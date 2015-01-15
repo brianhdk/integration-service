@@ -5,18 +5,18 @@ namespace Vertica.Integration.Infrastructure.Windows
 {
     public class WindowsServiceRunner : ServiceBase
     {
-        private readonly Func<IDisposable> _actionFactory;
+        private readonly Func<IDisposable> _taskFactory;
         private readonly string _name;
 
-        private IDisposable _currentAction;
+        private IDisposable _task;
 
-        public WindowsServiceRunner(string name, Func<IDisposable> actionFactory)
+        public WindowsServiceRunner(string name, Func<IDisposable> taskFactory)
         {
             if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
-            if (actionFactory == null) throw new ArgumentNullException("actionFactory");
+            if (taskFactory == null) throw new ArgumentNullException("taskFactory");
 
             _name = name;
-            _actionFactory = actionFactory;
+            _taskFactory = taskFactory;
         }
 
         public new string ServiceName
@@ -26,18 +26,18 @@ namespace Vertica.Integration.Infrastructure.Windows
 
         protected override void OnStart(string[] args)
         {
-            if (_currentAction != null)
+            if (_task != null)
                 throw new InvalidOperationException("Cannot start when already running.");
 
-            _currentAction = _actionFactory();
+            _task = _taskFactory();
         }
 
         protected override void OnStop()
         {
-            if (_currentAction != null)
+            if (_task != null)
             {
-                _currentAction.Dispose();
-                _currentAction = null;
+                _task.Dispose();
+                _task = null;
             }
         }
     }
