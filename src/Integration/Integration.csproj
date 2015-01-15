@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{460F774F-2C89-47F4-84BD-B97653060E68}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Vertica.Integration</RootNamespace>
+    <AssemblyName>Vertica.Integration</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Core">
+      <HintPath>..\..\packages\Castle.Core.3.3.0\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentNHibernate">
+      <HintPath>..\..\packages\FluentNHibernate.2.0.1.0\lib\net40\FluentNHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\..\packages\Microsoft.Owin.2.0.2\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.HttpListener">
+      <HintPath>..\..\packages\Microsoft.Owin.Host.HttpListener.2.0.2\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Hosting">
+      <HintPath>..\..\packages\Microsoft.Owin.Hosting.2.0.2\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\..\packages\NHibernate.4.0.2.4000\lib\net40\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.2\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Http, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.2\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.Owin">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Owin.5.2.2\lib\net45\System.Web.Http.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Vertica.Utilities_v4">
+      <HintPath>..\..\packages\Vertica.Utilities_v4.4.0.47.0\lib\net40\Vertica.Utilities_v4.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApplicationContext.cs" />
+    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Domain\Core\CleanUpIntegrationDbStep.cs" />
+    <Compile Include="Domain\Core\ImportFilesTask.cs" />
+    <Compile Include="Domain\Core\ImportFilesWorkItem.cs" />
+    <Compile Include="Domain\Core\MaintenanceTask.cs" />
+    <Compile Include="Domain\Core\MaintenanceWorkItem.cs" />
+    <Compile Include="Domain\Core\WriteDocumentationTask.cs" />
+    <Compile Include="Domain\Monitoring\ExportIntegrationErrorsStep.cs" />
+    <Compile Include="Domain\Monitoring\MessageContainsTextIgnoreFilter.cs" />
+    <Compile Include="Domain\Monitoring\MonitorEmailTemplate.cs" />
+    <Compile Include="Domain\Monitoring\MonitorEntry.cs" />
+    <Compile Include="Domain\Monitoring\MonitorTask.cs" />
+    <Compile Include="Domain\Monitoring\MonitorWorkItem.cs" />
+    <Compile Include="Infrastructure\ActionRepeater.cs" />
+    <Compile Include="Infrastructure\Configuration\IParametersProvider.cs" />
+    <Compile Include="Infrastructure\Configuration\Parameters.cs" />
+    <Compile Include="Infrastructure\Configuration\ParametersProvider.cs" />
+    <Compile Include="Infrastructure\Database\NHibernate\Castle.Windsor\CurrentSessionContext.cs" />
+    <Compile Include="Infrastructure\Database\NHibernate\Castle.Windsor\NHibernateInstaller.cs" />
+    <Compile Include="Infrastructure\Database\NHibernate\Castle.Windsor\NHibernateSelector.cs" />
+    <Compile Include="Infrastructure\Database\NHibernate\Connection.cs" />
+    <Compile Include="Infrastructure\Database\NHibernate\CurrentSession.cs" />
+    <Compile Include="Infrastructure\Database\NHibernate\DefaultConnection.cs" />
+    <Compile Include="Infrastructure\Database\NHibernate\ICurrentSession.cs" />
+    <Compile Include="Infrastructure\Database\NHibernate\Connections\IntegrationDb.cs" />
+    <Compile Include="Infrastructure\Database\NHibernate\ISessionFactoryProvider.cs" />
+    <Compile Include="Infrastructure\Database\NHibernate\Mappings\Infrastructure\Configuration\ParametersMap.cs" />
+    <Compile Include="Infrastructure\Database\NHibernate\Mappings\Infrastructure\Logging\ErrorLogMap.cs" />
+    <Compile Include="Infrastructure\Database\NHibernate\Mappings\Infrastructure\Logging\LogEntryMap.cs" />
+    <Compile Include="Infrastructure\Database\NHibernate\Mappings\Infrastructure\Logging\MessageLogMap.cs" />
+    <Compile Include="Infrastructure\Database\NHibernate\Mappings\Infrastructure\Logging\StepLogMap.cs" />
+    <Compile Include="Infrastructure\Database\NHibernate\Mappings\Infrastructure\Logging\TaskLogMap.cs" />
+    <Compile Include="Infrastructure\Delay.cs" />
+    <Compile Include="Infrastructure\Email\EmailService.cs" />
+    <Compile Include="Infrastructure\Email\EmailTemplate.cs" />
+    <Compile Include="Infrastructure\Email\IEmailService.cs" />
+    <Compile Include="Infrastructure\Extensions\ActionRepeaterExtensions.cs" />
+    <Compile Include="Infrastructure\Extensions\ExceptionExtensions.cs" />
+    <Compile Include="Infrastructure\Extensions\StringExtensions.cs" />
+    <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ConsoleWriterInstaller.cs" />
+    <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ConventionInstaller.cs" />
+    <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\TaskFactoryInstaller.cs" />
+    <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\WebApiInstaller.cs" />
+    <Compile Include="Infrastructure\Factories\ObjectFactory.cs" />
+    <Compile Include="Infrastructure\Logging\ErrorLog.cs" />
+    <Compile Include="Infrastructure\Logging\ILogger.cs" />
+    <Compile Include="Infrastructure\Logging\LogEntry.cs" />
+    <Compile Include="Infrastructure\Logging\Logger.cs" />
+    <Compile Include="Infrastructure\Logging\MessageLog.cs" />
+    <Compile Include="Infrastructure\Logging\Severity.cs" />
+    <Compile Include="Infrastructure\Logging\StepLog.cs" />
+    <Compile Include="Infrastructure\Logging\Target.cs" />
+    <Compile Include="Infrastructure\Logging\TaskLog.cs" />
+    <Compile Include="Infrastructure\Windows\WindowsServiceInstaller.cs" />
+    <Compile Include="Infrastructure\Windows\WindowsServiceRunner.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Infrastructure\Windows\WindowsUtils.cs" />
+    <Compile Include="Model\EmptyWorkItem.cs" />
+    <Compile Include="Model\Exceptions\StartupActionNotFoundException.cs" />
+    <Compile Include="Model\Exceptions\TaskExecutionFailedException.cs" />
+    <Compile Include="Model\Exceptions\TaskNotFoundException.cs" />
+    <Compile Include="Model\Execution.cs" />
+    <Compile Include="Model\IStep.cs" />
+    <Compile Include="Model\ITask.cs" />
+    <Compile Include="Model\ITaskFactory.cs" />
+    <Compile Include="Model\ITaskRunner.cs" />
+    <Compile Include="Model\ITaskService.cs" />
+    <Compile Include="Model\Log.cs" />
+    <Compile Include="Model\Output.cs" />
+    <Compile Include="Model\Startup\Argument.cs" />
+    <Compile Include="Model\Startup\ArgumentValidator.cs" />
+    <Compile Include="Model\Startup\ExecuteTask.cs" />
+    <Compile Include="Model\Startup\ExecuteTaskFromWebServiceInConsole.cs" />
+    <Compile Include="Model\Startup\ExecuteTaskInWindowsService.cs" />
+    <Compile Include="Model\Startup\ExecutionContext.cs" />
+    <Compile Include="Model\Startup\InstallWindowsServiceTaskHost.cs" />
+    <Compile Include="Model\Startup\StartupAction.cs" />
+    <Compile Include="Model\Startup\StartWebApiHost.cs" />
+    <Compile Include="Model\Startup\UninstallWindowsServiceTaskHost.cs" />
+    <Compile Include="Model\Step.cs" />
+    <Compile Include="Model\Task.cs" />
+    <Compile Include="Model\TaskExecutionResult.cs" />
+    <Compile Include="Model\TaskRunner.cs" />
+    <Compile Include="Model\TaskService.cs" />
+    <Compile Include="Model\Web\ExceptionHandlingAttribute.cs" />
+    <Compile Include="Model\Web\HomeController.cs" />
+    <Compile Include="Model\Web\TaskController.cs" />
+    <Compile Include="Model\Web\WebApiHost.cs" />
+    <Compile Include="Model\Web\WebApiTask.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\ISettings.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
