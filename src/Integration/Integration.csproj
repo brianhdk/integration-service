@@ -88,6 +88,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationConfiguration.cs" />
     <Compile Include="ApplicationContext.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Domain\Core\CleanUpIntegrationDbStep.cs" />
@@ -175,6 +176,7 @@
     <Compile Include="Model\TaskRunner.cs" />
     <Compile Include="Model\TaskService.cs" />
     <Compile Include="Model\Web\ExceptionHandlingAttribute.cs" />
+    <Compile Include="Model\Web\Formatters\HtmlFormatter.cs" />
     <Compile Include="Model\Web\HomeController.cs" />
     <Compile Include="Model\Web\TaskController.cs" />
     <Compile Include="Model\Web\WebApiHost.cs" />

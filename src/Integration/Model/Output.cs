@@ -4,16 +4,18 @@ namespace Vertica.Integration.Model
 {
     public class Output
     {
-        private readonly Action<string> _outputMessage;
+        private readonly Action<string> _message;
 
-        public Output(Action<string> outputMessage)
+        public Output(Action<string> message)
         {
-            _outputMessage = outputMessage;
+            if (message == null) throw new ArgumentNullException("message");
+
+            _message = message;
         }
 
         public void Message(string format, params object[] args)
         {
-            _outputMessage(String.Format(format, args));
+            _message(String.Format(format, args));
         }
     }
 }

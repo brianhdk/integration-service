@@ -9,6 +9,7 @@ using Microsoft.Owin.Hosting;
 using Owin;
 using Vertica.Integration.Infrastructure.Factories;
 using Vertica.Integration.Infrastructure.Logging;
+using Vertica.Integration.Model.Web.Formatters;
 
 namespace Vertica.Integration.Model.Web
 {
@@ -33,6 +34,7 @@ namespace Vertica.Integration.Model.Web
             {
                 var configuration = new HttpConfiguration();
                 configuration.Formatters.Remove(configuration.Formatters.XmlFormatter);
+                configuration.Formatters.Add(new HtmlFormatter());
 
                 configuration.Routes.MapHttpRoute(
                     name: "WebApi",

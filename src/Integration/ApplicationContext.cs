@@ -7,7 +7,7 @@ using Vertica.Integration.Model.Exceptions;
 
 namespace Vertica.Integration
 {
-	public sealed class ApplicationContext : IDisposable
+    public sealed class ApplicationContext : IDisposable
 	{
 	    private static readonly Lazy<ApplicationContext> Instance =
 	        new Lazy<ApplicationContext>(() => new ApplicationContext());
