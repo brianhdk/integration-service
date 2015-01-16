@@ -5,8 +5,8 @@ integrationsApp.config(function ($routeProvider) {
 
 		// route for the home page
 		.when('/', {
-			templateUrl: 'pages/profile.html',
-			controller: 'mainController'
+			templateUrl: 'pages/home.html',
+			controller: 'homeController'
 		})
 
 		 // route for the about page
@@ -17,8 +17,14 @@ integrationsApp.config(function ($routeProvider) {
 	;
 });
 integrationsApp.controller('mainController', function ($scope) {
+	$scope.message = 'main controller.';
+	$scope.active = false;
+});
+integrationsApp.controller('homeController', function ($scope) {
 	$scope.message = 'Look! I am a home page.';
+	$scope.active = true;
 });
 integrationsApp.controller('aboutController', function ($scope) {
 	$scope.message = 'Look! I am an about page.';
+	$scope.active = true;
 });
