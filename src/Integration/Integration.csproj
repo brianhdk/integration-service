@@ -199,6 +199,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Portal\Assets\js\site.js" />
     <Content Include="Portal\Assets\Style.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
