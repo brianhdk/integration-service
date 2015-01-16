@@ -14,7 +14,7 @@ namespace Vertica.Integration.Infrastructure.Email
 
 		internal string GetBody()
 		{
-		    throw new NotImplementedException("Implement Razor way instead.");
+		    return "TODO: Implement Razor..." + Template;
 		    //var engine = new VelocityEngine();
 		    //engine.Init(new ExtendedProperties());
 
