@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using NHibernate;
-using NHibernate.Criterion;
-using NHibernate.Transform;
-using Vertica.Integration.Domain.Monitoring;
+using PetaPoco;
 using Vertica.Integration.Infrastructure.Database.NHibernate;
 using Vertica.Integration.Infrastructure.Logging;
 
@@ -22,42 +21,29 @@ namespace Vertica.Integration.Model.Web
 
         public HttpResponseMessage Get()
         {
+            var query = @"
+SELECT TOP 100 [Id]
+      ,[MachineName]
+      ,[IdentityName]
+      ,[CommandLine]
+      ,[Message]
+      ,[FormattedMessage]
+      ,[TimeStamp]
+      ,[Severity]
+      ,[Target]
+  FROM [IC_PJ_Integration].[dbo].[ErrorLog]
+  order by [ID] DESC
+";
+
+            IEnumerable<ErrorLog> errors;
+
             using (IStatelessSession session = _sessionFactory.SessionFactory.OpenStatelessSession())
+            using (Database db = new PetaPoco.Database(session.Connection))
             {
-                ErrorLog errorLogAlias = null;
-                TaskLog taskLogAlias = null;
-                StepLog stepLogAlias = null;
-                ExportIntegrationErrorsStep.ErrorEntry errorEntryAlias = null;
-
-                IList<ExportIntegrationErrorsStep.ErrorEntry> errors =
-                    session.QueryOver(() => errorLogAlias)
-                            .SelectList(list => list
-                                .Select(() => errorLogAlias.Id).WithAlias(() => errorEntryAlias.ErrorId)
-                                .Select(() => errorLogAlias.Message).WithAlias(() => errorEntryAlias.ErrorMessage)
-                                .Select(() => errorLogAlias.TimeStamp).WithAlias(() => errorEntryAlias.DateTime)
-                                .Select(() => errorLogAlias.Severity).WithAlias(() => errorEntryAlias.Severity)
-                                .Select(() => errorLogAlias.Target).WithAlias(() => errorEntryAlias.Target)
-                                .SelectSubQuery(
-                                    QueryOver.Of(() => taskLogAlias)
-                                        .Where(taskLog => taskLog.ErrorLog.Id == errorLogAlias.Id)
-                                        .Select(Projections.Property(() => taskLogAlias.TaskName))
-                                ).WithAlias(() => errorEntryAlias.TaskNameFromTask)
-                                .SelectSubQuery(
-                                    QueryOver.Of(() => stepLogAlias)
-                                        .Where(stepLog => stepLog.ErrorLog.Id == errorLogAlias.Id)
-                                        .Select(Projections.Property(() => stepLogAlias.TaskName))
-                                ).WithAlias(() => errorEntryAlias.TaskNameFromStep)
-                                .SelectSubQuery(
-                                    QueryOver.Of(() => stepLogAlias)
-                                        .Where(stepLog => stepLog.ErrorLog.Id == errorLogAlias.Id)
-                                        .Select(Projections.Property(() => stepLogAlias.StepName))
-                                ).WithAlias(() => errorEntryAlias.StepName))
-                            .OrderBy(() => errorLogAlias.Id).Desc
-                            .TransformUsing(Transformers.AliasToBean<ExportIntegrationErrorsStep.ErrorEntry>())
-                            .List<ExportIntegrationErrorsStep.ErrorEntry>();
-
-                return Request.CreateResponse(HttpStatusCode.OK, errors);
+                errors = db.Query<ErrorLog>(query).ToList();
             }
+
+            return Request.CreateResponse(HttpStatusCode.OK, errors);
         }
     }
 }
