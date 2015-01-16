@@ -47,12 +47,12 @@ namespace Vertica.Integration.Infrastructure.Logging
 
 		public virtual ReadOnlyCollection<StepLog> Steps
 		{
-			get { return new ReadOnlyCollection<StepLog>(_steps); }
+			get { return _steps != null ? new ReadOnlyCollection<StepLog>(_steps): new ReadOnlyCollection<StepLog>(new List<StepLog>()); }
 		}
 
 		public virtual ReadOnlyCollection<MessageLog> Messages
 		{
-			get { return new ReadOnlyCollection<MessageLog>(_messages); }
+			get { return _messages!= null ? new ReadOnlyCollection<MessageLog>(_messages) : new ReadOnlyCollection<MessageLog>(new List<MessageLog>()); }
 		}
 
 		public virtual ErrorLog ErrorLog { get; protected internal set; }
