@@ -7,8 +7,8 @@
     <ProjectGuid>{17065F64-27C5-4451-8D09-1F92B92ABCD2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Integration.Messaging</RootNamespace>
-    <AssemblyName>Integration.Messaging</AssemblyName>
+    <RootNamespace>Vertica.Integration.Messaging</RootNamespace>
+    <AssemblyName>Vertica.Integration.Messaging</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
