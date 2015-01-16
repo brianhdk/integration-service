@@ -208,6 +208,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
+    <Content Include="Portal\Assets\js\angular\ng-table\ng-table.css" />
+    <Content Include="Portal\Assets\js\angular\ng-table\ng-table.js" />
+    <Content Include="Portal\Assets\js\angular\ng-table\ng-table.min.css" />
+    <Content Include="Portal\Assets\js\angular\ng-table\ng-table.min.js" />
     <Content Include="Portal\Assets\js\app.js" />
     <Content Include="Portal\Assets\js\controller\errorDetailController.js" />
     <Content Include="Portal\Assets\js\controller\latestTasksController.js" />
@@ -223,6 +227,8 @@
     <Content Include="Portal\Default.html" />
     <None Include="Portal\Assets\js\angular\angular-route.min.js.map" />
     <None Include="Portal\Assets\js\angular\angular.min.js.map" />
+    <None Include="Portal\Assets\js\angular\ng-table\ng-table.less" />
+    <None Include="Portal\Assets\js\angular\ng-table\ng-table.min.js.map" />
     <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-bold.eot" />
     <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-bold.ttf" />
     <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-bold.woff" />
