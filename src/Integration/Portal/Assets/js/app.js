@@ -23,13 +23,13 @@ integrationsApp.config(function ($routeProvider) {
 		 // route for the about page
         .when('/running-tasks', {
             templateUrl: '/assets/pages/runningTasks.html',
-            controller: 'tasksController'
+            controller: 'runningTasksController'
         })
 
 		 // route for the about page
         .when('/latest-tasks', {
             templateUrl: '/assets/pages/latestTasks.html',
-            controller: 'tasksController'
+            controller: 'latestTasksController'
         })
     ;
 });
