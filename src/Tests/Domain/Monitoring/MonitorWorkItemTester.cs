@@ -19,7 +19,7 @@ namespace Vertica.Integration.Tests.Domain.Monitoring
 			ignoreFilter1.IsSatisfiedBy(Arg.Is<MonitorEntry>(entry => entry.Message == "Message to ignore")).Returns(true);
 			ignoreFilter2.IsSatisfiedBy(Arg.Is<MonitorEntry>(entry => entry.Message == "Also to be ignored")).Returns(true);
 
-		    var subject = new MonitorWorkItem(Time.Now, ignoreFilter1, ignoreFilter2);
+		    var subject = new MonitorWorkItem(Time.Now, true, ignoreFilter1, ignoreFilter2);
             subject.Add(Time.Now, "Source", "Not ignored message", Target.Service);
             subject.Add(Time.Now, "Source", "Message to ignore", Target.Service);
             subject.Add(Time.Now, "Source", "Also to be ignored", Target.Service);
@@ -33,7 +33,7 @@ namespace Vertica.Integration.Tests.Domain.Monitoring
 		[Test]
 		public void Add_VariousMessagesNoFilters_VerifyCount()
 		{
-		    var subject = new MonitorWorkItem(Time.Now);
+		    var subject = new MonitorWorkItem(Time.Now, true);
             subject.Add(Time.Now, "Source", "Not ignored message", Target.Service);
             subject.Add(Time.Now, "Source", "Also not ignored", Target.Service);
             subject.Add(Time.Now, "Source", "And me neither", Target.Service);
