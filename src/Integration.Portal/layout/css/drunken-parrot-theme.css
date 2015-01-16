@@ -3,7 +3,6 @@
 @alert-border-radius:         @border-radius-base;
 @alert-link-font-weight:      bold;*/
 .masthead {
-  background: #fad46b;
   padding: 100px 0;
   position: relative;
   z-index: 2;
@@ -196,7 +195,6 @@
     width: 1170px;
   }
   .masthead {
-    padding: 265px 0;
   }
   .masthead .masthead-title {
     font-size: 80px;

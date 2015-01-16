@@ -60,25 +60,14 @@
     <Content Include="js\angular\angular-resource.min.js" />
     <Content Include="js\angular\angular-sanitize.min.js" />
     <Content Include="js\angular\angular.min.js" />
+    <Content Include="js\controller\errorController.js" />
     <Content Include="layout\bootstrap\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="layout\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="layout\bootstrap\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="layout\fonts\fontawesome\fontawesome-webfont.eot" />
-    <Content Include="layout\fonts\fontawesome\fontawesome-webfont.ttf" />
-    <Content Include="layout\fonts\fontawesome\fontawesome-webfont.woff" />
-    <Content Include="layout\fonts\fontawesome\FontAwesome.otf" />
-    <Content Include="layout\fonts\source-sans-pro\sourcesanspro-bold.eot" />
-    <Content Include="layout\fonts\source-sans-pro\sourcesanspro-bold.ttf" />
-    <Content Include="layout\fonts\source-sans-pro\sourcesanspro-bold.woff" />
-    <Content Include="layout\fonts\source-sans-pro\sourcesanspro-extralight.eot" />
-    <Content Include="layout\fonts\source-sans-pro\sourcesanspro-extralight.ttf" />
-    <Content Include="layout\fonts\source-sans-pro\sourcesanspro-extralight.woff" />
-    <Content Include="layout\fonts\source-sans-pro\sourcesanspro-regular.eot" />
-    <Content Include="layout\fonts\source-sans-pro\sourcesanspro-regular.ttf" />
-    <Content Include="layout\fonts\source-sans-pro\sourcesanspro-regular.woff" />
-    <Content Include="layout\fonts\source-sans-pro\sourcesanspro-semibold.eot" />
-    <Content Include="layout\fonts\source-sans-pro\sourcesanspro-semibold.ttf" />
-    <Content Include="layout\fonts\source-sans-pro\sourcesanspro-semibold.woff" />
+    <Content Include="layout\css\drunken-parrot-theme.css" />
+    <Content Include="layout\css\drunken-parrot.css" />
+    <Content Include="layout\css\style.css" />
+    <Content Include="layout\css\style.less" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -92,35 +81,7 @@
     <Content Include="layout\bootstrap\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="layout\bootstrap\js\bootstrap.min.js" />
     <Content Include="layout\bootstrap\js\prettify.js" />
-    <Content Include="layout\css\demo.css" />
-    <Content Include="layout\css\docs.css" />
-    <Content Include="layout\css\drunken-parrot.css" />
-    <Content Include="layout\css\font-awesome.min.css" />
     <Content Include="Default.html" />
-    <Content Include="layout\fonts\fontawesome\fontawesome-webfont.svg" />
-    <Content Include="layout\fonts\source-sans-pro\sourcesanspro-bold.svg" />
-    <Content Include="layout\fonts\source-sans-pro\sourcesanspro-extralight.svg" />
-    <Content Include="layout\fonts\source-sans-pro\sourcesanspro-regular.svg" />
-    <Content Include="layout\fonts\source-sans-pro\sourcesanspro-semibold.svg" />
-    <Content Include="layout\images\captain-hoarrd.png" />
-    <Content Include="layout\images\jumbotron.jpg" />
-    <Content Include="layout\images\logo%402x.png" />
-    <Content Include="layout\images\logo-dark%402x.png" />
-    <Content Include="layout\images\logo-yellow%402x.png" />
-    <Content Include="layout\images\thumbnail-01.jpg" />
-    <Content Include="layout\images\thumbnail-02.jpg" />
-    <Content Include="layout\images\thumbnail-03.jpg" />
-    <Content Include="layout\images\thumbnail-04.jpg" />
-    <Content Include="layout\images\thumbnail-large-01.jpg" />
-    <Content Include="layout\images\thumbnail-large-02.jpg" />
-    <Content Include="layout\images\thumbnail-large-03.jpg" />
-    <Content Include="layout\js\application.js" />
-    <Content Include="layout\js\bootstrap-switch.js" />
-    <Content Include="layout\js\checkbox.js" />
-    <Content Include="layout\js\html5shiv.js" />
-    <Content Include="layout\js\radio.js" />
-    <Content Include="layout\js\switch.js" />
-    <Content Include="layout\js\toolbar.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
