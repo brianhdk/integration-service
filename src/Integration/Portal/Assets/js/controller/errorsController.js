@@ -1,5 +1,4 @@
-﻿integrationsApp.controller('errorsController', function ($scope, $http, $routeParams) {
-    console.log($routeParams.errorId)
+﻿integrationsApp.controller('errorsController', function ($scope, $http) {
 
     $http.get("/errors").success(function (xhr) {
         $scope.errors = xhr;
