@@ -33,7 +33,7 @@ namespace Vertica.Integration
 				new NHibernateInstaller(new IntegrationDb()),
 				new TaskFactoryInstaller(),
                 new ConsoleWriterInstaller(),
-                new WebApiInstaller(new[] { integrationAssembly }),
+                new WebApiInstaller(integrationAssembly),
 				new ConventionInstaller(new[] { integrationAssembly }, typeof(ITask), typeof(IStep), typeof(ISettings)));
 
 			return container;
