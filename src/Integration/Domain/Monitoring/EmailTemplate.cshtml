@@ -1,0 +1,26 @@
+﻿@using Vertica.Integration.Domain.Monitoring
+@{ 
+    @model MonitorEntry[]
+}
+
+<h1>Integration Service: Monitoring</h1>
+<p>
+    <b>One or more errors/warnings occurred, see table below for further details.</b>
+</p>
+
+<table border="1" cellspacing="5" cellpadding="5">
+    <tr>
+        <td><b>DateTime (UTC)</b></td>
+        <td><b>Source</b></td>
+        <td><b>Description</b></td>
+    </tr>
+
+    @foreach (MonitorEntry entry in Model)
+    {
+        <tr>
+            <td valign="top">@entry.DateTime</td>
+            <td valign="top">@entry.Source</td>
+            <td valign="top">@((entry.Message ?? String.Empty).Replace(Environment.NewLine, "<br />"))</td>
+        </tr>
+    }
+</table>
