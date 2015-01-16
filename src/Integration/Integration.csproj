@@ -79,6 +79,10 @@
     <Reference Include="System.Web.Http.Owin">
       <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Owin.5.2.2\lib\net45\System.Web.Http.Owin.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.Razor.3.2.2\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -147,6 +151,7 @@
     <Compile Include="Infrastructure\Logging\StepLog.cs" />
     <Compile Include="Infrastructure\Logging\Target.cs" />
     <Compile Include="Infrastructure\Logging\TaskLog.cs" />
+    <Compile Include="Infrastructure\Templating\InMemoryRazorEngine.cs" />
     <Compile Include="Infrastructure\Windows\WindowsServiceInstaller.cs" />
     <Compile Include="Infrastructure\Windows\WindowsServiceRunner.cs">
       <SubType>Component</SubType>
@@ -196,6 +201,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <Content Include="Domain\Monitoring\EmailTemplate.cshtml">
+      <SubType>Code</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
     <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-bold.svg" />
     <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-extralight.svg" />
