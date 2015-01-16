@@ -207,10 +207,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
+    <Content Include="Portal\Assets\js\app.js" />
+    <Content Include="Portal\Assets\js\controller\mainController.js" />
+    <Content Include="Portal\Assets\js\controller\tasksController.js" />
     <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-bold.svg" />
     <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-extralight.svg" />
     <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-regular.svg" />
     <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-semibold.svg" />
+    <Content Include="Portal\Assets\pages\errors-detail.html" />
+    <Content Include="Portal\Assets\pages\errors.html" />
     <Content Include="Portal\Assets\pages\latestTasks.html" />
     <Content Include="Portal\Default.html" />
     <Content Include="Portal\Assets\layout\css\style.less" />
@@ -238,7 +243,7 @@
     <Content Include="Portal\Assets\js\angular\angular-route.min.js" />
     <Content Include="Portal\Assets\js\angular\angular-sanitize.min.js" />
     <Content Include="Portal\Assets\js\angular\angular.min.js" />
-    <Content Include="Portal\Assets\js\controller\errorController.js" />
+    <Content Include="Portal\Assets\js\controller\errorsController.js" />
     <Content Include="Portal\Assets\layout\bootstrap\css\bootstrap.css" />
     <Content Include="Portal\Assets\layout\bootstrap\css\prettify.css" />
     <Content Include="Portal\Assets\layout\bootstrap\js\bootstrap.min.js" />
@@ -247,7 +252,7 @@
     <Content Include="Portal\Assets\layout\css\drunken-parrot.css" />
     <Content Include="Portal\Assets\layout\css\style.css" />
     <Content Include="Portal\Assets\pages\runningTasks.html" />
-    <Content Include="Portal\Assets\pages\home.html" />
+    <Content Include="Portal\Assets\pages\main.html" />
     <Content Include="Portal\Assets\Style.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
