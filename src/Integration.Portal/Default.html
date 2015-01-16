@@ -2,39 +2,31 @@
 <html lang="en" ng-app="integrationsApp">
 <head>
     <meta charset="utf-8">
-    <title>Drunken Parrot UI Kit - Bootstrap Framework Theme</title>
-
-    <!-- Loading Bootstrap -->
+    <title>Task Manager Portal</title>
     <link href="layout/bootstrap/css/bootstrap.css" rel="stylesheet">
 	<link href="layout/css/style.css" rel="stylesheet" />
 	<link href="layout/css/drunken-parrot.css" rel="stylesheet" />
 	<link href="layout/css/drunken-parrot-theme.css" rel="stylesheet" />
-
     <script src="js/angular/angular.min.js"></script>
+	<script src="js/angular/angular-route.min.js"></script>
 	<script src="js/controller/errorController.js"></script>
 </head>
-	<body ng-controller="ErrorController">
-		<div class="masthead palette-the-black-flag">
-			<div class="container">
-				<div class="masthead-title">Task Manager Portal
-				</div>
-			</div>
-		</div>
+<body ng-controller="mainController">
+	<div class="masthead palette-the-black-flag">
 		<div class="container">
-				<ul class="nav nav-pills nav-stacked col-md-2">
-					<li class="active"><a href="#">Home</a></li>
-					<li><a ng-href="#!profile">Profile</a></li>
-					<li><a href="#">Hover</a></li>
-				</ul>
-			<div class="col-md-8">
-				<ul>
-					      <li ng-repeat="phone in phones">
-						      <span>{{phone.name}}</span>
-						      <p>{{phone.snippet}}</p>
-					      </li>
-				      </ul>
-				<div ng-view></div>
+			<div class="masthead-title">
+				Task Manager Portal
 			</div>
 		</div>
-	</body>
+	</div>
+	<div class="container">
+		<ul class="nav nav-pills nav-stacked col-md-2">
+			<li class="active"><a href="#/">Home</a></li>
+			<li><a href="#about">about</a></li>
+		</ul>
+		<div class="col-md-8">
+			<div ng-view></div>
+		</div>
+	</div>
+</body>
 </html>
