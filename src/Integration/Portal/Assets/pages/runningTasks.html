@@ -1,4 +1,21 @@
 ﻿
-<div ng-repeat="task in tasks">
-	{{task}}
-</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Step</th>
+            <th>Message</th>
+            <th>TimeStamp</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="task in tasks">
+            <td>{{task.TaskName}}</td>
+            <td>{{task.StepName}}</td>
+            <td>{{task.Message}}</td>
+            <td>{{task.TimeStamp}}</td>
+        </tr>
+    </tbody>
+</table>
+
+<div ng-hide="errors.length">No items found</div>

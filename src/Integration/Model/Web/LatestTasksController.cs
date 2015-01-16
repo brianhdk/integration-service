@@ -10,19 +10,19 @@ using Vertica.Integration.Infrastructure.Logging;
 
 namespace Vertica.Integration.Model.Web
 {
-    public class RunningTasksController : ApiController
+    public class LatestTasksController : ApiController
     {
         private readonly ISessionFactoryProvider _sessionFactory;
 
-        public RunningTasksController(ISessionFactoryProvider sessionFactory)
+        public LatestTasksController(ISessionFactoryProvider sessionFactory)
         {
             _sessionFactory = sessionFactory;
         }
 
-        public HttpResponseMessage Get()
+        public HttpResponseMessage Get(int count = 100)
         {
             var query = string.Format(@"
-SELECT
+SELECT {0}
 	[Id],
 	[Type],
 	[TaskName],
@@ -34,9 +34,9 @@ SELECT
 	[StepLog_Id],
 	[ErrorLog_Id]
 FROM [TaskLog]
-WHERE ExecutionTimeSeconds IS NULL
-AND ErrorLog_Id IS NULL
-");
+WHERE stepname IS NOT null
+ORDER BY timestamp DESC
+", count);
 
             IEnumerable<TaskLog> tasks;
 
