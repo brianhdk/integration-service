@@ -6,10 +6,17 @@
     <link href="assets/layout/bootstrap/css/bootstrap.css" rel="stylesheet">
 	<link href="assets/layout/css/style.css" rel="stylesheet" />
 	<link href="assets/layout/css/drunken-parrot.css" rel="stylesheet" />
-	<link href="assets/layout/css/drunken-parrot-theme.css" rel="stylesheet" />
+    <link href="assets/layout/css/drunken-parrot-theme.css" rel="stylesheet"/>
+
 	<script src="assets/js/angular/angular.min.js"></script>
-	<script src="assets/js/angular/angular-route.min.js"></script>
-	<script src="assets/js/controller/errorController.js"></script>
+    <script src="assets/js/angular/angular-route.min.js"></script>
+
+	<script src="assets/js/app.js"></script>
+	<script src="assets/js/controller/mainController.js"></script>
+	<script src="assets/js/controller/runningTasksController.js"></script>
+	<script src="assets/js/controller/latestTasksController.js"></script>
+	<script src="assets/js/controller/errorsController.js"></script>
+	<script src="assets/js/controller/errorDetailController.js"></script>
 </head>
 <body ng-controller="mainController">
 	<div class="masthead palette-the-black-flag">
@@ -22,6 +29,7 @@
 	<div class="container">
 		<ul class="nav nav-pills nav-stacked col-md-2">
 			<li ng-class="{'active' : isActive('/')}"><a href="#/">Home</a></li>
+			<li ng-class="{'active' : isActive('/errors')}"><a href="#errors">Errors</a></li>
 			<li ng-class="{'active' : isActive('/running-tasks')}"><a href="#running-tasks">Running tasks</a></li>
 			<li ng-class="{'active' : isActive('/latest-tasks')}"><a href="#latest-tasks">Latest tasks</a></li>
 		</ul>

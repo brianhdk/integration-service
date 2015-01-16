@@ -1,0 +1,24 @@
+﻿<div class="panel panel-default">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Time</th>
+            <th>Severity</th>
+            <th>Target</th>
+            <th>Message</th>
+            <th>Details</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="error in errors">
+            <td>{{error.TimeStamp | date:'medium' }}</td>
+            <td>{{error.Severity}}</td>
+            <td>{{error.Target}}</td>
+            <td>{{error.Message | limitTo: 100 }}{{error.Message.length > 100 ? '...' : ''}}</td>
+            <td><a href="#/errors/{{error.Id}}">Details</a></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div ng-hide="errors.length">No items found</div>
+</div>

@@ -45,5 +45,32 @@ SELECT TOP 100 [Id]
 
             return Request.CreateResponse(HttpStatusCode.OK, errors);
         }
+
+        public HttpResponseMessage Get(int id)
+        {
+            var query = @"
+SELECT TOP 100 [Id]
+      ,[MachineName]
+      ,[IdentityName]
+      ,[CommandLine]
+      ,[Message]
+      ,[FormattedMessage]
+      ,[TimeStamp]
+      ,[Severity]
+      ,[Target]
+  FROM [ErrorLog]
+  WHERE [ID] = @0
+";
+
+            ErrorLog error;
+
+            using (IStatelessSession session = _sessionFactory.SessionFactory.OpenStatelessSession())
+            using (Database db = new PetaPoco.Database(session.Connection))
+            {
+                error = db.SingleOrDefault<ErrorLog>(query, id);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, error);
+        }
     }
 }
