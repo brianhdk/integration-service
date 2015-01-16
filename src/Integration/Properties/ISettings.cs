@@ -14,7 +14,6 @@ namespace Vertica.Integration.Properties
 
 		StringCollection MonitorEmailRecipientsForService { get; }
 		StringCollection MonitorEmailRecipientsForBusiness { get; }
-        StringCollection MonitorEmailRecipientsForBusinessFreightRelated { get; }
 
 	    StringCollection IgnoreErrorsWithMessagesContaining { get; }
 	}

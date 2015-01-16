@@ -25,7 +25,7 @@ namespace Vertica.Integration.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool DisableDatabaseLog {
             get {
                 return ((bool)(this["DisableDatabaseLog"]));
@@ -61,7 +61,7 @@ namespace Vertica.Integration.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Integration Service")]
         public string EmailSubjectFormat {
             get {
                 return ((string)(this["EmailSubjectFormat"]));
@@ -70,6 +70,9 @@ namespace Vertica.Integration.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
+            "tring>bhk@vertica.dk</string>\r\n</ArrayOfString>")]
         public global::System.Collections.Specialized.StringCollection MonitorEmailRecipientsForService {
             get {
                 return ((global::System.Collections.Specialized.StringCollection)(this["MonitorEmailRecipientsForService"]));
@@ -78,17 +81,12 @@ namespace Vertica.Integration.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
+            "tring>bhk@vertica.dk</string>\r\n</ArrayOfString>")]
         public global::System.Collections.Specialized.StringCollection MonitorEmailRecipientsForBusiness {
             get {
                 return ((global::System.Collections.Specialized.StringCollection)(this["MonitorEmailRecipientsForBusiness"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.Collections.Specialized.StringCollection MonitorEmailRecipientsForBusinessFreightRelated {
-            get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["MonitorEmailRecipientsForBusinessFreightRelated"]));
             }
         }
         
