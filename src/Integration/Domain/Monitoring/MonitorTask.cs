@@ -48,9 +48,21 @@ namespace Vertica.Integration.Domain.Monitoring
 					.Select(x => x.Replace("\\r\\n", Environment.NewLine))
 					.ToArray();
 
-			Parameters parameters = _parametersProvider.Get();
+		    bool updateLastCheck;
 
-			return new MonitorWorkItem(parameters.LastMonitorCheck, new MessageContainsTextIgnoreFilter(ignoredMessages));
+		    DateTimeOffset lastCheck;
+            if (DateTimeOffset.TryParse(arguments.FirstOrDefault(), out lastCheck))
+            {
+                log.Message("Monitor starting from {0}", lastCheck);
+                updateLastCheck = false;
+            }
+            else
+            {
+                lastCheck = _parametersProvider.Get().LastMonitorCheck;
+                updateLastCheck = true;
+            }
+
+			return new MonitorWorkItem(lastCheck, updateLastCheck, new MessageContainsTextIgnoreFilter(ignoredMessages));
 		}
 
 		public override void End(MonitorWorkItem workItem, Log log, params string[] arguments)
@@ -58,10 +70,13 @@ namespace Vertica.Integration.Domain.Monitoring
 		    SendTo(Target.Service, workItem, log, _settings.MonitorEmailRecipientsForService);
             SendTo(Target.Business, workItem, log, _settings.MonitorEmailRecipientsForBusiness);
 
-		    Parameters parameters = _parametersProvider.Get();
-			parameters.LastMonitorCheck = workItem.CheckRange.UpperBound;
+		    if (workItem.UpdateLastCheck)
+		    {
+                Parameters parameters = _parametersProvider.Get();
+                parameters.LastMonitorCheck = workItem.CheckRange.UpperBound;
 
-			_parametersProvider.Save(parameters);
+                _parametersProvider.Save(parameters);		        
+		    }
 		}
 
 	    private void SendTo(Target target, MonitorWorkItem workItem, Log log, StringCollection recipients)
