@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Logging.Elmah",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Logging.Kibana", "src\Integration.Logging.Kibana\Integration.Logging.Kibana.csproj", "{A5C7E78E-065E-4903-ADAF-7B4224BEEA1D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Experiments", "src\Integration.Experiments\Integration.Experiments.csproj", "{A418FF22-74E1-42EB-A0BF-97DA7993647B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{A5C7E78E-065E-4903-ADAF-7B4224BEEA1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5C7E78E-065E-4903-ADAF-7B4224BEEA1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5C7E78E-065E-4903-ADAF-7B4224BEEA1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A418FF22-74E1-42EB-A0BF-97DA7993647B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A418FF22-74E1-42EB-A0BF-97DA7993647B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A418FF22-74E1-42EB-A0BF-97DA7993647B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A418FF22-74E1-42EB-A0BF-97DA7993647B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
