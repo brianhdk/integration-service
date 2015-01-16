@@ -22,8 +22,13 @@ integrationsApp.controller('mainController', function($scope, $location) {
 	}
 	$scope.message = 'main controller.';
 });
-integrationsApp.controller('homeController', function ($scope) {
-	$scope.message = 'Look! I am a home page.';
+integrationsApp.controller('homeController', function ($scope, $http) {
+    $scope.message = 'Look! I am a home page.';
+
+    $http.get("/errors").success(function (xhr) {
+        $scope.errors = xhr;
+    });
+
 });
 integrationsApp.controller('aboutController', function ($scope) {
 	$scope.message = 'Look! I am an about page.';

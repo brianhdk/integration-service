@@ -10,11 +10,11 @@ using Vertica.Integration.Infrastructure.Logging;
 
 namespace Vertica.Integration.Model.Web
 {
-    public class DashboardController : ApiController
+    public class ErrorsController : ApiController
     {
         private readonly ISessionFactoryProvider _sessionFactory;
 
-        public DashboardController(ISessionFactoryProvider sessionFactory)
+        public ErrorsController(ISessionFactoryProvider sessionFactory)
         {
             _sessionFactory = sessionFactory;
         }
@@ -31,7 +31,7 @@ SELECT TOP 100 [Id]
       ,[TimeStamp]
       ,[Severity]
       ,[Target]
-  FROM [IC_PJ_Integration].[dbo].[ErrorLog]
+  FROM [ErrorLog]
   order by [ID] DESC
 ";
 
