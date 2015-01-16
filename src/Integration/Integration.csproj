@@ -175,6 +175,7 @@
     <Compile Include="Model\TaskExecutionResult.cs" />
     <Compile Include="Model\TaskRunner.cs" />
     <Compile Include="Model\TaskService.cs" />
+    <Compile Include="Model\Web\DashboardController.cs" />
     <Compile Include="Model\Web\AssetsController.cs" />
     <Compile Include="Model\Web\ExceptionHandlingAttribute.cs" />
     <Compile Include="Model\Web\Formatters\HtmlFormatter.cs" />
