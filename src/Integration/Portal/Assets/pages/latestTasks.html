@@ -1,6 +1,19 @@
 ﻿
-<div ng-repeat="task in tasks">
-	{{task.TaskName}}
-	{{task.Message}}
-	{{task.TimeStamp}}
-</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Step</th>
+            <th>Message</th>
+            <th>TimeStamp</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="task in tasks">
+            <td>{{task.TaskName}}</td>
+            <td>{{task.StepName}}</td>
+            <td>{{task.Message}}</td>
+            <td>{{task.TimeStamp}}</td>
+        </tr>
+    </tbody>
+</table>
