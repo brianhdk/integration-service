@@ -221,7 +221,6 @@
     <Content Include="Portal\Assets\pages\errors.html" />
     <Content Include="Portal\Assets\pages\latestTasks.html" />
     <Content Include="Portal\Default.html" />
-    <Content Include="Portal\Assets\layout\css\style.less" />
     <None Include="Portal\Assets\js\angular\angular-route.min.js.map" />
     <None Include="Portal\Assets\js\angular\angular.min.js.map" />
     <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-bold.eot" />
