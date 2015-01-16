@@ -43,10 +43,17 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Vertica.Utilities_v4">
+      <HintPath>..\..\packages\Vertica.Utilities_v4.4.0.47.0\lib\net40\Vertica.Utilities_v4.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\Monitoring\MessageContainsTextIgnoreFilterTester.cs" />
+    <Compile Include="Domain\Monitoring\MonitorWorkItemTester.cs" />
     <Compile Include="Messaging\MessageHandlerMock.cs" />
     <Compile Include="Messaging\MessageHandlerTests.cs" />
+    <Compile Include="Model\TaskRunnerTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -56,6 +63,10 @@
     <ProjectReference Include="..\Integration.Messaging\Integration.Messaging.csproj">
       <Project>{17065F64-27C5-4451-8D09-1F92B92ABCD2}</Project>
       <Name>Integration.Messaging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration\Integration.csproj">
+      <Project>{460F774F-2C89-47F4-84BD-B97653060E68}</Project>
+      <Name>Integration</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
