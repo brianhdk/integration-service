@@ -178,7 +178,6 @@
     <Compile Include="Model\Web\DashboardController.cs" />
     <Compile Include="Model\Web\AssetsController.cs" />
     <Compile Include="Model\Web\ExceptionHandlingAttribute.cs" />
-    <Compile Include="Model\Web\Formatters\HtmlFormatter.cs" />
     <Compile Include="Model\Web\HomeController.cs" />
     <Compile Include="Model\Web\TaskController.cs" />
     <Compile Include="Model\Web\WebApiHost.cs" />
