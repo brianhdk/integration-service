@@ -22,12 +22,12 @@ integrationsApp.config(function ($routeProvider) {
 
         .when('/running-tasks', {
             templateUrl: '/assets/pages/runningTasks.html',
-            controller: 'runningTasksController'
+            controller: 'tasksController'
         })
 
         .when('/latest-tasks', {
             templateUrl: '/assets/pages/latestTasks.html',
-            controller: 'latestTasksController'
+            controller: 'tasksController'
         })
     ;
 });
