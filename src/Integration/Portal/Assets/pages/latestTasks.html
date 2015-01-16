@@ -1,27 +1,46 @@
-﻿
+﻿<div class="row">
+	<div class="col-md-12">
+		<h3>Resultater</h3>
+	</div>
+	<div class="col-md-3 col-xs-4 col-sm-2">
+		<button type="button" class="btn btn-block btn-primary" ng-click="getLatestTasks(10)">10</button>
+	</div>
+	<div class="col-md-3 col-xs-4 col-sm-2">
+		<button type="button" class="btn btn-block btn-danger" ng-click="getLatestTasks(50)">50</button>
+	</div>
+	<div class="col-md-3 col-xs-4 col-sm-2">
+		<button type="button" class="btn btn-block btn-warning" ng-click="getLatestTasks(100)">100</button>
+	</div>
+	<div class="col-md-3 col-xs-4 col-sm-2">
+		<button type="button" class="btn btn-block btn-info" ng-click="getLatestTasks(1000)">1000</button>
+	</div>
+</div>
 <div class="row">
-	<select>
-		<option>hello</option>
-		<option>kage</option>
-	</select>
+	<div class="col-md-12">
+		<h3>Filter</h3>
+	</div>
+	<div class="col-md-3 col-xs-4 col-sm-2">
+		<select>
+			<option>hello</option>
+			<option>kage</option>
+		</select>
+	</div>
 </div>
 <table class="table">
 	<thead>
 		<tr>
-			<th>Name</th>
-			<th>Step</th>
-			<th>Message</th>
-			<th>TimeStamp</th>
+			<th class="col-md-3">Timestamp</th>
+			<th class="col-md-3">Step</th>
+			<th class="col-md-3">Message</th>
+			<th class="col-md-3">Name</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr ng-repeat="task in tasks">
+			<td>{{task.TimeStamp | date:'medium' }}</td>
 			<td>{{task.TaskName}}</td>
 			<td>{{task.StepName}}</td>
 			<td>{{task.Message}}</td>
-			<td>
-				{{task.TimeStamp | date:'yyyy-MM-dd HH:mm:ss'}}
-			</td>
 		</tr>
 	</tbody>
 </table>
