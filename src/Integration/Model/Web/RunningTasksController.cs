@@ -34,8 +34,8 @@ SELECT
 	[StepLog_Id],
 	[ErrorLog_Id]
 FROM [TaskLog]
-WHERE stepname IS NOT null
-ORDER BY timestamp DESC
+WHERE ExecutionTimeSeconds IS NULL
+AND ErrorLog_Id IS NULL
 ");
 
             IEnumerable<TaskLog> tasks;

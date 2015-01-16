@@ -209,6 +209,7 @@
     </Content>
     <None Include="packages.config" />
     <Content Include="Portal\Assets\js\app.js" />
+    <Content Include="Portal\Assets\js\controller\errorDetailController.js" />
     <Content Include="Portal\Assets\js\controller\latestTasksController.js" />
     <Content Include="Portal\Assets\js\controller\mainController.js" />
     <Content Include="Portal\Assets\js\controller\runningTasksController.js" />

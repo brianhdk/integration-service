@@ -17,16 +17,14 @@ integrationsApp.config(function ($routeProvider) {
 
         .when('/errors/:errorId', {
             templateUrl: '/assets/pages/errors-detail.html',
-            controller: 'errorsController'
+            controller: 'errorDetailController'
         })
 
-		 // route for the about page
         .when('/running-tasks', {
             templateUrl: '/assets/pages/runningTasks.html',
             controller: 'runningTasksController'
         })
 
-		 // route for the about page
         .when('/latest-tasks', {
             templateUrl: '/assets/pages/latestTasks.html',
             controller: 'latestTasksController'

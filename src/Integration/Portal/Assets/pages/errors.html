@@ -1,6 +1,4 @@
 ﻿<div class="panel panel-default">
-    <div class="panel-heading">Panel heading</div>
-
     <table class="table">
         <thead>
         <tr>
@@ -16,7 +14,7 @@
             <td>{{error.TimeStamp | date:'medium' }}</td>
             <td>{{error.Severity}}</td>
             <td>{{error.Target}}</td>
-            <td>{{error.Message}}</td>
+            <td>{{error.Message | limitTo: 100 }}{{error.Message.length > 100 ? '...' : ''}}</td>
             <td><a href="#/errors/{{error.Id}}">Details</a></td>
         </tr>
         </tbody>
