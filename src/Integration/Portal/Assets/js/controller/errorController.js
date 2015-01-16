@@ -16,11 +16,17 @@ integrationsApp.config(function ($routeProvider) {
         })
 	;
 });
-integrationsApp.controller('mainController', function ($scope) {
+integrationsApp.controller('mainController', function($scope, $location) {
+	$scope.isActive = function (route) {
+		return route === $location.path();
+	}
 	$scope.message = 'main controller.';
 });
-integrationsApp.controller('homeController', function ($scope) {
-	$scope.message = 'Look! I am a home page.';
+integrationsApp.controller('homeController', function ($scope, $http) {
+    $http.get("/errors").success(function (xhr) {
+        $scope.errors = xhr;
+    });
+
 });
 integrationsApp.controller('aboutController', function ($scope) {
 	$scope.message = 'Look! I am an about page.';
