@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Portal", "src\I
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Queues", "Queues", "{4C65514D-BB5F-4805-95F0-C6C64282C443}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Queues", "src\Integration.Queues\Integration.Queues.csproj", "{AF1C3604-872D-4CD9-966C-4D0A97489D5C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Messaging", "src\Integration.Messaging\Integration.Messaging.csproj", "{17065F64-27C5-4451-8D09-1F92B92ABCD2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,15 +37,15 @@ Global
 		{72FAEA58-3204-412F-A986-13C377007015}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72FAEA58-3204-412F-A986-13C377007015}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72FAEA58-3204-412F-A986-13C377007015}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AF1C3604-872D-4CD9-966C-4D0A97489D5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AF1C3604-872D-4CD9-966C-4D0A97489D5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AF1C3604-872D-4CD9-966C-4D0A97489D5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AF1C3604-872D-4CD9-966C-4D0A97489D5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17065F64-27C5-4451-8D09-1F92B92ABCD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17065F64-27C5-4451-8D09-1F92B92ABCD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17065F64-27C5-4451-8D09-1F92B92ABCD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17065F64-27C5-4451-8D09-1F92B92ABCD2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{AF1C3604-872D-4CD9-966C-4D0A97489D5C} = {4C65514D-BB5F-4805-95F0-C6C64282C443}
+		{17065F64-27C5-4451-8D09-1F92B92ABCD2} = {4C65514D-BB5F-4805-95F0-C6C64282C443}
 	EndGlobalSection
 EndGlobal
