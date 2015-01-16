@@ -62,6 +62,7 @@
       <HintPath>..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
@@ -122,6 +123,9 @@
     <Compile Include="Infrastructure\Database\NHibernate\Mappings\Infrastructure\Logging\MessageLogMap.cs" />
     <Compile Include="Infrastructure\Database\NHibernate\Mappings\Infrastructure\Logging\StepLogMap.cs" />
     <Compile Include="Infrastructure\Database\NHibernate\Mappings\Infrastructure\Logging\TaskLogMap.cs" />
+    <Compile Include="Infrastructure\Database\PetaPoco.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Infrastructure\Delay.cs" />
     <Compile Include="Infrastructure\Email\EmailService.cs" />
     <Compile Include="Infrastructure\Email\EmailTemplate.cs" />
@@ -193,19 +197,52 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-bold.svg" />
+    <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-extralight.svg" />
+    <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-regular.svg" />
+    <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-semibold.svg" />
+    <Content Include="Portal\Default.html" />
+    <Content Include="Portal\Assets\layout\css\style.less" />
+    <None Include="Portal\Assets\js\angular\angular-route.min.js.map" />
+    <None Include="Portal\Assets\js\angular\angular.min.js.map" />
+    <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-bold.eot" />
+    <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-bold.ttf" />
+    <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-bold.woff" />
+    <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-extralight.eot" />
+    <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-extralight.ttf" />
+    <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-extralight.woff" />
+    <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-regular.eot" />
+    <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-regular.ttf" />
+    <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-regular.woff" />
+    <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-semibold.eot" />
+    <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-semibold.ttf" />
+    <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-semibold.woff" />
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Portal\Assets\js\site.js" />
+    <Content Include="Portal\Assets\js\angular\angular-resource.min.js" />
+    <Content Include="Portal\Assets\js\angular\angular-route.min.js" />
+    <Content Include="Portal\Assets\js\angular\angular-sanitize.min.js" />
+    <Content Include="Portal\Assets\js\angular\angular.min.js" />
+    <Content Include="Portal\Assets\js\controller\errorController.js" />
+    <Content Include="Portal\Assets\layout\bootstrap\css\bootstrap.css" />
+    <Content Include="Portal\Assets\layout\bootstrap\css\prettify.css" />
+    <Content Include="Portal\Assets\layout\bootstrap\js\bootstrap.min.js" />
+    <Content Include="Portal\Assets\layout\bootstrap\js\prettify.js" />
+    <Content Include="Portal\Assets\layout\css\drunken-parrot-theme.css" />
+    <Content Include="Portal\Assets\layout\css\drunken-parrot.css" />
+    <Content Include="Portal\Assets\layout\css\style.css" />
+    <Content Include="Portal\Assets\pages\about.html" />
+    <Content Include="Portal\Assets\pages\home.html" />
     <Content Include="Portal\Assets\Style.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Portal\Default.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
