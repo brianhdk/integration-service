@@ -10,5 +10,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 		ErrorLog LogError(Exception exception, Target target = Target.Service);
 
         void LogEntry(LogEntry entry);
+
+        IDisposable Disable();
     }
 }
