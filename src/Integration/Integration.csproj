@@ -62,6 +62,7 @@
       <HintPath>..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
@@ -122,6 +123,9 @@
     <Compile Include="Infrastructure\Database\NHibernate\Mappings\Infrastructure\Logging\MessageLogMap.cs" />
     <Compile Include="Infrastructure\Database\NHibernate\Mappings\Infrastructure\Logging\StepLogMap.cs" />
     <Compile Include="Infrastructure\Database\NHibernate\Mappings\Infrastructure\Logging\TaskLogMap.cs" />
+    <Compile Include="Infrastructure\Database\PetaPoco.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Infrastructure\Delay.cs" />
     <Compile Include="Infrastructure\Email\EmailService.cs" />
     <Compile Include="Infrastructure\Email\EmailTemplate.cs" />
@@ -236,6 +240,9 @@
     <Content Include="Portal\Assets\Style.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
