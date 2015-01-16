@@ -23,8 +23,6 @@ integrationsApp.controller('mainController', function($scope, $location) {
 	$scope.message = 'main controller.';
 });
 integrationsApp.controller('homeController', function ($scope, $http) {
-    $scope.message = 'Look! I am a home page.';
-
     $http.get("/errors").success(function (xhr) {
         $scope.errors = xhr;
     });
