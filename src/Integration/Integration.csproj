@@ -188,6 +188,7 @@
     <Compile Include="Model\Web\ErrorsController.cs" />
     <Compile Include="Model\Web\ExceptionHandlingAttribute.cs" />
     <Compile Include="Model\Web\HomeController.cs" />
+    <Compile Include="Model\Web\LatestTasksController.cs" />
     <Compile Include="Model\Web\RunningTasksController.cs" />
     <Compile Include="Model\Web\TaskController.cs" />
     <Compile Include="Model\Web\WebApiHost.cs" />
@@ -208,8 +209,9 @@
     </Content>
     <None Include="packages.config" />
     <Content Include="Portal\Assets\js\app.js" />
+    <Content Include="Portal\Assets\js\controller\latestTasksController.js" />
     <Content Include="Portal\Assets\js\controller\mainController.js" />
-    <Content Include="Portal\Assets\js\controller\tasksController.js" />
+    <Content Include="Portal\Assets\js\controller\runningTasksController.js" />
     <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-bold.svg" />
     <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-extralight.svg" />
     <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-regular.svg" />

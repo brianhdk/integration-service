@@ -5,7 +5,7 @@
             <th>Name</th>
             <th>Step</th>
             <th>Message</th>
-            <th>TimeStamp</th>
+            <th>Time</th>
         </tr>
     </thead>
     <tbody>
@@ -13,7 +13,7 @@
             <td>{{task.TaskName}}</td>
             <td>{{task.StepName}}</td>
             <td>{{task.Message}}</td>
-            <td>{{task.TimeStamp}}</td>
+            <td>{{task.TimeStamp | date:'medium'}}</td>
         </tr>
     </tbody>
 </table>
