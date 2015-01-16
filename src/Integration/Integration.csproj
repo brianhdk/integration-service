@@ -176,6 +176,7 @@
     <Compile Include="Model\TaskRunner.cs" />
     <Compile Include="Model\TaskService.cs" />
     <Compile Include="Model\Web\DashboardController.cs" />
+    <Compile Include="Model\Web\AssetsController.cs" />
     <Compile Include="Model\Web\ExceptionHandlingAttribute.cs" />
     <Compile Include="Model\Web\Formatters\HtmlFormatter.cs" />
     <Compile Include="Model\Web\HomeController.cs" />
@@ -197,6 +198,14 @@
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Portal\Assets\Style.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Portal\Default.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -57,7 +57,6 @@ namespace Vertica.Integration.Domain.Monitoring
 		{
 		    SendTo(Target.Service, workItem, log, _settings.MonitorEmailRecipientsForService);
             SendTo(Target.Business, workItem, log, _settings.MonitorEmailRecipientsForBusiness);
-            SendTo(Target.BusinessFreightRelated, workItem, log, _settings.MonitorEmailRecipientsForBusinessFreightRelated);
 
 		    Parameters parameters = _parametersProvider.Get();
 			parameters.LastMonitorCheck = workItem.CheckRange.UpperBound;
@@ -67,6 +66,12 @@ namespace Vertica.Integration.Domain.Monitoring
 
 	    private void SendTo(Target target, MonitorWorkItem workItem, Log log, StringCollection recipients)
 	    {
+	        if (recipients == null)
+	        {
+	            log.Warning(Target.Service, "No recipients found for target '{0}'.", target);
+	            return;
+	        }
+
             MonitorEntry[] entries = workItem.GetEntries(target);
 
 	        if (entries.Length > 0)

@@ -12,7 +12,7 @@ using Vertica.Utilities_v4.Extensions.EnumerableExt;
 
 namespace Vertica.Integration.Domain.Monitoring
 {
-	public class ExportIntegrationErrorsStep : Step<MonitorWorkItem>
+    public class ExportIntegrationErrorsStep : Step<MonitorWorkItem>
 	{
 		private readonly Lazy<ISessionFactoryProvider> _sessionFactory;
 		private readonly ITaskService _taskService;

@@ -12,7 +12,6 @@ namespace Vertica.Integration.Infrastructure.Configuration
 		public virtual int Id { get; protected set; }
 
 		public virtual DateTimeOffset LastMonitorCheck { get; set; }
-		public virtual DateTimeOffset LastCatalogImport { get; set; }
 
 		private void SetDefaults()
 		{

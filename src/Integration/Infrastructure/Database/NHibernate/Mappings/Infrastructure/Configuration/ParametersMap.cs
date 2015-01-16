@@ -10,7 +10,6 @@ namespace Vertica.Integration.Infrastructure.Database.NHibernate.Mappings.Infras
 			Id(x => x.Id).GeneratedBy.Assigned();
 
 			Map(x => x.LastMonitorCheck);
-			Map(x => x.LastCatalogImport);
 		}
 	}
 }
