@@ -65,6 +65,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Integration.Experiments\Integration.Experiments.csproj">
+      <Project>{a418ff22-74e1-42eb-a0bf-97da7993647b}</Project>
+      <Name>Integration.Experiments</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Integration.Logging.Elmah\Integration.Logging.Elmah.csproj">
       <Project>{6d28c1ce-7eae-44a2-8624-a879f7af7021}</Project>
       <Name>Integration.Logging.Elmah</Name>
