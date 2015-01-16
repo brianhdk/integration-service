@@ -10,26 +10,30 @@ namespace Vertica.Integration.Domain.Monitoring
 {
     public class MonitorWorkItem
     {
-	    private readonly Range<DateTimeOffset> _checkRange;
+        private readonly Range<DateTimeOffset> _checkRange;
 	    private readonly List<Tuple<Target, MonitorEntry>> _entries;
 	    private readonly ISpecification<MonitorEntry>[] _ignoreFilters;
 
-	    public MonitorWorkItem(DateTimeOffset lastErrorCheck, params ISpecification<MonitorEntry>[] ignoreFilters)
+	    public MonitorWorkItem(DateTimeOffset lastErrorCheck, bool updateLastCheck, params ISpecification<MonitorEntry>[] ignoreFilters)
         {
-		    var upperBound = Time.UtcNow;
+	        var upperBound = Time.UtcNow;
 
 		    if (lastErrorCheck > upperBound)
                 upperBound = lastErrorCheck;
+
+	        UpdateLastCheck = updateLastCheck;
 
 		    _checkRange = new Range<DateTimeOffset>(lastErrorCheck, upperBound);
 		    _entries = new List<Tuple<Target, MonitorEntry>>();
 		    _ignoreFilters = ignoreFilters.EmptyIfNull().SkipNulls().ToArray();
         }
 
-		public Range<DateTimeOffset> CheckRange
+        public Range<DateTimeOffset> CheckRange
 		{
 			get { return _checkRange; }
 		}
+
+        public bool UpdateLastCheck { get; private set; }
 
         public void Add(MonitorEntry entry, Target target)
         {
