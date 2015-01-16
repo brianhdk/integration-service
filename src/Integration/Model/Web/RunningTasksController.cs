@@ -19,40 +19,10 @@ namespace Vertica.Integration.Model.Web
             _sessionFactory = sessionFactory;
         }
 
-        public HttpResponseMessage Get()
-        {
-            var query = @"
-SELECT
-	[Id],
-	[Type],
-	[TaskName],
-	[StepName],
-	[Message],
-	[ExecutionTimeSeconds],
-	[TimeStamp],
-	[TaskLog_Id],
-	[StepLog_Id],
-	[ErrorLog_Id]
-FROM [TaskLog]
-WHERE ExecutionTimeSeconds IS NULL
-AND ErrorLog_Id IS NULL
-";
-
-            IEnumerable<TaskLog> tasks;
-
-            using (IStatelessSession session = _sessionFactory.SessionFactory.OpenStatelessSession())
-            using (Database db = new PetaPoco.Database(session.Connection))
-            {
-                tasks = db.Query<TaskLog>(query).ToList();
-            }
-
-            return Request.CreateResponse(HttpStatusCode.OK, tasks);
-        }
-
-        public HttpResponseMessage Get(int count)
+        public HttpResponseMessage Get(int count = 100)
         {
             var query = string.Format(@"
-SELECT {0}
+SELECT top {0}
 	[Id],
 	[Type],
 	[TaskName],
