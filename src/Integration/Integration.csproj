@@ -211,6 +211,7 @@
     <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-extralight.svg" />
     <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-regular.svg" />
     <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-semibold.svg" />
+    <Content Include="Portal\Assets\pages\latestTasks.html" />
     <Content Include="Portal\Default.html" />
     <Content Include="Portal\Assets\layout\css\style.less" />
     <None Include="Portal\Assets\js\angular\angular-route.min.js.map" />
@@ -245,7 +246,7 @@
     <Content Include="Portal\Assets\layout\css\drunken-parrot-theme.css" />
     <Content Include="Portal\Assets\layout\css\drunken-parrot.css" />
     <Content Include="Portal\Assets\layout\css\style.css" />
-    <Content Include="Portal\Assets\pages\about.html" />
+    <Content Include="Portal\Assets\pages\runningTasks.html" />
     <Content Include="Portal\Assets\pages\home.html" />
     <Content Include="Portal\Assets\Style.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

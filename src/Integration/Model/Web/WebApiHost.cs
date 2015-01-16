@@ -34,6 +34,12 @@ namespace Vertica.Integration.Model.Web
                 var configuration = new HttpConfiguration();
                 configuration.Formatters.Remove(configuration.Formatters.XmlFormatter);
 
+                configuration.Formatters.JsonFormatter.SerializerSettings.Formatting =
+                    Newtonsoft.Json.Formatting.Indented;
+
+                configuration.Formatters.JsonFormatter.SerializerSettings.Converters.Add
+                    (new Newtonsoft.Json.Converters.StringEnumConverter());
+
                 configuration.Routes.MapHttpRoute(
                     name: "WebApi",
                     routeTemplate: "{controller}",
@@ -47,7 +53,7 @@ namespace Vertica.Integration.Model.Web
                 configuration.Filters.Add(new ExceptionHandlingAttribute(logger));
 
                 configuration.Services.Replace(typeof(IHttpControllerActivator), new CustomResolver(ObjectFactory.Instance));
-                
+
                 builder.UseWebApi(configuration);
 
                 configuration.Properties[ContextKey] = new Context(taskName, task, arguments);

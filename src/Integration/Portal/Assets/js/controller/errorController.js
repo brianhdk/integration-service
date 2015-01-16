@@ -10,9 +10,15 @@ integrationsApp.config(function ($routeProvider) {
 		})
 
 		 // route for the about page
-        .when('/about', {
-        	templateUrl: '/assets/pages/about.html',
-            controller: 'aboutController'
+        .when('/running-tasks', {
+        	templateUrl: '/assets/pages/runningTasks.html',
+        	controller: 'runningTasksController'
+        })
+
+		 // route for the about page
+        .when('/latest-tasks', {
+        	templateUrl: '/assets/pages/latestTasks.html',
+        	controller: 'latestTasksController'
         })
 	;
 });
@@ -28,6 +34,15 @@ integrationsApp.controller('homeController', function ($scope, $http) {
     });
 
 });
-integrationsApp.controller('aboutController', function ($scope) {
-	$scope.message = 'Look! I am an about page.';
+integrationsApp.controller('runningTasksController', function ($scope, $http) {
+
+	$http.get("/runningtasks").success(function (xhr) {
+		$scope.tasks = xhr;
+	});
+});
+integrationsApp.controller('latestTasksController', function ($scope, $http) {
+
+	$http.get("/runningtasks?count=100").success(function (xhr) {
+		$scope.tasks = xhr;
+	});
 });
