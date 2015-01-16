@@ -1,15 +1,32 @@
 ﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" ng-app="integrationsApp">
 <head>
-    <meta charset="utf-8"/>
-    <link href="/Assets/Style.css" rel="stylesheet"/>
-    <title>Integration Service</title>
+    <meta charset="utf-8">
+    <title>Task Manager Portal</title>
+    <link href="assets/layout/bootstrap/css/bootstrap.css" rel="stylesheet">
+	<link href="assets/layout/css/style.css" rel="stylesheet" />
+	<link href="assets/layout/css/drunken-parrot.css" rel="stylesheet" />
+	<link href="assets/layout/css/drunken-parrot-theme.css" rel="stylesheet" />
+	<script src="assets/js/angular/angular.min.js"></script>
+	<script src="assets/js/angular/angular-route.min.js"></script>
+	<script src="assets/js/controller/errorController.js"></script>
 </head>
-<body>
-Portal up and running!!
-
-<span class="blue">yay!</span>
-<script src="/Assets/js/site.js"></script>
+<body ng-controller="mainController">
+	<div class="masthead palette-the-black-flag">
+		<div class="container">
+			<div class="masthead-title">
+				Task Manager Portal
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<ul class="nav nav-pills nav-stacked col-md-2">
+			<li><a href="#/">Home</a></li>
+			<li><a href="#about">about</a></li>
+		</ul>
+		<div class="col-md-8">
+			<div ng-view></div>
+		</div>
+	</div>
 </body>
 </html>
