@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NHibernate;
 using Vertica.Integration.Infrastructure.Database.NHibernate;
 using Vertica.Integration.Properties;
@@ -10,10 +11,15 @@ namespace Vertica.Integration.Infrastructure.Logging
 		private readonly Lazy<ISessionFactoryProvider> _provider;
 	    private readonly ISettings _settings;
 
+        private readonly object _dummy = new object();
+	    private readonly Stack<object> _disablers;
+
 		public Logger(Lazy<ISessionFactoryProvider> provider, ISettings settings)
 		{
 		    _provider = provider;
 		    _settings = settings;
+
+		    _disablers = new Stack<object>();
 		}
 
 	    public ErrorLog LogError(Target target, string message, params object[] args)
@@ -37,7 +43,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 		{
 			if (logEntry == null) throw new ArgumentNullException("logEntry");
 
-		    if (_settings.DisableDatabaseLog)
+		    if (_disablers.Count > 0 || _settings.DisableDatabaseLog)
 		        return;
 
 			using (IStatelessSession session = _provider.Value.SessionFactory.OpenStatelessSession())
@@ -55,6 +61,27 @@ namespace Vertica.Integration.Infrastructure.Logging
 				transaction.Commit();
 			}
 		}
+
+	    public IDisposable Disable()
+	    {
+	        _disablers.Push(_dummy);
+	        return new Disabler(() => _disablers.Pop());;
+	    }
+
+	    private class Disabler : IDisposable
+	    {
+	        private readonly Action _disposed;
+
+	        public Disabler(Action disposed)
+	        {
+	            _disposed = disposed;
+	        }
+
+	        public void Dispose()
+	        {
+	            _disposed();
+	        }
+	    }
 
 	    private ErrorLog Log(ErrorLog errorLog)
 	    {

@@ -7,7 +7,7 @@ namespace Vertica.Integration.Infrastructure.Database.NHibernate.Mappings.Infras
     {
          public LogEntryMap()
          {
-             Table("TaskLog");
+             Table(Tables.TaskLog);
 
              Id(x => x.Id);
              Map(x => x.TaskName);
