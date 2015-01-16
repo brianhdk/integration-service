@@ -1,6 +1,31 @@
 ﻿
-<div ng-repeat="task in tasks">
-	{{task.TaskName}}
-	{{task.Message}}
-	{{task.TimeStamp}}
+
+<div>
+	<div class="panel panel-default">
+		<div class="panel-heading">Panel heading</div>
+
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Task name</th>
+					<th>Message</th>
+					<th>Timestamp</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="task in tasks">
+					<td>
+						{{task.TaskName}}
+					</td>
+					<td>
+						{{task.Message}}
+					</td>
+					<td>
+						{{task.TimeStamp | date:'yyyy-MM-dd HH:mm:ss'}}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
 </div>
