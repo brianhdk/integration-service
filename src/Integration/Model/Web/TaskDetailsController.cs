@@ -11,46 +11,26 @@ namespace Vertica.Integration.Model.Web
     public class TaskDetailsController : ApiController
 	{
 		private readonly IDbFactory _dbFactory;
+		private readonly ITaskService _taskService;
 
-		public TaskDetailsController(IDbFactory dbFactory)
-	    {
-		    _dbFactory = dbFactory;
-	    }
+		public TaskDetailsController(IDbFactory dbFactory, ITaskService taskService)
+		{
+			_dbFactory = dbFactory;
+			_taskService = taskService;
+		}
 
 	    public HttpResponseMessage Get()
-        {
-            var query = string.Format(@"
-SELECT [TaskName]
-FROM [TaskLog]
-Group by [TaskName]
-");
-
-            IEnumerable<TaskLog> tasks;
-
-			using (IDb db = _dbFactory.OpenDatabase())
-			{
-                tasks = db.Query<TaskLog>(query).ToList();
-            }
-
-            return Request.CreateResponse(HttpStatusCode.OK, tasks);
+		{
+			var tasks = _taskService.GetAll().ToList();
+		    return Request.CreateResponse(HttpStatusCode.OK, tasks);
         }
 
-	    public HttpResponseMessage Get(string taskName)
-        {
-            var query = string.Format(@"
-SELECT [TaskName]
-FROM [TaskLog]
-WHERE taskname = {0}
-", taskName);
+	    public HttpResponseMessage Get(string displayName)
+	    {
+		    var task = _taskService.GetAll().FirstOrDefault(x => x.DisplayName == displayName);
 
-            IEnumerable<TaskLog> tasks;
 
-			using (IDb db = _dbFactory.OpenDatabase())
-			{
-                tasks = db.Query<TaskLog>(query).ToList();
-            }
-
-            return Request.CreateResponse(HttpStatusCode.OK, tasks);
+			return Request.CreateResponse(HttpStatusCode.OK, task);
         }
     }
 }
