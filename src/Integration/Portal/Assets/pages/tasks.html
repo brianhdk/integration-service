@@ -1,9 +1,11 @@
-﻿<div class="panel panel-default">
+﻿<div class="panel panel-default" ng-init="init()">
 	<table ng-table="tableParams" show-filter="true" class="table">
 		<tbody>
 			<tr ng-repeat="task in $data">
-				<td data-title="'TaskName'" sortable="'TaskName'" filter="{ 'TaskName': 'text' }">{{task.TaskName}}</td>
-				<td><a ng-href="#/taskdetails?taskname={{task.TaskName}}">Details</a></td>
+				<td data-title="'DisplayName'" sortable="'DisplayName'" filter="{ 'DisplayName': 'text' }">{{task.DisplayName}}</td>
+				<td data-title="'Description'" sortable="'Description'" filter="{ 'Description': 'text' }">{{task.Description}}</td>
+				<td data-title="'Schedule'" sortable="'Schedule'" filter="{ 'Schedule': 'text' }">{{task.Schedule}}</td>
+				<td><a ng-href="#taskdetail?displayname={{task.DisplayName}}" >Details</a></td>
 			</tr>
 		</tbody>
 	</table>

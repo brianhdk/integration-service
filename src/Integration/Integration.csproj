@@ -240,6 +240,7 @@
     <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-semibold.svg" />
     <Content Include="Portal\Assets\pages\errors-detail.html" />
     <Content Include="Portal\Assets\pages\errors.html" />
+    <Content Include="Portal\Assets\pages\taskDetail.html" />
     <Content Include="Portal\Assets\pages\tasks.html" />
     <Content Include="Portal\Assets\pages\latestTasks.html" />
     <Content Include="Portal\Default.html" />
