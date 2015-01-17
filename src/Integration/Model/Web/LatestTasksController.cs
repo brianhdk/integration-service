@@ -44,21 +44,5 @@ ORDER BY timestamp DESC
 
             return Request.CreateResponse(HttpStatusCode.OK, tasks);
         }
-
-		public HttpResponseMessage Get()
-		{
-			var query = string.Format(@"
-SELECT [TaskName]
-  FROM [TaskLog] group by TaskName");
-
-			IEnumerable<string> taskNames;
-
-			using (IDb db = _dbFactory.OpenDatabase())
-			{
-				taskNames = db.Query<string>(query).ToList();
-			}
-
-			return Request.CreateResponse(HttpStatusCode.OK, taskNames);
-		}
     }
 }
