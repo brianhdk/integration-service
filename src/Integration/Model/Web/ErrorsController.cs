@@ -3,21 +3,18 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using NHibernate;
 using Vertica.Integration.Infrastructure.Database;
-using Vertica.Integration.Infrastructure.Database.NHibernate;
-using Vertica.Integration.Infrastructure.Database.PetaPoco;
 using Vertica.Integration.Infrastructure.Logging;
 
 namespace Vertica.Integration.Model.Web
 {
     public class ErrorsController : ApiController
     {
-        private readonly ISessionFactoryProvider _sessionFactory;
+        private readonly IDbFactory _dbFactory;
 
-        public ErrorsController(ISessionFactoryProvider sessionFactory)
+        public ErrorsController(IDbFactory dbFactory)
         {
-            _sessionFactory = sessionFactory;
+            _dbFactory = dbFactory;
         }
 
         public HttpResponseMessage Get()
@@ -38,9 +35,9 @@ SELECT TOP 100 [Id]
 
             IEnumerable<ErrorLog> errors;
 
-            using (IStatelessSession session = _sessionFactory.SessionFactory.OpenStatelessSession())
-            using (Database db = new Database(session.Connection))
+            using (var db = _dbFactory.OpenDatabase())
             {
+                //errors = db.Page<ErrorLog>(1, 20, query).Items;
                 errors = db.Query<ErrorLog>(query).ToList();
             }
 
@@ -65,8 +62,7 @@ SELECT TOP 100 [Id]
 
             ErrorLog error;
 
-            using (IStatelessSession session = _sessionFactory.SessionFactory.OpenStatelessSession())
-            using (Database db = new Database(session.Connection))
+            using (var db = _dbFactory.OpenDatabase())
             {
                 error = db.SingleOrDefault<ErrorLog>(query, id);
             }

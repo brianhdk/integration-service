@@ -3,24 +3,21 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using NHibernate;
 using Vertica.Integration.Infrastructure.Database;
-using Vertica.Integration.Infrastructure.Database.NHibernate;
-using Vertica.Integration.Infrastructure.Database.PetaPoco;
 using Vertica.Integration.Infrastructure.Logging;
 
 namespace Vertica.Integration.Model.Web
 {
     public class LatestTasksController : ApiController
-    {
-        private readonly ISessionFactoryProvider _sessionFactory;
+	{
+		private readonly IDbFactory _dbFactory;
 
-        public LatestTasksController(ISessionFactoryProvider sessionFactory)
-        {
-            _sessionFactory = sessionFactory;
-        }
+	    public LatestTasksController(IDbFactory dbFactory)
+	    {
+		    _dbFactory = dbFactory;
+	    }
 
-        public HttpResponseMessage Get(int count)
+	    public HttpResponseMessage Get(int count)
         {
             var query = string.Format(@"
 SELECT TOP {0}
@@ -35,15 +32,13 @@ SELECT TOP {0}
 	[StepLog_Id],
 	[ErrorLog_Id]
 FROM [TaskLog]
-WHERE stepname IS NOT null
 ORDER BY timestamp DESC
-", count == 0 ? 10 : count);
+", count);
 
             IEnumerable<TaskLog> tasks;
 
-            using (IStatelessSession session = _sessionFactory.SessionFactory.OpenStatelessSession())
-            using (Database db = new Database(session.Connection))
-            {
+			using (IDb db = _dbFactory.OpenDatabase())
+			{
                 tasks = db.Query<TaskLog>(query).ToList();
             }
 
