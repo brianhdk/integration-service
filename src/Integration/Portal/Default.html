@@ -21,6 +21,7 @@
 	<script src="assets/js/controller/errorsController.js"></script>
 	<script src="assets/js/controller/errorDetailController.js"></script>
 	<script src="assets/js/controller/taskDetailsController.js"></script>
+    <script src="assets/js/controller/taskExecutionDetailsController.js"></script>
 </head>
 <body ng-controller="mainController">
 	<div class="masthead palette-the-black-flag">
@@ -34,7 +35,7 @@
 		<ul class="nav nav-pills nav-stacked col-md-2">
 			<li ng-class="{'active' : isActive('/')}"><a href="#/">Home</a></li>
 			<li ng-class="{'active' : isActive('/errors')}"><a href="#errors">Errors</a></li>
-			<li ng-class="{'active' : isActive('/tasks')}"><a href="#tasks">Tasks</a></li>
+			<li ng-class="{'active' : isActive('/tasks')}"><a href="#tasks">Task Types</a></li>
 			<li ng-class="{'active' : isActive('/running-tasks')}"><a href="#running-tasks">Running tasks</a></li>
 			<li ng-class="{'active' : isActive('/latest-tasks')}"><a href="#latest-tasks">Latest tasks</a></li>
 		</ul>
