@@ -202,6 +202,7 @@
     <Compile Include="Model\Web\ErrorsController.cs" />
     <Compile Include="Model\Web\ExceptionHandlingAttribute.cs" />
     <Compile Include="Model\Web\HomeController.cs" />
+    <Compile Include="Model\Web\TaskDetailsController.cs" />
     <Compile Include="Model\Web\LatestTasksController.cs" />
     <Compile Include="Model\Web\RunningTasksController.cs" />
     <Compile Include="Model\Web\TaskController.cs" />
@@ -231,12 +232,14 @@
     <Content Include="Portal\Assets\js\controller\latestTasksController.js" />
     <Content Include="Portal\Assets\js\controller\mainController.js" />
     <Content Include="Portal\Assets\js\controller\runningTasksController.js" />
+    <Content Include="Portal\Assets\js\controller\taskDetailsController.js" />
     <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-bold.svg" />
     <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-extralight.svg" />
     <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-regular.svg" />
     <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-semibold.svg" />
     <Content Include="Portal\Assets\pages\errors-detail.html" />
     <Content Include="Portal\Assets\pages\errors.html" />
+    <Content Include="Portal\Assets\pages\tasks.html" />
     <Content Include="Portal\Assets\pages\latestTasks.html" />
     <Content Include="Portal\Default.html" />
     <None Include="Portal\Assets\js\angular\angular-route.min.js.map" />
