@@ -1,21 +1,12 @@
-﻿
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Step</th>
-            <th>Message</th>
-            <th>TimeStamp</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr ng-repeat="task in tasks">
-            <td>{{task.TaskName}}</td>
-            <td>{{task.StepName}}</td>
-            <td>{{task.Message}}</td>
-            <td>{{task.TimeStamp}}</td>
-        </tr>
-    </tbody>
-</table>
-
-<div ng-hide="errors.length">No items found</div>
+﻿<div class="panel panel-default">
+	<table ng-table="tableParams" show-filter="true" class="table">
+		<tbody>
+			<tr ng-repeat="error in $data">
+				<td>{{error.TimeStamp | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+				<td data-title="'TaskName'" sortable="'TaskName'" filter="{ 'TaskName': 'text' }">{{error.TaskName}}</td>
+				<td data-title="'StepName'" sortable="'StepName'" filter="{ 'StepName': 'text' }">{{error.StepName}}</td>
+				<td data-title="'Message'" sortable="'Message'" filter="{ 'Message': 'text' }">{{error.Message | limitTo: 60 }}{{error.Message.length > 60 ? '...' : ''}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
