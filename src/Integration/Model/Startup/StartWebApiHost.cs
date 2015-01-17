@@ -37,8 +37,37 @@ namespace Vertica.Integration.Model.Startup
                 do
                 {
                     Console.WriteLine();
-                    Console.WriteLine("Press ESCAPE to stop web-service.");
+                    Console.WriteLine("Press ESCAPE to stop web-service..");
                     Console.WriteLine();
+
+//#if DEBUG
+//                    System.Threading.Tasks.Task.Factory.StartNew(() =>
+//                    {
+//                        var assembly = new FileInfo(typeof(StartWebApiHost).Assembly.Location).Directory;
+
+//                        if (assembly != null)
+//                        {
+//                            string codeRoot = Path.Combine(assembly.FullName, @"..\..\..\");
+
+//                            using (var watcher = new FileSystemWatcher(codeRoot, "build.watch"))
+//                            {
+//                                watcher.IncludeSubdirectories = true;
+//                                watcher.Changed += (o, args) =>
+//                                {
+//                                    IntPtr windowHandle = Process.GetCurrentProcess().MainWindowHandle;
+//                                    bool postMessage = PostMessage(windowHandle, 0x0100, 0x1B, 0);
+
+//                                    Console.WriteLine("POST: {0}", postMessage);
+//                                };
+//                                string s = "ssssssssss";
+
+//                                watcher.EnableRaisingEvents = true;
+
+//                                Thread.Sleep(Timeout.Infinite);
+//                            }
+//                        }
+//                    });
+//#endif
 
                 } while (WaitingForEscape());
             }
@@ -46,7 +75,12 @@ namespace Vertica.Integration.Model.Startup
 
         private static bool WaitingForEscape()
         {
-            return Console.ReadKey(true /* will not display */).Key != ConsoleKey.Escape;
+            return Console.ReadKey(intercept: true /* don't display */).Key != ConsoleKey.Escape;
         }
+
+//#if DEBUG
+//        [DllImport("user32.dll")]
+//        static extern bool PostMessage(IntPtr hWnd, uint Msg, int wParam, int lParam);
+//#endif
     }
 }
