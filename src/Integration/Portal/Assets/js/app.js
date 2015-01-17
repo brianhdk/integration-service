@@ -25,18 +25,23 @@ integrationsApp.config(function ($routeProvider) {
             controller: 'taskDetailsController'
         })
 
+        .when('/taskexecutiondetail/:taskId', {
+            templateUrl: '/assets/pages/taskList.html',
+            controller: 'taskExecutionDetailsController'
+        })
+
         .when('/errors/:errorId', {
             templateUrl: '/assets/pages/errors-detail.html',
             controller: 'errorDetailController'
         })
 
         .when('/running-tasks', {
-            templateUrl: '/assets/pages/runningTasks.html',
+            templateUrl: '/assets/pages/taskList.html',
             controller: 'runningTasksController'
         })
 
         .when('/latest-tasks', {
-            templateUrl: '/assets/pages/latestTasks.html',
+            templateUrl: '/assets/pages/taskList.html',
             controller: 'latestTasksController'
         })
     ;

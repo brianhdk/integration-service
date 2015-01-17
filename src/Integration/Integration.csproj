@@ -207,6 +207,7 @@
     <Compile Include="Model\Web\LatestTasksController.cs" />
     <Compile Include="Model\Web\RunningTasksController.cs" />
     <Compile Include="Model\Web\TaskController.cs" />
+    <Compile Include="Model\Web\TaskExecutionDetailsController.cs" />
     <Compile Include="Model\Web\WebApiHost.cs" />
     <Compile Include="Model\Web\WebApiTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -236,6 +237,7 @@
     <Content Include="Portal\Assets\js\controller\mainController.js" />
     <Content Include="Portal\Assets\js\controller\runningTasksController.js" />
     <Content Include="Portal\Assets\js\controller\taskDetailsController.js" />
+    <Content Include="Portal\Assets\js\controller\taskExecutionDetailsController.js" />
     <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-bold.svg" />
     <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-extralight.svg" />
     <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-regular.svg" />
@@ -243,8 +245,9 @@
     <Content Include="Portal\Assets\pages\errors-detail.html" />
     <Content Include="Portal\Assets\pages\errors.html" />
     <Content Include="Portal\Assets\pages\taskDetail.html" />
+    <Content Include="Portal\Assets\pages\taskExecutionDetail.html" />
+    <Content Include="Portal\Assets\pages\taskList.html" />
     <Content Include="Portal\Assets\pages\tasks.html" />
-    <Content Include="Portal\Assets\pages\latestTasks.html" />
     <Content Include="Portal\Default.html" />
     <None Include="Portal\Assets\js\angular\angular-route.min.js.map" />
     <None Include="Portal\Assets\js\angular\angular.min.js.map" />
@@ -280,7 +283,6 @@
     <Content Include="Portal\Assets\layout\css\drunken-parrot-theme.css" />
     <Content Include="Portal\Assets\layout\css\drunken-parrot.css" />
     <Content Include="Portal\Assets\layout\css\style.css" />
-    <Content Include="Portal\Assets\pages\runningTasks.html" />
     <Content Include="Portal\Assets\pages\main.html" />
     <Content Include="Portal\Assets\Style.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

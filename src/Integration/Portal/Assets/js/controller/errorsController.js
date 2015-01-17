@@ -1,5 +1,26 @@
 ﻿integrationsApp.controller('errorsController', function ($scope, $http, $filter, ngTableParams) {
 
+    //this.tableParams = new ngTableParams({
+    //    page: 1,
+    //    count: 10
+    //}, {
+    //    getData: function ($defer, params) {
+    //        $http.get('/errors', {
+    //            params: {
+    //                pageNumber: params.page() - 1,
+    //                rangeStart: rangeStart,
+    //                rangeStop: rangeStop
+    //            }
+    //        })
+    //            .success(function (data) {
+
+    //                params.total(data.TotalItems);
+
+    //                $defer.resolve(data.Items);
+    //            });
+    //    }
+    //});
+
     $http.get("/errors").success(function (xhr) {
         var data = xhr;
 
@@ -14,17 +35,12 @@
             }
         }, {
             getData: function ($defer, params) {
-                var filteredData = params.filter() ?
-                                   $filter('filter')(data, params.filter()) :
-                                   data;
+                //data = params.filter() ? $filter('filter')(data, params.filter()) : data;
+                //data = params.sorting() ? $filter('orderBy')(data, params.orderBy()) : data;
 
-                var orderedData = params.sorting() ?
-                                    $filter('orderBy')(filteredData, params.orderBy()) :
-                                    filteredData;
+                params.total(data.TotalItems);
 
-                params.total(orderedData.length);
-
-                $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+                $defer.resolve(data.Items.slice((params.page() - 1) * params.count(), params.page() * params.count()));
             }
         });
 
