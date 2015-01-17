@@ -12,7 +12,7 @@
 
 	$scope.getTaskNames = function () {
 		$http.get("/latestTasks").success(function (xhr) {
-			$scope.tasksNames = xhr;
+			$scope.taskNames = xhr;
 		});
 	}
 });

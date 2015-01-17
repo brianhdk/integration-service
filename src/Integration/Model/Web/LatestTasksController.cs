@@ -5,23 +5,21 @@ using System.Net.Http;
 using System.Web.Http;
 using NHibernate;
 using Vertica.Integration.Infrastructure.Database;
-using Vertica.Integration.Infrastructure.Database.NHibernate;
 using Vertica.Integration.Infrastructure.Database.PetaPoco;
 using Vertica.Integration.Infrastructure.Logging;
-using Vertica.Utilities_v4.Extensions.StringExt;
 
 namespace Vertica.Integration.Model.Web
 {
     public class LatestTasksController : ApiController
-    {
-        private readonly ISessionFactoryProvider _sessionFactory;
+	{
+		private readonly IDbFactory _factory;
 
-        public LatestTasksController(ISessionFactoryProvider sessionFactory)
-        {
-            _sessionFactory = sessionFactory;
-        }
+	    public LatestTasksController(IDbFactory factory)
+	    {
+		    _factory = factory;
+	    }
 
-        public HttpResponseMessage Get(int count)
+	    public HttpResponseMessage Get(int count)
         {
             var query = string.Format(@"
 SELECT TOP {0}
@@ -41,9 +39,8 @@ ORDER BY timestamp DESC
 
             IEnumerable<TaskLog> tasks;
 
-            using (IStatelessSession session = _sessionFactory.SessionFactory.OpenStatelessSession())
-            using (Database db = new Database(session.Connection))
-            {
+			using (IDb db = _factory.OpenDatabase())
+			{
                 tasks = db.Query<TaskLog>(query).ToList();
             }
 
@@ -58,8 +55,8 @@ SELECT [TaskName]
 
 			IEnumerable<string> taskNames;
 
-			using (IStatelessSession session = _sessionFactory.SessionFactory.OpenStatelessSession())
-			using (Database db = new PetaPoco.Database(session.Connection))
+
+			using (IDb db = _factory.OpenDatabase())
 			{
 				taskNames = db.Query<string>(query).ToList();
 			}
