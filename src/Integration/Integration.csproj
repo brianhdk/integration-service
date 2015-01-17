@@ -118,6 +118,10 @@
     <Compile Include="Infrastructure\Configuration\IParametersProvider.cs" />
     <Compile Include="Infrastructure\Configuration\Parameters.cs" />
     <Compile Include="Infrastructure\Configuration\ParametersProvider.cs" />
+    <Compile Include="Infrastructure\Database\IDb.cs" />
+    <Compile Include="Infrastructure\Database\IDbFactory.cs" />
+    <Compile Include="Infrastructure\Database\Db.cs" />
+    <Compile Include="Infrastructure\Database\Castle.Windsor\DbInstaller.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M1_Baseline.cs" />
     <Compile Include="Infrastructure\Database\Migrations\MigrateTask.cs" />
     <Compile Include="Infrastructure\Database\Migrations\MigrationExtensions.cs" />
@@ -137,7 +141,7 @@
     <Compile Include="Infrastructure\Database\NHibernate\Mappings\Infrastructure\Logging\MessageLogMap.cs" />
     <Compile Include="Infrastructure\Database\NHibernate\Mappings\Infrastructure\Logging\StepLogMap.cs" />
     <Compile Include="Infrastructure\Database\NHibernate\Mappings\Infrastructure\Logging\TaskLogMap.cs" />
-    <Compile Include="Infrastructure\Database\PetaPoco.cs">
+    <Compile Include="Infrastructure\Database\PetaPoco\PetaPoco.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Infrastructure\Delay.cs" />
@@ -272,6 +276,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

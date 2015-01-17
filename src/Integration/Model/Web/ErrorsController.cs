@@ -4,8 +4,9 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using NHibernate;
-using PetaPoco;
+using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Database.NHibernate;
+using Vertica.Integration.Infrastructure.Database.PetaPoco;
 using Vertica.Integration.Infrastructure.Logging;
 
 namespace Vertica.Integration.Model.Web
@@ -38,7 +39,7 @@ SELECT TOP 100 [Id]
             IEnumerable<ErrorLog> errors;
 
             using (IStatelessSession session = _sessionFactory.SessionFactory.OpenStatelessSession())
-            using (Database db = new PetaPoco.Database(session.Connection))
+            using (Database db = new Database(session.Connection))
             {
                 errors = db.Query<ErrorLog>(query).ToList();
             }
@@ -65,7 +66,7 @@ SELECT TOP 100 [Id]
             ErrorLog error;
 
             using (IStatelessSession session = _sessionFactory.SessionFactory.OpenStatelessSession())
-            using (Database db = new PetaPoco.Database(session.Connection))
+            using (Database db = new Database(session.Connection))
             {
                 error = db.SingleOrDefault<ErrorLog>(query, id);
             }
