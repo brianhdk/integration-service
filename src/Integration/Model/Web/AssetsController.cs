@@ -11,7 +11,7 @@ namespace Vertica.Integration.Model.Web
     public class AssetsController : ApiController
     {
         private static readonly string Root = Path.Combine(
-            new FileInfo(typeof(AssetsController).Assembly.Location).DirectoryName ?? String.Empty, 
+            new FileInfo(typeof(AssetsController).Assembly.Location).DirectoryName ?? String.Empty,
             "Portal");
 
         public HttpResponseMessage Get(string path)
@@ -24,12 +24,12 @@ namespace Vertica.Integration.Model.Web
             if (request == null) throw new ArgumentNullException("request");
             if (String.IsNullOrWhiteSpace(path)) throw new ArgumentException(@"Value cannot be null or empty.", "path");
 
-            #if DEBUG
-                const string codeFileDirectory = @"..\..\..\..\Integration\Portal\";
+#if DEBUG
+            const string codeFileDirectory = @"..\..\..\..\Integration\Portal\";
 
-                if (Directory.Exists(Path.Combine(Root, codeFileDirectory)))
-                    path = String.Concat(codeFileDirectory, path);
-            #endif
+            if (Directory.Exists(Path.Combine(Root, codeFileDirectory)))
+                path = String.Concat(codeFileDirectory, path);
+#endif
 
             path = Path.Combine(Root, path);
 
@@ -41,11 +41,11 @@ namespace Vertica.Integration.Model.Web
             HttpResponseMessage response = request.CreateResponse(HttpStatusCode.OK);
 
             response.Content = new StreamContent(file.OpenRead());
-            
+
             string contentType = MimeMapping.GetMimeMapping(file.Name);
             response.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
 
-            return response;            
+            return response;
         }
     }
 }

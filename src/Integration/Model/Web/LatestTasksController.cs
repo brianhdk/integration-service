@@ -3,20 +3,18 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using NHibernate;
 using Vertica.Integration.Infrastructure.Database;
-using Vertica.Integration.Infrastructure.Database.PetaPoco;
 using Vertica.Integration.Infrastructure.Logging;
 
 namespace Vertica.Integration.Model.Web
 {
     public class LatestTasksController : ApiController
 	{
-		private readonly IDbFactory _factory;
+		private readonly IDbFactory _dbFactory;
 
-	    public LatestTasksController(IDbFactory factory)
+	    public LatestTasksController(IDbFactory dbFactory)
 	    {
-		    _factory = factory;
+		    _dbFactory = dbFactory;
 	    }
 
 	    public HttpResponseMessage Get(int count)
@@ -39,7 +37,7 @@ ORDER BY timestamp DESC
 
             IEnumerable<TaskLog> tasks;
 
-			using (IDb db = _factory.OpenDatabase())
+			using (IDb db = _dbFactory.OpenDatabase())
 			{
                 tasks = db.Query<TaskLog>(query).ToList();
             }
@@ -55,8 +53,7 @@ SELECT [TaskName]
 
 			IEnumerable<string> taskNames;
 
-
-			using (IDb db = _factory.OpenDatabase())
+			using (IDb db = _dbFactory.OpenDatabase())
 			{
 				taskNames = db.Query<string>(query).ToList();
 			}
