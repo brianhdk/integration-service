@@ -3,13 +3,13 @@ using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
 
-namespace Vertica.Integration.Experiments.MicroOrm
+namespace Vertica.Integration.Experiments.Database
 {
-    public class MicroOrmTask : Task
+    public class DatabaseTestTask : Task
     {
         private readonly IDbFactory _factory;
 
-        public MicroOrmTask(IDbFactory factory)
+        public DatabaseTestTask(IDbFactory factory)
         {
             _factory = factory;
         }
