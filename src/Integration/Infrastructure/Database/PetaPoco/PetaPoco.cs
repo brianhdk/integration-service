@@ -670,7 +670,7 @@ namespace Vertica.Integration.Infrastructure.Database.PetaPoco
 		/// This method allows separate SQL statements to be explicitly provided for the two parts of the page query.
 		/// The page and itemsPerPage parameters are not used directly and are used simply to populate the returned Page object.
 		/// </remarks>
-		public Page<T> Page<T>(long page, long itemsPerPage, string sqlCount, object[] countArgs, string sqlPage, object[] pageArgs)
+		public IPage<T> Page<T>(long page, long itemsPerPage, string sqlCount, object[] countArgs, string sqlPage, object[] pageArgs)
 		{
 			// Save the one-time command time out and use it for both queries
 			var saveTimeout = OneTimeCommandTimeout;
@@ -711,7 +711,7 @@ namespace Vertica.Integration.Infrastructure.Database.PetaPoco
 		/// records for the specified page.  It will also execute a second query to retrieve the
 		/// total number of records in the result set.
 		/// </remarks>
-		public Page<T> Page<T>(long page, long itemsPerPage, string sql, params object[] args) 
+		public IPage<T> Page<T>(long page, long itemsPerPage, string sql, params object[] args) 
 		{
 			string sqlCount, sqlPage;
 			BuildPageQueries<T>((page-1)*itemsPerPage, itemsPerPage, sql, ref args, out sqlCount, out sqlPage);
@@ -731,7 +731,7 @@ namespace Vertica.Integration.Infrastructure.Database.PetaPoco
 		/// records for the specified page.  It will also execute a second query to retrieve the
 		/// total number of records in the result set.
 		/// </remarks>
-		public Page<T> Page<T>(long page, long itemsPerPage, Sql sql)
+		public IPage<T> Page<T>(long page, long itemsPerPage, Sql sql)
 		{
 			return Page<T>(page, itemsPerPage, sql.SQL, sql.Arguments);
 		}
@@ -749,7 +749,7 @@ namespace Vertica.Integration.Infrastructure.Database.PetaPoco
 		/// This method allows separate SQL statements to be explicitly provided for the two parts of the page query.
 		/// The page and itemsPerPage parameters are not used directly and are used simply to populate the returned Page object.
 		/// </remarks>
-		public Page<T> Page<T>(long page, long itemsPerPage, Sql sqlCount, Sql sqlPage)
+		public IPage<T> Page<T>(long page, long itemsPerPage, Sql sqlCount, Sql sqlPage)
 		{
 			return Page<T>(page, itemsPerPage, sqlCount.SQL, sqlCount.Arguments, sqlPage.SQL, sqlPage.Arguments);
 		}
@@ -2667,7 +2667,7 @@ namespace Vertica.Integration.Infrastructure.Database.PetaPoco
 	/// Holds the results of a paged request.
 	/// </summary>
 	/// <typeparam name="T">The type of Poco in the returned result set</typeparam>
-	public class Page<T>
+	public class Page<T> : IPage<T>
 	{
 		/// <summary>
 		/// The current page number contained in this page of result set 
