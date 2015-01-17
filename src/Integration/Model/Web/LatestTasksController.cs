@@ -20,10 +20,10 @@ namespace Vertica.Integration.Model.Web
             _sessionFactory = sessionFactory;
         }
 
-        public HttpResponseMessage Get(int count = 100)
+        public HttpResponseMessage Get(int count)
         {
             var query = string.Format(@"
-SELECT {0}
+SELECT TOP {0}
 	[Id],
 	[Type],
 	[TaskName],
@@ -37,7 +37,7 @@ SELECT {0}
 FROM [TaskLog]
 WHERE stepname IS NOT null
 ORDER BY timestamp DESC
-", count);
+", count == 0 ? 10 : count);
 
             IEnumerable<TaskLog> tasks;
 
