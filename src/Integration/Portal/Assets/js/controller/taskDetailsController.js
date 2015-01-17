@@ -1,32 +1,39 @@
-﻿integrationsApp.controller('taskDetailsController', function ($scope, $http, $filter, ngTableParams) {
+﻿integrationsApp.controller('taskDetailsController', function ($scope, $http, $routeParams, $filter, ngTableParams) {
+	
+	$scope.init = function() {
+		$http.get("/taskDetails").success(function(xhr) {
+			var data = xhr;
 
-	$http.get("/taskDetails").success(function (xhr) {
-		var data = xhr;
+			$scope.tableParams = new ngTableParams({
+				page: 1,
+				count: 100,
+				sorting: {
+					DisplayName: 'asc' // initial sorting
+				},
+				filter: {
+					name: '' // initial filter
+				}
+			}, {
+				getData: function($defer, params) {
+					var filteredData = params.filter() ?
+						$filter('filter')(data, params.filter()) :
+						data;
 
-		$scope.tableParams = new ngTableParams({
-			page: 1,
-			count:100,
-			sorting: {
-				TimeStamp: 'desc'     // initial sorting
-			},
-			filter: {
-				name: ''       // initial filter
-			}
-		}, {
-			getData: function ($defer, params) {
-				var filteredData = params.filter() ?
-                                   $filter('filter')(data, params.filter()) :
-                                   data;
+					var orderedData = params.sorting() ?
+						$filter('orderBy')(filteredData, params.orderBy()) :
+						filteredData;
 
-				var orderedData = params.sorting() ?
-                                    $filter('orderBy')(filteredData, params.orderBy()) :
-                                    filteredData;
+					params.total(orderedData.length);
 
-				params.total(orderedData.length);
+					$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+				}
+			});
 
-				$defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-			}
 		});
-
-	});
+	}
+	$scope.getTaskDetail = function () {
+		$http.get("/taskDetails?displayname=" + $routeParams.displayname).success(function (xhr) {
+			$scope.taskDetail = xhr;
+		});
+	}
 });
