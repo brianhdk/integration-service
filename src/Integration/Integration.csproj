@@ -122,6 +122,7 @@
     <Compile Include="Infrastructure\Database\IDbFactory.cs" />
     <Compile Include="Infrastructure\Database\Db.cs" />
     <Compile Include="Infrastructure\Database\Castle.Windsor\DbInstaller.cs" />
+    <Compile Include="Infrastructure\Database\IPage.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M1_Baseline.cs" />
     <Compile Include="Infrastructure\Database\Migrations\MigrateTask.cs" />
     <Compile Include="Infrastructure\Database\Migrations\MigrationExtensions.cs" />

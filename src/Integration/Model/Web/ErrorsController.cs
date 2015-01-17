@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -20,7 +19,7 @@ namespace Vertica.Integration.Model.Web
         public HttpResponseMessage Get()
         {
             var query = @"
-SELECT TOP 100 [Id]
+SELECT [Id]
       ,[MachineName]
       ,[IdentityName]
       ,[CommandLine]
@@ -30,15 +29,14 @@ SELECT TOP 100 [Id]
       ,[Severity]
       ,[Target]
   FROM [ErrorLog]
-  order by [ID] DESC
 ";
 
             IEnumerable<ErrorLog> errors;
 
             using (var db = _dbFactory.OpenDatabase())
             {
-                //errors = db.Page<ErrorLog>(1, 20, query).Items;
-                errors = db.Query<ErrorLog>(query).ToList();
+                errors = db.Page<ErrorLog>(1, 20, query).Items;
+                //errors = db.Query<ErrorLog>(query).ToList();
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, errors);
