@@ -15,6 +15,11 @@ integrationsApp.config(function ($routeProvider) {
             controller: 'errorsController'
         })
 
+        .when('/taskdetails', {
+            templateUrl: '/assets/pages/tasks.html',
+            controller: 'taskDetailsController'
+        })
+
         .when('/errors/:errorId', {
             templateUrl: '/assets/pages/errors-detail.html',
             controller: 'errorDetailController'
