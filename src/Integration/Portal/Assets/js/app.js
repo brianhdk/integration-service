@@ -1,4 +1,4 @@
-﻿var integrationsApp = angular.module('integrationsApp', ['ngRoute']);
+﻿var integrationsApp = angular.module('integrationsApp', ['ngRoute', 'ngTable']);
 
 // configure our routes
 integrationsApp.config(function ($routeProvider) {
