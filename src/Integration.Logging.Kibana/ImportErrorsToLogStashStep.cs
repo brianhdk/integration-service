@@ -4,7 +4,7 @@ using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Logging.Kibana
 {
-    public class ImportErrorsToLogStash : Step<MonitorWorkItem>
+    public class ImportErrorsToLogStashStep : Step<MonitorWorkItem>
     {
         public override void Execute(MonitorWorkItem workItem, Log log)
         {
