@@ -14,6 +14,10 @@
 	<div class="col-md-3 col-xs-4 col-sm-2">
 		<button type="button" class="btn btn-block btn-info" ng-click="getLatestTasks(1000)">1000</button>
 	</div>
+	<div class="col-md-3 col-xs-4 col-sm-2">
+		<button type="button" class="btn btn-block btn-info" ng-click="getTaskNames()">test</button>
+	</div>	
+	{{taskNames}}
 </div>
 <div class="row">
 	<div class="col-md-12">
@@ -29,10 +33,10 @@
 <table class="table">
 	<thead>
 		<tr>
-			<th class="col-md-3">Timestamp</th>
-			<th class="col-md-3">Step</th>
-			<th class="col-md-3">Message</th>
-			<th class="col-md-3">Name</th>
+			<th>Time</th>
+			<th>Name</th>
+			<th>Step</th>
+			<th>Message</th>
 		</tr>
 	</thead>
 	<tbody>
