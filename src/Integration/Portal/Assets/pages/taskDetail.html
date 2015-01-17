@@ -1,0 +1,37 @@
+﻿
+<div class="row" ng-init="getTaskDetail()">
+	<div class="col-md-6">
+		<h3 class="demo-componant-title">Task Detail</h3>
+		<form class="form-horizontal ng-pristine ng-valid" role="form">
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Display name</label>
+				<div class="col-sm-9">
+					<p class="form-control-static">{{ taskDetail.DisplayName }}</p>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Description</label>
+				<div class="col-sm-9">
+					<p class="form-control-static">{{ taskDetail.Description }}</p>
+				</div>
+			</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">Schedule</label>
+			<div class="col-sm-9">
+				<p class="form-control-static">{{ taskDetail.Schedule }}</p>
+			</div>
+		</div>
+			<div>
+				<label class="col-sm-3">Steps</label>
+				<div class="col-sm-9">
+					<p ng-repeat="step in taskDetail.Steps">
+						{{ step.Description }}
+					</p>
+				</div>
+			</div>
+		</form>
+	</div>
+
+</div>
