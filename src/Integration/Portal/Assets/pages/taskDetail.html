@@ -1,9 +1,8 @@
 ﻿
 <div class="row" ng-init="getTaskDetail()">
-	<div class="col-md-8">
+	<div class="col-md-12">
 		<h3 class="demo-componant-title">Task Detail</h3>
 		<form class="form-horizontal ng-pristine ng-valid" role="form">
-
 			<div class="form-group">
 				<label class="col-sm-5 control-label">Display name</label>
 				<div class="col-sm-7">
@@ -17,12 +16,12 @@
 					<p class="form-control-static">{{ taskDetail.Description }}</p>
 				</div>
 			</div>
-		<div class="form-group">
-			<label class="col-sm-5 control-label">Schedule</label>
-			<div class="col-sm-7">
-				<p class="form-control-static">{{ taskDetail.Schedule }}</p>
+			<div class="form-group">
+				<label class="col-sm-5 control-label">Schedule</label>
+				<div class="col-sm-7">
+					<p class="form-control-static">{{ taskDetail.Schedule }}</p>
+				</div>
 			</div>
-		</div>
 			<div class="row">
 				<label class="col-sm-5 control-label">Steps</label>
 				<div class="col-sm-7">
@@ -41,5 +40,4 @@
 			</div>
 		</form>
 	</div>
-
 </div>
