@@ -7,6 +7,7 @@ namespace Vertica.Integration.Infrastructure.Database
     {
         IEnumerable<T> Query<T>(string sql, params object[] args);
         List<T> Fetch<T>(string sql, params object[] args);
-        T SingleOrDefault<T>(string sql, params object[] args);        
+        T SingleOrDefault<T>(string sql, params object[] args);
+        IPage<T> Page<T>(long page, long itemsPerPage, string sql, params object[] args);
     }
 }
