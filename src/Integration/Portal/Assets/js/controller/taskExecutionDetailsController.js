@@ -1,11 +1,5 @@
 ﻿integrationsApp.controller('taskExecutionDetailsController', function ($scope, $http, $routeParams, $filter, ngTableParams) {
 
-    //$http.get("/taskExecutionDetails?id=" + $routeParams.taskId).success(function (xhr) {
-    //    $scope.taskDetail = xhr;
-    //    var data = xhr;
-
-    //});
-
     $http.get("/taskExecutionDetails?id=" + $routeParams.taskId).success(function (xhr) {
         var data = xhr;
 
@@ -13,7 +7,7 @@
             page: 1,
             count: 10,
             sorting: {
-                TimeStamp: 'desc'     // initial sorting
+                TimeStamp: 'asc'
             },
             filter: {
                 name: ''       // initial filter

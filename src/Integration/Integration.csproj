@@ -283,7 +283,6 @@
     <Content Include="Portal\Assets\layout\css\drunken-parrot-theme.css" />
     <Content Include="Portal\Assets\layout\css\drunken-parrot.css" />
     <Content Include="Portal\Assets\layout\css\style.css" />
-    <Content Include="Portal\Assets\pages\main.html" />
     <Content Include="Portal\Assets\Style.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
