@@ -32,7 +32,7 @@ SELECT
 	[StepLog_Id],
 	[ErrorLog_Id]
 FROM [TaskLog]
-WHERE ExecutionTimeSeconds IS NULL
+WHERE ExecutionTimeSeconds = 0
 AND ErrorLog_Id IS NULL
 ");
 
