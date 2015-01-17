@@ -7,7 +7,7 @@
 			page: 1,
 			count: 10,
 			sorting: {
-				//name: 'asc'     // initial sorting
+				TimeStamp: 'desc'     // initial sorting
 			},
 			filter: {
 				name: ''       // initial filter
