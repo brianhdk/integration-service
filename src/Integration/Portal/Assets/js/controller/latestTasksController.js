@@ -9,4 +9,10 @@
 			$scope.tasks = xhr;
 		});
 	}
+
+	$scope.getTaskNames = function () {
+		$http.get("/latestTasks").success(function (xhr) {
+			$scope.tasksNames = xhr;
+		});
+	}
 });
