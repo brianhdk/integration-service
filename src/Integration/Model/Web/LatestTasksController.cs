@@ -32,6 +32,7 @@ SELECT TOP {0}
 	[StepLog_Id],
 	[ErrorLog_Id]
 FROM [TaskLog]
+WHERE Type = 'T'
 ORDER BY timestamp DESC
 ", count);
 

@@ -4,15 +4,14 @@
 integrationsApp.config(function ($routeProvider) {
     $routeProvider
 
-		// route for the home page
 		.when('/', {
-		    templateUrl: '/assets/pages/main.html',
-		    controller: 'mainController'
+		    templateUrl: '/assets/pages/errors.html',
+		    controller: 'errorsController'
 		})
 
         .when('/errors', {
             templateUrl: '/assets/pages/errors.html',
-            controller: 'errorsController'
+            controller: 'errorsController',
         })
 
         .when('/tasks', {
@@ -25,18 +24,23 @@ integrationsApp.config(function ($routeProvider) {
             controller: 'taskDetailsController'
         })
 
+        .when('/taskexecutiondetail/:taskId', {
+            templateUrl: '/assets/pages/taskExecutionDetail.html',
+            controller: 'taskExecutionDetailsController'
+        })
+
         .when('/errors/:errorId', {
             templateUrl: '/assets/pages/errors-detail.html',
             controller: 'errorDetailController'
         })
 
         .when('/running-tasks', {
-            templateUrl: '/assets/pages/runningTasks.html',
+            templateUrl: '/assets/pages/taskList.html',
             controller: 'runningTasksController'
         })
 
         .when('/latest-tasks', {
-            templateUrl: '/assets/pages/latestTasks.html',
+            templateUrl: '/assets/pages/taskList.html',
             controller: 'latestTasksController'
         })
     ;

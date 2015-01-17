@@ -1,40 +1,13 @@
 ﻿<div class="panel panel-default">
     <table ng-table="tableParams" show-filter="true" class="table">
-        <!--<thead>
-            <tr>
-                <th>Time</th>
-                <th>Severity</th>
-                <th>Target</th>
-                <th>Message</th>
-                <th>Details</th>
-            </tr>
-        </thead>-->
         <tbody>
             <tr ng-repeat="error in $data">
                 <td>{{error.TimeStamp | date:'yyyy-MM-dd HH:mm:ss' }}</td>
                 <td data-title="'Severity'" sortable="'Severity'" filter="{ 'Severity': 'text' }">{{error.Severity}}</td>
                 <td data-title="'Target'" sortable="'Target'" filter="{ 'Target': 'text' }">{{error.Target}}</td>
-                <td data-title="'Message'" sortable="'Message'" filter="{ 'Message': 'text' }">{{error.Message | limitTo: 60 }}{{error.Message.length > 60 ? '...' : ''}}</td>
-                <td><a href="#/errors/{{error.Id}}">Details</a></td>
+                <td data-title="'Message'" sortable="'Message'" filter="{ 'Message': 'text' }">{{error.Message | limitTo: 120 }}{{error.Message.length > 120 ? '...' : ''}}</td>
+                <td><a ng-href="#/errors/{{error.Id}}">Details</a></td>
             </tr>
         </tbody>
     </table>
-
-    <!--<div ng-hide="$data.length">No items found</div>-->
 </div>
-
-<!--<div class="panel panel-default">
-
-    <table ng-table="tableParams" show-filter="true" class="table">
-        <tr ng-repeat="task in $data">
-            <td data-title="'TaskName'" sortable="'TaskName'" filter="{ 'TaskName': 'text' }">{{task.TaskName}}</td>
-            <td data-title="'StepName'" sortable="'name'">{{task.StepName}}</td>
-            <td>{{task.Message}}</td>
-            <td>
-                {{task.TimeStamp | date:'yyyy-MM-dd HH:mm:ss'}}
-            </td>
-        </tr>
-    </table>
-
-    <div ng-hide="errors.length">No items found</div>
-</div>-->

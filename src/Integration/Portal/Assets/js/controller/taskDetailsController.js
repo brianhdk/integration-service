@@ -35,5 +35,9 @@
 		$http.get("/taskDetails?displayname=" + $routeParams.displayname).success(function (xhr) {
 			$scope.taskDetail = xhr;
 		});
+		$http.get("/taskDetails?displayname=" + $routeParams.displayname + "&count=10").success(function (xhr) {
+			$scope.lastRun = xhr;
+		});
+
 	}
 });

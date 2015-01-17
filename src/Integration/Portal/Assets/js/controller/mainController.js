@@ -2,5 +2,6 @@
     $scope.isActive = function (route) {
         return route === $location.path();
     }
-    $scope.message = 'main controller.';
+
+    $location.path("/errors");
 });
