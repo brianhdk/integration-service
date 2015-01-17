@@ -1,0 +1,13 @@
+﻿<div class="panel panel-default">
+    <table ng-table="tableParams" show-filter="true" class="table">
+        <tbody>
+            <tr ng-repeat="task in $data">
+                <td>{{task.TimeStamp | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+                <td data-title="'TaskName'" sortable="'TaskName'" filter="{ 'TaskName': 'text' }">{{task.TaskName}}</td>
+                <td data-title="'StepName'" sortable="'StepName'" filter="{ 'StepName': 'text' }">{{task.StepName}}</td>
+                <td data-title="'Message'" sortable="'Message'" filter="{ 'Message': 'text' }">{{task.Message | limitTo: 60 }}{{task.Message.length > 60 ? '...' : ''}}</td>
+                <td><a ng-href="#/taskexecutiondetail/{{task.Id}}">Details</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
