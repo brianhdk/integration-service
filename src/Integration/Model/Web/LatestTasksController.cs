@@ -4,8 +4,9 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using NHibernate;
-using PetaPoco;
+using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Database.NHibernate;
+using Vertica.Integration.Infrastructure.Database.PetaPoco;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Utilities_v4.Extensions.StringExt;
 
@@ -41,7 +42,7 @@ ORDER BY timestamp DESC
             IEnumerable<TaskLog> tasks;
 
             using (IStatelessSession session = _sessionFactory.SessionFactory.OpenStatelessSession())
-            using (Database db = new PetaPoco.Database(session.Connection))
+            using (Database db = new Database(session.Connection))
             {
                 tasks = db.Query<TaskLog>(query).ToList();
             }

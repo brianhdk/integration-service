@@ -44,7 +44,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
             StringBuilder output;
             MigrationRunner runner = CreateRunner(out output);
 
-            runner.MigrateUp(true);
+            runner.MigrateUp(useAutomaticTransactionManagement: true);
 
             if (output.Length > 0)
                 log.Message(output.ToString());
@@ -68,6 +68,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
                 sb.Append(s);
             });
 
+            // todo:configurable?
             var factory = new SqlServer2012ProcessorFactory();
 
             IMigrationProcessor processor = factory.Create(
@@ -75,6 +76,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
                 announcer,
                 new MigrationOptions());
 
+            // todo: allow for configuration of additional assemblies+namespaces,
             var assembly = Assembly.GetExecutingAssembly();
 
             var context = new RunnerContext(announcer)
