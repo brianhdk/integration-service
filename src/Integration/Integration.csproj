@@ -228,6 +228,8 @@
     <Content Include="Portal\Assets\js\angular\ng-table\ng-table.js" />
     <Content Include="Portal\Assets\js\angular\ng-table\ng-table.min.css" />
     <Content Include="Portal\Assets\js\angular\ng-table\ng-table.min.js" />
+    <Content Include="Portal\Assets\js\angular\restangular\restangular.js" />
+    <Content Include="Portal\Assets\js\angular\restangular\restangular.min.js" />
     <Content Include="Portal\Assets\js\app.js" />
     <Content Include="Portal\Assets\js\controller\errorDetailController.js" />
     <Content Include="Portal\Assets\js\controller\latestTasksController.js" />
