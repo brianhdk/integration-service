@@ -5,6 +5,8 @@ using Castle.MicroKernel.Resolvers;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
+using Vertica.Integration.Infrastructure.Database;
+using Vertica.Integration.Infrastructure.Database.Castle.Windsor;
 using Vertica.Integration.Infrastructure.Database.NHibernate.Castle.Windsor;
 using Vertica.Integration.Infrastructure.Database.NHibernate.Connections;
 using Vertica.Integration.Infrastructure.Factories;
@@ -31,6 +33,7 @@ namespace Vertica.Integration
 
 			container.Install(
 				new NHibernateInstaller(new IntegrationDb()),
+                new DbInstaller(),
 				new TaskFactoryInstaller(),
                 new ConsoleWriterInstaller(),
                 new WebApiInstaller(integrationAssembly),

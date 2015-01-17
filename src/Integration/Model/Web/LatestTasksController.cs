@@ -4,9 +4,11 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using NHibernate;
-using PetaPoco;
+using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Database.NHibernate;
+using Vertica.Integration.Infrastructure.Database.PetaPoco;
 using Vertica.Integration.Infrastructure.Logging;
+using Vertica.Utilities_v4.Extensions.StringExt;
 
 namespace Vertica.Integration.Model.Web
 {
@@ -34,19 +36,35 @@ SELECT TOP {0}
 	[StepLog_Id],
 	[ErrorLog_Id]
 FROM [TaskLog]
-WHERE stepname IS NOT null
 ORDER BY timestamp DESC
-", count == 0 ? 10 : count);
+", count);
 
             IEnumerable<TaskLog> tasks;
 
             using (IStatelessSession session = _sessionFactory.SessionFactory.OpenStatelessSession())
-            using (Database db = new PetaPoco.Database(session.Connection))
+            using (Database db = new Database(session.Connection))
             {
                 tasks = db.Query<TaskLog>(query).ToList();
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, tasks);
         }
+
+		public HttpResponseMessage Get()
+		{
+			var query = string.Format(@"
+SELECT [TaskName]
+  FROM [TaskLog] group by TaskName");
+
+			IEnumerable<string> taskNames;
+
+			using (IStatelessSession session = _sessionFactory.SessionFactory.OpenStatelessSession())
+			using (Database db = new PetaPoco.Database(session.Connection))
+			{
+				taskNames = db.Query<string>(query).ToList();
+			}
+
+			return Request.CreateResponse(HttpStatusCode.OK, taskNames);
+		}
     }
 }
