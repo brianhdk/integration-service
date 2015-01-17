@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -41,7 +40,8 @@ SELECT TOP 100 [Id]
             using (IStatelessSession session = _sessionFactory.SessionFactory.OpenStatelessSession())
             using (Database db = new Database(session.Connection))
             {
-                errors = db.Query<ErrorLog>(query).ToList();
+                errors = db.Page<ErrorLog>(1, 20, query).Items;
+                //errors = db.Query<ErrorLog>(query).ToList();
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, errors);
