@@ -8,32 +8,38 @@ using Vertica.Integration.Model.Exceptions;
 namespace Vertica.Integration
 {
     public sealed class ApplicationContext : IDisposable
-	{
-	    private static readonly Lazy<ApplicationContext> Instance =
-	        new Lazy<ApplicationContext>(() => new ApplicationContext());
+    {
+        private static readonly Lazy<Action> EnsureSingleton = new Lazy<Action>(() => () => { });
+ 
+        private readonly IWindsorContainer _container;
 
-		private readonly IWindsorContainer _windsorContainer;
+        private ApplicationContext(Action<ApplicationConfiguration> builder)
+        {
+            var configuration = new ApplicationConfiguration();
 
-	    private ApplicationContext()
-		{
+            if (builder != null)
+                builder(configuration);
+
 			ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
 
-			_windsorContainer = Bootstrapper.Run();
+            _container = CastleWindsor.Initialize(configuration);
 
 			AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) => LogException(eventArgs);
 		}
 
-	    public static ApplicationContext Create()
+	    public static ApplicationContext Create(Action<ApplicationConfiguration> builder = null)
 	    {
-		    if (Instance.IsValueCreated)
+            if (EnsureSingleton.IsValueCreated)
 			    throw new InvalidOperationException("An instance of ApplicationContext has already been created.");
 
-			return Instance.Value;
-		}
+	        EnsureSingleton.Value();
+
+	        return new ApplicationContext(builder);
+	    }
 
 	    public ITaskService TaskService
 		{
-			get { return _windsorContainer.Resolve<ITaskService>(); }
+			get { return _container.Resolve<ITaskService>(); }
 		}
 
 	    private void LogException(UnhandledExceptionEventArgs e)
@@ -46,12 +52,12 @@ namespace Vertica.Integration
             if (exception is TaskExecutionFailedException)
                 return;
 
-	        _windsorContainer.Resolve<ILogger>().LogError(exception);
+	        _container.Resolve<ILogger>().LogError(exception);
 	    }
 
 		public void Dispose()
 		{
-			_windsorContainer.Dispose();
+			_container.Dispose();
 		}
 	}
 }

@@ -7,8 +7,8 @@ namespace Vertica.Integration.Infrastructure.Database.NHibernate.Connections
 {
 	public class IntegrationDb : DefaultConnection
 	{
-		public IntegrationDb()
-			: base("IntegrationDb")
+		public IntegrationDb(string connectionStringName)
+			: base(connectionStringName)
 		{
 		}
 

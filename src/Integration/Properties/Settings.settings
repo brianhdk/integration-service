@@ -3,16 +3,16 @@
   <Profiles />
   <Settings>
     <Setting Name="DisableDatabaseLog" Type="System.Boolean" Scope="Application">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="WindowsServiceUsername" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">[TBD]</Value>
     </Setting>
     <Setting Name="WindowsServicePassword" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">[TBD]</Value>
     </Setting>
     <Setting Name="WindowsServiceNamePrefix" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Integration Service</Value>
     </Setting>
     <Setting Name="EmailSubjectFormat" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Integration Service</Value>

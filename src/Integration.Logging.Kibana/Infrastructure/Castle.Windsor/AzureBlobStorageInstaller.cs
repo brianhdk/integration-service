@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using Castle.Facilities.TypedFactory;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
@@ -9,15 +10,15 @@ using Vertica.Integration.Logging.Kibana.Infrastructure.Azure;
 
 namespace Vertica.Integration.Logging.Kibana.Infrastructure.Castle.Windsor
 {
-    public class AzureBlobStorageInstaller : IWindsorInstaller
+    internal class AzureBlobStorageInstaller : IWindsorInstaller
     {
-        private readonly string _connectionString;
+        private readonly string _connectionStringName;
 
-        public AzureBlobStorageInstaller(string connectionString)
+        public AzureBlobStorageInstaller(string connectionStringName)
         {
-            if (String.IsNullOrWhiteSpace(connectionString)) throw new ArgumentException(@"Value cannot be null or empty.");
+            if (String.IsNullOrWhiteSpace(connectionStringName)) throw new ArgumentException(@"Value cannot be null or empty.");
 
-            _connectionString = connectionString;
+            _connectionStringName = connectionStringName;
         }
 
         public void Install(IWindsorContainer container, IConfigurationStore store)
@@ -32,7 +33,8 @@ namespace Vertica.Integration.Logging.Kibana.Infrastructure.Castle.Windsor
                     .For<CloudBlobClient>()
                     .UsingFactoryMethod(() =>
                     {
-                        CloudStorageAccount account = CloudStorageAccount.Parse(_connectionString);
+                        ConnectionStringSettings connectionString = ConfigurationManager.ConnectionStrings[_connectionStringName];
+                        CloudStorageAccount account = CloudStorageAccount.Parse(connectionString.ConnectionString);
                         CloudBlobClient client = account.CreateCloudBlobClient();
 
                         return client;
