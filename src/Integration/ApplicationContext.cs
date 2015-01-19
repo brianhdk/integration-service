@@ -20,7 +20,8 @@ namespace Vertica.Integration
             if (builder != null)
                 builder(configuration);
 
-			ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+            if (configuration.IgnoreSslErrors)
+			    ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
 
             _container = CastleWindsor.Initialize(configuration);
 
