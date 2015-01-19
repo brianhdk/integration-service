@@ -101,7 +101,7 @@
   <ItemGroup>
     <Compile Include="ApplicationConfiguration.cs" />
     <Compile Include="ApplicationContext.cs" />
-    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="CastleWindsor.cs" />
     <Compile Include="Domain\Core\CleanUpIntegrationDbStep.cs" />
     <Compile Include="Domain\Core\ImportFilesTask.cs" />
     <Compile Include="Domain\Core\ImportFilesWorkItem.cs" />

@@ -25,7 +25,7 @@ namespace Vertica.Integration.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool DisableDatabaseLog {
             get {
                 return ((bool)(this["DisableDatabaseLog"]));
@@ -34,7 +34,7 @@ namespace Vertica.Integration.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("[TBD]")]
         public string WindowsServiceUsername {
             get {
                 return ((string)(this["WindowsServiceUsername"]));
@@ -43,7 +43,7 @@ namespace Vertica.Integration.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("[TBD]")]
         public string WindowsServicePassword {
             get {
                 return ((string)(this["WindowsServicePassword"]));
@@ -52,7 +52,7 @@ namespace Vertica.Integration.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Integration Service")]
         public string WindowsServiceNamePrefix {
             get {
                 return ((string)(this["WindowsServiceNamePrefix"]));

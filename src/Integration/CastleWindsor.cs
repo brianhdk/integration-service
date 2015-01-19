@@ -1,11 +1,11 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using Castle.Facilities.TypedFactory;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.Resolvers;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
-using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Database.Castle.Windsor;
 using Vertica.Integration.Infrastructure.Database.NHibernate.Castle.Windsor;
 using Vertica.Integration.Infrastructure.Database.NHibernate.Connections;
@@ -16,11 +16,13 @@ using Vertica.Integration.Properties;
 
 namespace Vertica.Integration
 {
-	public static class Bootstrapper
+    internal static class CastleWindsor
 	{
-		internal static IWindsorContainer Run()
+        public static IWindsorContainer Initialize(ApplicationConfiguration configuration)
 		{
-			IWindsorContainer container = 
+		    if (configuration == null) throw new ArgumentNullException("configuration");
+
+		    IWindsorContainer container = 
 				ObjectFactory.Create(() => new WindsorContainer(new XmlInterpreter()));
 
 			container.Kernel.AddFacility<TypedFactoryFacility>();
@@ -29,15 +31,17 @@ namespace Vertica.Integration
 
 			container.Register(Component.For<ISettings>().UsingFactoryMethod(x => Settings.Default));
 
-			Assembly integrationAssembly = typeof (Bootstrapper).Assembly;
+			Assembly integrationAssembly = typeof (CastleWindsor).Assembly;
 
 			container.Install(
-				new NHibernateInstaller(new IntegrationDb()),
+				new NHibernateInstaller(new IntegrationDb(configuration.DatabaseConnectionStringName)),
                 new DbInstaller(),
 				new TaskFactoryInstaller(),
                 new ConsoleWriterInstaller(),
                 new WebApiInstaller(integrationAssembly),
 				new ConventionInstaller(new[] { integrationAssembly }, typeof(ITask), typeof(IStep), typeof(ISettings)));
+
+            container.Install(configuration.CustomInstallers);
 
 			return container;
 		}

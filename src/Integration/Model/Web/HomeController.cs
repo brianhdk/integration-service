@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -13,6 +14,11 @@ namespace Vertica.Integration.Model.Web
                 return AssetsController.ServePortalFile(Request, "Default.html");
 
             return Request.CreateResponse(HttpStatusCode.OK, "Running.");
+        }
+
+        public HttpResponseMessage Put()
+        {
+            throw new InvalidOperationException("test");
         }
     }
 }
