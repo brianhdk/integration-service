@@ -12,7 +12,9 @@ namespace Vertica.Integration
         public ApplicationConfiguration()
         {
             _customInstallers = new List<IWindsorInstaller>();
+
             DatabaseConnectionStringName = "IntegrationDb";
+            IgnoreSslErrors = true;
         }
 
         public ApplicationConfiguration AddCustomInstaller(IWindsorInstaller installer)
@@ -36,6 +38,16 @@ namespace Vertica.Integration
             get { return _customInstallers.ToArray(); }
         }
 
+        public ApplicationConfiguration Change(Action<ApplicationConfiguration> change)
+        {
+            if (change == null) throw new ArgumentNullException("change");
+
+            change(this);
+
+            return this;
+        }
+
         public string DatabaseConnectionStringName { get; set; }
+        public bool IgnoreSslErrors { get; set; }
     }
 }
