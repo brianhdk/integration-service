@@ -58,7 +58,7 @@ namespace Vertica.Integration.Model
 
         public ITask[] GetAll()
         {
-            return _factory.GetTasks().EmptyIfNull().ToArray();
+            return _factory.GetTasks().EmptyIfNull().Distinct().ToArray();
         }
     }
 }
