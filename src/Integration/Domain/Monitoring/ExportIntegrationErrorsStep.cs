@@ -8,6 +8,7 @@ using NHibernate.Transform;
 using Vertica.Integration.Infrastructure.Database.NHibernate;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
+using Vertica.Integration.Model.Exceptions;
 using Vertica.Utilities_v4.Extensions.EnumerableExt;
 
 namespace Vertica.Integration.Domain.Monitoring
@@ -64,15 +65,27 @@ namespace Vertica.Integration.Domain.Monitoring
 				{
 					log.Message("{0} errors/warnings within time-period {1}.", errors.Count, workItem.CheckRange);
 
-					Dictionary<string, ITask> tasksByName =
-						_taskService
-							.GetAll()
-							.ToDictionary(x => x.GetType().Name, x => x, StringComparer.OrdinalIgnoreCase);
+				    var tasksByName = new Dictionary<string, ITask>(StringComparer.OrdinalIgnoreCase);
 
 					foreach (ErrorEntry error in errors)
 					{
-						ITask task;
-						if (tasksByName.TryGetValue(error.SafeTaskName(), out task))
+					    string taskName = error.SafeTaskName();
+
+					    ITask task = null;
+
+					    if (!String.IsNullOrWhiteSpace(taskName) && !tasksByName.TryGetValue(taskName, out task))
+					    {
+					        try
+					        {
+					            task = _taskService.GetByName(taskName);
+					            tasksByName.Add(taskName, task);
+					        }
+					        catch (TaskNotFoundException)
+					        {
+					        }
+					    }
+
+						if (task != null)
 						{
 							error.TaskDescription = task.Description;
 							error.TaskSchedule = task.Schedule;
@@ -80,7 +93,7 @@ namespace Vertica.Integration.Domain.Monitoring
 							IStep step =
 								task.Steps.EmptyIfNull()
 									.SingleOrDefault(x =>
-										String.Equals(x.GetType().Name, error.StepName, StringComparison.OrdinalIgnoreCase));
+										String.Equals(TaskRunner.GetStepName(x), error.StepName, StringComparison.OrdinalIgnoreCase));
 
 							if (step != null)
 								error.StepDescription = step.Description;

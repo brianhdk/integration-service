@@ -4,6 +4,7 @@ using System.Linq;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model.Exceptions;
 using Vertica.Integration.Model.Startup;
+using Vertica.Utilities_v4.Extensions.EnumerableExt;
 
 namespace Vertica.Integration.Model
 {
@@ -33,8 +34,6 @@ namespace Vertica.Integration.Model
 
             ITask task = _factory.GetTaskByName(taskName);
 
-            if (task == null) throw new TaskNotFoundException(taskName);
-
             var context = new ExecutionContext(taskName, task, arguments);
 
             StartupAction action = _actions.FirstOrDefault(x => x.IsSatisfiedBy(context));
@@ -45,9 +44,21 @@ namespace Vertica.Integration.Model
             action.Execute(context);
         }
 
-        public IEnumerable<ITask> GetAll()
+        public ITask GetByName(string taskName)
         {
-            return (_factory.GetTasks() ?? Enumerable.Empty<ITask>()).Distinct().ToList();
+            try
+            {
+                return _factory.GetTaskByName(taskName);
+            }
+            catch (TaskNotFoundException)
+            {
+                return null;
+            }
+        }
+
+        public ITask[] GetAll()
+        {
+            return _factory.GetTasks().EmptyIfNull().ToArray();
         }
     }
 }
