@@ -31,6 +31,9 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 						MethodInfo method = ((MethodCallExpression)expression.Body).Method;
 						string name = method.GetParameters().Select(x => x.Name).Single();
 
+					    if (context.AdditionalArguments.Count == 0)
+					        return kernel.Resolve<ITask>();
+
 						var taskName = context.AdditionalArguments[name] as string;
 
 					    if (String.IsNullOrWhiteSpace(taskName))

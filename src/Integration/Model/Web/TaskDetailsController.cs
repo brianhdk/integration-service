@@ -21,13 +21,12 @@ namespace Vertica.Integration.Model.Web
 
 		public HttpResponseMessage Get()
 		{
-			var tasks = _taskService.GetAll().ToList();
-			return Request.CreateResponse(HttpStatusCode.OK, tasks);
+			return Request.CreateResponse(HttpStatusCode.OK, _taskService.GetAll());
 		}
 
 		public HttpResponseMessage Get(string displayName)
 		{
-			var task = _taskService.GetAll().FirstOrDefault(x => x.DisplayName == displayName);
+		    ITask task = _taskService.GetByName(displayName);
 
 			return Request.CreateResponse(HttpStatusCode.OK, task);
 		}

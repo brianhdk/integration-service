@@ -6,6 +6,8 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
 using Castle.Windsor;
 using Microsoft.Owin.Hosting;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Owin;
 using Vertica.Integration.Infrastructure.Factories;
 using Vertica.Integration.Infrastructure.Logging;
@@ -32,23 +34,21 @@ namespace Vertica.Integration.Model.Web
             _httpServer = WebApp.Start(new StartOptions(url), builder =>
             {
                 var configuration = new HttpConfiguration();
+
                 configuration.Formatters.Remove(configuration.Formatters.XmlFormatter);
 
-                configuration.Formatters.JsonFormatter.SerializerSettings.Formatting =
-                    Newtonsoft.Json.Formatting.Indented;
+                JsonSerializerSettings jsonSettings = 
+                    configuration.Formatters.JsonFormatter.SerializerSettings;
 
-                configuration.Formatters.JsonFormatter.SerializerSettings.Converters.Add
-                    (new Newtonsoft.Json.Converters.StringEnumConverter());
+                jsonSettings.Formatting = Formatting.Indented;
+                jsonSettings.Converters.Add(new StringEnumConverter());
+
+                configuration.MapHttpAttributeRoutes();
 
                 configuration.Routes.MapHttpRoute(
                     name: "WebApi",
                     routeTemplate: "{controller}",
                     defaults: new { controller = "Home" });
-
-                configuration.Routes.MapHttpRoute(
-                    name: "Assets",
-                    routeTemplate: "assets/{*path}",
-                    defaults: new { controller = "Assets" });
 
                 configuration.Filters.Add(new ExceptionHandlingAttribute(logger));
 

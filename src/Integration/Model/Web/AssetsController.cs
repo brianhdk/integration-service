@@ -14,6 +14,7 @@ namespace Vertica.Integration.Model.Web
             new FileInfo(typeof(AssetsController).Assembly.Location).DirectoryName ?? String.Empty,
             "Portal");
 
+        [Route("assets/{*path}")]
         public HttpResponseMessage Get(string path)
         {
             return ServePortalFile(Request, Path.Combine("Assets", path));
