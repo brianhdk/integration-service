@@ -12,6 +12,7 @@ using Vertica.Integration.Infrastructure.Database.NHibernate.Connections;
 using Vertica.Integration.Infrastructure.Factories;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Model;
+using Vertica.Integration.Model.Web;
 using Vertica.Integration.Properties;
 
 namespace Vertica.Integration
