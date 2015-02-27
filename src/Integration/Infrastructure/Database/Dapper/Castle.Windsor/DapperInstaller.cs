@@ -2,8 +2,6 @@
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Web;
-using System.Web.Hosting;
 using Castle.Facilities.TypedFactory;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
@@ -40,8 +38,6 @@ namespace Vertica.Integration.Infrastructure.Database.Dapper.Castle.Windsor
 		private readonly TConnection _connection;
 	    private readonly string _connectionString;
 
-	    private bool _unhandledException;
-
 	    public DapperInstaller(TConnection connection)
 		{
 			if (connection == null) throw new ArgumentNullException("connection");
@@ -56,9 +52,6 @@ namespace Vertica.Integration.Infrastructure.Database.Dapper.Castle.Windsor
                     String.Format("No ConnectionString found with name '{0}'.", _connection.ConnectionStringName));
 
 	        _connectionString = connectionString.ConnectionString;
-
-			if (!HostingEnvironment.IsHosted)
-				AppDomain.CurrentDomain.UnhandledException += (obj, ex) => _unhandledException = true;
 		}
 
 		public virtual void Install(IWindsorContainer container, IConfigurationStore store)
@@ -88,33 +81,9 @@ namespace Vertica.Integration.Infrastructure.Database.Dapper.Castle.Windsor
 		            .AsFactory(cfg => cfg.SelectedWith(_connection.SelectorName)));
 		}
 
-		private Func<bool> SaveChanges
-		{
-			get
-			{
-				if (!HostingEnvironment.IsHosted)
-					return () => !_unhandledException;
-
-				return () => HttpContext.Server.GetLastError() == null;
-			}
-		}
-
 		protected TConnection Connection
 		{
 			get { return _connection; }
-		}
-
-		private HttpContextBase HttpContext
-		{
-			get 
-			{
-				var ctx = System.Web.HttpContext.Current;
-
-				if (ctx != null)
-					return new HttpContextWrapper(ctx);
-
-				return null;
-			}
 		}
 	}
 }

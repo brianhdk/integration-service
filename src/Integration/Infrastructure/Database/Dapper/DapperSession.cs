@@ -46,6 +46,11 @@ namespace Vertica.Integration.Infrastructure.Database.Dapper
             return SqlMapper.Query<T>(_connection, sql, param, CurrentTransaction);
         }
 
+        public IDbConnection Connection
+        {
+            get { return _connection; }
+        }
+
         public virtual void Dispose()
         {
             _connection.Dispose();
