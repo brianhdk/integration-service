@@ -115,6 +115,9 @@
     <Compile Include="Domain\Monitoring\MonitorTask.cs" />
     <Compile Include="Domain\Monitoring\MonitorWorkItem.cs" />
     <Compile Include="Infrastructure\ActionRepeater.cs" />
+    <Compile Include="Infrastructure\Archiving\Archive.cs" />
+    <Compile Include="Infrastructure\Archiving\Archiver.cs" />
+    <Compile Include="Infrastructure\Archiving\IArchiver.cs" />
     <Compile Include="Infrastructure\Configuration\IParametersProvider.cs" />
     <Compile Include="Infrastructure\Configuration\Parameters.cs" />
     <Compile Include="Infrastructure\Configuration\ParametersProvider.cs" />
