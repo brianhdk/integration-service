@@ -6,7 +6,7 @@ using Castle.Windsor;
 
 namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 {
-    public class ConsoleWriterInstaller : IWindsorInstaller
+    internal class ConsoleWriterInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {

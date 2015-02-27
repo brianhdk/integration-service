@@ -33,12 +33,15 @@ namespace Vertica.Integration
 
 			Assembly integrationAssembly = typeof (CastleWindsor).Assembly;
 
+            WebApiConfiguration webApi = null;
+            configuration.WebApi(x => webApi = x.ScanAssembly(integrationAssembly));
+
 			container.Install(
 				new NHibernateInstaller(new IntegrationDb(configuration.DatabaseConnectionStringName)),
                 new DbInstaller(),
 				new TaskFactoryInstaller(),
                 new ConsoleWriterInstaller(),
-                new WebApiInstaller(integrationAssembly),
+                new WebApiInstaller(webApi),
 				new ConventionInstaller(new[] { integrationAssembly }, typeof(ITask), typeof(IStep), typeof(ISettings)));
 
             container.Install(configuration.CustomInstallers);

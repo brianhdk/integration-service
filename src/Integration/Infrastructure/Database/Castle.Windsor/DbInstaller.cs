@@ -6,7 +6,7 @@ using Vertica.Integration.Infrastructure.Database.NHibernate;
 
 namespace Vertica.Integration.Infrastructure.Database.Castle.Windsor
 {
-    public class DbInstaller : IWindsorInstaller
+    internal class DbInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {

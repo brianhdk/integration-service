@@ -8,10 +8,12 @@ namespace Vertica.Integration
     public class ApplicationConfiguration
     {
         private readonly List<IWindsorInstaller> _customInstallers;
+        private readonly WebApiConfiguration _webApi;
 
         public ApplicationConfiguration()
         {
             _customInstallers = new List<IWindsorInstaller>();
+            _webApi = new WebApiConfiguration();
 
             DatabaseConnectionStringName = "IntegrationDb";
             IgnoreSslErrors = true;
@@ -36,6 +38,15 @@ namespace Vertica.Integration
         public IWindsorInstaller[] CustomInstallers
         {
             get { return _customInstallers.ToArray(); }
+        }
+
+        public ApplicationConfiguration WebApi(Action<WebApiConfiguration> webApi)
+        {
+            if (webApi == null) throw new ArgumentNullException("webApi");
+
+            webApi(_webApi);
+
+            return this;
         }
 
         public ApplicationConfiguration Change(Action<ApplicationConfiguration> change)
