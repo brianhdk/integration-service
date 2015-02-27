@@ -114,9 +114,7 @@
     <Content Include="Assets\pages\tasks.html" />
     <Content Include="Default.html" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="layout\fonts\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Assets\js\angular\angular-resource.min.js.map" />
     <None Include="Assets\js\angular\angular-route.min.js.map" />

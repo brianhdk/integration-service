@@ -1,5 +1,5 @@
 ﻿integrationsApp.controller('taskDetailsController', function ($scope, $http, $routeParams, $filter, ngTableParams) {
-	
+
 	$scope.init = function() {
 		$http.get("/taskDetails").success(function(xhr) {
 			var data = xhr;
@@ -10,9 +10,7 @@
 				sorting: {
 					DisplayName: 'asc' // initial sorting
 				},
-				filter: {
-					name: '' // initial filter
-				}
+				filter: {}
 			}, {
 				getData: function($defer, params) {
 					var filteredData = params.filter() ?
