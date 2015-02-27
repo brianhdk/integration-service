@@ -134,11 +134,6 @@
     <Compile Include="Infrastructure\Database\Dapper\DefaultConnection.cs" />
     <Compile Include="Infrastructure\Database\Dapper\IDapperProvider.cs" />
     <Compile Include="Infrastructure\Database\Dapper\IDapperSession.cs" />
-    <Compile Include="Infrastructure\Database\IDb.cs" />
-    <Compile Include="Infrastructure\Database\IDbFactory.cs" />
-    <Compile Include="Infrastructure\Database\Db.cs" />
-    <Compile Include="Infrastructure\Database\Castle.Windsor\DbInstaller.cs" />
-    <Compile Include="Infrastructure\Database\IPage.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M1_Baseline.cs" />
     <Compile Include="Infrastructure\Database\Migrations\MigrateTask.cs" />
     <Compile Include="Infrastructure\Database\Migrations\MigrationExtensions.cs" />
@@ -158,9 +153,6 @@
     <Compile Include="Infrastructure\Database\NHibernate\Mappings\Infrastructure\Logging\MessageLogMap.cs" />
     <Compile Include="Infrastructure\Database\NHibernate\Mappings\Infrastructure\Logging\StepLogMap.cs" />
     <Compile Include="Infrastructure\Database\NHibernate\Mappings\Infrastructure\Logging\TaskLogMap.cs" />
-    <Compile Include="Infrastructure\Database\PetaPoco\PetaPoco.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Infrastructure\Delay.cs" />
     <Compile Include="Infrastructure\Email\EmailService.cs" />
     <Compile Include="Infrastructure\Email\EmailTemplate.cs" />
