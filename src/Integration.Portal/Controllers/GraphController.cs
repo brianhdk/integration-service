@@ -1,17 +1,17 @@
 ﻿using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using Vertica.Integration.Infrastructure.Database;
+using Vertica.Integration.Infrastructure.Database.Dapper;
 
 namespace Vertica.Integration.Portal.Controllers
 {
 	class GraphController : ApiController
     {
-        private readonly IDbFactory _dbFactory;
+        private readonly IDapperProvider _dapper;
 
-		public GraphController(IDbFactory dbFactory)
+		public GraphController(IDapperProvider dapper)
 		{
-			_dbFactory = dbFactory;
+			_dapper = dapper;
 		}
 
 
