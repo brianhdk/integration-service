@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 namespace Vertica.Integration.Infrastructure.Archiving
 {
@@ -63,6 +64,8 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
         public void IncludeContent(string name, string content, string extension = "txt")
         {
+            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
+
             name = Regex.Replace(name, @"[^\w\s]", String.Empty);
 
             ZipArchiveEntry entry = _archive.CreateEntry(String.Format("{0}.{1}", name, extension));
@@ -73,15 +76,21 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
         public void IncludeBinary(string fileName, byte[] content)
         {
+            if (String.IsNullOrWhiteSpace(fileName)) throw new ArgumentException(@"Value cannot be null or empty.", "fileName");
+
             ZipArchiveEntry entry = _archive.CreateEntry(fileName);
 
             using (var writer = new BinaryWriter(entry.Open()))
                 writer.Write(content);               
         }
 
-        public void IncludeObject(object obj)
+        public void IncludeObjectAsJson(object obj, string fileNameWithoutExtension = null)
         {
-            throw new NotImplementedException();
+            if (obj == null) throw new ArgumentNullException("obj");
+
+            string content = JsonConvert.SerializeObject(obj, Formatting.Indented);
+
+            IncludeContent(fileNameWithoutExtension ?? obj.GetType().Name, content, "json");
         }
 
         public void Dispose()
