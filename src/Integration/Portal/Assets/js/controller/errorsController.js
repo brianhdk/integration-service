@@ -1,20 +1,32 @@
-﻿integrationsApp.controller('errorsController', function ($scope, $http, $filter,  $resource, ngTableParams) {
+﻿integrationsApp.controller('errorsController', function ($scope, $http, $filter, ngTableParams) {
 
-    var Api = $resource('/errors');
+    $http.get("/errors").success(function (xhr) {
+        var data = xhr;
 
-    $scope.tableParams = new ngTableParams({
-        page: 1,
-        count: 10
-    }, {
-        total: 0,
-        getData: function ($defer, params) {
+        $scope.tableParams = new ngTableParams({
+            page: 1,
+            count: 10,
+            sorting: {
+                TimeStamp: 'desc'     // initial sorting
+            },
+            filter: {
+                name: ''       // initial filter
+            }
+        }, {
+            getData: function ($defer, params) {
+                var filteredData = params.filter() ?
+                                   $filter('filter')(data, params.filter()) :
+                                   data;
 
-            Api.get(params.url(), function (data) {
+                var orderedData = params.sorting() ?
+                                    $filter('orderBy')(filteredData, params.orderBy()) :
+                                    filteredData;
 
-                params.total(data.TotalItems);
+                params.total(orderedData.length);
 
-                $defer.resolve(data.Items);
-            });
-        }
+                $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+            }
+        });
+
     });
 });
