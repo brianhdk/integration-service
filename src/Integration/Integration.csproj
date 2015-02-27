@@ -199,15 +199,8 @@
     <Compile Include="Model\TaskExecutionResult.cs" />
     <Compile Include="Model\TaskRunner.cs" />
     <Compile Include="Model\TaskService.cs" />
-    <Compile Include="Model\Web\AssetsController.cs" />
-    <Compile Include="Model\Web\ErrorsController.cs" />
     <Compile Include="Model\Web\ExceptionHandlingAttribute.cs" />
-    <Compile Include="Model\Web\HomeController.cs" />
-    <Compile Include="Model\Web\TaskDetailsController.cs" />
-    <Compile Include="Model\Web\LatestTasksController.cs" />
-    <Compile Include="Model\Web\RunningTasksController.cs" />
     <Compile Include="Model\Web\TaskController.cs" />
-    <Compile Include="Model\Web\TaskExecutionDetailsController.cs" />
     <Compile Include="Model\Web\WebApiHost.cs" />
     <Compile Include="Model\Web\WebApiTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

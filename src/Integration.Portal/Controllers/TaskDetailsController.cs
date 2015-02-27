@@ -5,8 +5,9 @@ using System.Net.Http;
 using System.Web.Http;
 using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Logging;
+using Vertica.Integration.Model;
 
-namespace Vertica.Integration.Model.Web
+namespace Vertica.Integration.Portal.Controllers
 {
 	public class TaskDetailsController : ApiController
 	{

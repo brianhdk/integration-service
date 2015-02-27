@@ -6,7 +6,7 @@ using System.Net.Http.Headers;
 using System.Web;
 using System.Web.Http;
 
-namespace Vertica.Integration.Model.Web
+namespace Vertica.Integration.Portal.Controllers
 {
     public class AssetsController : ApiController
     {

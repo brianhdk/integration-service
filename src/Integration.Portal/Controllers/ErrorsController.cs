@@ -4,7 +4,7 @@ using System.Web.Http;
 using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Logging;
 
-namespace Vertica.Integration.Model.Web
+namespace Vertica.Integration.Portal.Controllers
 {
     public class ErrorsController : ApiController
     {
