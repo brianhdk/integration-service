@@ -7,11 +7,9 @@
             page: 1,
             count: 10,
             sorting: {
-                TimeStamp: 'asc'
+                TimeStamp: 'desc'
             },
-            filter: {
-                name: ''       // initial filter
-            }
+            filter: {}
         }, {
             getData: function ($defer, params) {
                 var filteredData = params.filter() ?

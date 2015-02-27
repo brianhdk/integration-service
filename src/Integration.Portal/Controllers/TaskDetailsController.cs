@@ -22,7 +22,7 @@ namespace Vertica.Integration.Portal.Controllers
 
         public HttpResponseMessage Get()
         {
-            return Request.CreateResponse(HttpStatusCode.OK, _taskService.GetAll());
+            return Request.CreateResponse(HttpStatusCode.OK, _taskService.GetAll().OrderBy(x => x.DisplayName));
         }
 
         public HttpResponseMessage Get(string displayName)
