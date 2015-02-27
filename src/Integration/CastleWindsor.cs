@@ -6,7 +6,6 @@ using Castle.MicroKernel.Resolvers;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
-using Vertica.Integration.Infrastructure.Database.Castle.Windsor;
 using Vertica.Integration.Infrastructure.Database.Dapper.Castle.Windsor;
 using Vertica.Integration.Infrastructure.Database.NHibernate.Castle.Windsor;
 using Vertica.Integration.Infrastructure.Database.NHibernate.Connections;
@@ -40,7 +39,6 @@ namespace Vertica.Integration
 			container.Install(
                 new DapperInstaller(new Infrastructure.Database.Dapper.Databases.IntegrationDb(configuration.DatabaseConnectionStringName)),
 				new NHibernateInstaller(new IntegrationDb(configuration.DatabaseConnectionStringName)),
-                new DbInstaller(),
 				new TaskFactoryInstaller(),
                 new ConsoleWriterInstaller(),
                 new WebApiInstaller(webApi),
