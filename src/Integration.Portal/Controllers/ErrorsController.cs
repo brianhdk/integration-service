@@ -1,23 +1,25 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using Vertica.Integration.Infrastructure.Database;
+using Vertica.Integration.Infrastructure.Database.Dapper;
 using Vertica.Integration.Infrastructure.Logging;
 
 namespace Vertica.Integration.Portal.Controllers
 {
     public class ErrorsController : ApiController
     {
-        private readonly IDbFactory _dbFactory;
+        private readonly IDapperProvider _dapper;
 
-        public ErrorsController(IDbFactory dbFactory)
+        public ErrorsController(IDapperProvider dapper)
         {
-            _dbFactory = dbFactory;
+            _dapper = dapper;
         }
 
-        public HttpResponseMessage Get(long page, long count)
+        public HttpResponseMessage Get()
         {
-            var query = @"
+            string sql = @"
 SELECT [Id]
       ,[MachineName]
       ,[IdentityName]
@@ -27,22 +29,22 @@ SELECT [Id]
       ,[TimeStamp]
       ,[Severity]
       ,[Target]
-  FROM [ErrorLog]
+  FROM [ErrorLog] order by TimeStamp desc
 ";
 
-            IPage<ErrorLog> pageResult;
+            IEnumerable<ErrorLog> errors;
 
-            using (var db = _dbFactory.OpenDatabase())
+            using (IDapperSession session = _dapper.OpenSession())
             {
-                pageResult = db.Page<ErrorLog>(page, count, query);
+                errors = session.Query<ErrorLog>(sql);
             }
 
-            return Request.CreateResponse(HttpStatusCode.OK, pageResult);
+            return Request.CreateResponse(HttpStatusCode.OK, errors);
         }
 
         public HttpResponseMessage Get(int id)
         {
-            var query = @"
+            string sql = @"
 SELECT [Id]
       ,[MachineName]
       ,[IdentityName]
@@ -53,14 +55,14 @@ SELECT [Id]
       ,[Severity]
       ,[Target]
   FROM [ErrorLog]
-  WHERE [ID] = @0
+  WHERE [ID] = @id order by TimeStamp desc
 ";
 
             ErrorLog error;
 
-            using (var db = _dbFactory.OpenDatabase())
+            using (IDapperSession session = _dapper.OpenSession())
             {
-                error = db.SingleOrDefault<ErrorLog>(query, id);
+                error = session.Query<ErrorLog>(sql, new { id }).SingleOrDefault();
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, error);

@@ -3,23 +3,23 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using Vertica.Integration.Infrastructure.Database;
+using Vertica.Integration.Infrastructure.Database.Dapper;
 using Vertica.Integration.Infrastructure.Logging;
 
 namespace Vertica.Integration.Portal.Controllers
 {
     public class TaskExecutionDetailsController : ApiController
     {
-        private readonly IDbFactory _dbFactory;
+        private readonly IDapperProvider _dapper;
 
-        public TaskExecutionDetailsController(IDbFactory dbFactory)
-		{
-			_dbFactory = dbFactory;
-		}
+        public TaskExecutionDetailsController(IDapperProvider dapper)
+        {
+            _dapper = dapper;
+        }
 
-	    public HttpResponseMessage Get(int id)
-		{
-            var query = @"
+        public HttpResponseMessage Get(int id)
+        {
+            string sql = @"
 SELECT [Id]
       ,[Type]
       ,[TaskName]
@@ -31,14 +31,13 @@ SELECT [Id]
       ,[StepLog_Id]
       ,[ErrorLog_Id]
   FROM [IC_PJ_Integration].[dbo].[TaskLog]
-  WHERE [Id] = @0 OR TaskLog_Id = @0
-";
+  WHERE [Id] = @id OR TaskLog_Id = @taskLogId";
 
             IEnumerable<TaskLog> taskLogs;
 
-            using (var db = _dbFactory.OpenDatabase())
+            using (IDapperSession session = _dapper.OpenSession())
             {
-                taskLogs = db.Query<TaskLog>(query, id).ToList();
+                taskLogs = session.Query<TaskLog>(sql, new { id, taskLogId = id }).ToList();
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, taskLogs);
