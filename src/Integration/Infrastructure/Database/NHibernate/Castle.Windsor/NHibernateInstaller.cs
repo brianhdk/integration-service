@@ -12,7 +12,7 @@ using Environment = NHibernate.Cfg.Environment;
 
 namespace Vertica.Integration.Infrastructure.Database.NHibernate.Castle.Windsor
 {
-	public class NHibernateInstaller : NHibernateInstaller<DefaultConnection>
+    internal class NHibernateInstaller : NHibernateInstaller<DefaultConnection>
 	{
 	    private static readonly Lazy<Action> EnsureSingleton = new Lazy<Action>(() => () => { });
  

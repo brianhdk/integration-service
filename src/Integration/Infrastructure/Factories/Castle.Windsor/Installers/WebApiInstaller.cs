@@ -8,13 +8,13 @@ using Vertica.Integration.Model.Web;
 
 namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 {
-    public class WebApiInstaller : IWindsorInstaller
+    internal class WebApiInstaller : IWindsorInstaller
 	{
-        private readonly Assembly[] _assemblies;
+        private readonly WebApiConfiguration _configuration;
 
-        public WebApiInstaller(params Assembly[] assemblies)
+        public WebApiInstaller(WebApiConfiguration configuration)
         {
-            _assemblies = assemblies ?? new Assembly[0];
+            _configuration = configuration;
         }
 
         public void Install(IWindsorContainer container, IConfigurationStore store)
@@ -23,7 +23,7 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
                 .Register(Component.For<ITask>()
                 .ImplementedBy<WebApiTask>().Named("WebApiTask"));
 
-            foreach (var assembly in _assemblies)
+            foreach (Assembly assembly in _configuration.Assemblies)
             {
                 container.Register(
                     Classes.FromAssembly(assembly)
@@ -31,6 +31,12 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
                         .WithServiceSelf()
                         .LifestyleTransient());
             }
+
+            container.Register(
+                Classes.From(_configuration.Controllers)
+                    .BasedOn<ApiController>()
+                    .WithServiceSelf()
+                    .LifestyleTransient());
 		}
 	}
 }

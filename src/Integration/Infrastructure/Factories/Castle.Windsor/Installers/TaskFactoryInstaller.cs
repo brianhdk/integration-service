@@ -11,7 +11,7 @@ using Vertica.Integration.Model.Exceptions;
 
 namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 {
-    public class TaskFactoryInstaller : IWindsorInstaller
+    internal class TaskFactoryInstaller : IWindsorInstaller
 	{
 		public void Install(IWindsorContainer container, IConfigurationStore store)
 		{
