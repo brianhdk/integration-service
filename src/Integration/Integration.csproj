@@ -36,6 +36,9 @@
     <Reference Include="Castle.Windsor">
       <HintPath>..\..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
+    <Reference Include="Dapper">
+      <HintPath>..\..\packages\Dapper.1.38\lib\net45\Dapper.dll</HintPath>
+    </Reference>
     <Reference Include="FluentMigrator">
       <HintPath>..\..\packages\FluentMigrator.1.4.0.0\lib\40\FluentMigrator.dll</HintPath>
     </Reference>
@@ -121,6 +124,14 @@
     <Compile Include="Infrastructure\Configuration\IParametersProvider.cs" />
     <Compile Include="Infrastructure\Configuration\Parameters.cs" />
     <Compile Include="Infrastructure\Configuration\ParametersProvider.cs" />
+    <Compile Include="Infrastructure\Database\Dapper\Castle.Windsor\DapperInstaller.cs" />
+    <Compile Include="Infrastructure\Database\Dapper\Castle.Windsor\DapperSelector.cs" />
+    <Compile Include="Infrastructure\Database\Dapper\Connection.cs" />
+    <Compile Include="Infrastructure\Database\Dapper\DapperSession.cs" />
+    <Compile Include="Infrastructure\Database\Dapper\Databases\IntegrationDb.cs" />
+    <Compile Include="Infrastructure\Database\Dapper\DefaultConnection.cs" />
+    <Compile Include="Infrastructure\Database\Dapper\IDapperProvider.cs" />
+    <Compile Include="Infrastructure\Database\Dapper\IDapperSession.cs" />
     <Compile Include="Infrastructure\Database\IDb.cs" />
     <Compile Include="Infrastructure\Database\IDbFactory.cs" />
     <Compile Include="Infrastructure\Database\Db.cs" />
