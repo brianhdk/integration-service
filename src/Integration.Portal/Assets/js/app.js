@@ -43,5 +43,10 @@ integrationsApp.config(function ($routeProvider) {
             templateUrl: '/assets/pages/taskList.html',
             controller: 'latestTasksController'
         })
+
+        .when('/graph', {
+            templateUrl: '/assets/pages/graph.html',
+            controller: 'graphController'
+        })
     ;
 });

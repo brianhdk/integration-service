@@ -5,7 +5,7 @@ using Vertica.Integration.Infrastructure.Database.Dapper;
 
 namespace Vertica.Integration.Portal.Controllers
 {
-	class GraphController : ApiController
+	public class GraphController : ApiController
     {
         private readonly IDapperProvider _dapper;
 

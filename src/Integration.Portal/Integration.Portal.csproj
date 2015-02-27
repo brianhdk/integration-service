@@ -89,6 +89,7 @@
     <Content Include="Assets\js\controller\errorDetailController.js" />
     <Content Include="Assets\js\controller\errorsController.js" />
     <Content Include="Assets\js\controller\latestTasksController.js" />
+    <Content Include="Assets\js\controller\graphController.js" />
     <Content Include="Assets\js\controller\mainController.js" />
     <Content Include="Assets\js\controller\runningTasksController.js" />
     <Content Include="Assets\js\controller\taskDetailsController.js" />
@@ -104,6 +105,7 @@
     <Content Include="Assets\layout\fonts\source-sans-pro\sourcesanspro-extralight.svg" />
     <Content Include="Assets\layout\fonts\source-sans-pro\sourcesanspro-regular.svg" />
     <Content Include="Assets\layout\fonts\source-sans-pro\sourcesanspro-semibold.svg" />
+    <Content Include="Assets\pages\graph.html" />
     <Content Include="Assets\pages\errors-detail.html" />
     <Content Include="Assets\pages\errors.html" />
     <Content Include="Assets\pages\taskDetail.html" />
