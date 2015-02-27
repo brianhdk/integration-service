@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>Task Manager Portal</title>
+
     <link href="assets/layout/bootstrap/css/bootstrap.css" rel="stylesheet">
 	<link href="assets/layout/css/drunken-parrot.css" rel="stylesheet" />
     <link href="assets/layout/css/drunken-parrot-theme.css" rel="stylesheet"/>
@@ -22,6 +23,7 @@
 	<script src="assets/js/controller/errorDetailController.js"></script>
 	<script src="assets/js/controller/taskDetailsController.js"></script>
     <script src="assets/js/controller/taskExecutionDetailsController.js"></script>
+    <script src="assets/js/controller/archivesController.js"></script>
 </head>
 <body ng-controller="mainController">
 	<div class="masthead palette-the-black-flag">
@@ -37,6 +39,7 @@
 			<li ng-class="{'active' : isActive('/running-tasks')}"><a href="#running-tasks">Running tasks</a></li>
 		    <li ng-class="{'active' : isActive('/latest-tasks')}"><a href="#latest-tasks">Latest tasks</a></li>
             <li ng-class="{'active' : isActive('/tasks')}"><a href="#tasks">Task Types</a></li>
+            <li ng-class="{'active' : isActive('/archives')}"><a href="#archives">Archives</a></li>
 		</ul>
 		<div class="row">
 			<div ng-view></div>
