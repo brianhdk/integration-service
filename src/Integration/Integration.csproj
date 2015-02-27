@@ -225,6 +225,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
+    <Content Include="Portal\Assets\js\angular\angular-resource.js" />
     <Content Include="Portal\Assets\js\angular\ng-table\ng-table.css" />
     <Content Include="Portal\Assets\js\angular\ng-table\ng-table.js" />
     <Content Include="Portal\Assets\js\angular\ng-table\ng-table.min.css" />
@@ -249,6 +250,7 @@
     <Content Include="Portal\Assets\pages\taskList.html" />
     <Content Include="Portal\Assets\pages\tasks.html" />
     <Content Include="Portal\Default.html" />
+    <None Include="Portal\Assets\js\angular\angular-resource.min.js.map" />
     <None Include="Portal\Assets\js\angular\angular-route.min.js.map" />
     <None Include="Portal\Assets\js\angular\angular.min.js.map" />
     <None Include="Portal\Assets\js\angular\ng-table\ng-table.less" />

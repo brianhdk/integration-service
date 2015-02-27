@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Vertica.Integration.Infrastructure.Database;
@@ -16,7 +15,7 @@ namespace Vertica.Integration.Model.Web
             _dbFactory = dbFactory;
         }
 
-        public HttpResponseMessage Get()
+        public HttpResponseMessage Get(long page, long count)
         {
             var query = @"
 SELECT [Id]
@@ -31,21 +30,20 @@ SELECT [Id]
   FROM [ErrorLog]
 ";
 
-            IEnumerable<ErrorLog> errors;
+            IPage<ErrorLog> pageResult;
 
             using (var db = _dbFactory.OpenDatabase())
             {
-                errors = db.Page<ErrorLog>(1, 20, query).Items;
-                //errors = db.Query<ErrorLog>(query).ToList();
+                pageResult = db.Page<ErrorLog>(page, count, query);
             }
 
-            return Request.CreateResponse(HttpStatusCode.OK, errors);
+            return Request.CreateResponse(HttpStatusCode.OK, pageResult);
         }
 
         public HttpResponseMessage Get(int id)
         {
             var query = @"
-SELECT TOP 100 [Id]
+SELECT [Id]
       ,[MachineName]
       ,[IdentityName]
       ,[CommandLine]
