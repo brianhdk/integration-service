@@ -3,23 +3,23 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using Vertica.Integration.Infrastructure.Database;
+using Vertica.Integration.Infrastructure.Database.Dapper;
 using Vertica.Integration.Infrastructure.Logging;
 
 namespace Vertica.Integration.Portal.Controllers
 {
     public class LatestTasksController : ApiController
-	{
-		private readonly IDbFactory _dbFactory;
+    {
+        private readonly IDapperProvider _dapper;
 
-	    public LatestTasksController(IDbFactory dbFactory)
-	    {
-		    _dbFactory = dbFactory;
-	    }
-
-	    public HttpResponseMessage Get(int count)
+        public LatestTasksController(IDapperProvider dapper)
         {
-            var query = string.Format(@"
+            _dapper = dapper;
+        }
+
+        public HttpResponseMessage Get(int count)
+        {
+            string sql = string.Format(@"
 SELECT TOP {0}
 	[Id],
 	[Type],
@@ -33,14 +33,13 @@ SELECT TOP {0}
 	[ErrorLog_Id]
 FROM [TaskLog]
 WHERE Type = 'T'
-ORDER BY timestamp DESC
-", count);
+ORDER BY timestamp DESC", count);
 
             IEnumerable<TaskLog> tasks;
 
-			using (IDb db = _dbFactory.OpenDatabase())
-			{
-                tasks = db.Query<TaskLog>(query).ToList();
+            using (IDapperSession session = _dapper.OpenSession())
+            {
+                tasks = session.Query<TaskLog>(sql).ToList();
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, tasks);

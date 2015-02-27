@@ -3,23 +3,23 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using Vertica.Integration.Infrastructure.Database;
+using Vertica.Integration.Infrastructure.Database.Dapper;
 using Vertica.Integration.Infrastructure.Logging;
 
 namespace Vertica.Integration.Portal.Controllers
 {
     public class RunningTasksController : ApiController
     {
-        private readonly IDbFactory _dbFactory;
+        private readonly IDapperProvider _dappper;
 
-        public RunningTasksController(IDbFactory dbFactory)
+        public RunningTasksController(IDapperProvider dappper)
         {
-            _dbFactory = dbFactory;
+            _dappper = dappper;
         }
 
         public HttpResponseMessage Get()
         {
-            var query = string.Format(@"
+            string sql = string.Format(@"
 SELECT
 	[Id],
 	[Type],
@@ -38,9 +38,9 @@ AND ErrorLog_Id IS NULL
 
             IEnumerable<TaskLog> tasks;
 
-            using (IDb db = _dbFactory.OpenDatabase())
+            using (IDapperSession session = _dappper.OpenSession())
             {
-                tasks = db.Query<TaskLog>(query).ToList();
+                tasks = session.Query<TaskLog>(sql).ToList();
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, tasks);
