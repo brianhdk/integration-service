@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Controllers\AssetsController.cs" />
     <Compile Include="Controllers\ErrorsController.cs" />
+    <Compile Include="Controllers\GraphController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LatestTasksController.cs" />
     <Compile Include="Controllers\RunningTasksController.cs" />
@@ -72,6 +73,65 @@
       <Name>Integration</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\js\angular\angular-resource.js" />
+    <Content Include="Assets\js\angular\angular-resource.min.js" />
+    <Content Include="Assets\js\angular\angular-route.min.js" />
+    <Content Include="Assets\js\angular\angular-sanitize.min.js" />
+    <Content Include="Assets\js\angular\angular.min.js" />
+    <Content Include="Assets\js\angular\ng-table\ng-table.css" />
+    <Content Include="Assets\js\angular\ng-table\ng-table.js" />
+    <Content Include="Assets\js\angular\ng-table\ng-table.min.css" />
+    <Content Include="Assets\js\angular\ng-table\ng-table.min.js" />
+    <Content Include="Assets\js\angular\restangular\restangular.js" />
+    <Content Include="Assets\js\angular\restangular\restangular.min.js" />
+    <Content Include="Assets\js\app.js" />
+    <Content Include="Assets\js\controller\errorDetailController.js" />
+    <Content Include="Assets\js\controller\errorsController.js" />
+    <Content Include="Assets\js\controller\latestTasksController.js" />
+    <Content Include="Assets\js\controller\mainController.js" />
+    <Content Include="Assets\js\controller\runningTasksController.js" />
+    <Content Include="Assets\js\controller\taskDetailsController.js" />
+    <Content Include="Assets\js\controller\taskExecutionDetailsController.js" />
+    <Content Include="Assets\layout\bootstrap\css\bootstrap.css" />
+    <Content Include="Assets\layout\bootstrap\css\prettify.css" />
+    <Content Include="Assets\layout\bootstrap\js\bootstrap.min.js" />
+    <Content Include="Assets\layout\bootstrap\js\prettify.js" />
+    <Content Include="Assets\layout\css\drunken-parrot-theme.css" />
+    <Content Include="Assets\layout\css\drunken-parrot.css" />
+    <Content Include="Assets\layout\css\style.css" />
+    <Content Include="Assets\layout\fonts\source-sans-pro\sourcesanspro-bold.svg" />
+    <Content Include="Assets\layout\fonts\source-sans-pro\sourcesanspro-extralight.svg" />
+    <Content Include="Assets\layout\fonts\source-sans-pro\sourcesanspro-regular.svg" />
+    <Content Include="Assets\layout\fonts\source-sans-pro\sourcesanspro-semibold.svg" />
+    <Content Include="Assets\pages\errors-detail.html" />
+    <Content Include="Assets\pages\errors.html" />
+    <Content Include="Assets\pages\taskDetail.html" />
+    <Content Include="Assets\pages\taskExecutionDetail.html" />
+    <Content Include="Assets\pages\taskList.html" />
+    <Content Include="Assets\pages\tasks.html" />
+    <Content Include="Default.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\js\angular\angular-resource.min.js.map" />
+    <None Include="Assets\js\angular\angular-route.min.js.map" />
+    <None Include="Assets\js\angular\angular.min.js.map" />
+    <None Include="Assets\js\angular\ng-table\ng-table.less" />
+    <None Include="Assets\js\angular\ng-table\ng-table.min.js.map" />
+    <None Include="Assets\layout\fonts\source-sans-pro\sourcesanspro-bold.eot" />
+    <None Include="Assets\layout\fonts\source-sans-pro\sourcesanspro-bold.ttf" />
+    <None Include="Assets\layout\fonts\source-sans-pro\sourcesanspro-bold.woff" />
+    <None Include="Assets\layout\fonts\source-sans-pro\sourcesanspro-extralight.eot" />
+    <None Include="Assets\layout\fonts\source-sans-pro\sourcesanspro-extralight.ttf" />
+    <None Include="Assets\layout\fonts\source-sans-pro\sourcesanspro-extralight.woff" />
+    <None Include="Assets\layout\fonts\source-sans-pro\sourcesanspro-regular.eot" />
+    <None Include="Assets\layout\fonts\source-sans-pro\sourcesanspro-regular.ttf" />
+    <None Include="Assets\layout\fonts\source-sans-pro\sourcesanspro-regular.woff" />
+    <None Include="Assets\layout\fonts\source-sans-pro\sourcesanspro-semibold.eot" />
+    <None Include="Assets\layout\fonts\source-sans-pro\sourcesanspro-semibold.ttf" />
+    <None Include="Assets\layout\fonts\source-sans-pro\sourcesanspro-semibold.woff" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
