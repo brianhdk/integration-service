@@ -5,7 +5,7 @@ using Vertica.Integration.Infrastructure.Database;
 
 namespace Vertica.Integration.Portal.Controllers
 {
-	class GraphController : ApiController
+	public class GraphController : ApiController
     {
         private readonly IDbFactory _dbFactory;
 
@@ -13,8 +13,6 @@ namespace Vertica.Integration.Portal.Controllers
 		{
 			_dbFactory = dbFactory;
 		}
-
-
 
 		public HttpResponseMessage Get(int id)
 		{
