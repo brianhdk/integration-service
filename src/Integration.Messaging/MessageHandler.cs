@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Integration.Messaging
+namespace Vertica.Integration.Messaging
 {
 	public abstract class MessageHandler<TMessage>
 	{
