@@ -29,7 +29,8 @@ SELECT [Id]
       ,[TimeStamp]
       ,[Severity]
       ,[Target]
-FROM [dbo].[ErrorLog]";
+  FROM [ErrorLog] order by TimeStamp desc
+";
 
             IEnumerable<ErrorLog> errors;
 
@@ -54,7 +55,7 @@ SELECT [Id]
       ,[Severity]
       ,[Target]
   FROM [ErrorLog]
-  WHERE [ID] = @id
+  WHERE [ID] = @0 order by TimeStamp desc
 ";
 
             ErrorLog error;
