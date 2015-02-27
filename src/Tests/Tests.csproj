@@ -64,8 +64,6 @@
   <ItemGroup>
     <Compile Include="Domain\Monitoring\MessageContainsTextIgnoreFilterTester.cs" />
     <Compile Include="Domain\Monitoring\MonitorWorkItemTester.cs" />
-    <Compile Include="Messaging\MessageHandlerMock.cs" />
-    <Compile Include="Messaging\MessageHandlerTests.cs" />
     <Compile Include="Model\TaskRunnerTester.cs" />
     <Compile Include="Model\Web\ErrorsControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
