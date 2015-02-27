@@ -72,6 +72,14 @@
       <Name>Integration</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\js\controller\errorsController.js" />
+    <Content Include="Assets\js\controller\graphController.js" />
+    <Content Include="Assets\pages\graph.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="layout\fonts\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
