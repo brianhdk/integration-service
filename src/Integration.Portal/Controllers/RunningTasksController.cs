@@ -34,6 +34,7 @@ SELECT
 FROM [TaskLog]
 WHERE ExecutionTimeSeconds = 0
 AND ErrorLog_Id IS NULL
+ order by TimeStamp desc
 ");
 
             IEnumerable<TaskLog> tasks;
