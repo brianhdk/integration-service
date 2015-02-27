@@ -30,7 +30,7 @@ SELECT [Id]
       ,[TaskLog_Id]
       ,[StepLog_Id]
       ,[ErrorLog_Id]
-  FROM [IC_PJ_Integration].[dbo].[TaskLog]
+  FROM [dbo].[TaskLog]
   WHERE [Id] = @id OR TaskLog_Id = @taskLogId";
 
             IEnumerable<TaskLog> taskLogs;

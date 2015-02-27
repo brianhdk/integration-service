@@ -43,5 +43,10 @@ integrationsApp.config(function ($routeProvider) {
             templateUrl: '/assets/pages/taskList.html',
             controller: 'latestTasksController'
         })
+
+        .when('/archives', {
+            templateUrl: '/assets/pages/archives.html',
+            controller: 'archivesController'
+        })
     ;
 });
