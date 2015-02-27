@@ -238,66 +238,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
-    <Content Include="Portal\Assets\js\angular\angular-resource.js" />
-    <Content Include="Portal\Assets\js\angular\ng-table\ng-table.css" />
-    <Content Include="Portal\Assets\js\angular\ng-table\ng-table.js" />
-    <Content Include="Portal\Assets\js\angular\ng-table\ng-table.min.css" />
-    <Content Include="Portal\Assets\js\angular\ng-table\ng-table.min.js" />
-    <Content Include="Portal\Assets\js\angular\restangular\restangular.js" />
-    <Content Include="Portal\Assets\js\angular\restangular\restangular.min.js" />
-    <Content Include="Portal\Assets\js\app.js" />
-    <Content Include="Portal\Assets\js\controller\errorDetailController.js" />
-    <Content Include="Portal\Assets\js\controller\latestTasksController.js" />
-    <Content Include="Portal\Assets\js\controller\mainController.js" />
-    <Content Include="Portal\Assets\js\controller\runningTasksController.js" />
-    <Content Include="Portal\Assets\js\controller\taskDetailsController.js" />
-    <Content Include="Portal\Assets\js\controller\taskExecutionDetailsController.js" />
-    <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-bold.svg" />
-    <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-extralight.svg" />
-    <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-regular.svg" />
-    <Content Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-semibold.svg" />
-    <Content Include="Portal\Assets\pages\errors-detail.html" />
-    <Content Include="Portal\Assets\pages\errors.html" />
-    <Content Include="Portal\Assets\pages\taskDetail.html" />
-    <Content Include="Portal\Assets\pages\taskExecutionDetail.html" />
-    <Content Include="Portal\Assets\pages\taskList.html" />
-    <Content Include="Portal\Assets\pages\tasks.html" />
-    <Content Include="Portal\Default.html" />
-    <None Include="Portal\Assets\js\angular\angular-resource.min.js.map" />
-    <None Include="Portal\Assets\js\angular\angular-route.min.js.map" />
-    <None Include="Portal\Assets\js\angular\angular.min.js.map" />
-    <None Include="Portal\Assets\js\angular\ng-table\ng-table.less" />
-    <None Include="Portal\Assets\js\angular\ng-table\ng-table.min.js.map" />
-    <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-bold.eot" />
-    <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-bold.ttf" />
-    <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-bold.woff" />
-    <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-extralight.eot" />
-    <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-extralight.ttf" />
-    <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-extralight.woff" />
-    <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-regular.eot" />
-    <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-regular.ttf" />
-    <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-regular.woff" />
-    <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-semibold.eot" />
-    <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-semibold.ttf" />
-    <None Include="Portal\Assets\layout\fonts\source-sans-pro\sourcesanspro-semibold.woff" />
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Portal\Assets\js\angular\angular-resource.min.js" />
-    <Content Include="Portal\Assets\js\angular\angular-route.min.js" />
-    <Content Include="Portal\Assets\js\angular\angular-sanitize.min.js" />
-    <Content Include="Portal\Assets\js\angular\angular.min.js" />
-    <Content Include="Portal\Assets\js\controller\errorsController.js" />
-    <Content Include="Portal\Assets\layout\bootstrap\css\bootstrap.css" />
-    <Content Include="Portal\Assets\layout\bootstrap\css\prettify.css" />
-    <Content Include="Portal\Assets\layout\bootstrap\js\bootstrap.min.js" />
-    <Content Include="Portal\Assets\layout\bootstrap\js\prettify.js" />
-    <Content Include="Portal\Assets\layout\css\drunken-parrot-theme.css" />
-    <Content Include="Portal\Assets\layout\css\drunken-parrot.css" />
-    <Content Include="Portal\Assets\layout\css\style.css" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
