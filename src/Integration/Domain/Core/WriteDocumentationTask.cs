@@ -20,7 +20,7 @@ namespace Vertica.Integration.Domain.Core
         {
             var sb = new StringBuilder();
 
-            foreach (ITask task in _taskService.GetAll())
+		    foreach (ITask task in _taskService.GetAll())
             {
                 sb.AppendLine(task.DisplayName);
                 sb.AppendLine();
