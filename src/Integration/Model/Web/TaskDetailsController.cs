@@ -30,6 +30,7 @@ namespace Vertica.Integration.Model.Web
 
 			return Request.CreateResponse(HttpStatusCode.OK, task);
 		}
+
 		public HttpResponseMessage Get(string displayName, int count)
 		{
 			var query = string.Format(@"
