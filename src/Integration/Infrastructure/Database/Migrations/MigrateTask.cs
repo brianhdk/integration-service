@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Reflection;
 using System.Text;
 using FluentMigrator;
@@ -6,7 +7,7 @@ using FluentMigrator.Runner;
 using FluentMigrator.Runner.Announcers;
 using FluentMigrator.Runner.Initialization;
 using FluentMigrator.Runner.Processors.SqlServer;
-using Vertica.Integration.Infrastructure.Database.NHibernate;
+using Vertica.Integration.Infrastructure.Database.Dapper;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
 
@@ -14,12 +15,12 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
     public class MigrateTask : Task
     {
-        private readonly Lazy<ISessionFactoryProvider> _sessionFactory;
+        private readonly IDapperProvider _dapper;
         private readonly IDisposable _loggingDisabler;
 
-        public MigrateTask(Lazy<ISessionFactoryProvider> sessionFactory, ILogger logger)
+        public MigrateTask(IDapperProvider dapper, ILogger logger)
         {
-            _sessionFactory = sessionFactory;
+            _dapper = dapper;
 
             StringBuilder output;
             MigrationRunner runner = CreateRunner(out output);
@@ -68,23 +69,22 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
                 sb.Append(s);
             });
 
-            // todo:configurable?
             var factory = new SqlServer2012ProcessorFactory();
 
-            IMigrationProcessor processor = factory.Create(
-                _sessionFactory.Value.CurrentSession.Connection.ConnectionString,
-                announcer,
-                new MigrationOptions());
-
-            // todo: allow for configuration of additional assemblies+namespaces,
-            var assembly = Assembly.GetExecutingAssembly();
-
-            var context = new RunnerContext(announcer)
+            using (IDbConnection connection = _dapper.GetConnection())
             {
-                Namespace = typeof (M1_Baseline).Namespace
-            };
+                IMigrationProcessor processor = factory.Create(connection.ConnectionString, announcer, new MigrationOptions());
 
-            return new MigrationRunner(assembly, context, processor);
+                // todo: allow for configuration of additional assemblies+namespaces,
+                var assembly = Assembly.GetExecutingAssembly();
+
+                var context = new RunnerContext(announcer)
+                {
+                    Namespace = typeof(M1_Baseline).Namespace
+                };
+
+                return new MigrationRunner(assembly, context, processor);                
+            }
         }
 
         private class MigrationOptions : IMigrationProcessorOptions

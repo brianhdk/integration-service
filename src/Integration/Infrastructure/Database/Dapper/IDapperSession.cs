@@ -11,5 +11,7 @@ namespace Vertica.Integration.Infrastructure.Database.Dapper
         int Execute(string sql, dynamic param = null);
         T ExecuteScalar<T>(string sql, dynamic param = null);
         IEnumerable<T> Query<T>(string sql, dynamic param = null);
+
+        IDbConnection Connection { get; }
     }
 }
