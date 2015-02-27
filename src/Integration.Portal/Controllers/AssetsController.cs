@@ -26,7 +26,7 @@ namespace Vertica.Integration.Portal.Controllers
             if (String.IsNullOrWhiteSpace(path)) throw new ArgumentException(@"Value cannot be null or empty.", "path");
 
 #if DEBUG
-            const string codeFileDirectory = @"..\..\..\..\Integration\Portal\";
+            const string codeFileDirectory = @"..\..\..\..\Integration.Portal\";
 
             if (Directory.Exists(Path.Combine(Root, codeFileDirectory)))
                 path = String.Concat(codeFileDirectory, path);

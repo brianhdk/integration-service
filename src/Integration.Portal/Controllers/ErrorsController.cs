@@ -27,7 +27,7 @@ SELECT [Id]
       ,[TimeStamp]
       ,[Severity]
       ,[Target]
-  FROM [ErrorLog]
+  FROM [ErrorLog] order by TimeStamp desc
 ";
 
             IPage<ErrorLog> pageResult;
@@ -53,7 +53,7 @@ SELECT [Id]
       ,[Severity]
       ,[Target]
   FROM [ErrorLog]
-  WHERE [ID] = @0
+  WHERE [ID] = @0 order by TimeStamp desc
 ";
 
             ErrorLog error;
