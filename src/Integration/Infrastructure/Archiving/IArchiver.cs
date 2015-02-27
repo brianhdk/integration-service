@@ -8,5 +8,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
         SavedArchive[] GetAll();
         byte[] Get(int id);
+
+        int Delete(DateTime olderThan);
     }
 }

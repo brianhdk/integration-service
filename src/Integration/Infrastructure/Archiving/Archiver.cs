@@ -29,7 +29,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
                 {
                     byte[] data = stream.ToArray();
 
-                    archiveId = session.Query<int>(
+                    archiveId = session.ExecuteScalar<int>(
                         "INSERT INTO Archive (Name, BinaryData, ByteSize, Created) VALUES (@Name, @BinaryData, @ByteSize, @Created);" +
                         "SELECT CAST(SCOPE_IDENTITY() AS INT);",
                         new
@@ -38,7 +38,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
                             BinaryData = data,
                             ByteSize = data.Length,
                             Created = Time.UtcNow
-                        }).Single();
+                        });
 
                     transaction.Commit();
                 }
@@ -63,6 +63,19 @@ namespace Vertica.Integration.Infrastructure.Archiving
                 return
                     session.Query<byte[]>("SELECT BinaryData FROM Archive WHERE Id = @Id", new { Id = id })
                         .SingleOrDefault();
+            }
+        }
+
+        public int Delete(DateTime olderThan)
+        {
+            using (IDapperSession session = _dapper.OpenSession())
+            using (IDbTransaction transaction = session.BeginTransaction())
+            {
+                int count = session.Execute("DELETE FROM Archive WHERE Created <= @olderThan", new { olderThan });
+
+                transaction.Commit();
+
+                return count;
             }
         }
     }

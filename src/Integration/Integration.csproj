@@ -123,6 +123,7 @@
     <Compile Include="Infrastructure\Archiving\Archive.cs" />
     <Compile Include="Infrastructure\Archiving\Archiver.cs" />
     <Compile Include="Infrastructure\Archiving\ArchiverExtensions.cs" />
+    <Compile Include="Infrastructure\Archiving\CleanUpArchivesStep.cs" />
     <Compile Include="Infrastructure\Archiving\DumpArchiveTask.cs" />
     <Compile Include="Infrastructure\Archiving\IArchiver.cs" />
     <Compile Include="Infrastructure\Archiving\SavedArchive.cs" />
