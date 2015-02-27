@@ -22,6 +22,8 @@
 	<script src="assets/js/controller/errorDetailController.js"></script>
 	<script src="assets/js/controller/taskDetailsController.js"></script>
     <script src="assets/js/controller/taskExecutionDetailsController.js"></script>
+    <script src="assets/js/controller/graphController.js"></script>
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 </head>
 <body ng-controller="mainController">
 	<div class="masthead palette-the-black-flag">
@@ -37,6 +39,7 @@
 			<li ng-class="{'active' : isActive('/running-tasks')}"><a href="#running-tasks">Running tasks</a></li>
 		    <li ng-class="{'active' : isActive('/latest-tasks')}"><a href="#latest-tasks">Latest tasks</a></li>
             <li ng-class="{'active' : isActive('/tasks')}"><a href="#tasks">Task Types</a></li>
+            <li ng-class="{'active' : isActive('/graph')}"><a href="#graph">Graph</a></li>
 		</ul>
 		<div class="row">
 			<div ng-view></div>
