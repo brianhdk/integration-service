@@ -7,7 +7,7 @@ using NUnit.Framework;
 using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Database.PetaPoco;
 using Vertica.Integration.Infrastructure.Logging;
-using Vertica.Integration.Model.Web;
+using Vertica.Integration.Portal.Controllers;
 
 namespace Vertica.Integration.Tests.Model.Web
 {
