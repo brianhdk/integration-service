@@ -51,7 +51,8 @@ namespace Vertica.Integration.Infrastructure.Archiving
         {
             using (IDapperSession session = _dapper.OpenSession())
             {
-                return session.Query<SavedArchive>("SELECT Id, Name, ByteSize, Created FROM Archive").ToArray();
+                return session.Query<SavedArchive>("SELECT Id, Name, ByteSize, Created FROM Archive")
+                    .ToArray();
             }
         }
 

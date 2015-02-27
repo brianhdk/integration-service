@@ -5,7 +5,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Vertica.Integration.Infrastructure.Archiving;
 using Vertica.Integration.Infrastructure.Database.Dapper;
-
+    
 namespace Vertica.Integration.Tests.Infrastructure.Archiving
 {
     [TestFixture]
@@ -18,16 +18,11 @@ namespace Vertica.Integration.Tests.Infrastructure.Archiving
 
             using (Archive archive = subject.Create("Test Archive", Console.WriteLine))
             {
-                var file = new FileInfo(String.Format("ArchiveTest-{0}.txt", Guid.NewGuid().ToString("N")));
-
-                using (var writer = file.CreateText())
-                {
-                    writer.Write(new string('A', 1000));
-                }
-
-                archive.IncludeFile(file);
                 archive.IncludeFile(new FileInfo(@"Castle.Core.dll"));
-                //archive.IncludeFolder(new DirectoryInfo(@"C:\Users\bhk\Documents\GitHub\checklist"));
+                archive.IncludeFolder(new DirectoryInfo(@"C:\Users\bhk\Documents\GitHub\checklist"));
+                archive.IncludeContent("A", new string('A', 1000));
+                archive.IncludeContent("B", new string('B', 3000));
+                archive.IncludeBinary("B.bin", new byte[] { 1, 2, 3 });
                 //archive.IncludeObject("sadfsdf");
             }
         }
