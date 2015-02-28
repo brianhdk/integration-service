@@ -65,7 +65,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 	    public IDisposable Disable()
 	    {
 	        _disablers.Push(_dummy);
-	        return new Disabler(() => _disablers.Pop());;
+	        return new Disabler(() => _disablers.Pop());
 	    }
 
 	    private class Disabler : IDisposable
