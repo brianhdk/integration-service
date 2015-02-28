@@ -1,32 +1,45 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Vertica.Integration.Infrastructure.Configuration;
-using Vertica.Integration.Infrastructure.Database.Dapper;
 
 namespace Vertica.Integration.Portal.Controllers
 {
     public class ConfigurationController : ApiController
     {
-        private readonly IDapperProvider _dapper;
 	    private readonly IConfigurationProvider _configurationProvider;
 
-        public ConfigurationController(IDapperProvider dapper, IConfigurationProvider configurationProvider)
+        public ConfigurationController(IConfigurationProvider configurationProvider)
         {
-	        _dapper = dapper;
 	        _configurationProvider = configurationProvider;
         }
 
 	    public HttpResponseMessage Get()
 	    {
-		    var configs = _configurationProvider.GetAll();
-            return Request.CreateResponse(HttpStatusCode.OK, configs);
+		    Configuration[] configurations = _configurationProvider.GetAll();
+
+            return Request.CreateResponse(HttpStatusCode.OK, configurations);
         }
 
 		public HttpResponseMessage Get(string clrType)
 	    {
-		    var config = _configurationProvider.Get(clrType);
-            return Request.CreateResponse(HttpStatusCode.OK, config);
+		    Configuration configuration = _configurationProvider.Get(clrType);
+
+            return Request.CreateResponse(HttpStatusCode.OK, configuration);
+        }
+
+        public HttpResponseMessage Put(Configuration configuration)
+        {
+            if (configuration == null) throw new ArgumentNullException("configuration");
+
+            // TODO: Validate JSON before submitting
+
+            configuration.UpdatedBy = "Portal";
+            
+            configuration = _configurationProvider.Save(configuration);
+
+            return Request.CreateResponse(HttpStatusCode.OK, configuration);
         }
     }
 }
