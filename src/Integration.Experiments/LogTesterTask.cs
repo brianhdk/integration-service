@@ -24,8 +24,8 @@ namespace Vertica.Integration.Experiments
 
         public override void End(LogTesterWorkItem workItem, Log log, params string[] arguments)
         {
-            _logger.LogError(Target.Service, "error");
-            _logger.LogError(new ApplicationException(), Target.Business);
+            log.Warning(Target.Service, "warning");
+            _logger.LogError(new ApplicationException(), Target.Service);
         }
 
         public override string Description

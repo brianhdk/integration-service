@@ -11,10 +11,6 @@ namespace Vertica.Integration.Infrastructure.Logging
 
 		private readonly IList<MessageLog> _messages;
 
-		protected StepLog()
-		{
-		}
-
 		internal StepLog(TaskLog taskLog, string stepName, Output output)
 			: base(taskLog.TaskName)
 		{
@@ -28,9 +24,9 @@ namespace Vertica.Integration.Infrastructure.Logging
 			Initialize(taskLog, stepName);
 		}
 
-		public virtual TaskLog TaskLog { get; protected set; }
-		public virtual string StepName { get; protected set; }
-		public virtual ErrorLog ErrorLog { get; protected internal set; }
+		public virtual TaskLog TaskLog { get; private set; }
+		public virtual string StepName { get; private set; }
+		public virtual ErrorLog ErrorLog { get; internal set; }
 
 		public virtual ReadOnlyCollection<MessageLog> Messages
 		{

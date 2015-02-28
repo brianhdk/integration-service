@@ -31,6 +31,14 @@ namespace Vertica.Integration.Infrastructure.Logging
             return target.ToString();
         }
 
+        public static implicit operator Target(string name)
+        {
+            if (String.IsNullOrWhiteSpace(name))
+                return null;
+
+            return Custom(name);
+        }
+
         public bool Equals(Target other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -58,8 +66,11 @@ namespace Vertica.Integration.Infrastructure.Logging
         {
             Target custom = new Target(name);
 
-            if (custom.Equals(Service) || custom.Equals(All))
-                throw new ArgumentException(String.Format("'{0}' is a reserved name.", name));
+            if (custom.Equals(Service))
+                return Service;
+
+            if (custom.Equals(All))
+                return All;
 
             return custom;
         }
