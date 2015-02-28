@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Vertica.Integration.Infrastructure.Email
+﻿namespace Vertica.Integration.Infrastructure.Email
 {
 	public abstract class EmailTemplate
 	{

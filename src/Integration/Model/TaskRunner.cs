@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model.Exceptions;
 using Vertica.Utilities_v4;
@@ -20,8 +21,21 @@ namespace Vertica.Integration.Model
 
 	    public TaskExecutionResult Execute(string taskName, ITask task, params string[] arguments)
 	    {
-            // latebound because we don't know the exact generic type at compile time
-	        return ExecuteInternal(taskName, (dynamic) task, arguments);
+	        using (DisableLogOrDefault(arguments))
+	        {
+                // latebound because we don't know the exact generic type at compile time
+                return ExecuteInternal(taskName, (dynamic)task, arguments);	            
+	        }
+	    }
+
+	    private IDisposable DisableLogOrDefault(string[] arguments)
+	    {
+	        if (arguments != null && String.Equals(arguments.Last(), "DisableLog", StringComparison.OrdinalIgnoreCase))
+	        {
+	            return _logger.Disable();
+	        }
+
+	        return new VoidDisabler();
 	    }
 
 	    private TaskExecutionResult ExecuteInternal<TWorkItem>(string taskName, ITask<TWorkItem> task, params string[] arguments)
@@ -116,5 +130,12 @@ namespace Vertica.Integration.Model
 
 			return step.GetType().Name;
 		}
+
+	    private class VoidDisabler : IDisposable
+	    {
+	        public void Dispose()
+	        {
+	        }
+	    }
 	}
 }
