@@ -49,6 +49,10 @@ integrationsApp.config(function ($routeProvider) {
             controller: 'archivesController'
         })
 
+        .when('/configuration', {
+        	templateUrl: '/assets/pages/configuration.html',
+        	controller: 'configurationController'
+        })
         .when('/graph', {
             templateUrl: '/assets/pages/graph.html',
             controller: 'graphController'
