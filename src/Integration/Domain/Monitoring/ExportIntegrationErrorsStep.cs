@@ -21,42 +21,51 @@ namespace Vertica.Integration.Domain.Monitoring
             _taskService = taskService;
         }
 
+        public override string Description
+        {
+            get { return "Exports errors from integration error log."; }
+        }
+
         public override void Execute(MonitorWorkItem workItem, Log log)
         {
-            using (IDapperSession session = _dapper.OpenSession())
+            using (var session = _dapper.OpenSession())
             {
-                IList<ErrorEntry> errors = session.Query<ErrorEntry>(
-@"SELECT
-	ErrorLog.Id,
-	ErrorLog.[Message],
-	ErrorLog.[TimeStamp],
+                ErrorEntry[] errors = session.Query<ErrorEntry>(@"
+SELECT
+	ErrorLog.Id AS ErrorId,
+	ErrorLog.[Message] AS ErrorMessage,
+	ErrorLog.[TimeStamp] AS [DateTime],
 	ErrorLog.Severity,
 	ErrorLog.[Target],
 	TaskLog.TaskName,
 	TaskLog.StepName
 FROM
 	ErrorLog
-	LEFT OUTER JOIN
-		TaskLog ON (TaskLog.ErrorLog_Id = ErrorLog.Id)
+	OUTER APPLY (
+		SELECT TOP 1 TaskLog.TaskName, TaskLog.StepName
+		FROM TaskLog
+		WHERE (TaskLog.ErrorLog_Id = ErrorLog.Id)
+		ORDER BY ID DESC
+	) AS TaskLog
 WHERE (
 	ErrorLog.[TimeStamp] BETWEEN @LowerBound AND @UpperBound
 )
 ORDER BY ErrorLog.Id DESC",
-                         new
-                         {
-                             LowerBound = workItem.CheckRange.LowerBound,
-                             UpperBound = workItem.CheckRange.UpperBound
-                         }).ToList();
+                    new
+                    {
+                        workItem.CheckRange.LowerBound,
+                        workItem.CheckRange.UpperBound
+                    }).ToArray();
 
-                if (errors.Count > 0)
+                if (errors.Length > 0)
                 {
-                    log.Message("{0} errors/warnings within time-period {1}.", errors.Count, workItem.CheckRange);
+                    log.Message("{0} errors/warnings within time-period {1}.", errors.Length, workItem.CheckRange);
 
                     var tasksByName = new Dictionary<string, ITask>(StringComparer.OrdinalIgnoreCase);
 
-                    foreach (ErrorEntry error in errors)
+                    foreach (var error in errors)
                     {
-                        string taskName = error.SafeTaskName();
+                        var taskName = error.SafeTaskName();
 
                         ITask task = null;
 
@@ -77,22 +86,25 @@ ORDER BY ErrorLog.Id DESC",
                             error.TaskDescription = task.Description;
                             error.TaskSchedule = task.Schedule;
 
-                            IStep step =
+                            var step =
                                 task.Steps.EmptyIfNull()
                                     .SingleOrDefault(x =>
-                                        String.Equals(TaskRunner.GetStepName(x), error.StepName, StringComparison.OrdinalIgnoreCase));
+                                        String.Equals(TaskRunner.GetStepName(x), error.StepName,
+                                            StringComparison.OrdinalIgnoreCase));
 
                             if (step != null)
                                 error.StepDescription = step.Description;
                         }
 
-                        workItem.Add(error.DateTime, "Integration Service", error.CombineMessage(), error.Target);
+                        workItem.Add(
+                            error.DateTime, 
+                            "Integration Service", 
+                            error.CombineMessage(), 
+                            error.Target);
                     }
                 }
             }
         }
-
-        public override string Description { get { return "Exports errors from integration error log."; } }
 
         public class ErrorEntry
         {
@@ -101,19 +113,16 @@ ORDER BY ErrorLog.Id DESC",
             public DateTimeOffset DateTime { get; set; }
             public Severity Severity { get; set; }
             public Target Target { get; set; }
-
-            public string TaskNameFromTask { get; set; }
-            public string TaskNameFromStep { get; set; }
+            public string TaskName { get; set; }
             public string StepName { get; set; }
-
-            public string SafeTaskName()
-            {
-                return TaskNameFromTask ?? TaskNameFromStep ?? String.Empty;
-            }
-
             public string TaskDescription { get; set; }
             public string TaskSchedule { get; set; }
             public string StepDescription { get; set; }
+
+            public string SafeTaskName()
+            {
+                return TaskName ?? String.Empty;
+            }
 
             public string CombineMessage()
             {

@@ -16,10 +16,6 @@ namespace Vertica.Integration.Infrastructure.Logging
 		private readonly IList<StepLog> _steps;
 		private readonly IList<MessageLog> _messages;
 
-		protected TaskLog()
-		{
-		}
-
 		public TaskLog(string taskName, Action<LogEntry> persist, Output output)
 			: base(taskName)
 		{

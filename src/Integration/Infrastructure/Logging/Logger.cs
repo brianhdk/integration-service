@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using Vertica.Integration.Infrastructure.Database.Dapper;
-using Vertica.Integration.Properties;
 using Vertica.Utilities_v4.Patterns;
 
 namespace Vertica.Integration.Infrastructure.Logging
@@ -10,17 +9,15 @@ namespace Vertica.Integration.Infrastructure.Logging
     public class Logger : ILogger
     {
         private readonly IDapperProvider _dapper;
-        private readonly ISettings _settings;
 
         private readonly object _dummy = new object();
         private readonly Stack<object> _disablers;
 
         private readonly ChainOfResponsibilityLink<LogEntry> _chainOfResponsibility;
 
-        public Logger(IDapperProvider dapper, ISettings settings)
+        public Logger(IDapperProvider dapper)
         {
             _dapper = dapper;
-            _settings = settings;
 
             _chainOfResponsibility = ChainOfResponsibility.Empty<LogEntry>()
                 .Chain(new TaskLogLink(_dapper))
@@ -35,7 +32,7 @@ namespace Vertica.Integration.Infrastructure.Logging
             return Log(new ErrorLog(Severity.Error, String.Format(message, args), target));
         }
 
-        public ErrorLog LogError(Exception exception, Target target = Target.Service)
+        public ErrorLog LogError(Exception exception, Target target = null)
         {
             if (exception == null) throw new ArgumentNullException("exception");
 
@@ -51,7 +48,7 @@ namespace Vertica.Integration.Infrastructure.Logging
         {
             if (logEntry == null) throw new ArgumentNullException("logEntry");
 
-            if (_disablers.Count > 0 || _settings.DisableDatabaseLog)
+            if (LoggingDisabled)
                 return;
 
             _chainOfResponsibility.Handle(logEntry);
@@ -61,6 +58,11 @@ namespace Vertica.Integration.Infrastructure.Logging
         {
             _disablers.Push(_dummy);
             return new Disabler(() => _disablers.Pop());
+        }
+
+        private bool LoggingDisabled
+        {
+            get { return _disablers.Count > 0; }
         }
 
         private class Disabler : IDisposable
@@ -80,7 +82,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 
         private ErrorLog Log(ErrorLog errorLog)
         {
-            if (_settings.DisableDatabaseLog)
+            if (LoggingDisabled)
                 return null;
 
             using (IDapperSession session = _dapper.OpenSession())
@@ -92,14 +94,14 @@ namespace Vertica.Integration.Infrastructure.Logging
                       SELECT CAST(SCOPE_IDENTITY() AS INT)",
                     new
                     {
-                        MachineName = errorLog.MachineName,
-                        IdentityName = errorLog.IdentityName,
-                        CommandLine = errorLog.CommandLine,
-                        Severity = Enum.GetName(errorLog.Severity.GetType(), errorLog.Severity),
-                        Message = errorLog.Message,
-                        FormattedMessage = errorLog.FormattedMessage,
-                        TimeStamp = errorLog.TimeStamp,
-                        Target = Enum.GetName(errorLog.Target.GetType(), errorLog.Target)
+                        errorLog.MachineName, 
+                        errorLog.IdentityName, 
+                        errorLog.CommandLine,
+                        Severity = errorLog.Severity.ToString(), 
+                        errorLog.Message, 
+                        errorLog.FormattedMessage, 
+                        errorLog.TimeStamp,
+                        Target = errorLog.Target.ToString()
                     });
 
                 transaction.Commit();
@@ -138,17 +140,7 @@ namespace Vertica.Integration.Infrastructure.Logging
             }
 
             protected abstract void HandleInsert(IDapperSession session, TLogEntry logEntry);
-
-            private void HandleUpdate(IDapperSession session, TLogEntry logEntry)
-            {
-                session.Execute(
-                    @"UPDATE TaskLog SET ExecutionTimeSeconds = @ExecutionTimeSeconds WHERE Id = @Id",
-                    new
-                    {
-                        ExecutionTimeSeconds = logEntry.ExecutionTimeSeconds,
-                        Id = logEntry.Id
-                    });
-            }
+            protected abstract void HandleUpdate(IDapperSession session, TLogEntry logEntry);
         }
 
         private class MessageLogLink : LogEntryLink<MessageLog>
@@ -166,14 +158,19 @@ namespace Vertica.Integration.Infrastructure.Logging
                       SELECT CAST(SCOPE_IDENTITY() AS INT)",
                     new
                     {
-                        TaskName = logEntry.TaskName,
-                        ExecutionTimeSeconds = logEntry.ExecutionTimeSeconds,
-                        TimeStamp = logEntry.TimeStamp,
-                        StepName = logEntry.StepName,
-                        Message = logEntry.Message,
+                        logEntry.TaskName,
+                        logEntry.ExecutionTimeSeconds,
+                        logEntry.TimeStamp,
+                        logEntry.StepName,
+                        logEntry.Message,
                         TaskLog_Id = logEntry.TaskLog.Id,
                         StepLog_Id = logEntry.StepLog != null ? logEntry.StepLog.Id : default(int?)
                     });
+            }
+
+            protected override void HandleUpdate(IDapperSession session, MessageLog logEntry)
+            {
+                throw new NotSupportedException();
             }
         }
 
@@ -187,17 +184,27 @@ namespace Vertica.Integration.Infrastructure.Logging
             protected override void HandleInsert(IDapperSession session, StepLog logEntry)
             {
                 logEntry.Id = session.ExecuteScalar<int>(
-                    @"INSERT INTO TaskLog (TaskName, ExecutionTimeSeconds, TimeStamp, StepName, TaskLog_Id, ErrorLog_id, Type)
-                      VALUES (@TaskName, @ExecutionTimeSeconds, @TimeStamp, @StepName, @TaskLog_Id, @ErrorLog_id, 'S')
+                    @"INSERT INTO TaskLog (Type, TaskName, StepName, ExecutionTimeSeconds, TimeStamp, TaskLog_Id)
+                      VALUES ('S', @TaskName, @StepName, 0, @TimeStamp, @TaskLog_Id)
                       SELECT CAST(SCOPE_IDENTITY() AS INT)",
                     new
                     {
-                        TaskName = logEntry.TaskName,
-                        ExecutionTimeSeconds = logEntry.ExecutionTimeSeconds,
-                        TimeStamp = logEntry.TimeStamp,
-                        StepName = logEntry.StepName,
-                        TaskLog_Id = logEntry.TaskLog.Id,
-                        ErrorLog_id = logEntry.ErrorLog != null ? logEntry.ErrorLog.Id : default(int?)
+                        logEntry.TaskName,
+                        logEntry.StepName,
+                        logEntry.TimeStamp,
+                        TaskLog_Id = logEntry.TaskLog.Id
+                    });
+            }
+
+            protected override void HandleUpdate(IDapperSession session, StepLog logEntry)
+            {
+                session.Execute(
+                    @"UPDATE TaskLog SET ExecutionTimeSeconds = @ExecutionTimeSeconds, ErrorLog_Id = @ErrorLog_Id WHERE Id = @Id",
+                    new
+                    {
+                        logEntry.Id,
+                        logEntry.ExecutionTimeSeconds,
+                        ErrorLog_Id = logEntry.ErrorLog != null ? logEntry.ErrorLog.Id : default(int?)
                     });
             }
         }
@@ -212,15 +219,25 @@ namespace Vertica.Integration.Infrastructure.Logging
             protected override void HandleInsert(IDapperSession session, TaskLog logEntry)
             {
                 logEntry.Id = session.ExecuteScalar<int>(
-                    @"INSERT INTO TaskLog (TaskName, ExecutionTimeSeconds, TimeStamp, ErrorLog_id, Type)
-                      VALUES (@TaskName, @ExecutionTimeSeconds, @TimeStamp, @ErrorLog_id, 'T')
+                    @"INSERT INTO TaskLog (Type, TaskName, ExecutionTimeSeconds, TimeStamp)
+                      VALUES ('T', @TaskName, 0, @TimeStamp)
                       SELECT CAST(SCOPE_IDENTITY() AS INT)",
                     new
                     {
-                        TaskName = logEntry.TaskName,
-                        ExecutionTimeSeconds = logEntry.ExecutionTimeSeconds,
-                        TimeStamp = logEntry.TimeStamp,
-                        ErrorLog_id = logEntry.ErrorLog != null ? logEntry.ErrorLog.Id : default(int?)
+                        logEntry.TaskName,
+                        logEntry.TimeStamp
+                    });
+            }
+
+            protected override void HandleUpdate(IDapperSession session, TaskLog logEntry)
+            {
+                session.Execute(
+                    @"UPDATE TaskLog SET ExecutionTimeSeconds = @ExecutionTimeSeconds, ErrorLog_Id = @ErrorLog_Id WHERE Id = @Id",
+                    new
+                    {
+                        logEntry.Id,
+                        logEntry.ExecutionTimeSeconds,
+                        ErrorLog_Id = logEntry.ErrorLog != null ? logEntry.ErrorLog.Id : default(int?)
                     });
             }
         }

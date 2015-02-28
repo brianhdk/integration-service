@@ -6,10 +6,6 @@ namespace Vertica.Integration.Infrastructure.Logging
 {
 	public class MessageLog : LogEntry
 	{
-		protected MessageLog()
-        {
-        }
-
         internal MessageLog(TaskLog taskLog, string message, Output output)
             : base(taskLog.TaskName)
         {
@@ -28,10 +24,10 @@ namespace Vertica.Integration.Infrastructure.Logging
             output.Message("{0}: {1}", stepLog.StepName, message);
         }
 
-		public virtual TaskLog TaskLog { get; protected set; }
-		public virtual StepLog StepLog { get; protected set; }
-        public virtual string StepName { get; protected set; }
-        public virtual string Message { get; protected set; }
+		public TaskLog TaskLog { get; private set; }
+		public StepLog StepLog { get; private set; }
+        public string StepName { get; private set; }
+        public string Message { get; private set; }
 
 		private void Initialize(TaskLog taskLog, string message)
         {
