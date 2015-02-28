@@ -62,6 +62,10 @@
       <Link>Tasks.Experiments.config</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="..\Integration.Logging.Elmah\Tasks.Elmah.config">
+      <Link>Tasks.Elmah.config</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="..\Integration.Logging.Kibana\Tasks.Kibana.config">
       <Link>Tasks.Kibana.config</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

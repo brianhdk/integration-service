@@ -7,7 +7,7 @@ namespace Vertica.Integration.Infrastructure.Logging
         ErrorLog LogWarning(Target target, string message, params object[] args);
 
         ErrorLog LogError(Target target, string message, params object[] args);
-		ErrorLog LogError(Exception exception, Target target = Target.Service);
+		ErrorLog LogError(Exception exception, Target target = null);
 
         void LogEntry(LogEntry entry);
 

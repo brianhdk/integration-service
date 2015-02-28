@@ -2,9 +2,6 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Vertica.Integration.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="DisableDatabaseLog" Type="System.Boolean" Scope="Application">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="WindowsServiceUsername" Type="System.String" Scope="Application">
       <Value Profile="(Default)">[TBD]</Value>
     </Setting>
@@ -16,21 +13,6 @@
     </Setting>
     <Setting Name="EmailSubjectFormat" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Integration Service</Value>
-    </Setting>
-    <Setting Name="MonitorEmailRecipientsForService" Type="System.Collections.Specialized.StringCollection" Scope="Application">
-      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;string&gt;bhk@vertica.dk&lt;/string&gt;
-&lt;/ArrayOfString&gt;</Value>
-    </Setting>
-    <Setting Name="MonitorEmailRecipientsForBusiness" Type="System.Collections.Specialized.StringCollection" Scope="Application">
-      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;string&gt;bhk@vertica.dk&lt;/string&gt;
-&lt;/ArrayOfString&gt;</Value>
-    </Setting>
-    <Setting Name="IgnoreErrorsWithMessagesContaining" Type="System.Collections.Specialized.StringCollection" Scope="Application">
-      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

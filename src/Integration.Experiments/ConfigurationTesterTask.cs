@@ -21,7 +21,7 @@ namespace Vertica.Integration.Experiments
             // load up configuration
             // read it
 
-            ConfigurationTesterConfiguration configuration = _provider.GetOrInstantiateNew<ConfigurationTesterConfiguration>();
+            ConfigurationTesterConfiguration configuration = _provider.Get<ConfigurationTesterConfiguration>();
 
             return new ConfigurationTesterWorkItem(configuration);
         }
@@ -31,7 +31,7 @@ namespace Vertica.Integration.Experiments
             // load up configuration, 
             //  - store it, back-up old version
 
-            var configuration = _provider.GetOrInstantiateNew<ConfigurationTesterConfiguration>();
+            var configuration = _provider.Get<ConfigurationTesterConfiguration>();
             configuration.LastRun = DateTime.Now;
 
             _provider.Save(configuration, "ConfigurationTesterTask", createArchiveBackup: true);

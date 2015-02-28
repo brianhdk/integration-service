@@ -115,8 +115,10 @@
     <Compile Include="Domain\Core\WriteDocumentationTask.cs" />
     <Compile Include="Domain\Monitoring\ExportIntegrationErrorsStep.cs" />
     <Compile Include="Domain\Monitoring\MessageContainsTextIgnoreFilter.cs" />
+    <Compile Include="Domain\Monitoring\MonitorConfiguration.cs" />
     <Compile Include="Domain\Monitoring\MonitorEmailTemplate.cs" />
     <Compile Include="Domain\Monitoring\MonitorEntry.cs" />
+    <Compile Include="Domain\Monitoring\MonitorTarget.cs" />
     <Compile Include="Domain\Monitoring\MonitorTask.cs" />
     <Compile Include="Domain\Monitoring\MonitorWorkItem.cs" />
     <Compile Include="Infrastructure\ActionRepeater.cs" />
@@ -130,9 +132,6 @@
     <Compile Include="Infrastructure\Configuration\Configuration.cs" />
     <Compile Include="Infrastructure\Configuration\ConfigurationProvider.cs" />
     <Compile Include="Infrastructure\Configuration\IConfigurationProvider.cs" />
-    <Compile Include="Infrastructure\Configuration\IParametersProvider.cs" />
-    <Compile Include="Infrastructure\Configuration\Parameters.cs" />
-    <Compile Include="Infrastructure\Configuration\ParametersProvider.cs" />
     <Compile Include="Infrastructure\Database\Dapper\Castle.Windsor\DapperInstaller.cs" />
     <Compile Include="Infrastructure\Database\Dapper\Castle.Windsor\DapperSelector.cs" />
     <Compile Include="Infrastructure\Database\Dapper\Connection.cs" />
@@ -156,7 +155,6 @@
     <Compile Include="Infrastructure\Database\NHibernate\ICurrentSession.cs" />
     <Compile Include="Infrastructure\Database\NHibernate\Connections\IntegrationDb.cs" />
     <Compile Include="Infrastructure\Database\NHibernate\ISessionFactoryProvider.cs" />
-    <Compile Include="Infrastructure\Database\NHibernate\Mappings\Infrastructure\Configuration\ParametersMap.cs" />
     <Compile Include="Infrastructure\Database\NHibernate\Mappings\Infrastructure\Logging\ErrorLogMap.cs" />
     <Compile Include="Infrastructure\Database\NHibernate\Mappings\Infrastructure\Logging\LogEntryMap.cs" />
     <Compile Include="Infrastructure\Database\NHibernate\Mappings\Infrastructure\Logging\MessageLogMap.cs" />
