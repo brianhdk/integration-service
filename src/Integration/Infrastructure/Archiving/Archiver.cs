@@ -2,6 +2,7 @@
 using System.Data;
 using System.Linq;
 using Vertica.Integration.Infrastructure.Database.Dapper;
+using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Utilities_v4;
 
 namespace Vertica.Integration.Infrastructure.Archiving
@@ -27,17 +28,17 @@ namespace Vertica.Integration.Infrastructure.Archiving
                 using (IDapperSession session = _dapper.OpenSession())
                 using (IDbTransaction transaction = session.BeginTransaction())
                 {
-                    byte[] data = stream.ToArray();
+                    byte[] binaryData = stream.ToArray();
 
                     archiveId = session.ExecuteScalar<int>(
-                        "INSERT INTO Archive (Name, BinaryData, ByteSize, Created) VALUES (@Name, @BinaryData, @ByteSize, @Created);" +
+                        "INSERT INTO Archive (Name, BinaryData, ByteSize, Created) VALUES (@name, @binaryData, @byteSize, @created);" +
                         "SELECT CAST(SCOPE_IDENTITY() AS INT);",
                         new
                         {
-                            Name = name,
-                            BinaryData = data,
-                            ByteSize = data.Length,
-                            Created = Time.UtcNow
+                            name = name.MaxLength(255),
+                            binaryData,
+                            byteSize = binaryData.Length,
+                            created = Time.UtcNow
                         });
 
                     transaction.Commit();
