@@ -10,7 +10,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
 		public override void Up()
 		{
-			Create.Table(Tables.ErrorLog)
+            Create.Table("ErrorLog")
 				.WithColumn("Id").AsInt32().PrimaryKey().Identity()
 				.WithColumn("MachineName").AsString(255)
                 .WithColumn("IdentityName").AsString(255).Nullable()
@@ -21,11 +21,11 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
                 .WithColumn("Target").AsString(50)
 				.WithColumn("TimeStamp").AsDateTimeOffset();
 
-			Create.Table(Tables.Parameters)
+            Create.Table("Parameters")
 				.WithColumn("Id").AsInt32().PrimaryKey()
 				.WithColumn("LastMonitorCheck").AsDateTimeOffset();
 
-			Create.Table(Tables.TaskLog)
+            Create.Table("TaskLog")
 				.WithColumn("Id").AsInt32().PrimaryKey().Identity()
 				.WithColumn("Type").AsAnsiString(1)
 				.WithColumn("TaskName").AsString(255)

@@ -23,15 +23,15 @@ namespace Vertica.Integration.Infrastructure.Logging
 			Initialize(exception, target);
 		}
 
-        public virtual int Id { get; protected set; }
-		public virtual string MachineName { get; protected set; }
-		public virtual string IdentityName { get; protected set; }
-		public virtual string CommandLine { get; protected set; }
-        public virtual Severity Severity { get; protected set; }
-		public virtual string Message { get; protected set; }
-		public virtual string FormattedMessage { get; protected set; }
-		public virtual DateTimeOffset TimeStamp { get; protected set; }
-        public virtual Target Target { get; protected set; }
+        public int Id { get; internal set; }
+		public string MachineName { get; private set; }
+		public string IdentityName { get; private set; }
+		public string CommandLine { get; private set; }
+        public Severity Severity { get; private set; }
+		public string Message { get; private set; }
+		public string FormattedMessage { get; private set; }
+		public DateTimeOffset TimeStamp { get; private set; }
+        public Target Target { get; private set; }
 
         private void Initialize(Exception exception, Target target)
         {

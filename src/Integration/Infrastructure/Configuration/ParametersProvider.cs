@@ -1,51 +1,61 @@
 ﻿using System;
-using NHibernate;
-using Vertica.Integration.Infrastructure.Database.NHibernate;
+using System.Data;
+using System.Linq;
+using Vertica.Integration.Infrastructure.Database.Dapper;
 
 namespace Vertica.Integration.Infrastructure.Configuration
 {
-	public class ParametersProvider : IParametersProvider
-	{
-		private readonly Lazy<ISessionFactoryProvider> _sessionFactoryProvider;
+    public class ParametersProvider : IParametersProvider
+    {
+        private readonly IDapperProvider _dapper;
 
-		public ParametersProvider(Lazy<ISessionFactoryProvider> sessionFactoryProvider)
-		{
-			_sessionFactoryProvider = sessionFactoryProvider;
-		}
+        public ParametersProvider(IDapperProvider dapper)
+        {
+            _dapper = dapper;
+        }
 
-		public Parameters Get()
-		{
-			ISessionFactory sessionFactory = _sessionFactoryProvider.Value.SessionFactory;
+        public Parameters Get()
+        {
+            using (IDapperSession session = _dapper.OpenSession())
+            using (IDbTransaction transaction = session.BeginTransaction())
+            {
+                var parameters =
+                    session.Query<Parameters>(@"SELECT [Id], [LastMonitorCheck] FROM [dbo].[Parameters]").SingleOrDefault();
 
-			using (IStatelessSession session = sessionFactory.OpenStatelessSession())
-			using (ITransaction transaction = session.BeginTransaction())
-			{
-				var parameters =
-					session.QueryOver<Parameters>().SingleOrDefault();
+                if (parameters == null)
+                {
+                    parameters = new Parameters();
+                    session.Execute(
+                        @"INSERT INTO [dbo].[Parameters] ([Id], [LastMonitorCheck]) VALUES (@Id, @LastMonitorCheck)",
+                        new
+                        {
+                            Id = parameters.Id,
+                            LastMonitorCheck = parameters.LastMonitorCheck
+                        });
+                    transaction.Commit();
+                }
 
-				if (parameters == null)
-				{
-					parameters = new Parameters();
-					session.Insert(parameters);
-					transaction.Commit();
-				}
+                return parameters;
+            }
+        }
 
-				return parameters;				
-			}
-		}
+        public void Save(Parameters parameters)
+        {
+            if (parameters == null) throw new ArgumentNullException("parameters");
 
-		public void Save(Parameters parameters)
-		{
-			if (parameters == null) throw new ArgumentNullException("parameters");
+            using (var session = _dapper.OpenSession())
+            using (var transaction = session.BeginTransaction())
+            {
+                session.Execute(
+                    @"UPDATE [dbo].[Parameters] SET [LastMonitorCheck] = @LastMonitorCheck WHERE [Id] = @Id",
+                    new
+                    {
+                        Id = parameters.Id,
+                        LastMonitorCheck = parameters.LastMonitorCheck
+                    });
 
-			ISessionFactory sessionFactory = _sessionFactoryProvider.Value.SessionFactory;
-
-			using (IStatelessSession session = sessionFactory.OpenStatelessSession())
-			using (ITransaction transaction = session.BeginTransaction())
-			{
-				session.Update(parameters);
-				transaction.Commit();
-			}
-		}
-	}
+                transaction.Commit();
+            }
+        }
+    }
 }
