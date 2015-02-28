@@ -16,11 +16,11 @@ namespace Vertica.Integration.Infrastructure.Logging
             Initialize(severity, message, message, target);
         }
 
-        public ErrorLog(Exception exception, Target target = Target.Service)
+        public ErrorLog(Exception exception, Target target = null)
 		{
 			if (exception == null) throw new ArgumentNullException("exception");
 
-			Initialize(exception, target);
+			Initialize(exception, target ?? Target.Service);
 		}
 
         public virtual int Id { get; protected set; }

@@ -19,7 +19,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
             _dapper = dapper;
         }
 
-        public TConfiguration GetOrInstantiateNew<TConfiguration>() where TConfiguration : class, new()
+        public TConfiguration Get<TConfiguration>() where TConfiguration : class, new()
         {
             Configuration raw = Get(GetClrType(typeof (TConfiguration)));
 
@@ -33,7 +33,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
             return new TConfiguration();
         }
 
-        public void Save<TConfiguration>(TConfiguration configuration, string updatedBy, bool createArchiveBackup = false) where TConfiguration : class, new()
+        public void Save<TConfiguration>(TConfiguration configuration, string updatedBy, bool createArchiveBackup = false) 
         {
             if (configuration == null) throw new ArgumentNullException("configuration");
             if (String.IsNullOrWhiteSpace(updatedBy)) throw new ArgumentException(@"Value cannot be null or empty.", "updatedBy");

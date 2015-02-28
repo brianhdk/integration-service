@@ -21,10 +21,6 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
                 .WithColumn("Target").AsString(50)
 				.WithColumn("TimeStamp").AsDateTimeOffset();
 
-			Create.Table(Tables.Parameters)
-				.WithColumn("Id").AsInt32().PrimaryKey()
-				.WithColumn("LastMonitorCheck").AsDateTimeOffset();
-
 			Create.Table(Tables.TaskLog)
 				.WithColumn("Id").AsInt32().PrimaryKey().Identity()
 				.WithColumn("Type").AsAnsiString(1)

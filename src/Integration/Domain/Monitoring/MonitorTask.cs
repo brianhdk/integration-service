@@ -1,28 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using Vertica.Integration.Infrastructure.Configuration;
 using Vertica.Integration.Infrastructure.Email;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
-using Vertica.Integration.Properties;
 using Vertica.Utilities_v4.Extensions.EnumerableExt;
 
 namespace Vertica.Integration.Domain.Monitoring
 {
 	public class MonitorTask : Task<MonitorWorkItem>
 	{
-		private readonly IParametersProvider _parametersProvider;
-		private readonly ISettings _settings;
+		private readonly IConfigurationProvider _configuration;
 		private readonly IEmailService _emailService;
 		private readonly string[] _ignoreErrorsWithMessagesContaining;
 
-		public MonitorTask(IEnumerable<IStep<MonitorWorkItem>> steps, IParametersProvider parametersProvider, ISettings settings, IEmailService emailService, string[] ignoreErrorsWithMessagesContaining)
+        public MonitorTask(IEnumerable<IStep<MonitorWorkItem>> steps, IConfigurationProvider configuration, IEmailService emailService, string[] ignoreErrorsWithMessagesContaining)
 			: base(steps)
 		{
-			_parametersProvider = parametersProvider;
-			_settings = settings;
+			_configuration = configuration;
 			_emailService = emailService;
 			_ignoreErrorsWithMessagesContaining = ignoreErrorsWithMessagesContaining ?? new string[0];
 		}
@@ -39,61 +35,66 @@ namespace Vertica.Integration.Domain.Monitoring
 
 		public override MonitorWorkItem Start(Log log, params string[] arguments)
 		{
+		    MonitorConfiguration configuration = _configuration.Get<MonitorConfiguration>();
+		    configuration.Assert();
+
 			string[] ignoredMessages =
-				(_settings.IgnoreErrorsWithMessagesContaining ?? new StringCollection())
-					.OfType<string>()
+				configuration.IgnoreErrorsWithMessagesContaining
+                    .EmptyIfNull()
 					.Concat(_ignoreErrorsWithMessagesContaining)
 					.SkipNulls()
 					.Distinct()
 					.Select(x => x.Replace("\\r\\n", Environment.NewLine))
 					.ToArray();
 
-		    bool updateLastCheck;
+		    bool updateLastRun;
 
-		    DateTimeOffset lastCheck;
-            if (DateTimeOffset.TryParse(arguments.FirstOrDefault(), out lastCheck))
+		    DateTimeOffset lastRun;
+            if (DateTimeOffset.TryParse(arguments.FirstOrDefault(), out lastRun))
             {
-                log.Message("Monitor starting from {0}", lastCheck);
-                updateLastCheck = false;
+                log.Message("Monitor starting from {0}", lastRun);
+                updateLastRun = false;
             }
             else
             {
-                lastCheck = _parametersProvider.Get().LastMonitorCheck;
-                updateLastCheck = true;
+                lastRun = configuration.LastRun;
+                updateLastRun = true;
             }
 
-			return new MonitorWorkItem(lastCheck, updateLastCheck, new MessageContainsTextIgnoreFilter(ignoredMessages));
+			return new MonitorWorkItem(lastRun, updateLastRun)
+                .WithIgnoreFilter(new MessageContainsTextIgnoreFilter(ignoredMessages));
 		}
 
 		public override void End(MonitorWorkItem workItem, Log log, params string[] arguments)
 		{
-		    SendTo(Target.Service, workItem, log, _settings.MonitorEmailRecipientsForService);
-            SendTo(Target.Business, workItem, log, _settings.MonitorEmailRecipientsForBusiness);
+            MonitorConfiguration configuration = _configuration.Get<MonitorConfiguration>();
+
+		    foreach (MonitorTarget target in configuration.Targets)
+		        SendTo(target, workItem, log, target.Recipients);
 
 		    if (workItem.UpdateLastCheck)
 		    {
-                Parameters parameters = _parametersProvider.Get();
-                parameters.LastMonitorCheck = workItem.CheckRange.UpperBound;
-
-                _parametersProvider.Save(parameters);		        
+                configuration.LastRun = workItem.CheckRange.UpperBound;
+		        _configuration.Save(configuration, "MonitorTask");
 		    }
 		}
 
-	    private void SendTo(Target target, MonitorWorkItem workItem, Log log, StringCollection recipients)
+	    private void SendTo(Target target, MonitorWorkItem workItem, Log log, string[] recipients)
 	    {
-	        if (recipients == null)
-	        {
-	            log.Warning(Target.Service, "No recipients found for target '{0}'.", target);
-	            return;
-	        }
-
             MonitorEntry[] entries = workItem.GetEntries(target);
 
 	        if (entries.Length > 0)
 	        {
-                log.Message("Sending {0} entries to {1}.", entries.Length, target);
+                if (recipients == null)
+                {
+                    log.Warning(Target.Service, "No recipients found for target '{0}'.", target);
+                    return;
+                }
 
-	            _emailService.Send(new MonitorEmailTemplate(workItem.CheckRange, entries), recipients.Cast<string>());
+                // TODO: Group entries before sending
+
+                log.Message("Sending {0} entries to {1}.", entries.Length, target);
+                _emailService.Send(new MonitorEmailTemplate(workItem.CheckRange, entries), recipients);
 	        }
 	    }
 	}

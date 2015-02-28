@@ -2,22 +2,19 @@
 using System.Collections.Generic;
 using NHibernate;
 using Vertica.Integration.Infrastructure.Database.NHibernate;
-using Vertica.Integration.Properties;
 
 namespace Vertica.Integration.Infrastructure.Logging
 {
 	public class Logger : ILogger
 	{
 		private readonly Lazy<ISessionFactoryProvider> _provider;
-	    private readonly ISettings _settings;
 
-        private readonly object _dummy = new object();
+	    private readonly object _dummy = new object();
 	    private readonly Stack<object> _disablers;
 
-		public Logger(Lazy<ISessionFactoryProvider> provider, ISettings settings)
+		public Logger(Lazy<ISessionFactoryProvider> provider)
 		{
 		    _provider = provider;
-		    _settings = settings;
 
 		    _disablers = new Stack<object>();
 		}
@@ -27,7 +24,7 @@ namespace Vertica.Integration.Infrastructure.Logging
             return Log(new ErrorLog(Severity.Error, String.Format(message, args), target));
 	    }
 
-	    public ErrorLog LogError(Exception exception, Target target = Target.Service)
+	    public ErrorLog LogError(Exception exception, Target target = null)
 	    {
 	        if (exception == null) throw new ArgumentNullException("exception");
 
@@ -43,7 +40,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 		{
 			if (logEntry == null) throw new ArgumentNullException("logEntry");
 
-		    if (_disablers.Count > 0 || _settings.DisableDatabaseLog)
+		    if (LoggingDisabled)
 		        return;
 
 			using (IStatelessSession session = _provider.Value.SessionFactory.OpenStatelessSession())
@@ -61,6 +58,11 @@ namespace Vertica.Integration.Infrastructure.Logging
 				transaction.Commit();
 			}
 		}
+
+	    private bool LoggingDisabled
+	    {
+	        get { return _disablers.Count > 0; }
+	    }
 
 	    public IDisposable Disable()
 	    {
@@ -85,7 +87,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 
 	    private ErrorLog Log(ErrorLog errorLog)
 	    {
-	        if (_settings.DisableDatabaseLog)
+	        if (LoggingDisabled)
 	            return null;
 
 	        using (IStatelessSession session = _provider.Value.SessionFactory.OpenStatelessSession())

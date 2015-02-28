@@ -16,7 +16,7 @@ namespace Vertica.Integration.Infrastructure.Database.NHibernate.Mappings.Infras
 			// http://ayende.com/blog/1969/nhibernate-and-large-text-fields-gotchas
             Map(x => x.FormattedMessage).CustomType("StringClob");
             Map(x => x.TimeStamp);
-            Map(x => x.Target);
+            //Map(x => x.Target);
         }
     }
 }
