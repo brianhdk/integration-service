@@ -8,7 +8,7 @@ namespace Vertica.Integration.Infrastructure.Logging
     {
         private readonly Stopwatch _watch;
 
-        public virtual int Id { get; protected set; }
+        public virtual int Id { get; internal set; }
         public virtual string TaskName { get; protected set; }
         public virtual double ExecutionTimeSeconds { get; protected set; }
         public virtual DateTimeOffset TimeStamp { get; protected set; }
@@ -19,24 +19,24 @@ namespace Vertica.Integration.Infrastructure.Logging
 
         protected LogEntry(string taskName, bool startStopwatch = true)
         {
-			_watch = new Stopwatch();
+            _watch = new Stopwatch();
 
-			if (startStopwatch)
-				_watch.Start();
+            if (startStopwatch)
+                _watch.Start();
 
-			Initialize(taskName);
+            Initialize(taskName);
         }
 
         private void Initialize(string taskName)
         {
             TaskName = taskName;
-			TimeStamp = Time.UtcNow;
+            TimeStamp = Time.UtcNow;
         }
 
-	    public virtual void Dispose()
+        public virtual void Dispose()
         {
-			if (_watch.IsRunning)
-				_watch.Stop();
+            if (_watch.IsRunning)
+                _watch.Stop();
 
             ExecutionTimeSeconds = _watch.Elapsed.TotalSeconds;
         }

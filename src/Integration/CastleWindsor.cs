@@ -7,8 +7,6 @@ using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
 using Vertica.Integration.Infrastructure.Database.Dapper.Castle.Windsor;
-using Vertica.Integration.Infrastructure.Database.NHibernate.Castle.Windsor;
-using Vertica.Integration.Infrastructure.Database.NHibernate.Connections;
 using Vertica.Integration.Infrastructure.Factories;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Model;
@@ -23,7 +21,7 @@ namespace Vertica.Integration
 		{
 		    if (configuration == null) throw new ArgumentNullException("configuration");
 
-		    IWindsorContainer container = 
+		    IWindsorContainer container =
 				ObjectFactory.Create(() => new WindsorContainer(new XmlInterpreter()));
 
 			container.Kernel.AddFacility<TypedFactoryFacility>();
@@ -32,14 +30,13 @@ namespace Vertica.Integration
 
 			container.Register(Component.For<ISettings>().UsingFactoryMethod(x => Settings.Default));
 
-			Assembly integrationAssembly = typeof (CastleWindsor).Assembly;
+			Assembly integrationAssembly = typeof(CastleWindsor).Assembly;
 
             WebApiConfiguration webApi = null;
             configuration.WebApi(x => webApi = x.ScanAssembly(integrationAssembly));
 
 			container.Install(
                 new DapperInstaller(new Infrastructure.Database.Dapper.Databases.IntegrationDb(configuration.DatabaseConnectionStringName)),
-				new NHibernateInstaller(new IntegrationDb(configuration.DatabaseConnectionStringName)),
 				new TaskFactoryInstaller(),
                 new ConsoleWriterInstaller(),
                 new WebApiInstaller(webApi),
