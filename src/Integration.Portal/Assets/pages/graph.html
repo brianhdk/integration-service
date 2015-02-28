@@ -3,7 +3,7 @@
 <div class="container">
 	<ul class="row nav nav-pills">
 		<li ng-class="{'active' : isActive('/graph')}"><a href="#graph">5 shades of Errors</a></li>
-		<li ng-class="{'active' : isActive('/graph?id=2')}"><a href="#graph?id=2">Pie chart</a></li>
+		<li ng-class="{'active' : isActive('/graph?id=2')}" ng-click="initPie()"><a href="#graph?id=2">Pie chart</a></li>
 	</ul>
 </div>		
 <div id="chart_div" style="width: 900px; height: 500px;" ng-init="initGraph()"></div>
