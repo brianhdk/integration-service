@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Vertica.Integration
+namespace Vertica.Integration.Model.Web
 {
     public class WebApiConfiguration
     {
