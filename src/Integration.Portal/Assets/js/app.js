@@ -53,6 +53,10 @@ integrationsApp.config(function ($routeProvider) {
         	templateUrl: '/assets/pages/configuration.html',
         	controller: 'configurationController'
         })
+        .when('/configuration/:clrType', {
+        	templateUrl: '/assets/pages/configurationDetail.html',
+        	controller: 'configurationDetailController'
+        })
         .when('/graph', {
             templateUrl: '/assets/pages/graph.html',
             controller: 'graphController'

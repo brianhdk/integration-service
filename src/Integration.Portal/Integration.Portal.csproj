@@ -90,6 +90,7 @@
     <Content Include="Assets\js\app.js" />
     <Content Include="Assets\js\controller\configurationController.js" />
     <Content Include="Assets\js\controller\archivesController.js" />
+    <Content Include="Assets\js\controller\configurationDetailController.js" />
     <Content Include="Assets\js\controller\errorDetailController.js" />
     <Content Include="Assets\js\controller\errorsController.js" />
     <Content Include="Assets\js\controller\graphController.js" />
@@ -110,6 +111,7 @@
     <Content Include="Assets\layout\fonts\source-sans-pro\sourcesanspro-regular.svg" />
     <Content Include="Assets\layout\fonts\source-sans-pro\sourcesanspro-semibold.svg" />
     <Content Include="Assets\pages\configuration.html" />
+    <Content Include="Assets\pages\configurationDetail.html" />
     <Content Include="Assets\pages\errors-detail.html" />
     <Content Include="Assets\pages\errors.html" />
     <Content Include="Assets\pages\graph.html" />

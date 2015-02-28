@@ -1,9 +1,7 @@
-﻿using System.IO;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Web.Http;
-using Vertica.Integration.Infrastructure.Archiving;
+using Vertica.Integration.Infrastructure.Configuration;
 using Vertica.Integration.Infrastructure.Database.Dapper;
 
 namespace Vertica.Integration.Portal.Controllers
@@ -11,42 +9,24 @@ namespace Vertica.Integration.Portal.Controllers
     public class ConfigurationController : ApiController
     {
         private readonly IDapperProvider _dapper;
+	    private readonly IConfigurationProvider _configurationProvider;
 
-        public ConfigurationController(IDapperProvider dapper)
+        public ConfigurationController(IDapperProvider dapper, IConfigurationProvider configurationProvider)
         {
-            _dapper = dapper;
+	        _dapper = dapper;
+	        _configurationProvider = configurationProvider;
         }
 
-        public HttpResponseMessage Get()
-        {
-            Archiver archiver = new Archiver(_dapper);
-            SavedArchive[] archives = archiver.GetAll();
-
-            return Request.CreateResponse(HttpStatusCode.OK, archives);
+	    public HttpResponseMessage Get()
+	    {
+		    var configs = _configurationProvider.GetAll();
+            return Request.CreateResponse(HttpStatusCode.OK, configs);
         }
 
-        public HttpResponseMessage Get(int id)
-        {
-            Archiver archiver = new Archiver(_dapper);
-            byte[] archive = archiver.Get(id);
-
-            if (archive == null)
-            {
-                return Request.CreateResponse(HttpStatusCode.NotFound);
-            }
-
-            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
-
-            Stream stream = new MemoryStream(archive);
-            response.Content = new StreamContent(stream);
-            response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-
-            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
-            {
-                FileName = string.Format("Archive-{0}.zip", id)
-            };
-
-            return response;
+		public HttpResponseMessage Get(string clrType)
+	    {
+		    var config = _configurationProvider.Get(clrType);
+            return Request.CreateResponse(HttpStatusCode.OK, config);
         }
     }
 }
