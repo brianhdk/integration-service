@@ -9,6 +9,6 @@
 
         Configuration[] GetAll();
         Configuration Get(string clrType);
-        void Save(Configuration configuration);
+        Configuration Save(Configuration configuration);
     }
 }

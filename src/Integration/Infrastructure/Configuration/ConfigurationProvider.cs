@@ -37,6 +37,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
         {
             if (configuration == null) throw new ArgumentNullException("configuration");
             if (String.IsNullOrWhiteSpace(updatedBy)) throw new ArgumentException(@"Value cannot be null or empty.", "updatedBy");
+            if (configuration is Configuration) throw new ArgumentException("Use the specific Save method when saving this Configuration instance.", "configuration");
 
             SaveInternal(
                 GetClrType(typeof (TConfiguration)),
@@ -71,11 +72,13 @@ namespace Vertica.Integration.Infrastructure.Configuration
             }
         }
 
-        public void Save(Configuration configuration)
+        public Configuration Save(Configuration configuration)
         {
             if (configuration == null) throw new ArgumentNullException("configuration");
 
             SaveInternal(configuration.ClrType, configuration.JsonData, configuration.UpdatedBy, backup: true);
+
+            return Get(configuration.ClrType);
         }
 
         private void SaveInternal(string clrType, string jsonData, string updatedBy, bool backup)
