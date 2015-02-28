@@ -1,13 +1,13 @@
-﻿integrationsApp.controller('taskExecutionDetailsController', function ($scope, $http, $routeParams, $filter, ngTableParams) {
+﻿integrationsApp.controller('archivesController', function ($scope, $http, $filter, ngTableParams) {
 
-    $http.get("/taskExecutionDetails?id=" + $routeParams.taskId).success(function (xhr) {
+    $http.get("/archives").success(function (xhr) {
         var data = xhr;
 
         $scope.tableParams = new ngTableParams({
             page: 1,
             count: 10,
             sorting: {
-                TimeStamp: 'desc'
+                Created: 'desc'     // initial sorting
             },
             filter: {}
         }, {

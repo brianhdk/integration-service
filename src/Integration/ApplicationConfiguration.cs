@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Castle.MicroKernel.Registration;
+using Vertica.Integration.Model.Web;
 using Vertica.Utilities_v4.Extensions.EnumerableExt;
 
 namespace Vertica.Integration

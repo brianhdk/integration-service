@@ -122,6 +122,8 @@
     <Compile Include="Infrastructure\ActionRepeater.cs" />
     <Compile Include="Infrastructure\Archiving\Archive.cs" />
     <Compile Include="Infrastructure\Archiving\Archiver.cs" />
+    <Compile Include="Infrastructure\Archiving\ArchiverExtensions.cs" />
+    <Compile Include="Infrastructure\Archiving\CleanUpArchivesStep.cs" />
     <Compile Include="Infrastructure\Archiving\DumpArchiveTask.cs" />
     <Compile Include="Infrastructure\Archiving\IArchiver.cs" />
     <Compile Include="Infrastructure\Archiving\SavedArchive.cs" />
@@ -221,7 +223,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="WebApiConfiguration.cs" />
+    <Compile Include="Model\Web\WebApiConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

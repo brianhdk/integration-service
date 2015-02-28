@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ArchivesController.cs" />
     <Compile Include="Controllers\AssetsController.cs" />
     <Compile Include="Controllers\ErrorsController.cs" />
     <Compile Include="Controllers\GraphController.cs" />
@@ -86,6 +87,7 @@
     <Content Include="Assets\js\angular\restangular\restangular.js" />
     <Content Include="Assets\js\angular\restangular\restangular.min.js" />
     <Content Include="Assets\js\app.js" />
+    <Content Include="Assets\js\controller\archivesController.js" />
     <Content Include="Assets\js\controller\errorDetailController.js" />
     <Content Include="Assets\js\controller\errorsController.js" />
     <Content Include="Assets\js\controller\graphController.js" />
@@ -133,6 +135,7 @@
     <None Include="Assets\layout\fonts\source-sans-pro\sourcesanspro-semibold.eot" />
     <None Include="Assets\layout\fonts\source-sans-pro\sourcesanspro-semibold.ttf" />
     <None Include="Assets\layout\fonts\source-sans-pro\sourcesanspro-semibold.woff" />
+    <Content Include="Assets\pages\archives.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

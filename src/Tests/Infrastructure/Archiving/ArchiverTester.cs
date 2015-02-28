@@ -1,6 +1,4 @@
-﻿using System;
-using System.Data.SqlClient;
-using System.IO;
+﻿using System.Data;
 using NSubstitute;
 using NUnit.Framework;
 using Vertica.Integration.Infrastructure.Archiving;
@@ -11,36 +9,31 @@ namespace Vertica.Integration.Tests.Infrastructure.Archiving
     [TestFixture]
     public class ArchiverTester
     {
-        [Test, Ignore]
-        public void Archive()
+        [Test]
+        public void ArchiveText_Verify_DapperInteraction()
         {
-            Archiver subject = Initialize();
+            IDapperSession session;
+            Archiver subject = Initialize(out session);
 
-            using (Archive archive = subject.Create("Test Archive", Console.WriteLine))
-            {
-                var file = new FileInfo(String.Format("ArchiveTest-{0}.txt", Guid.NewGuid().ToString("N")));
+            const int expectedId = 1;
+            session.Query<int>(null).ReturnsForAnyArgs(new[] { expectedId });
 
-                using (var writer = file.CreateText())
-                {
-                    writer.Write(new string('A', 1000));
-                }
+            int actualId = subject.ArchiveText("C", new string('C', 10000));
 
-                archive.IncludeFile(file);
-                archive.IncludeFile(new FileInfo(@"Castle.Core.dll"));
-                //archive.IncludeFolder(new DirectoryInfo(@"C:\Users\bhk\Documents\GitHub\checklist"));
-                //archive.IncludeObject("sadfsdf");
-            }
+            Assert.That(actualId, Is.EqualTo(expectedId));
         }
 
-        private Archiver Initialize()
+        private Archiver Initialize(out IDapperSession session)
         {
             var dapper = Substitute.For<IDapperProvider>();
+            session = Substitute.For<IDapperSession>();
 
             dapper
                 .OpenSession()
-                .Returns(c => 
-                    new DapperSession(
-                        new SqlConnection("Integrated Security=SSPI;Data Source=pj-sql01.vertica.dk;Database=IC_PJ_Integration")));
+                .Returns(session);
+
+            IDbTransaction transaction = Substitute.For<IDbTransaction>();
+            session.BeginTransaction().Returns(transaction);
 
             return new Archiver(dapper);
         }
