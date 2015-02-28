@@ -1,6 +1,6 @@
 ﻿using System;
-using NHibernate;
-using Vertica.Integration.Infrastructure.Database.NHibernate;
+using System.Data;
+using Vertica.Integration.Infrastructure.Database.Dapper;
 using Vertica.Integration.Model;
 using Vertica.Utilities_v4.Extensions.StringExt;
 using Vertica.Utilities_v4.Extensions.TimeExt;
@@ -9,13 +9,13 @@ namespace Vertica.Integration.Domain.Core
 {
 	public class CleanUpIntegrationDbStep : Step<MaintenanceWorkItem>
 	{
-	    private readonly Lazy<ISessionFactoryProvider> _sessionFactory;
+	    private readonly IDapperProvider _dapper;
 	    private readonly TimeSpan _tasksOlderThan;
 		private readonly TimeSpan _errorsOlderThan;
 
-		public CleanUpIntegrationDbStep(Lazy<ISessionFactoryProvider> sessionFactory, TimeSpan tasksOlderThan, TimeSpan errorsOlderThan)
+		public CleanUpIntegrationDbStep(IDapperProvider dapper, TimeSpan tasksOlderThan, TimeSpan errorsOlderThan)
 		{
-		    _sessionFactory = sessionFactory;
+		    _dapper = dapper;
 		    _tasksOlderThan = tasksOlderThan;
 			_errorsOlderThan = errorsOlderThan;
 		}
@@ -25,8 +25,8 @@ namespace Vertica.Integration.Domain.Core
 			DateTimeOffset tasksLowerBound = DateTimeOffset.UtcNow.BeginningOfDay().Subtract(_tasksOlderThan),
 				errorsLowerBound = DateTimeOffset.UtcNow.BeginningOfDay().Subtract(_errorsOlderThan);
 
-			using (IStatelessSession session = _sessionFactory.Value.SessionFactory.OpenStatelessSession())
-			using (ITransaction transaction = session.BeginTransaction())
+			using (IDapperSession session = _dapper.OpenSession())
+			using (IDbTransaction transaction = session.BeginTransaction())
 			{
 				int taskCount = DeleteTaskEntries(session, tasksLowerBound);
 				int errorCount = DeleteErrorEntries(session, errorsLowerBound);
@@ -41,20 +41,14 @@ namespace Vertica.Integration.Domain.Core
 			}
 		}
 
-		private int DeleteTaskEntries(IStatelessSession session, DateTimeOffset lowerBound)
+		private int DeleteTaskEntries(IDapperSession session, DateTimeOffset lowerBound)
 		{
-		    return
-		        session.CreateSQLQuery("DELETE FROM [TaskLog] WHERE [TimeStamp] <= :timestamp")
-		            .SetParameter("timestamp", lowerBound)
-		            .ExecuteUpdate();
+		    return session.ExecuteScalar<int>("DELETE FROM [TaskLog] WHERE [TimeStamp] <= @lowerbound", new { lowerBound });
 		}
 
-		private int DeleteErrorEntries(IStatelessSession session, DateTimeOffset lowerBound)
+		private int DeleteErrorEntries(IDapperSession session, DateTimeOffset lowerBound)
 		{
-            return
-                session.CreateSQLQuery("DELETE FROM [ErrorLog] WHERE [TimeStamp] <= :timestamp")
-                    .SetParameter("timestamp", lowerBound)
-                    .ExecuteUpdate();
+            return session.ExecuteScalar<int>("DELETE FROM [ErrorLog] WHERE [TimeStamp] <= @lowerBound", new { lowerBound });
 		}
 
         public override string Description
