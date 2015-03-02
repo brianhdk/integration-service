@@ -9,6 +9,6 @@
 
         Configuration[] GetAll();
         Configuration Get(string clrType);
-        Configuration Save(Configuration configuration);
+        Configuration Save(Configuration configuration, bool createArchiveBackup = false);
     }
 }

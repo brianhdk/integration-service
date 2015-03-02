@@ -21,6 +21,8 @@ namespace Vertica.Integration.Infrastructure.Configuration
 
         public TConfiguration Get<TConfiguration>() where TConfiguration : class, new()
         {
+            if (typeof(TConfiguration) == typeof(Configuration)) throw new ArgumentException("Getting a Configuration of type Configuration is not allowed.");
+
             Configuration raw = Get(GetClrType(typeof (TConfiguration)));
 
             if (raw != null)
@@ -72,18 +74,18 @@ namespace Vertica.Integration.Infrastructure.Configuration
             }
         }
 
-        public Configuration Save(Configuration configuration)
+        public Configuration Save(Configuration configuration, bool createArchiveBackup = false)
         {
             if (configuration == null) throw new ArgumentNullException("configuration");
 
-            SaveInternal(configuration.ClrType, configuration.JsonData, configuration.UpdatedBy, backup: true);
+            SaveInternal(configuration.ClrType, configuration.JsonData, configuration.UpdatedBy, createArchiveBackup);
 
             return Get(configuration.ClrType);
         }
 
-        private void SaveInternal(string clrType, string jsonData, string updatedBy, bool backup)
+        private void SaveInternal(string clrType, string jsonData, string updatedBy, bool createArchiveBackup)
         {
-            if (backup)
+            if (createArchiveBackup)
             {
                 Configuration configuration = Get(clrType);
 

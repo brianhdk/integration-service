@@ -17,16 +17,19 @@ namespace Vertica.Integration.Portal.Controllers
 
 	    public HttpResponseMessage Get()
 	    {
-		    Configuration[] configurations = _configurationProvider.GetAll();
+		    Configuration[] model = _configurationProvider.GetAll();
 
-            return Request.CreateResponse(HttpStatusCode.OK, configurations);
+            return Request.CreateResponse(HttpStatusCode.OK, model);
         }
 
 		public HttpResponseMessage Get(string clrType)
 	    {
-		    Configuration configuration = _configurationProvider.Get(clrType);
+		    Configuration model = _configurationProvider.Get(clrType);
 
-            return Request.CreateResponse(HttpStatusCode.OK, configuration);
+            if (model == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            return Request.CreateResponse(HttpStatusCode.OK, model);
         }
 
         public HttpResponseMessage Put(Configuration configuration)
@@ -36,8 +39,7 @@ namespace Vertica.Integration.Portal.Controllers
             // TODO: Validate JSON before submitting
 
             configuration.UpdatedBy = "Portal";
-            
-            configuration = _configurationProvider.Save(configuration);
+            configuration = _configurationProvider.Save(configuration, createArchiveBackup: true);
 
             return Request.CreateResponse(HttpStatusCode.OK, configuration);
         }
