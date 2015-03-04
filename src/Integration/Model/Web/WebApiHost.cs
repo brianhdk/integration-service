@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Web.Http;
@@ -121,7 +120,7 @@ namespace Vertica.Integration.Model.Web
 
             public ICollection<Type> GetControllerTypes(IAssembliesResolver assembliesResolver)
             {
-                return _container.ResolveAll<ApiController>().Select(x => x.GetType()).ToList();
+                return _container.Resolve<IWebApiControllers>().Controllers;
             }
 
             public IHttpController Create(HttpRequestMessage request, HttpControllerDescriptor controllerDescriptor, Type controllerType)

@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Web.Http;
 using Castle.MicroKernel.Registration;
@@ -24,23 +26,57 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
                 .Register(Component.For<ITask>()
                 .ImplementedBy<WebApiTask>().Named("WebApiTask"));
 
+            var types = new List<Type>();
+
             foreach (Assembly assembly in _configuration.ScanAssemblies)
             {
                 container.Register(
                     Classes.FromAssembly(assembly)
                         .BasedOn<ApiController>()
-                        .If(x => !_configuration.RemoveControllers.Contains(x))
+                        .If(x =>
+                        {
+                            if (!_configuration.RemoveControllers.Contains(x))
+                            {
+                                types.Add(x);
+                                return true;
+                            }
+
+                            return false;
+                        })
                         .WithServiceSelf()
-                        .WithServiceBase()
                         .LifestyleTransient());
             }
 
             container.Register(
                 Classes.From(_configuration.AddControllers)
                     .BasedOn<ApiController>()
+                    .If(x =>
+                    {
+                        types.Add(x);
+                        return true;
+                    })
                     .WithServiceSelf()
-                    .WithServiceBase()
                     .LifestyleTransient());
-		}
+
+            container.Register(
+                Component.For<IWebApiControllers>()
+                    .UsingFactoryMethod(x => new ControllerTypes(types.ToArray()))
+                    .LifeStyle.Singleton);
+        }
+
+        private class ControllerTypes : IWebApiControllers
+        {
+            private readonly Type[] _types;
+
+            public ControllerTypes(Type[] types)
+            {
+                _types = types;
+            }
+
+            public Type[] Controllers
+            {
+                get { return _types; }
+            }
+        }
 	}
 }
