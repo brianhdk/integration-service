@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
@@ -52,7 +55,10 @@ namespace Vertica.Integration.Model.Web
 
                 configuration.Filters.Add(new ExceptionHandlingAttribute(logger));
 
-                configuration.Services.Replace(typeof(IHttpControllerActivator), new CustomResolver(ObjectFactory.Instance));
+                var resolver = new CustomResolver(ObjectFactory.Instance);
+                configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
+                configuration.Services.Replace(typeof(IHttpControllerTypeResolver), resolver);
+                configuration.Services.Replace(typeof(IHttpControllerActivator), resolver);
 
                 builder.UseWebApi(configuration);
 
@@ -97,7 +103,7 @@ namespace Vertica.Integration.Model.Web
             }
         }
 
-        private class CustomResolver : IHttpControllerActivator
+        private class CustomResolver : IAssembliesResolver, IHttpControllerTypeResolver, IHttpControllerActivator
         {
             private readonly IWindsorContainer _container;
 
@@ -106,6 +112,16 @@ namespace Vertica.Integration.Model.Web
                 if (container == null) throw new ArgumentNullException("container");
 
                 _container = container;
+            }
+
+            public ICollection<Assembly> GetAssemblies()
+            {
+                return new List<Assembly>();
+            }
+
+            public ICollection<Type> GetControllerTypes(IAssembliesResolver assembliesResolver)
+            {
+                return _container.ResolveAll<ApiController>().Select(x => x.GetType()).ToList();
             }
 
             public IHttpController Create(HttpRequestMessage request, HttpControllerDescriptor controllerDescriptor, Type controllerType)

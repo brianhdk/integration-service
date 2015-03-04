@@ -2,46 +2,61 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Web.Http;
 
 namespace Vertica.Integration.Model.Web
 {
     public class WebApiConfiguration
     {
-        private readonly List<Assembly> _assemblies;
-        private readonly List<Type> _controllers;
+        private readonly List<Assembly> _scan;
+        private readonly List<Type> _add;
+        private readonly List<Type> _remove; 
 
         public WebApiConfiguration()
         {
-            _assemblies = new List<Assembly>();
-            _controllers = new List<Type>();
+            _scan = new List<Assembly>();
+            _add = new List<Type>();
+            _remove = new List<Type>();
         }
 
-        public WebApiConfiguration ScanAssembly(Assembly assemblyToScan)
+        public WebApiConfiguration Scan(Assembly assemblyToScan)
         {
             if (assemblyToScan == null) throw new ArgumentNullException("assemblyToScan");
 
-            _assemblies.Add(assemblyToScan);
+            _scan.Add(assemblyToScan);
 
             return this;
         }
 
-        public WebApiConfiguration AddApiController(Type apiController)
+        public WebApiConfiguration Add<T>()
+            where T : ApiController
         {
-            if (apiController == null) throw new ArgumentNullException("apiController");
-
-            _controllers.Add(apiController);
+            _add.Add(typeof (T));
 
             return this;
         }
 
-        public Assembly[] Assemblies
+        public WebApiConfiguration Remove<T>()
+            where T : ApiController
         {
-            get { return _assemblies.Distinct().ToArray(); }
+            _remove.Add(typeof (T));
+
+            return this;
         }
 
-        public Type[] Controllers
+        internal Assembly[] ScanAssemblies
         {
-            get { return _controllers.Distinct().ToArray(); }
+            get { return _scan.Distinct().ToArray(); }
+        }
+
+        internal Type[] AddControllers
+        {
+            get { return _add.Except(_remove).Distinct().ToArray(); }
+        }
+
+        internal Type[] RemoveControllers
+        {
+            get { return _remove.Distinct().ToArray(); }
         }
     }
 }

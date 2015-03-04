@@ -33,7 +33,7 @@ namespace Vertica.Integration
 			Assembly integrationAssembly = typeof(CastleWindsor).Assembly;
 
             WebApiConfiguration webApi = null;
-            configuration.WebApi(x => webApi = x.ScanAssembly(integrationAssembly));
+            configuration.WebApi(x => webApi = x.Scan(integrationAssembly));
 
 			container.Install(
                 new DapperInstaller(new Infrastructure.Database.Dapper.Databases.IntegrationDb(configuration.DatabaseConnectionStringName)),

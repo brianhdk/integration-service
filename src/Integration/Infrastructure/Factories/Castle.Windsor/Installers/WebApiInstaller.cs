@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Linq;
+using System.Reflection;
 using System.Web.Http;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
@@ -23,19 +24,22 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
                 .Register(Component.For<ITask>()
                 .ImplementedBy<WebApiTask>().Named("WebApiTask"));
 
-            foreach (Assembly assembly in _configuration.Assemblies)
+            foreach (Assembly assembly in _configuration.ScanAssemblies)
             {
                 container.Register(
                     Classes.FromAssembly(assembly)
                         .BasedOn<ApiController>()
+                        .If(x => !_configuration.RemoveControllers.Contains(x))
                         .WithServiceSelf()
+                        .WithServiceBase()
                         .LifestyleTransient());
             }
 
             container.Register(
-                Classes.From(_configuration.Controllers)
+                Classes.From(_configuration.AddControllers)
                     .BasedOn<ApiController>()
                     .WithServiceSelf()
+                    .WithServiceBase()
                     .LifestyleTransient());
 		}
 	}

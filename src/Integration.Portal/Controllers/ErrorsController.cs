@@ -19,7 +19,7 @@ namespace Vertica.Integration.Portal.Controllers
 
         public HttpResponseMessage Get()
         {
-            string sql = @"
+            const string sql = @"
 SELECT [Id]
       ,[MachineName]
       ,[IdentityName]

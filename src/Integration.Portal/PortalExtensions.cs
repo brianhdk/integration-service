@@ -1,4 +1,5 @@
 ﻿using System;
+using Vertica.Integration.Model.Web;
 
 namespace Vertica.Integration.Portal
 {
@@ -13,8 +14,10 @@ namespace Vertica.Integration.Portal
             if (portal != null)
                 portal(configuration);
 
-            builder.WebApi(x => x.ScanAssembly(typeof (PortalExtensions).Assembly));
-            
+            builder.WebApi(x => x
+                .Remove<HomeController>()
+                .Scan(typeof (PortalExtensions).Assembly));
+
             return builder;
         }
     }

@@ -191,6 +191,7 @@
     <Compile Include="Model\TaskRunner.cs" />
     <Compile Include="Model\TaskService.cs" />
     <Compile Include="Model\Web\ExceptionHandlingAttribute.cs" />
+    <Compile Include="Model\Web\HomeController.cs" />
     <Compile Include="Model\Web\TaskController.cs" />
     <Compile Include="Model\Web\WebApiHost.cs" />
     <Compile Include="Model\Web\WebApiTask.cs" />
