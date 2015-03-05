@@ -6,7 +6,6 @@ using System.Web.Http;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
-using Vertica.Integration.Model;
 using Vertica.Integration.Model.Web;
 
 namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
@@ -22,10 +21,6 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            container
-                .Register(Component.For<ITask>()
-                .ImplementedBy<WebApiTask>().Named("WebApiTask"));
-
             var types = new List<Type>();
 
             foreach (Assembly assembly in _configuration.ScanAssemblies)
@@ -33,14 +28,12 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
                 container.Register(
                     Classes.FromAssembly(assembly)
                         .BasedOn<ApiController>()
-                        .If(x =>
+                        .Unless(x =>
                         {
-                            if (!_configuration.RemoveControllers.Contains(x))
-                            {
-                                types.Add(x);
+                            if (_configuration.RemoveControllers.Contains(x))
                                 return true;
-                            }
 
+                            types.Add(x);
                             return false;
                         })
                         .WithServiceSelf()
@@ -50,11 +43,7 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
             container.Register(
                 Classes.From(_configuration.AddControllers)
                     .BasedOn<ApiController>()
-                    .If(x =>
-                    {
-                        types.Add(x);
-                        return true;
-                    })
+                    .Expose(types.Add)
                     .WithServiceSelf()
                     .LifestyleTransient());
 

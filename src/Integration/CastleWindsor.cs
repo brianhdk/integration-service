@@ -7,6 +7,7 @@ using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
 using Vertica.Integration.Infrastructure.Database.Dapper.Castle.Windsor;
+using Vertica.Integration.Infrastructure.Database.Dapper.Databases;
 using Vertica.Integration.Infrastructure.Factories;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Model;
@@ -32,11 +33,15 @@ namespace Vertica.Integration
 
 			Assembly integrationAssembly = typeof(CastleWindsor).Assembly;
 
+            AutoRegistredTasksConfiguration autoRegistredTasks = null;
+            configuration.AutoRegistredTasks(x => autoRegistredTasks = x);
+
             WebApiConfiguration webApi = null;
-            configuration.WebApi(x => webApi = x.Scan(integrationAssembly));
+            configuration.WebApi(x => webApi = x);
 
 			container.Install(
-                new DapperInstaller(new Infrastructure.Database.Dapper.Databases.IntegrationDb(configuration.DatabaseConnectionStringName)),
+                new DapperInstaller(new IntegrationDb(configuration.DatabaseConnectionStringName)),
+                new AutoRegisterTasksInstaller(autoRegistredTasks),
 				new TaskFactoryInstaller(),
                 new ConsoleWriterInstaller(),
                 new WebApiInstaller(webApi),

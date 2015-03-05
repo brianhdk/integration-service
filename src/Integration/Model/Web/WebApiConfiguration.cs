@@ -17,6 +17,9 @@ namespace Vertica.Integration.Model.Web
             _scan = new List<Assembly>();
             _add = new List<Type>();
             _remove = new List<Type>();
+
+            // scan own assembly
+            Scan(GetType().Assembly);
         }
 
         public WebApiConfiguration Scan(Assembly assemblyToScan)
