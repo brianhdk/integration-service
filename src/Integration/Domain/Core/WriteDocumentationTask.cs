@@ -8,12 +8,10 @@ namespace Vertica.Integration.Domain.Core
     public class WriteDocumentationTask : Task
     {
         private readonly ITaskService _taskService;
-	    private readonly string _fileName;
 
-	    public WriteDocumentationTask(ITaskService taskService, string fileName)
+	    public WriteDocumentationTask(ITaskService taskService)
         {
 	        _taskService = taskService;
-	        _fileName = fileName;
         }
 
 		public override void StartTask(Log log, params string[] arguments)
@@ -35,7 +33,7 @@ namespace Vertica.Integration.Domain.Core
                 sb.AppendLine();
             }
 
-			File.WriteAllText(_fileName, sb.ToString());
+			File.WriteAllText("Tasks-Documentation.txt", sb.ToString());
         }
 
         public override string Description

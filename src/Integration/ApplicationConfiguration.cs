@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Castle.MicroKernel.Registration;
+using Vertica.Integration.Model;
 using Vertica.Integration.Model.Web;
 using Vertica.Utilities_v4.Extensions.EnumerableExt;
 
@@ -9,11 +10,13 @@ namespace Vertica.Integration
     public class ApplicationConfiguration
     {
         private readonly List<IWindsorInstaller> _customInstallers;
+        private readonly AutoRegistredTasksConfiguration _autoRegistredTasks;
         private readonly WebApiConfiguration _webApi;
 
         public ApplicationConfiguration()
         {
             _customInstallers = new List<IWindsorInstaller>();
+            _autoRegistredTasks = new AutoRegistredTasksConfiguration();
             _webApi = new WebApiConfiguration();
 
             DatabaseConnectionStringName = "IntegrationDb";
@@ -41,6 +44,15 @@ namespace Vertica.Integration
             get { return _customInstallers.ToArray(); }
         }
 
+        public ApplicationConfiguration AutoRegistredTasks(Action<AutoRegistredTasksConfiguration> autoRegistredTasks)
+        {
+            if (autoRegistredTasks == null) throw new ArgumentNullException("autoRegistredTasks");
+
+            autoRegistredTasks(_autoRegistredTasks);
+
+            return this;
+        }
+
         public ApplicationConfiguration WebApi(Action<WebApiConfiguration> webApi)
         {
             if (webApi == null) throw new ArgumentNullException("webApi");
@@ -61,5 +73,10 @@ namespace Vertica.Integration
 
         public string DatabaseConnectionStringName { get; set; }
         public bool IgnoreSslErrors { get; set; }
+
+        public ApplicationConfiguration Nothing()
+        {
+            return this;
+        }
     }
 }

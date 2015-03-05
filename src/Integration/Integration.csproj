@@ -99,8 +99,6 @@
     <Compile Include="ApplicationContext.cs" />
     <Compile Include="CastleWindsor.cs" />
     <Compile Include="Domain\Core\CleanUpIntegrationDbStep.cs" />
-    <Compile Include="Domain\Core\ImportFilesTask.cs" />
-    <Compile Include="Domain\Core\ImportFilesWorkItem.cs" />
     <Compile Include="Domain\Core\MaintenanceTask.cs" />
     <Compile Include="Domain\Core\MaintenanceWorkItem.cs" />
     <Compile Include="Domain\Core\WriteDocumentationTask.cs" />
@@ -143,8 +141,11 @@
     <Compile Include="Infrastructure\Extensions\ActionRepeaterExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\ExceptionExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\StringExtensions.cs" />
+    <Compile Include="Infrastructure\Factories\Castle.Windsor\CastleWindsorExtensions.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ConsoleWriterInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ConventionInstaller.cs" />
+    <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\AutoRegisterTasksInstaller.cs" />
+    <Compile Include="Model\AutoRegistredTasksConfiguration.cs" />
     <Compile Include="Model\Web\IWebApiControllers.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\TaskFactoryInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\WebApiInstaller.cs" />
@@ -218,6 +219,9 @@
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="Tasks.Core.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -225,7 +229,8 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>copy nul &gt; ../build.watch</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>

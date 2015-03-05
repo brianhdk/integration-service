@@ -60,15 +60,19 @@
   <ItemGroup>
     <None Include="..\Integration.Experiments\Tasks.Experiments.config">
       <Link>Tasks.Experiments.config</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="..\Integration.Logging.Elmah\Tasks.Elmah.config">
       <Link>Tasks.Elmah.config</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="..\Integration.Logging.Kibana\Tasks.Kibana.config">
       <Link>Tasks.Kibana.config</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Integration\Tasks.Core.config">
+      <Link>Tasks.Core.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="App.config" />
     <None Include="packages.config" />
