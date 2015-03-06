@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Data;
-using System.Reflection;
+using System.Linq;
 using System.Text;
 using FluentMigrator;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Announcers;
 using FluentMigrator.Runner.Initialization;
+using FluentMigrator.Runner.Processors;
 using FluentMigrator.Runner.Processors.SqlServer;
 using Vertica.Integration.Infrastructure.Database.Dapper;
 using Vertica.Integration.Infrastructure.Logging;
@@ -15,19 +16,28 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
     public class MigrateTask : Task
     {
-        private readonly IDapperProvider _dapper;
+        private readonly MigrationDestination[] _destinations;
         private readonly IDisposable _loggingDisabler;
 
-        public MigrateTask(IDapperProvider dapper, ILogger logger)
+        public MigrateTask(IDapperProvider dapper, ILogger logger, MigrationConfiguration configuration)
         {
-            _dapper = dapper;
+            using (IDbConnection connection = dapper.GetConnection())
+            {
+                var selfDestination = new MigrationDestination(
+                    configuration.IntegrationDbDatabaseServer,
+                    connection.ConnectionString,
+                    typeof (M1_Baseline).Assembly,
+                    typeof (M1_Baseline).Namespace);
 
-            StringBuilder output;
-            MigrationRunner runner = CreateRunner(out output);
+                StringBuilder output;
+                MigrationRunner runner = CreateRunner(selfDestination, out output);
 
-            // Baseline has not been applied, so we'll have to disable any logging
-            if (!runner.VersionLoader.VersionInfo.HasAppliedMigration(M1_Baseline.VersionNumber))
-                _loggingDisabler = logger.Disable();
+                // Baseline has not been applied, so we'll have to disable any logging
+                if (!runner.VersionLoader.VersionInfo.HasAppliedMigration(M1_Baseline.VersionNumber))
+                    _loggingDisabler = logger.Disable();
+
+                _destinations = new[] { selfDestination }.Concat(configuration.CustomDestinations).ToArray();
+            }
         }
 
         public override string Description
@@ -37,18 +47,21 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
         public override string Schedule
         {
-            get { return "TBD"; }
+            get { return "Manual."; }
         }
 
         public override void StartTask(Log log, params string[] arguments)
         {
-            StringBuilder output;
-            MigrationRunner runner = CreateRunner(out output);
+            foreach (MigrationDestination destination in _destinations)
+            {
+                StringBuilder output;
+                MigrationRunner runner = CreateRunner(destination, out output);
 
-            runner.MigrateUp(useAutomaticTransactionManagement: true);
+                runner.MigrateUp(useAutomaticTransactionManagement: true);
 
-            if (output.Length > 0)
-                log.Message(output.ToString());
+                if (output.Length > 0)
+                    log.Message(output.ToString());
+            }
         }
 
         public override void End(EmptyWorkItem workItem, Log log, params string[] arguments)
@@ -57,7 +70,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
                 _loggingDisabler.Dispose();
         }
 
-        private MigrationRunner CreateRunner(out StringBuilder output)
+        private MigrationRunner CreateRunner(MigrationDestination destination, out StringBuilder output)
         {
             var sb = output = new StringBuilder();
 
@@ -69,21 +82,28 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
                 sb.Append(s);
             });
 
-            var factory = new SqlServer2012ProcessorFactory();
+            IMigrationProcessorFactory factory = CreateFactory(destination.DatabaseServer);
 
-            using (IDbConnection connection = _dapper.GetConnection())
+            IMigrationProcessor processor = factory.Create(destination.ConnectionString, announcer, new MigrationOptions());
+
+            var context = new RunnerContext(announcer)
             {
-                IMigrationProcessor processor = factory.Create(connection.ConnectionString, announcer, new MigrationOptions());
+                Namespace = destination.NamespaceContainingMigrations
+            };
 
-                // todo: allow for configuration of additional assemblies+namespaces,
-                var assembly = Assembly.GetExecutingAssembly();
+            return new MigrationRunner(destination.Assembly, context, processor);
+        }
 
-                var context = new RunnerContext(announcer)
-                {
-                    Namespace = typeof(M1_Baseline).Namespace
-                };
-
-                return new MigrationRunner(assembly, context, processor);                
+        private static IMigrationProcessorFactory CreateFactory(DatabaseServer databaseServer)
+        {
+            switch (databaseServer)
+            {
+                case DatabaseServer.SqlServer2012:
+                    return new SqlServer2012ProcessorFactory();
+                case DatabaseServer.SqlServer2014:
+                    return new SqlServer2014ProcessorFactory();
+                default:
+                    throw new ArgumentOutOfRangeException("databaseServer");
             }
         }
 

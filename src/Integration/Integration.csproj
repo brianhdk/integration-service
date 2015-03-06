@@ -129,10 +129,13 @@
     <Compile Include="Infrastructure\Database\Dapper\DefaultConnection.cs" />
     <Compile Include="Infrastructure\Database\Dapper\IDapperProvider.cs" />
     <Compile Include="Infrastructure\Database\Dapper\IDapperSession.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\DatabaseServer.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M1_Baseline.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M3_Configuration.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M2_Archive.cs" />
     <Compile Include="Infrastructure\Database\Migrations\MigrateTask.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\MigrationConfiguration.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\MigrationDestination.cs" />
     <Compile Include="Infrastructure\Database\Migrations\MigrationExtensions.cs" />
     <Compile Include="Infrastructure\Delay.cs" />
     <Compile Include="Infrastructure\Email\EmailService.cs" />

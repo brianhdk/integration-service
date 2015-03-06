@@ -16,7 +16,7 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 
         public ConventionInstaller(IEnumerable<Assembly> assemblies, params Type[] ignoreTypes)
         {
-            _assemblies = (assemblies ?? Enumerable.Empty<Assembly>()).ToArray();
+            _assemblies = (assemblies ?? Enumerable.Empty<Assembly>()).Distinct().ToArray();
 
             _ignoreTypes = (ignoreTypes ?? Enumerable.Empty<Type>()).Concat(new[]
             {

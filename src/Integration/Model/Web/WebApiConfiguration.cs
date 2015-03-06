@@ -10,9 +10,9 @@ namespace Vertica.Integration.Model.Web
     {
         private readonly List<Assembly> _scan;
         private readonly List<Type> _add;
-        private readonly List<Type> _remove; 
+        private readonly List<Type> _remove;
 
-        public WebApiConfiguration()
+        internal WebApiConfiguration()
         {
             _scan = new List<Assembly>();
             _add = new List<Type>();
