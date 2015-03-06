@@ -8,6 +8,7 @@ using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
 using Vertica.Integration.Infrastructure.Database.Dapper.Castle.Windsor;
 using Vertica.Integration.Infrastructure.Database.Dapper.Databases;
+using Vertica.Integration.Infrastructure.Database.Migrations;
 using Vertica.Integration.Infrastructure.Factories;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Model;
@@ -48,6 +49,13 @@ namespace Vertica.Integration
 				new ConventionInstaller(new[] { integrationAssembly }, typeof(ITask), typeof(IStep), typeof(ISettings)));
 
             container.Install(configuration.CustomInstallers);
+
+            MigrationConfiguration migration = null;
+            configuration.Migration(x => migration = x.Lock());
+
+            container.Register(
+                Component.For<MigrationConfiguration>()
+                    .UsingFactoryMethod(() => migration));
 
 			return container;
 		}

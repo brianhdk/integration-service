@@ -8,10 +8,12 @@ namespace Vertica.Integration.Infrastructure.Database.Dapper
 
 	    protected Connection(string connectionStringName)
 		{
+            if (String.IsNullOrWhiteSpace(connectionStringName)) throw new ArgumentException("Value cannot be null or empty.");
+
 			_connectionStringName = connectionStringName;
 		}
 
-		internal string ConnectionStringName
+	    public string ConnectionStringName
 		{
 			get { return _connectionStringName; }
 		}
