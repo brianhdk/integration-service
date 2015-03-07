@@ -68,6 +68,7 @@ namespace Vertica.Integration.Infrastructure.Logging
         private class Disabler : IDisposable
         {
             private readonly Action _disposed;
+            private bool _wasDisposed;
 
             public Disabler(Action disposed)
             {
@@ -76,7 +77,11 @@ namespace Vertica.Integration.Infrastructure.Logging
 
             public void Dispose()
             {
-                _disposed();
+                if (!_wasDisposed)
+                {
+                    _disposed();
+                    _wasDisposed = true;
+                }
             }
         }
 
@@ -184,15 +189,17 @@ namespace Vertica.Integration.Infrastructure.Logging
             protected override void HandleInsert(IDapperSession session, StepLog logEntry)
             {
                 logEntry.Id = session.ExecuteScalar<int>(
-                    @"INSERT INTO TaskLog (Type, TaskName, StepName, ExecutionTimeSeconds, TimeStamp, TaskLog_Id)
-                      VALUES ('S', @TaskName, @StepName, 0, @TimeStamp, @TaskLog_Id)
+                    @"INSERT INTO TaskLog (Type, TaskName, StepName, ExecutionTimeSeconds, TimeStamp, TaskLog_Id, ErrorLog_Id)
+                      VALUES ('S', @TaskName, @StepName, @ExecutionTimeSeconds, @TimeStamp, @TaskLog_Id, @ErrorLog_Id)
                       SELECT CAST(SCOPE_IDENTITY() AS INT)",
                     new
                     {
                         logEntry.TaskName,
                         logEntry.StepName,
+                        logEntry.ExecutionTimeSeconds,
                         logEntry.TimeStamp,
-                        TaskLog_Id = logEntry.TaskLog.Id
+                        TaskLog_Id = logEntry.TaskLog.Id,
+                        ErrorLog_Id = logEntry.ErrorLog != null ? logEntry.ErrorLog.Id : default(int?)
                     });
             }
 
@@ -219,13 +226,15 @@ namespace Vertica.Integration.Infrastructure.Logging
             protected override void HandleInsert(IDapperSession session, TaskLog logEntry)
             {
                 logEntry.Id = session.ExecuteScalar<int>(
-                    @"INSERT INTO TaskLog (Type, TaskName, ExecutionTimeSeconds, TimeStamp)
-                      VALUES ('T', @TaskName, 0, @TimeStamp)
+                    @"INSERT INTO TaskLog (Type, TaskName, ExecutionTimeSeconds, TimeStamp, ErrorLog_Id)
+                      VALUES ('T', @TaskName, @ExecutionTimeSeconds, @TimeStamp, @ErrorLog_Id)
                       SELECT CAST(SCOPE_IDENTITY() AS INT)",
                     new
                     {
                         logEntry.TaskName,
-                        logEntry.TimeStamp
+                        logEntry.ExecutionTimeSeconds,
+                        logEntry.TimeStamp,
+                        ErrorLog_Id = logEntry.ErrorLog != null ? logEntry.ErrorLog.Id : default(int?)
                     });
             }
 
