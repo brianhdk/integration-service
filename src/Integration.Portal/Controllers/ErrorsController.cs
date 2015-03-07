@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Vertica.Integration.Infrastructure.Database.Dapper;
-using Vertica.Integration.Infrastructure.Logging;
+using Vertica.Integration.Portal.Models;
 
 namespace Vertica.Integration.Portal.Controllers
 {
@@ -21,22 +21,18 @@ namespace Vertica.Integration.Portal.Controllers
         {
             const string sql = @"
 SELECT [Id]
-      ,[MachineName]
-      ,[IdentityName]
-      ,[CommandLine]
       ,[Message]
-      ,[FormattedMessage]
       ,[TimeStamp]
       ,[Severity]
       ,[Target]
   FROM [ErrorLog] ORDER BY TimeStamp DESC
 ";
 
-            IEnumerable<ErrorLog> errors;
+            IEnumerable<ErrorLogModel> errors;
 
             using (IDapperSession session = _dapper.OpenSession())
             {
-                errors = session.Query<ErrorLog>(sql);
+                errors = session.Query<ErrorLogModel>(sql);
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, errors);
@@ -58,11 +54,11 @@ SELECT [Id]
   WHERE [ID] = @id
 ";
 
-            ErrorLog error;
+            ErrorLogDetailedModel error;
 
             using (IDapperSession session = _dapper.OpenSession())
             {
-                error = session.Query<ErrorLog>(sql, new { id }).SingleOrDefault();
+                error = session.Query<ErrorLogDetailedModel>(sql, new { id }).SingleOrDefault();
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, error);

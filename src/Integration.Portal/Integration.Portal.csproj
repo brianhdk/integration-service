@@ -69,6 +69,10 @@
     <Compile Include="Controllers\RunningTasksController.cs" />
     <Compile Include="Controllers\TaskDetailsController.cs" />
     <Compile Include="Controllers\TaskExecutionDetailsController.cs" />
+    <Compile Include="Models\ErrorLogDetailedModel.cs" />
+    <Compile Include="Models\ErrorLogModel.cs" />
+    <Compile Include="Models\TaskExecutionDetailModel.cs" />
+    <Compile Include="Models\TaskLogModel.cs" />
     <Compile Include="PortalConfiguration.cs" />
     <Compile Include="PortalExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
