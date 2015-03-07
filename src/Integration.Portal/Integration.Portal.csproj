@@ -84,6 +84,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\js\ace\ace.js" />
+    <Content Include="Assets\js\ace\mode-json.js" />
+    <Content Include="Assets\js\ace\theme-github.js" />
+    <Content Include="Assets\js\ace\ui-ace.js" />
+    <Content Include="Assets\js\ace\worker-json.js" />
     <Content Include="Assets\js\angular\angular-resource.js" />
     <Content Include="Assets\js\angular\angular-resource.min.js" />
     <Content Include="Assets\js\angular\angular-route.min.js" />
