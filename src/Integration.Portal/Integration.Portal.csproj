@@ -112,6 +112,7 @@
     <Content Include="Assets\js\controller\runningTasksController.js" />
     <Content Include="Assets\js\controller\taskDetailsController.js" />
     <Content Include="Assets\js\controller\taskExecutionDetailsController.js" />
+    <Content Include="Assets\js\filesize.min.js" />
     <Content Include="Assets\layout\bootstrap\css\bootstrap.css" />
     <Content Include="Assets\layout\bootstrap\css\prettify.css" />
     <Content Include="Assets\layout\bootstrap\js\bootstrap.min.js" />
