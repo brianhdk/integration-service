@@ -2,10 +2,10 @@
     <table ng-table="tableParams" show-filter="true" class="table">
         <tbody>
             <tr ng-repeat="archive in $data">
-                <td data-title="'Created'" sortable="'Created'">{{archive.Created | date:'yyyy-MM-dd HH:mm:ss' }}</td>
-                <td data-title="'Name'" sortable="'Name'" filter="{ 'Name': 'text' }">{{archive.Name}}</td>
-                <td data-title="'Byte Size'" sortable="'ByteSize'" filter="{ 'ByteSize': 'text' }">{{archive.ByteSize}}</td>
-                <td><a ng-href="/archives?id={{archive.Id}}">Download</a></td>
+                <td data-title="'Created'" sortable="'Created'">{{ archive.Created | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+                <td data-title="'Name'" sortable="'Name'" filter="{ 'Name': 'text' }">{{ archive.Name }}</td>
+                <td data-title="'Byte Size'" sortable="'ByteSize'">{{ formatSize(archive.ByteSize) }}</td>
+                <td><a ng-href="/archives?id={{ archive.Id }}">Download</a></td>
             </tr>
         </tbody>
     </table>
