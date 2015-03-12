@@ -27,4 +27,8 @@
         });
 
     });
+
+    $scope.formatSize = function(byteSize) {
+        return filesize(byteSize);
+    }
 });

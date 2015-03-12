@@ -33,7 +33,7 @@
 				<label class="col-sm-2 control-label">Last run</label>
 				<div class="col-sm-10">
 					<p class="form-control-static" ng-repeat="run in lastRun">
-						<td>{{run.TimeStamp | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+						<span>{{ run | date:'yyyy-MM-dd HH:mm:ss' }}</span>
 					</p>
 				</div>
 			</div>

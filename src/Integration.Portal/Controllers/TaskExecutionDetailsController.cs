@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Vertica.Integration.Infrastructure.Database.Dapper;
-using Vertica.Integration.Infrastructure.Logging;
+using Vertica.Integration.Portal.Models;
 
 namespace Vertica.Integration.Portal.Controllers
 {
@@ -21,23 +21,19 @@ namespace Vertica.Integration.Portal.Controllers
         {
             string sql = @"
 SELECT [Id]
-      ,[Type]
       ,[TaskName]
       ,[StepName]
       ,[Message]
       ,[ExecutionTimeSeconds]
       ,[TimeStamp]
-      ,[TaskLog_Id]
-      ,[StepLog_Id]
-      ,[ErrorLog_Id]
   FROM [dbo].[TaskLog]
   WHERE [Id] = @id OR TaskLog_Id = @taskLogId";
 
-            IEnumerable<TaskLog> taskLogs;
+            IEnumerable<TaskExecutionDetailModel> taskLogs;
 
             using (IDapperSession session = _dapper.OpenSession())
             {
-                taskLogs = session.Query<TaskLog>(sql, new { id, taskLogId = id }).ToList();
+                taskLogs = session.Query<TaskExecutionDetailModel>(sql, new { id, taskLogId = id }).ToList();
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, taskLogs);

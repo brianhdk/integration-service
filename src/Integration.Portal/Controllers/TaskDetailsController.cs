@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Vertica.Integration.Infrastructure.Database.Dapper;
-using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Portal.Controllers
@@ -35,20 +35,21 @@ namespace Vertica.Integration.Portal.Controllers
         public HttpResponseMessage Get(string displayName, int count)
         {
             string sql = string.Format(@"
-SELECT TOP {0} *
+SELECT TOP {0}
+	[TimeStamp]
 FROM [TaskLog]
-WHERE TaskName = '{1}' AND Type = 'T'
-ORDER BY timestamp DESC
+WHERE [TaskName] = '{1}' AND [Type] = 'T'
+ORDER BY [TimeStamp] DESC
 ", count, displayName);
 
-            IEnumerable<TaskLog> tasks;
+            IEnumerable<DateTimeOffset> lastRun;
 
             using (IDapperSession session = _dapper.OpenSession())
             {
-                tasks = session.Query<TaskLog>(sql).ToList();
+                lastRun = session.Query<DateTimeOffset>(sql).ToList();
             }
 
-            return Request.CreateResponse(HttpStatusCode.OK, tasks);
+            return Request.CreateResponse(HttpStatusCode.OK, lastRun);
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -25,7 +24,7 @@ namespace Vertica.Integration.Portal.Controllers
 				case 2:
 					return PieChart();
 			}
-			
+
 			return Request.CreateResponse(HttpStatusCode.NotFound);
 		}
 
@@ -36,17 +35,17 @@ namespace Vertica.Integration.Portal.Controllers
 
 		private HttpResponseMessage LastFiveDaysOfErrors()
 		{
-			var query = @"SELECT TOP 5 Max(CONVERT(VARCHAR(50), TimeStamp, 105)) as Date,
+			string sql = @"SELECT TOP 5 Max(CONVERT(VARCHAR(50), TimeStamp, 105)) as Date,
 count(id) as Errors
-FROM [ErrorLog] 
-group by DAY(TimeStamp) 
+FROM [ErrorLog]
+group by DAY(TimeStamp)
 order by Date desc";
 
 			IEnumerable<object> errors;
 
 			using (IDapperSession session = _dapper.OpenSession())
 			{
-				errors = session.Query<object>(query);
+				errors = session.Query<object>(sql);
 			}
 
 			return Request.CreateResponse(HttpStatusCode.OK, errors);
