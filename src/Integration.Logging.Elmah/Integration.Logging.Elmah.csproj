@@ -46,9 +46,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CleanUpErrorsStep.cs" />
+    <Compile Include="CleanUpElmahErrorsStep.cs" />
     <Compile Include="ElmahError.cs" />
-    <Compile Include="ExportErrorsStep.cs" />
+    <Compile Include="ExportElmahErrorsStep.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

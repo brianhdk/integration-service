@@ -5,6 +5,7 @@ using Vertica.Integration.Experiments.Custom_Database;
 using Vertica.Integration.Experiments.Custom_Database.Migrations;
 using Vertica.Integration.Infrastructure.Database.Dapper.Castle.Windsor;
 using Vertica.Integration.Infrastructure.Database.Migrations;
+using Vertica.Integration.Logging.Kibana;
 using Vertica.Integration.Model;
 using Vertica.Integration.Portal;
 
@@ -19,15 +20,7 @@ namespace Vertica.Integration.Console
 
 		    var customDb = new CustomDb();
 
-			using (var context = ApplicationContext.Create(builder => builder
-                .UsePortal()
-                //.AutoRegistredTasks(autoTasks => autoTasks
-                //    .Skip<WriteDocumentationTask>()
-                //    .Scan(typeof(CustomDbTesterTask).Assembly))
-                //.Migration(migration => migration
-                //    .IncludeFromNamespaceOfThis<DummyClassInNamespaceOfMigrations>(DatabaseServer.SqlServer2012, customDb.ConnectionStringName))
-                //.AddCustomInstaller(new DapperInstaller<CustomDb>(customDb))
-                .Nothing()))
+			using (var context = ApplicationContext.Create(builder => builder.UseKibana()))
 			{
 				ITaskService taskService = context.TaskService;
 

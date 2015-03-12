@@ -8,10 +8,6 @@ namespace Vertica.Integration.Domain.Monitoring
 {
 	public class MonitorEmailTemplate : EmailTemplate
 	{
-	    private static readonly string TemplatePath = Path.Combine(
-	        new FileInfo(typeof(MonitorEmailTemplate).Assembly.Location).DirectoryName ?? String.Empty,
-	        "Domain", "Monitoring", "EmailTemplate.cshtml");
-
 	    private readonly Range<DateTimeOffset> _checkRange;
 	    private readonly MonitorEntry[] _entries;
 
@@ -36,14 +32,15 @@ namespace Vertica.Integration.Domain.Monitoring
 
 	    public override string GetBody()
 	    {
-	        using (var reader = new StreamReader(TemplatePath))
-	        {
-	            return InMemoryRazorEngine.Execute(
-                    reader.ReadToEnd(), 
-                    _entries, 
-                    new { }, 
-                    typeof(MonitorEmailTemplate).Assembly);
-	        }
+            using (var stream = new MemoryStream(Resources.EmailTemplate))
+            using (var reader = new StreamReader(stream))
+            {
+                return InMemoryRazorEngine.Execute(
+                    reader.ReadToEnd(),
+                    _entries,
+                    new { },
+                    typeof(MonitorEmailTemplate).Assembly);                
+            }
 	    }
 	}
 }

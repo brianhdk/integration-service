@@ -94,6 +94,7 @@ namespace Vertica.Integration.Domain.Monitoring
                 // TODO: Group entries before sending
 
                 log.Message("Sending {0} entries to {1}.", entries.Length, target);
+
                 _emailService.Send(new MonitorEmailTemplate(workItem.CheckRange, entries), recipients);
 	        }
 	    }
