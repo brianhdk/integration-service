@@ -8,25 +8,31 @@ using Vertica.Utilities_v4.Extensions.StringExt;
 
 namespace Vertica.Integration.Logging.Elmah
 {
-    public class CleanUpErrorsStep : Step<MaintenanceWorkItem>
+    public class CleanUpElmahErrorsStep : Step<MaintenanceWorkItem>
     {
         private readonly string _connectionStringName;
         private readonly TimeSpan _olderThan;
 
-        public CleanUpErrorsStep(string connectionStringName, TimeSpan olderThan)
+        public CleanUpElmahErrorsStep(string connectionStringName, TimeSpan olderThan)
         {
+            if (String.IsNullOrWhiteSpace(connectionStringName)) throw new ArgumentException(@"Value cannot be null or empty.", "connectionStringName");
+
             _connectionStringName = connectionStringName;
             _olderThan = olderThan;
         }
 
         public override void Execute(MaintenanceWorkItem workItem, Log log)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings[_connectionStringName].ConnectionString;
+            ConnectionStringSettings settings = ConfigurationManager.ConnectionStrings[_connectionStringName];
+
+            if (settings == null)
+                throw new InvalidOperationException(
+                    String.Format("Found no ConnectionString with name '{0}'. Please add this to the <connectionString> element.", _connectionStringName));
 
             DateTime lowerBound = DateTime.UtcNow.Date.Subtract(_olderThan);
 
-            using (var connection = new SqlConnection(connectionString))
-            using (var command = connection.CreateCommand())
+            using (var connection = new SqlConnection(settings.ConnectionString))
+            using (SqlCommand command = connection.CreateCommand())
             {
                 connection.Open();
 
