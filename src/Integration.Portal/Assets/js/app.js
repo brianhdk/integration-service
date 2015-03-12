@@ -1,4 +1,4 @@
-﻿var integrationsApp = angular.module('integrationsApp', ['ngRoute', 'ngTable', 'ngResource']);
+﻿var integrationsApp = angular.module('integrationsApp', ['ngRoute', 'ngTable', 'ngResource', 'ui.ace']);
 
 // configure our routes
 integrationsApp.config(function ($routeProvider) {

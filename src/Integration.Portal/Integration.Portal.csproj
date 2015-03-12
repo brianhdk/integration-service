@@ -69,6 +69,10 @@
     <Compile Include="Controllers\RunningTasksController.cs" />
     <Compile Include="Controllers\TaskDetailsController.cs" />
     <Compile Include="Controllers\TaskExecutionDetailsController.cs" />
+    <Compile Include="Models\ErrorLogDetailedModel.cs" />
+    <Compile Include="Models\ErrorLogModel.cs" />
+    <Compile Include="Models\TaskExecutionDetailModel.cs" />
+    <Compile Include="Models\TaskLogModel.cs" />
     <Compile Include="PortalConfiguration.cs" />
     <Compile Include="PortalExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -80,6 +84,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\js\ace\ace.js" />
+    <Content Include="Assets\js\ace\mode-json.js" />
+    <Content Include="Assets\js\ace\theme-github.js" />
+    <Content Include="Assets\js\ace\ui-ace.js" />
+    <Content Include="Assets\js\ace\worker-json.js" />
     <Content Include="Assets\js\angular\angular-resource.js" />
     <Content Include="Assets\js\angular\angular-resource.min.js" />
     <Content Include="Assets\js\angular\angular-route.min.js" />
@@ -103,6 +112,7 @@
     <Content Include="Assets\js\controller\runningTasksController.js" />
     <Content Include="Assets\js\controller\taskDetailsController.js" />
     <Content Include="Assets\js\controller\taskExecutionDetailsController.js" />
+    <Content Include="Assets\js\filesize.min.js" />
     <Content Include="Assets\layout\bootstrap\css\bootstrap.css" />
     <Content Include="Assets\layout\bootstrap\css\prettify.css" />
     <Content Include="Assets\layout\bootstrap\js\bootstrap.min.js" />
