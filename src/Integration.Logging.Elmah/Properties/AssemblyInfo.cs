@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Vertica.Integration.Logging.Elmah")]
 [assembly: AssemblyDescription("Extension to Vertica Integration Service that supports Elmah framework.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Vertica")]
+[assembly: AssemblyCompany("Vertica A/S")]
 [assembly: AssemblyProduct("")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]

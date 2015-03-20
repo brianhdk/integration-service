@@ -14,12 +14,10 @@
     <description>$description$</description>
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2015</copyright>
-    <tags>Vertica Integration Service IntegrationService Elmah</tags>
+    <tags>Vertica Integration Service IntegrationService Portal</tags>
   </metadata>
   <files>
-    <file src="Tasks*.config" target="content" />
+    <file src="Portal.Assets.zip" exclude="assets/**/*.*" target="content" />
     <file src="NuGet-install.ps1" target="tools/install.ps1" />
-    <file src="NuGet-Tasks.config.install.xdt" target="tools/Tasks.config.install.xdt" />
-    <file src="NuGet-Tasks.config.uninstall.xdt" target="tools/Tasks.config.uninstall.xdt" />    
   </files>
 </package>

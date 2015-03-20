@@ -1,0 +1,5 @@
+﻿<?xml version="1.0"?>
+
+<castle xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+  <include uri="file://Tasks.Elmah.config" xdt:Transform="Insert" />
+</castle>

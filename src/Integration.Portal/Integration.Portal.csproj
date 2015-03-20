@@ -36,6 +36,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Net.Http">
       <Private>True</Private>
     </Reference>
@@ -133,7 +135,7 @@
     <Content Include="Assets\pages\taskExecutionDetail.html" />
     <Content Include="Assets\pages\taskList.html" />
     <Content Include="Assets\pages\tasks.html" />
-    <Content Include="Default.html" />
+    <Content Include="Assets\Default.html" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -155,6 +157,10 @@
     <None Include="Assets\layout\fonts\source-sans-pro\sourcesanspro-semibold.ttf" />
     <None Include="Assets\layout\fonts\source-sans-pro\sourcesanspro-semibold.woff" />
     <Content Include="Assets\pages\archives.html" />
+    <None Include="Integration.Portal.nuspec" />
+    <None Include="NuGet-install.ps1" />
+    <None Include="NuGet-After-Pack.ps1" />
+    <None Include="NuGet-Before-Pack.ps1" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -215,10 +215,14 @@
     <Compile Include="Model\Web\WebApiConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="NuGet-app.config.uninstall.xdt" />
+    <None Include="NuGet-app.config.install.xdt" />
     <None Include="app.config" />
     <None Include="Domain\Monitoring\EmailTemplate.cshtml">
       <SubType>Code</SubType>
     </None>
+    <None Include="Integration.nuspec" />
+    <None Include="NuGet-install.ps1" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
