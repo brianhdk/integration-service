@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Vertica.Integration")]
 [assembly: AssemblyDescription("Core component when using Vertica Integration Service.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Vertica")]
+[assembly: AssemblyCompany("Vertica A/S")]
 [assembly: AssemblyProduct("")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]

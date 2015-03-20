@@ -10,31 +10,29 @@ namespace Vertica.Integration.Portal.Controllers
 {
     public class AssetsController : ApiController
     {
-        private static readonly string Root = Path.Combine(
-            new FileInfo(typeof(AssetsController).Assembly.Location).DirectoryName ?? String.Empty,
-            "Portal");
-
         [Route("assets/{*path}")]
         public HttpResponseMessage Get(string path)
         {
-            return ServePortalFile(Request, Path.Combine("Assets", path));
+            return ServeFile(Request, path);
         }
 
-        internal static HttpResponseMessage ServePortalFile(HttpRequestMessage request, string path)
+        internal static HttpResponseMessage ServeFile(HttpRequestMessage request, string relativePathToFile)
         {
             if (request == null) throw new ArgumentNullException("request");
-            if (String.IsNullOrWhiteSpace(path)) throw new ArgumentException(@"Value cannot be null or empty.", "path");
+            if (String.IsNullOrWhiteSpace(relativePathToFile)) throw new ArgumentException(@"Value cannot be null or empty.", "relativePathToFile");
+
+            relativePathToFile = Path.Combine(PortalConfiguration.AssetsFolderName, relativePathToFile);
 
 #if DEBUG
-            const string codeFileDirectory = @"..\..\..\..\Integration.Portal\";
+            const string developmentFolder = @"..\..\..\Integration.Portal";
 
-            if (Directory.Exists(Path.Combine(Root, codeFileDirectory)))
-                path = String.Concat(codeFileDirectory, path);
+            if (Directory.Exists(Path.Combine(BinFolder, developmentFolder)))
+                relativePathToFile = String.Concat(developmentFolder, "\\", relativePathToFile);
 #endif
 
-            path = Path.Combine(Root, path);
+            relativePathToFile = Path.Combine(PortalConfiguration.BinFolder, relativePathToFile);
 
-            var file = new FileInfo(path);
+            var file = new FileInfo(relativePathToFile);
 
             if (!file.Exists)
                 return request.CreateErrorResponse(HttpStatusCode.NotFound, "Resource not found.");

@@ -8,7 +8,7 @@ namespace Vertica.Integration.Portal.Controllers
         public override HttpResponseMessage Get()
         {
             if (Request.Headers.Accept.Contains(new MediaTypeWithQualityHeaderValue("text/html")))
-                return AssetsController.ServePortalFile(Request, "Default.html");
+                return AssetsController.ServeFile(Request, "Default.html");
 
             return base.Get();
         }

@@ -1,0 +1,10 @@
+﻿<?xml version="1.0"?>
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+  <configSections>
+    <section name="castle" type="Castle.Windsor.Configuration.AppDomain.CastleSectionHandler, Castle.Windsor" xdt:Transform="Insert" />
+  </configSections>
+  <castle configSource="Tasks.config" xdt:Transform="Insert" />
+  <connectionStrings>
+    <add name="IntegrationDb" connectionString="Integrated Security=SSPI;Data Source=[NAME-OF-SQL-SERVER];Database=[NAME-OF-INTEGRATION-DATABASE]" xdt:Transform="Insert" />
+  </connectionStrings>
+</configuration>
