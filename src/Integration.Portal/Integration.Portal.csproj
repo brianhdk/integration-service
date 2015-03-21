@@ -135,7 +135,8 @@
     <Content Include="Assets\pages\taskExecutionDetail.html" />
     <Content Include="Assets\pages\taskList.html" />
     <Content Include="Assets\pages\tasks.html" />
-    <Content Include="Assets\Default.html" />
+    <Content Include="Default.html" />
+    <Content Include="Integration.Portal-readme.txt" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
