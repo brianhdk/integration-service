@@ -136,7 +136,7 @@
     <Content Include="Assets\pages\taskList.html" />
     <Content Include="Assets\pages\tasks.html" />
     <Content Include="Default.html" />
-    <Content Include="Integration.Portal-readme.txt" />
+    <Content Include="App_Readme\Integration.Portal-readme.txt" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
