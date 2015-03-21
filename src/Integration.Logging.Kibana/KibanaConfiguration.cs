@@ -11,9 +11,8 @@ namespace Vertica.Integration.Logging.Kibana
 
         public KibanaConfiguration Change(Action<KibanaConfiguration> change)
         {
-            if (change == null) throw new ArgumentNullException("change");
-
-            change(this);
+            if (change != null)
+                change(this);
 
             return this;
         }

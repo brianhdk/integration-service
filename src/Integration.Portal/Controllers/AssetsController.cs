@@ -13,7 +13,7 @@ namespace Vertica.Integration.Portal.Controllers
         [Route("assets/{*path}")]
         public HttpResponseMessage Get(string path)
         {
-            return ServeFile(Request, path);
+            return ServeFile(Request, Path.Combine("Assets", path));
         }
 
         internal static HttpResponseMessage ServeFile(HttpRequestMessage request, string relativePathToFile)
@@ -21,16 +21,16 @@ namespace Vertica.Integration.Portal.Controllers
             if (request == null) throw new ArgumentNullException("request");
             if (String.IsNullOrWhiteSpace(relativePathToFile)) throw new ArgumentException(@"Value cannot be null or empty.", "relativePathToFile");
 
-            relativePathToFile = Path.Combine(PortalConfiguration.AssetsFolderName, relativePathToFile);
+            string rootFolder = Path.Combine(PortalConfiguration.BinFolder, PortalConfiguration.FolderName);
 
 #if DEBUG
-            const string developmentFolder = @"..\..\..\Integration.Portal";
+            const string developmentFolder = @"..\..\..\..\Integration.Portal";
 
-            if (Directory.Exists(Path.Combine(BinFolder, developmentFolder)))
-                relativePathToFile = String.Concat(developmentFolder, "\\", relativePathToFile);
+            if (Directory.Exists(Path.Combine(rootFolder, developmentFolder)))
+                relativePathToFile = String.Concat(developmentFolder, @"\", relativePathToFile);
 #endif
 
-            relativePathToFile = Path.Combine(PortalConfiguration.BinFolder, relativePathToFile);
+            relativePathToFile = Path.Combine(rootFolder, relativePathToFile);
 
             var file = new FileInfo(relativePathToFile);
 

@@ -1,3 +1,3 @@
-﻿if (Test-Path "Portal.Assets.zip") {
-	Remove-Item "Portal.Assets.zip"
+﻿if (Test-Path "Portal.Html5.zip") {
+	Remove-Item "Portal.Html5.zip"
 }

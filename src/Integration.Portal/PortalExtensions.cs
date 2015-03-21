@@ -16,22 +16,24 @@ namespace Vertica.Integration.Portal
             if (portal != null)
                 portal(configuration);
 
-            string assetsPath = Path.Combine(PortalConfiguration.BinFolder, PortalConfiguration.AssetsFolderName);
+#if !DEBUG
+            string portalFolder = Path.Combine(PortalConfiguration.BinFolder, PortalConfiguration.FolderName);
 
-            if (!Directory.Exists(assetsPath))
+            if (!Directory.Exists(portalFolder))
             {
-                string zipFile = Path.Combine(PortalConfiguration.BinFolder, PortalConfiguration.ZipFileName);
+                string zipFile = Path.Combine(PortalConfiguration.BinFolder, String.Format("{0}.zip", PortalConfiguration.FolderName));
 
                 if (!File.Exists(zipFile))
                 {
                     throw new InvalidOperationException(String.Format(
 @"Expected the following zip-file '{0}' to be present in the following folder '{1}'. 
 This zip is automatically added when installing the Vertica.Integration.Portal NuGet package. 
-Try re-installing the package.", PortalConfiguration.ZipFileName, PortalConfiguration.BinFolder));
+Try re-installing the package.", Path.GetFileName(zipFile), PortalConfiguration.BinFolder));
                 }
 
-                ZipFile.ExtractToDirectory(zipFile, PortalConfiguration.BinFolder);
+                ZipFile.ExtractToDirectory(zipFile, Path.Combine(PortalConfiguration.BinFolder, PortalConfiguration.FolderName));
             }
+#endif 
 
             builder.WebApi(x => x
                 .Remove<HomeController>()

@@ -28,16 +28,16 @@ namespace Vertica.Integration
 
         public ApplicationConfiguration AddCustomInstaller(IWindsorInstaller installer)
         {
-            if (installer == null) throw new ArgumentNullException("installer");
-
-            AddCustomInstallers(installer);
+            if (installer != null)
+                AddCustomInstallers(installer);
 
             return this;
         }
 
         public ApplicationConfiguration AddCustomInstallers(params IWindsorInstaller[] installers)
         {
-            _customInstallers.AddRange(installers.EmptyIfNull().SkipNulls());
+            if (installers != null)
+                _customInstallers.AddRange(installers.SkipNulls());
 
             return this;
         }
@@ -49,36 +49,32 @@ namespace Vertica.Integration
 
         public ApplicationConfiguration AutoRegistredTasks(Action<AutoRegistredTasksConfiguration> autoRegistredTasks)
         {
-            if (autoRegistredTasks == null) throw new ArgumentNullException("autoRegistredTasks");
-
-            autoRegistredTasks(_autoRegistredTasks);
+            if (autoRegistredTasks != null)
+                autoRegistredTasks(_autoRegistredTasks);
 
             return this;
         }
 
         public ApplicationConfiguration WebApi(Action<WebApiConfiguration> webApi)
         {
-            if (webApi == null) throw new ArgumentNullException("webApi");
-
-            webApi(_webApi);
+            if (webApi != null)
+                webApi(_webApi);
 
             return this;
         }
 
         public ApplicationConfiguration Migration(Action<MigrationConfiguration> migration)
         {
-            if (migration == null) throw new ArgumentNullException("migration");
-
-            migration(_migration);
+            if (migration != null)
+                migration(_migration);
 
             return this;
         }
 
         public ApplicationConfiguration Change(Action<ApplicationConfiguration> change)
         {
-            if (change == null) throw new ArgumentNullException("change");
-
-            change(this);
+            if (change != null)
+                change(this);
 
             return this;
         }
