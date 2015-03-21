@@ -17,7 +17,7 @@
     <tags>Vertica Integration Service IntegrationService</tags>
   </metadata>
   <files>
-    <file src="Integration-readme.txt" target="readme.txt" />
+    <file src="App_Readme/Integration-readme.txt" target="readme.txt" />
     <file src="Tasks*.config" target="content" />
     <file src="NuGet-install.ps1" target="tools/install.ps1" />
     <file src="NuGet-app.config.install.xdt" target="content/App.config.install.xdt" />
