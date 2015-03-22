@@ -16,7 +16,7 @@ namespace Vertica.Integration.Tests.Infrastructure.Archiving
             Archiver subject = Initialize(out session);
 
             const int expectedId = 1;
-            session.Query<int>(null).ReturnsForAnyArgs(new[] { expectedId });
+            session.ExecuteScalar<int>(null).ReturnsForAnyArgs(expectedId);
 
             int actualId = subject.ArchiveText("C", new string('C', 10000));
 

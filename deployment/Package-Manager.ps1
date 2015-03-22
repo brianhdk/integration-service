@@ -3,12 +3,13 @@ $script_directory = Split-Path -Parent $PSCommandPath
 
 $settings = @{
     "src" = @{
-        "integration" = Resolve-Path $script_directory\..\src\integration
-        "integration_portal" = Resolve-Path $script_directory\..\src\integration.portal
-		"integration_logging_elmah" = Resolve-Path $script_directory\..\src\integration.logging.elmah
+        "integration" = Resolve-Path $script_directory\..\src\Integration
+        "integration_host" = Resolve-Path $script_directory\..\src\Integration.Host
+        "integration_portal" = Resolve-Path $script_directory\..\src\Integration.Portal
+		"integration_logging_elmah" = Resolve-Path $script_directory\..\src\Integration.Logging.Elmah
     }
     "tools" = @{
-        "nuget" = Resolve-Path $script_directory\..\tools\NuGet\nuget.exe
+        "nuget" = Resolve-Path $script_directory\..\tools\NuGet\NuGet.exe
     }
 	"packages" = @{
 		#"destination" = "\\nuget.vertica.dk\nuget.vertica.dk\root\Packages"
@@ -44,10 +45,3 @@ foreach ($project in $settings.src.Keys) {
 }
 
 cd $script_directory
-
-#&$settings.tools.nuget spec
-
-# todo: fortæl hvad der er nyt
-# todo: giv nyt versionsnummer
-# todo: anvend master branch - og når der er merged fra dev-branch så lav ny release - inkl. release-notes
-# todo: readme.txt

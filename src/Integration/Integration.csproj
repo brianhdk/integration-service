@@ -205,8 +205,6 @@
     <Compile Include="Model\Web\TaskController.cs" />
     <Compile Include="Model\Web\WebApiHost.cs" />
     <Compile Include="Model\Web\WebApiTask.cs" />
-    <Content Include="App_Readme\Integration-readme.txt" />
-    <None Include="NuGet-IntegrationStartup.cs.pp" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\ISettings.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -217,26 +215,17 @@
     <Compile Include="Model\Web\WebApiConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="NuGet-app.config.uninstall.xdt" />
-    <None Include="NuGet-app.config.install.xdt" />
     <None Include="app.config" />
     <None Include="Domain\Monitoring\EmailTemplate.cshtml">
       <SubType>Code</SubType>
     </None>
     <None Include="Integration.nuspec" />
-    <None Include="NuGet-install.ps1" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="Tasks.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Tasks.Core.config">
-      <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
