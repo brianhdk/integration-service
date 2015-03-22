@@ -156,6 +156,7 @@
     <Compile Include="Infrastructure\Email\IEmailService.cs" />
     <Compile Include="Infrastructure\Extensions\ActionRepeaterExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\ExceptionExtensions.cs" />
+    <Compile Include="Infrastructure\Extensions\NameExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\StringExtensions.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\CastleWindsorExtensions.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ConsoleWriterInstaller.cs" />

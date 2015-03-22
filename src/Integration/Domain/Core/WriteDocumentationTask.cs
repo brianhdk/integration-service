@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Domain.Core
@@ -20,7 +21,7 @@ namespace Vertica.Integration.Domain.Core
 
 		    foreach (ITask task in _taskService.GetAll())
             {
-                sb.AppendLine(task.DisplayName);
+                sb.AppendLine(task.Name());
                 sb.AppendLine();
                 sb.AppendLine(String.Format("\t- {0}", task.Description));
 
@@ -28,7 +29,6 @@ namespace Vertica.Integration.Domain.Core
                     sb.AppendLine(String.Format("\t\t- {0}", step.Description));
 
                 sb.AppendLine();
-                sb.AppendLine(String.Format("Schedule: {0}", task.Schedule));
                 sb.AppendLine("-------------------------------------");
                 sb.AppendLine();
             }
@@ -39,11 +39,6 @@ namespace Vertica.Integration.Domain.Core
         public override string Description
         {
             get { return "Outputs all integration tasks and related steps."; }
-        }
-
-        public override string Schedule
-        {
-            get { return "Manually."; }
         }
     }
 }

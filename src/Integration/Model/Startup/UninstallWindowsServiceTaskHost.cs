@@ -1,3 +1,4 @@
+using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Windows;
 
 namespace Vertica.Integration.Model.Startup
@@ -16,7 +17,9 @@ namespace Vertica.Integration.Model.Startup
 
         protected override void DoExecute(ExecutionContext context)
         {
-            using (var installer = new WindowsServiceInstaller(context.TaskName, context.Task.DisplayName))
+            string taskName = context.Task.Name();
+
+            using (var installer = new WindowsServiceInstaller(taskName, taskName))
             {
                 installer.Uninstall();
             }

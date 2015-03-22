@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Vertica.Integration.Infrastructure.Database.Dapper;
+using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Portal.Controllers
@@ -22,17 +23,30 @@ namespace Vertica.Integration.Portal.Controllers
 
         public HttpResponseMessage Get()
         {
-            return Request.CreateResponse(HttpStatusCode.OK, _taskService.GetAll().OrderBy(x => x.DisplayName));
+            return 
+                Request.CreateResponse(HttpStatusCode.OK,
+                    _taskService.GetAll()
+                        .Select(x => new { Name = x.Name(), x.Description })
+                        .OrderBy(x => x.Name));
         }
 
-        public HttpResponseMessage Get(string displayName)
+        public HttpResponseMessage Get(string name)
         {
-            ITask task = _taskService.GetByName(displayName);
+            ITask task = _taskService.GetByName(name);
 
-            return Request.CreateResponse(HttpStatusCode.OK, task);
+            return Request.CreateResponse(HttpStatusCode.OK, new
+            {
+                Name = task.Name(),
+                task.Description,
+                Steps = task.Steps.Select(step => new
+                {
+                    Name = step.Name(),
+                    step.Description
+                }).ToArray()
+            });
         }
 
-        public HttpResponseMessage Get(string displayName, int count)
+        public HttpResponseMessage Get(string name, int count)
         {
             string sql = string.Format(@"
 SELECT TOP {0}
@@ -40,7 +54,7 @@ SELECT TOP {0}
 FROM [TaskLog]
 WHERE [TaskName] = '{1}' AND [Type] = 'T'
 ORDER BY [TimeStamp] DESC
-", count, displayName);
+", count, name);
 
             IEnumerable<DateTimeOffset> lastRun;
 

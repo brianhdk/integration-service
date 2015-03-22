@@ -39,13 +39,13 @@ namespace Vertica.Integration.Model.Startup
 
             if (Argument.AbsoluteUrl.IsValid(context.ActionArguments[0]))
             {
-                taskFactory = () => new WebApiHost(context.ActionArguments[0], TextWriter.Null, _logger, context.TaskName, context.Task, context.TaskArguments);
+                taskFactory = () => new WebApiHost(context.ActionArguments[0], TextWriter.Null, _logger, context.Task, context.TaskArguments);
             }
             else
             {
                 uint seconds = UInt32.Parse(context.ActionArguments[0]);
 
-                Action task = () => _runner.Execute(context.TaskName, context.Task, context.TaskArguments);
+                Action task = () => _runner.Execute(context.Task, context.TaskArguments);
 
                 taskFactory = () => task.Repeat(Delay.Custom(seconds), TextWriter.Null);
             }

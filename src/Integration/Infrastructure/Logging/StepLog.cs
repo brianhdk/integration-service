@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Infrastructure.Logging
@@ -8,41 +9,35 @@ namespace Vertica.Integration.Infrastructure.Logging
 	public class StepLog : LogEntry
 	{
         private readonly Output _output;
-
 		private readonly IList<MessageLog> _messages;
 
-		internal StepLog(TaskLog taskLog, string stepName, Output output)
+		internal StepLog(TaskLog taskLog, IStep step, Output output)
 			: base(taskLog.TaskName)
 		{
 			if (taskLog == null) throw new ArgumentNullException("taskLog");
+		    if (step == null) throw new ArgumentNullException("step");
 		    if (output == null) throw new ArgumentNullException("output");
 
 		    _output = output;
-
 			_messages = new List<MessageLog>();
 
-			Initialize(taskLog, stepName);
+            TaskLog = taskLog;
+		    StepName = step.Name();
+
+            TaskLog.Persist(this);
+            _output.Message(StepName);
 		}
 
-		public virtual TaskLog TaskLog { get; private set; }
-		public virtual string StepName { get; private set; }
-		public virtual ErrorLog ErrorLog { get; internal set; }
+		public TaskLog TaskLog { get; private set; }
+		public string StepName { get; private set; }
+		public ErrorLog ErrorLog { get; internal set; }
 
-		public virtual ReadOnlyCollection<MessageLog> Messages
+		public ReadOnlyCollection<MessageLog> Messages
 		{
 			get { return new ReadOnlyCollection<MessageLog>(_messages); }
 		}
 
-		private void Initialize(TaskLog taskLog, string stepName)
-		{
-			TaskLog = taskLog;
-			StepName = stepName;
-
-			TaskLog.Persist(this);
-		    _output.Message(StepName);
-		}
-
-		public virtual void LogMessage(string message)
+		public void LogMessage(string message)
 		{
 			using (var log = new MessageLog(this, message, _output))
 			{

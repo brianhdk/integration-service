@@ -27,12 +27,12 @@ namespace Vertica.Integration.Model.Startup
 
         protected override void DoExecute(ExecutionContext context)
         {
-            using (new WebApiHost(context.ActionArguments[0], Console.Out, _logger, context.TaskName, context.Task, context.TaskArguments))
+            using (new WebApiHost(context.ActionArguments[0], Console.Out, _logger, context.Task, context.TaskArguments))
             {
                 do
                 {
                     Console.WriteLine();
-                    Console.WriteLine("Press ESCAPE to stop web-service.");
+                    Console.WriteLine(@"Press ESCAPE to stop web-service.");
                     Console.WriteLine();
 
                 } while (WaitingForEscape());

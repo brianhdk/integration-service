@@ -15,12 +15,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
         public override string Description
         {
-            get { return "Dumps a specified archive-file to the disc."; }
-        }
-
-        public override string Schedule
-        {
-            get { return "Manual"; }
+            get { return "Dumps a specified archive to the file system."; }
         }
 
         public override void StartTask(Log log, params string[] arguments)

@@ -18,13 +18,13 @@ namespace Vertica.Integration.Model
 			_outputter = outputter;
 		}
 
-	    public TaskExecutionResult Execute(string taskName, ITask task, params string[] arguments)
+	    public TaskExecutionResult Execute(ITask task, params string[] arguments)
 	    {
             // latebound because we don't know the exact generic type at compile time
-            return ExecuteInternal(taskName, (dynamic)task, arguments);
+            return ExecuteInternal((dynamic)task, arguments);
 	    }
 
-	    private TaskExecutionResult ExecuteInternal<TWorkItem>(string taskName, ITask<TWorkItem> task, params string[] arguments)
+	    private TaskExecutionResult ExecuteInternal<TWorkItem>(ITask<TWorkItem> task, params string[] arguments)
 		{
 			if (task == null) throw new ArgumentNullException("task");
 
@@ -50,7 +50,7 @@ namespace Vertica.Integration.Model
 	            _logger.LogError(target, message);
 	        };
 
-            using (var taskLog = new TaskLog(taskName, _logger.LogEntry, new Output(outputter)))
+            using (var taskLog = new TaskLog(task, _logger.LogEntry, new Output(outputter)))
 			{
 				TWorkItem workItem;
 
@@ -76,7 +76,7 @@ namespace Vertica.Integration.Model
 					if (continueWith == Execution.StepOver)
 						continue;
 
-					using (var stepLog = taskLog.LogStep(GetStepName(step)))
+					using (var stepLog = taskLog.LogStep(step))
 					{
 						try
 						{

@@ -28,11 +28,6 @@ namespace Vertica.Integration.Domain.Monitoring
 			get { return "Monitors the solution and sends out e-mails if there is any errors."; }
 		}
 
-		public override string Schedule
-		{
-			get { return "Every 15 minutes between 05:00 and 23:00."; }
-		}
-
 		public override MonitorWorkItem Start(Log log, params string[] arguments)
 		{
 		    MonitorConfiguration configuration = _configuration.Get<MonitorConfiguration>();

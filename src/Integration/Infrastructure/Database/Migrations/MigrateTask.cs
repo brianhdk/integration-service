@@ -46,11 +46,6 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
             get { return "Runs migrations."; }
         }
 
-        public override string Schedule
-        {
-            get { return "Manual."; }
-        }
-
         public override void StartTask(Log log, params string[] arguments)
         {
             foreach (MigrationDestination destination in _destinations)
