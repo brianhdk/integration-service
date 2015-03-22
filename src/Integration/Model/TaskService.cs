@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model.Exceptions;

@@ -24,7 +24,8 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
                     Classes.FromAssembly(assembly)
                         .BasedOn<Task>()
                         .Unless(_configuration.Skipped.Contains)
-                        .Configure(configure => { configure.Named(configure.Implementation.Name); }));
+                        .Configure(configure => { configure.Named(configure.Implementation.Name); } )
+                        .WithServiceDefaultInterfaces());
             }
         }
     }
