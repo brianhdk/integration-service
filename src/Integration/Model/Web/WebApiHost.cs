@@ -23,14 +23,14 @@ namespace Vertica.Integration.Model.Web
         private readonly TaskLog _taskLog;
         private readonly IDisposable _httpServer;
 
-        public WebApiHost(string url, TextWriter outputter, ILogger logger, string taskName, ITask task, params string[] arguments)
+        public WebApiHost(string url, TextWriter outputter, ILogger logger, ITask task, params string[] arguments)
         {
             if (String.IsNullOrWhiteSpace(url)) throw new ArgumentException(@"Value cannot be null or empty.", "url");
             if (outputter == null) throw new ArgumentNullException("outputter");
             if (logger == null) throw new ArgumentNullException("logger");
             if (task == null) throw new ArgumentNullException("task");
 
-            _taskLog = new TaskLog(taskName, logger.LogEntry, new Output(outputter.WriteLine));
+            _taskLog = new TaskLog(task, logger.LogEntry, new Output(outputter.WriteLine));
             _taskLog.LogMessage(String.Format("Starting web-service listening on URL: {0}", url));
 
             _httpServer = WebApp.Start(new StartOptions(url), builder =>
@@ -61,7 +61,7 @@ namespace Vertica.Integration.Model.Web
 
                 builder.UseWebApi(configuration);
 
-                configuration.Properties[ContextKey] = new Context(taskName, task, arguments);
+                configuration.Properties[ContextKey] = new Context(task, arguments);
             });
         }
 
@@ -76,16 +76,14 @@ namespace Vertica.Integration.Model.Web
 
         internal class Context
         {
-            internal Context(string taskName, ITask task, string[] arguments)
+            internal Context(ITask task, string[] arguments)
             {
                 if (task == null) throw new ArgumentNullException("task");
 
-                TaskName = taskName;
                 Task = task;
                 Arguments = arguments;
             }
 
-            public string TaskName { get; private set; }
             public ITask Task { get; private set; }
             public string[] Arguments { get; private set; }
 

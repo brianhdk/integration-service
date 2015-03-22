@@ -18,11 +18,6 @@ namespace Vertica.Integration.Experiments.Custom_Database
             get { return "TBD"; }
         }
 
-        public override string Schedule
-        {
-            get { return "TBD"; }
-        }
-
         public override void StartTask(Log log, params string[] arguments)
         {
             using (IDapperSession session = _customDb.OpenSession())

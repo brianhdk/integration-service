@@ -84,7 +84,6 @@ ORDER BY ErrorLog.Id DESC",
                         if (task != null)
                         {
                             error.TaskDescription = task.Description;
-                            error.TaskSchedule = task.Schedule;
 
                             var step =
                                 task.Steps.EmptyIfNull()
@@ -116,7 +115,6 @@ ORDER BY ErrorLog.Id DESC",
             public string TaskName { get; set; }
             public string StepName { get; set; }
             public string TaskDescription { get; set; }
-            public string TaskSchedule { get; set; }
             public string StepDescription { get; set; }
 
             public string SafeTaskName()
@@ -140,7 +138,7 @@ ORDER BY ErrorLog.Id DESC",
 
                     if (!String.IsNullOrWhiteSpace(TaskDescription))
                     {
-                        sb.AppendFormat(": {0}, {1}", TaskDescription, TaskSchedule);
+                        sb.AppendFormat(": {0}", TaskDescription);
                         sb.AppendLine();
                     }
 

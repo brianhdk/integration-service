@@ -4,7 +4,7 @@
             <tr ng-repeat="task in $data">
                 <td data-title="'Time Stamp'" sortable="'TimeStamp'">{{task.TimeStamp | date:'yyyy-MM-dd HH:mm:ss' }}</td>
                 <td data-title="'Task Name'" sortable="'TaskName'" filter="{ 'TaskName': 'text' }">
-                    <a ng-href="#taskdetail?displayname={{task.TaskName}}">
+                    <a ng-href="#taskdetail?name={{task.TaskName}}">
                         {{task.TaskName}}
                     </a>
                 </td>

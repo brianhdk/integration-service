@@ -22,11 +22,6 @@ namespace Vertica.Integration.Logging.Kibana
             get { return "Exports log files to LogStash."; }
         }
 
-        public override string Schedule
-        {
-            get { return "Runs two times per day."; }
-        }
-
         public override ExportLogsToLogStashWorkItem Start(Log log, params string[] arguments)
         {
             CloudBlobClient client = _factory.Create();

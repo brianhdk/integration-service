@@ -23,7 +23,7 @@ namespace Vertica.Integration.Model.Startup
 
         protected override void DoExecute(ExecutionContext context)
         {
-            _runner.Execute(context.TaskName, context.Task, context.TaskArguments);
+            _runner.Execute(context.Task, context.TaskArguments);
         }
     }
 }

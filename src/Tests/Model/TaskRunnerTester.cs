@@ -31,7 +31,7 @@ namespace Vertica.Integration.Tests.Model
 
 			var subject = new TaskRunner(logger, outputter);
 
-			subject.Execute("TaskName", task);
+			subject.Execute(task);
 
 			logger.Received().LogEntry(Arg.Any<TaskLog>());
 			logger.Received().LogEntry(Arg.Is<StepLog>(x => x.StepName == TaskRunner.GetStepName(step1)));
@@ -67,7 +67,7 @@ namespace Vertica.Integration.Tests.Model
 
 			var subject = new TaskRunner(logger, outputter);
 
-			var thrownException = Assert.Throws<TaskExecutionFailedException>(() => subject.Execute("TaskName", task));
+			var thrownException = Assert.Throws<TaskExecutionFailedException>(() => subject.Execute(task));
 			Assert.That(thrownException.InnerException, Is.EqualTo(throwingException));
 
 			logger.Received().LogEntry(Arg.Any<TaskLog>());

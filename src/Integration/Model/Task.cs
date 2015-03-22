@@ -42,13 +42,7 @@ namespace Vertica.Integration.Model
 			get { return _steps; }
 		}
 
-		public virtual string DisplayName
-		{
-			get { return GetType().Name; }
-		}
-
 		public abstract string Description { get; }
-		public abstract string Schedule { get; }
 
 		public abstract TWorkItem Start(Log log, params string[] arguments);
 

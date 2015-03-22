@@ -41,11 +41,6 @@ namespace Vertica.Integration.Experiments
         {
             get { return "TBD"; }
         }
-
-        public override string Schedule
-        {
-            get { return "TBD"; }
-        }
     }
 
     public class ConfigurationTesterConfiguration

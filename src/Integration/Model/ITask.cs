@@ -4,9 +4,7 @@ namespace Vertica.Integration.Model
 {
 	public interface ITask
 	{
-		string DisplayName { get; }
 	    string Description { get; }
-        string Schedule { get; }
 		IEnumerable<IStep> Steps { get; }
 	}
 

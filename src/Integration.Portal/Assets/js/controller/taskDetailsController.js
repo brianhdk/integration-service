@@ -8,7 +8,7 @@
 				page: 1,
 				count: 100,
 				sorting: {
-					DisplayName: 'asc' // initial sorting
+					Name: 'asc' // initial sorting
 				},
 				filter: {}
 			}, {
@@ -30,10 +30,10 @@
 		});
 	}
 	$scope.getTaskDetail = function () {
-		$http.get("/taskDetails?displayname=" + $routeParams.displayname).success(function (xhr) {
+		$http.get("/taskDetails?name=" + $routeParams.name).success(function (xhr) {
 			$scope.taskDetail = xhr;
 		});
-		$http.get("/taskDetails?displayname=" + $routeParams.displayname + "&count=10").success(function (xhr) {
+		$http.get("/taskDetails?name=" + $routeParams.name + "&count=10").success(function (xhr) {
 			$scope.lastRun = xhr;
 		});
 

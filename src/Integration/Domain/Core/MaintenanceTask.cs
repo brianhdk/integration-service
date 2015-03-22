@@ -15,11 +15,6 @@ namespace Vertica.Integration.Domain.Core
 			get { return "Performs a number of steps to clean up the solution."; }
 		}
 
-		public override string Schedule
-		{
-			get { return "Every day @01:00."; }
-		}
-
 		public override MaintenanceWorkItem Start(Log log, params string[] arguments)
 		{
 			return new MaintenanceWorkItem();
