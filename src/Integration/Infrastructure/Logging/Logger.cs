@@ -136,9 +136,13 @@ namespace Vertica.Integration.Infrastructure.Logging
                 using (IDbTransaction transaction = session.BeginTransaction())
                 {
                     if (context.Id == 0)
+                    {
                         HandleInsert(session, context as TLogEntry);
+                    }
                     else
+                    {
                         HandleUpdate(session, context as TLogEntry);
+                    }
 
                     transaction.Commit();
                 }
