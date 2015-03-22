@@ -58,6 +58,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Integration.Logging.Elmah.nuspec" />
     <None Include="NuGet-Tasks.config.uninstall.xdt" />
     <None Include="NuGet-Tasks.config.install.xdt" />

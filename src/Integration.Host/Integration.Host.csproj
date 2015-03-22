@@ -42,6 +42,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Integration.Host.nuspec" />
     <None Include="NuGet-app.config.install.xdt" />
     <None Include="NuGet-app.config.uninstall.xdt" />
