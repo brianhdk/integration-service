@@ -21,18 +21,7 @@ namespace Vertica.Integration.Portal.Controllers
             if (request == null) throw new ArgumentNullException("request");
             if (String.IsNullOrWhiteSpace(relativePathToFile)) throw new ArgumentException(@"Value cannot be null or empty.", "relativePathToFile");
 
-            string rootFolder = Path.Combine(PortalConfiguration.BinFolder, PortalConfiguration.FolderName);
-
-#if DEBUG
-            const string developmentFolder = @"..\..\..\..\Integration.Portal";
-
-            if (Directory.Exists(Path.Combine(rootFolder, developmentFolder)))
-                relativePathToFile = String.Concat(developmentFolder, @"\", relativePathToFile);
-#endif
-
-            relativePathToFile = Path.Combine(rootFolder, relativePathToFile);
-
-            var file = new FileInfo(relativePathToFile);
+            var file = new FileInfo(Path.Combine(PortalConfiguration.BaseFolder, relativePathToFile));
 
             if (!file.Exists)
                 return request.CreateErrorResponse(HttpStatusCode.NotFound, "Resource not found.");

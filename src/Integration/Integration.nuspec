@@ -15,5 +15,11 @@
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>Vertica Integration Service IntegrationService</tags>
+    <dependencies>
+      <dependency id="Microsoft.Owin" version="3.0.1" />
+      <dependency id="Microsoft.Owin.Host.HttpListener" version="3.0.1" />
+      <dependency id="Microsoft.Owin.Hosting" version="3.0.1" />
+      <dependency id="Newtonsoft.Json" version="6.0.8" />
+    </dependencies>
   </metadata>
 </package>
