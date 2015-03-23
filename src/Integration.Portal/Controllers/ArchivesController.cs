@@ -25,7 +25,7 @@ namespace Vertica.Integration.Portal.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, archives);
         }
 
-        public HttpResponseMessage Get(int id)
+        public HttpResponseMessage Get(string id)
         {
             Archiver archiver = new Archiver(_dapper);
             byte[] archive = archiver.Get(id);

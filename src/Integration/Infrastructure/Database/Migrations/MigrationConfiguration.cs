@@ -27,7 +27,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
         public MigrationConfiguration IncludeFromNamespaceOfThis<T>(DatabaseServer db, string connectionStringName)
         {
-            if (String.IsNullOrWhiteSpace(connectionStringName)) throw new ArgumentException("Value cannot be null or empty.", "connectionStringName");
+            if (String.IsNullOrWhiteSpace(connectionStringName)) throw new ArgumentException(@"Value cannot be null or empty.", "connectionStringName");
 
             AssertNotLocked();
 

@@ -23,14 +23,10 @@ namespace Vertica.Integration.Infrastructure.Archiving
             if (arguments == null || arguments.Length == 0)
                 throw new InvalidOperationException(@"Parameter usage: [ArchiveID]");
 
-            uint archiveId;
-            if (!UInt32.TryParse(arguments[0], out archiveId))
-                throw new InvalidOperationException(@"Invalid first parameter, should be an int.");
-
-            byte[] archive = _archiver.Get((int)archiveId);
+            byte[] archive = _archiver.Get(arguments[0]);
 
             if (archive != null)
-                File.WriteAllBytes(String.Format("Archive-{0}.zip", archiveId), archive);
+                File.WriteAllBytes(String.Format("Archive-{0}.zip", arguments[0]), archive);
         }
     }
 }

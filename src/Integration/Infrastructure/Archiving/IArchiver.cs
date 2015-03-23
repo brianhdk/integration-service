@@ -4,10 +4,10 @@ namespace Vertica.Integration.Infrastructure.Archiving
 {
     public interface IArchiver
     {
-        Archive Create(string name, Action<int> onCreated);
+        Archive Create(string name, Action<string> onCreated);
 
         SavedArchive[] GetAll();
-        byte[] Get(int id);
+        byte[] Get(string id);
 
         int Delete(DateTime olderThan);
     }

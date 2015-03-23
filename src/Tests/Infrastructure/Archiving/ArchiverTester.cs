@@ -18,9 +18,9 @@ namespace Vertica.Integration.Tests.Infrastructure.Archiving
             const int expectedId = 1;
             session.ExecuteScalar<int>(null).ReturnsForAnyArgs(expectedId);
 
-            int actualId = subject.ArchiveText("C", new string('C', 10000));
+            string actualId = subject.ArchiveText("C", new string('C', 10000));
 
-            Assert.That(actualId, Is.EqualTo(expectedId));
+            Assert.That(actualId, Is.EqualTo(expectedId.ToString()));
         }
 
         private Archiver Initialize(out IDapperSession session)
