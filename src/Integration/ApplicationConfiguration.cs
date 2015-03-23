@@ -81,10 +81,5 @@ namespace Vertica.Integration
 
         public string DatabaseConnectionStringName { get; set; }
         public bool IgnoreSslErrors { get; set; }
-
-        public ApplicationConfiguration Nothing()
-        {
-            return this;
-        }
     }
 }

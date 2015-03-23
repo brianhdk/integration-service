@@ -81,6 +81,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Integration.Azure\Integration.Azure.csproj">
+      <Project>{fc35a1e3-52dd-4b8d-af2c-b01ce8ae2ee8}</Project>
+      <Name>Integration.Azure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Integration.Experiments\Integration.Experiments.csproj">
       <Project>{a418ff22-74e1-42eb-a0bf-97da7993647b}</Project>
       <Name>Integration.Experiments</Name>

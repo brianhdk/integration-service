@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.WindowsAzure.Storage.Blob;
-using Vertica.Integration.Logging.Kibana.Infrastructure.Azure;
+using Vertica.Integration.Azure.Infrastructure.BlobStorage;
+using Vertica.Integration.Logging.Kibana.Infrastructure;
 using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Logging.Kibana
 {
     public class ExportLogsToLogStashTask : Task<ExportLogsToLogStashWorkItem>
     {
-        private readonly IAzureBlobClientFactory _factory;
+        private readonly IAzureBlobClientFactory<KibanaConnection> _factory;
 
-        public ExportLogsToLogStashTask(IAzureBlobClientFactory factory, IEnumerable<IStep<ExportLogsToLogStashWorkItem>> steps)
+        public ExportLogsToLogStashTask(IAzureBlobClientFactory<KibanaConnection> factory, IEnumerable<IStep<ExportLogsToLogStashWorkItem>> steps)
             : base(steps)
         {
             _factory = factory;

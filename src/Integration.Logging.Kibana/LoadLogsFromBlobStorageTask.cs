@@ -1,16 +1,17 @@
 ﻿using System.IO;
 using System.Linq;
 using Microsoft.WindowsAzure.Storage.Blob;
-using Vertica.Integration.Logging.Kibana.Infrastructure.Azure;
+using Vertica.Integration.Azure.Infrastructure.BlobStorage;
+using Vertica.Integration.Logging.Kibana.Infrastructure;
 using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Logging.Kibana
 {
     public class LoadLogsFromBlobStorageTask : Task
     {
-        private readonly IAzureBlobClientFactory _factory;
+        private readonly IAzureBlobClientFactory<KibanaConnection> _factory;
 
-        public LoadLogsFromBlobStorageTask(IAzureBlobClientFactory factory)
+        public LoadLogsFromBlobStorageTask(IAzureBlobClientFactory<KibanaConnection> factory)
         {
             _factory = factory;
         }

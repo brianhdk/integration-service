@@ -16,7 +16,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
             _dapper = dapper;
         }
 
-        public Archive Create(string name, Action<int> onCreated)
+        public Archive Create(string name, Action<string> onCreated)
         {
             if (onCreated == null) throw new ArgumentNullException("onCreated");
             if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
@@ -44,7 +44,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
                     transaction.Commit();
                 }
 
-                onCreated(archiveId);
+                onCreated(archiveId.ToString());
             });
         }
 
@@ -57,12 +57,16 @@ namespace Vertica.Integration.Infrastructure.Archiving
             }
         }
 
-        public byte[] Get(int id)
+        public byte[] Get(string id)
         {
+            int value;
+            if (!Int32.TryParse(id, out value))
+                return null;
+
             using (IDapperSession session = _dapper.OpenSession())
             {
                 return
-                    session.Query<byte[]>("SELECT BinaryData FROM Archive WHERE Id = @Id", new { Id = id })
+                    session.Query<byte[]>("SELECT BinaryData FROM Archive WHERE Id = @Id", new { Id = value })
                         .SingleOrDefault();
             }
         }

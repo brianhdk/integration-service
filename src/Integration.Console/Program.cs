@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using Vertica.Integration.Azure;
+using Vertica.Integration.Experiments.Azure;
 using Vertica.Integration.Model;
 using Vertica.Integration.Portal;
 
@@ -13,7 +15,11 @@ namespace Vertica.Integration.Console
 			if (args.Length == 0) throw new ArgumentOutOfRangeException("args", @"No task name passed as argument");
 
 			using (var context = ApplicationContext.Create(builder => builder
-                .UsePortal()))
+                .UsePortal()
+                .UseAzure(azure =>
+                    azure.ReplaceArchiverWithBlobStorage("AzureBlobStorage.Archiver"))
+                .AutoRegistredTasks(auto =>
+                    auto.Scan(typeof(AzureArchiverTesterTask).Assembly))))
 			{
 				ITaskService taskService = context.TaskService;
 
