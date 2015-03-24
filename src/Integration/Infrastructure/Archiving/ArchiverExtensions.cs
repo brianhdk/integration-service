@@ -12,7 +12,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
             string id = null;
 
-            using (Archive archive = archiver.Create(archiveName ?? file.Name, archiveId => id = archiveId))
+            using (BeginArchive archive = archiver.Create(archiveName ?? file.Name, archiveId => id = archiveId))
             {
                 archive.IncludeFile(file);
             }
@@ -27,7 +27,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
             string id = null;
 
-            using (Archive archive = archiver.Create(archiveName ?? folder.Name, archiveId => id = archiveId))
+            using (BeginArchive archive = archiver.Create(archiveName ?? folder.Name, archiveId => id = archiveId))
             {
                 archive.IncludeFolder(folder);
             }
@@ -41,7 +41,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
             string id = null;
 
-            using (Archive archive = archiver.Create(archiveName ?? name, archiveId => id = archiveId))
+            using (BeginArchive archive = archiver.Create(archiveName ?? name, archiveId => id = archiveId))
             {
                 archive.IncludeContent(name, content);
             }
@@ -56,7 +56,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
             string id = null;
 
-            using (Archive archive = archiver.Create(archiveName ?? name, archiveId => id = archiveId))
+            using (BeginArchive archive = archiver.Create(archiveName ?? name, archiveId => id = archiveId))
             {
                 archive.IncludeObjectAsJson(obj, name);
             }
@@ -64,13 +64,13 @@ namespace Vertica.Integration.Infrastructure.Archiving
             return id;
         }
 
-        public static string Archive(this IArchiver archiver, string name, Action<Archive> archive)
+        public static string Archive(this IArchiver archiver, string name, Action<BeginArchive> archive)
         {
             if (archive == null) throw new ArgumentNullException("archive");
 
             string id = null;
 
-            using (Archive local = archiver.Create(name, archiveId => id = archiveId))
+            using (BeginArchive local = archiver.Create(name, archiveId => id = archiveId))
             {
                 archive(local);
             }

@@ -4,31 +4,28 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web.Http;
 using Vertica.Integration.Infrastructure.Archiving;
-using Vertica.Integration.Infrastructure.Database.Dapper;
 
 namespace Vertica.Integration.Portal.Controllers
 {
     public class ArchivesController : ApiController
     {
-        private readonly IDapperProvider _dapper;
+        private readonly IArchiver _archiver;
 
-        public ArchivesController(IDapperProvider dapper)
+        public ArchivesController(IArchiver archiver)
         {
-            _dapper = dapper;
+            _archiver = archiver;
         }
 
         public HttpResponseMessage Get()
         {
-            Archiver archiver = new Archiver(_dapper);
-            SavedArchive[] archives = archiver.GetAll();
+            Archive[] archives = _archiver.GetAll();
 
             return Request.CreateResponse(HttpStatusCode.OK, archives);
         }
 
         public HttpResponseMessage Get(string id)
         {
-            Archiver archiver = new Archiver(_dapper);
-            byte[] archive = archiver.Get(id);
+            byte[] archive = _archiver.Get(id);
 
             if (archive == null)
             {
