@@ -23,10 +23,24 @@ namespace Vertica.Integration.Infrastructure.Archiving
             if (arguments == null || arguments.Length == 0)
                 throw new InvalidOperationException(@"Parameter usage: [ArchiveID]");
 
-            byte[] archive = _archiver.Get(arguments[0]);
+            string id = arguments[0];
+
+            byte[] archive = _archiver.Get(id);
 
             if (archive != null)
-                File.WriteAllBytes(String.Format("Archive-{0}.zip", arguments[0]), archive);
+            {
+                DirectoryInfo directory = Directory.CreateDirectory("Archive-Dumps");
+
+                var file = Path.Combine(directory.FullName, String.Format("Archive-{0}.zip", id));
+
+                File.WriteAllBytes(file, archive);
+
+                log.Message("Archive dumped to {0}", file);
+            }
+            else
+            {
+                log.Warning("Archive '{0}' not found.", id);
+            }
         }
     }
 }

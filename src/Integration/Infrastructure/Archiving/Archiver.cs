@@ -16,12 +16,12 @@ namespace Vertica.Integration.Infrastructure.Archiving
             _dapper = dapper;
         }
 
-        public Archive Create(string name, Action<string> onCreated)
+        public BeginArchive Create(string name, Action<CreatedArchive> onCreated)
         {
-            if (onCreated == null) throw new ArgumentNullException("onCreated");
             if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
+            if (onCreated == null) throw new ArgumentNullException("onCreated");
 
-            return new Archive(stream =>
+            return new BeginArchive(stream =>
             {
                 int archiveId;
 
@@ -44,15 +44,15 @@ namespace Vertica.Integration.Infrastructure.Archiving
                     transaction.Commit();
                 }
 
-                onCreated(archiveId.ToString());
+                onCreated(new CreatedArchive(archiveId.ToString()));
             });
         }
 
-        public SavedArchive[] GetAll()
+        public Archive[] GetAll()
         {
             using (IDapperSession session = _dapper.OpenSession())
             {
-                return session.Query<SavedArchive>("SELECT Id, Name, ByteSize, Created FROM Archive")
+                return session.Query<Archive>("SELECT Id, Name, ByteSize, Created FROM Archive")
                     .ToArray();
             }
         }
@@ -71,7 +71,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
             }
         }
 
-        public int Delete(DateTime olderThan)
+        public int Delete(DateTimeOffset olderThan)
         {
             using (IDapperSession session = _dapper.OpenSession())
             using (IDbTransaction transaction = session.BeginTransaction())

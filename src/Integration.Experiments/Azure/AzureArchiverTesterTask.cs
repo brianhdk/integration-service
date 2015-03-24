@@ -14,7 +14,9 @@ namespace Vertica.Integration.Experiments.Azure
 
         public override void StartTask(Log log, params string[] arguments)
         {
-            log.Message("{0}", _archiver.ArchiveText("Some name", "Some content"));
+            log.Warning("{0}", _archiver.ArchiveText("Some name", "Some content"));
+
+            //_archiver.Delete(DateTimeOffset.UtcNow.AddHours(-2));
         }
 
         public override string Description

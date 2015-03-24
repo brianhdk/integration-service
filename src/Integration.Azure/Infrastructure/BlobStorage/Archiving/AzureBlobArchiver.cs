@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -20,78 +21,111 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage.Archiving
             _containerName = containerName;
         }
 
-        public Archive Create(string name, Action<string> onCreated)
+        public BeginArchive Create(string name, Action<CreatedArchive> onCreated)
         {
             if (onCreated == null) throw new ArgumentNullException("onCreated");
             if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
 
-            return new Archive(stream =>
+            return new BeginArchive(stream =>
             {
                 CloudBlobClient client = _factory.Create();
 
                 CloudBlobContainer container = client.GetContainerReference(_containerName);
-                container.CreateIfNotExists();
+                container.CreateIfNotExists(BlobContainerPublicAccessType.Blob);
 
                 string id = Guid.NewGuid().ToString("D");
 
-                CloudBlockBlob blockBlob = container.GetBlockBlobReference(id);
+                CloudBlockBlob blockBlob = LoadBlob(container, id);
                 blockBlob.Metadata["Name"] = name;
 
                 blockBlob.UploadFromStream(stream);
 
-                onCreated(id);
+                onCreated(new CreatedArchive(id, String.Format("Download from {0}", blockBlob.Uri)));
             });
         }
 
-        public SavedArchive[] GetAll()
+        public Archive[] GetAll()
         {
-            throw new NotImplementedException();
-
             CloudBlobClient client = _factory.Create();
 
             CloudBlobContainer container = client.GetContainerReference(_containerName);
-            container.CreateIfNotExists();
 
-            foreach (CloudBlockBlob item in container.ListBlobs().OfType<CloudBlockBlob>())
+            if (!container.Exists())
+                return new Archive[0];
+
+            var list = new List<Archive>();
+
+            foreach (CloudBlockBlob item in container
+                .ListBlobs(blobListingDetails: BlobListingDetails.Metadata)
+                .OfType<CloudBlockBlob>())
             {
+                string name;
+                if (item.Metadata.TryGetValue("Name", out name))
+                {
+                    list.Add(new Archive
+                    {
+                        Id = Path.GetFileNameWithoutExtension(item.Name),
+                        Name = name,
+                        ByteSize = item.Properties.Length,
+                        Created = item.Properties.LastModified.GetValueOrDefault()
+                    });                    
+                }
             }
 
-            return new SavedArchive[0];
+            return list.ToArray();
         }
 
         public byte[] Get(string id)
         {
-            throw new NotImplementedException();
-
             CloudBlobClient client = _factory.Create();
 
             CloudBlobContainer container = client.GetContainerReference(_containerName);
             container.CreateIfNotExists();
 
-            foreach (CloudBlockBlob item in container.ListBlobs().OfType<CloudBlockBlob>())
+            CloudBlockBlob blob = LoadBlob(container, id);
+
+            if (blob.Exists())
             {
                 using (var memoryStream = new MemoryStream())
                 {
-                    //item.DownloadToStream(memoryStream);
+                    blob.DownloadToStream(memoryStream);
 
-                    //return memoryStream.ToArray();
-                }
+                    return memoryStream.ToArray();
+                }                
             }
+
+            return null;
         }
 
-        public int Delete(DateTime olderThan)
+        public int Delete(DateTimeOffset olderThan)
         {
-            throw new NotImplementedException();
+            int deleted = 0;
 
             CloudBlobClient client = _factory.Create();
 
             CloudBlobContainer container = client.GetContainerReference(_containerName);
-            container.CreateIfNotExists();
 
-            foreach (CloudBlockBlob item in container.ListBlobs().OfType<CloudBlockBlob>())
+            if (container.Exists())
             {
-                //item.Delete();
+                foreach (CloudBlockBlob item in container
+                    .ListBlobs(blobListingDetails: BlobListingDetails.Metadata)
+                    .OfType<CloudBlockBlob>())
+                {
+                    if (item.Properties.LastModified.GetValueOrDefault(olderThan) <= olderThan)
+                    {
+                        item.Delete();
+
+                        deleted++;
+                    }
+                }                
             }
+
+            return deleted;
+        }
+
+        private static CloudBlockBlob LoadBlob(CloudBlobContainer container, string id)
+        {
+            return container.GetBlockBlobReference(String.Format("{0}.zip", id));
         }
     }
 }

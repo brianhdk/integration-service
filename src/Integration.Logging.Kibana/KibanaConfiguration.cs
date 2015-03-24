@@ -6,7 +6,7 @@ namespace Vertica.Integration.Logging.Kibana
     {
         public KibanaConfiguration()
         {
-            AzureBlobStorageConnectionStringName = "AzureBlobStorage";
+            AzureBlobStorageConnectionStringName = "AzureBlobStorage.Kibana";
         }
 
         public KibanaConfiguration Change(Action<KibanaConfiguration> change)

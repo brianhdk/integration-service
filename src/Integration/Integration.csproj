@@ -124,13 +124,14 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\ActionRepeater.cs" />
-    <Compile Include="Infrastructure\Archiving\Archive.cs" />
+    <Compile Include="Infrastructure\Archiving\BeginArchive.cs" />
     <Compile Include="Infrastructure\Archiving\Archiver.cs" />
     <Compile Include="Infrastructure\Archiving\ArchiverExtensions.cs" />
     <Compile Include="Infrastructure\Archiving\CleanUpArchivesStep.cs" />
+    <Compile Include="Infrastructure\Archiving\CreatedArchive.cs" />
     <Compile Include="Infrastructure\Archiving\DumpArchiveTask.cs" />
     <Compile Include="Infrastructure\Archiving\IArchiver.cs" />
-    <Compile Include="Infrastructure\Archiving\SavedArchive.cs" />
+    <Compile Include="Infrastructure\Archiving\Archive.cs" />
     <Compile Include="Infrastructure\Configuration\Configuration.cs" />
     <Compile Include="Infrastructure\Configuration\ConfigurationProvider.cs" />
     <Compile Include="Infrastructure\Configuration\IConfigurationProvider.cs" />

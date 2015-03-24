@@ -1,6 +1,7 @@
 ﻿using System;
 using Vertica.Integration.Domain.Core;
 using Vertica.Integration.Model;
+using Vertica.Utilities_v4;
 using Vertica.Utilities_v4.Extensions.StringExt;
 
 namespace Vertica.Integration.Infrastructure.Archiving
@@ -18,7 +19,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
         public override void Execute(MaintenanceWorkItem workItem, Log log)
         {
-            DateTime lowerBound = DateTime.UtcNow.Date.Subtract(_olderThan);
+            DateTimeOffset lowerBound = Time.UtcNow.Subtract(_olderThan);
 
             int count = _archiver.Delete(lowerBound);
 
