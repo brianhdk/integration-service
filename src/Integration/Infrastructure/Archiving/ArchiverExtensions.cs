@@ -5,77 +5,77 @@ namespace Vertica.Integration.Infrastructure.Archiving
 {
     public static class ArchiverExtensions
     {
-        public static string ArchiveFile(this IArchiver archiver, FileInfo file, string archiveName = null)
+        public static ArchiveCreated ArchiveFile(this IArchiver archiver, FileInfo file, string archiveName = null)
         {
             if (archiver == null) throw new ArgumentNullException("archiver");
             if (file == null) throw new ArgumentNullException("file");
 
-            string id = null;
+            ArchiveCreated created = null;
 
-            using (BeginArchive archive = archiver.Create(archiveName ?? file.Name, archiveId => id = archiveId))
+            using (BeginArchive archive = archiver.Create(archiveName ?? file.Name, x => created = x))
             {
                 archive.IncludeFile(file);
             }
 
-            return id;
+            return created;
         }
 
-        public static string ArchiveFolder(this IArchiver archiver, DirectoryInfo folder, string archiveName = null)
+        public static ArchiveCreated ArchiveFolder(this IArchiver archiver, DirectoryInfo folder, string archiveName = null)
         {
             if (archiver == null) throw new ArgumentNullException("archiver");
             if (folder == null) throw new ArgumentNullException("folder");
 
-            string id = null;
+            ArchiveCreated created = null;
 
-            using (BeginArchive archive = archiver.Create(archiveName ?? folder.Name, archiveId => id = archiveId))
+            using (BeginArchive archive = archiver.Create(archiveName ?? folder.Name, x => created = x))
             {
                 archive.IncludeFolder(folder);
             }
 
-            return id;
+            return created;
         }
 
-        public static string ArchiveText(this IArchiver archiver, string name, string content, string archiveName = null)
+        public static ArchiveCreated ArchiveText(this IArchiver archiver, string name, string content, string archiveName = null)
         {
             if (archiver == null) throw new ArgumentNullException("archiver");
 
-            string id = null;
+            ArchiveCreated created = null;
 
-            using (BeginArchive archive = archiver.Create(archiveName ?? name, archiveId => id = archiveId))
+            using (BeginArchive archive = archiver.Create(archiveName ?? name, x => created = x))
             {
                 archive.IncludeContent(name, content);
             }
 
-            return id;
+            return created;
         }
 
-        public static string ArchiveObjectAsJson(this IArchiver archiver, object obj, string name, string archiveName = null)
+        public static ArchiveCreated ArchiveObjectAsJson(this IArchiver archiver, object obj, string name, string archiveName = null)
         {
             if (archiver == null) throw new ArgumentNullException("archiver");
             if (obj == null) throw new ArgumentNullException("obj");
 
-            string id = null;
+            ArchiveCreated created = null;
 
-            using (BeginArchive archive = archiver.Create(archiveName ?? name, archiveId => id = archiveId))
+            using (BeginArchive archive = archiver.Create(archiveName ?? name, x => created = x))
             {
                 archive.IncludeObjectAsJson(obj, name);
             }
 
-            return id;
+            return created;
         }
 
-        public static string Archive(this IArchiver archiver, string name, Action<BeginArchive> archive)
+        public static ArchiveCreated Archive(this IArchiver archiver, string name, Action<BeginArchive> archive)
         {
             if (archive == null) throw new ArgumentNullException("archive");
 
-            string id = null;
+            ArchiveCreated created = null;
 
-            using (BeginArchive local = archiver.Create(name, archiveId => id = archiveId))
+            using (BeginArchive local = archiver.Create(name, x => created = x))
             {
                 archive(local);
             }
 
-            return id;            
+            return created;            
         }
     }
 }

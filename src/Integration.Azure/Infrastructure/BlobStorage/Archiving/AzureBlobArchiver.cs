@@ -21,7 +21,7 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage.Archiving
             _containerName = containerName;
         }
 
-        public BeginArchive Create(string name, Action<CreatedArchive> onCreated)
+        public BeginArchive Create(string name, Action<ArchiveCreated> onCreated)
         {
             if (onCreated == null) throw new ArgumentNullException("onCreated");
             if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
@@ -40,7 +40,7 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage.Archiving
 
                 blockBlob.UploadFromStream(stream);
 
-                onCreated(new CreatedArchive(id, String.Format("Download from {0}", blockBlob.Uri)));
+                onCreated(new ArchiveCreated(id, String.Format("Download from {0}", blockBlob.Uri)));
             });
         }
 
