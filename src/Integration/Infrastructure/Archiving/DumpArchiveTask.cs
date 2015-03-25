@@ -31,11 +31,11 @@ namespace Vertica.Integration.Infrastructure.Archiving
             {
                 DirectoryInfo directory = Directory.CreateDirectory("Archive-Dumps");
 
-                var file = Path.Combine(directory.FullName, String.Format("Archive-{0}.zip", id));
+                string file = Path.Combine(directory.FullName, String.Format("{0}.zip", id));
 
                 File.WriteAllBytes(file, archive);
 
-                log.Message("Archive dumped to {0}", file);
+                log.Message("Archive dumped to {0}.", file);
             }
             else
             {

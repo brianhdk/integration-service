@@ -3,11 +3,11 @@ using System.Linq;
 
 namespace Vertica.Integration.Infrastructure.Archiving
 {
-    public class CreatedArchive
+    public class ArchiveCreated
     {
         private readonly string[] _additionalDownloadOptions;
 
-        public CreatedArchive(string id, params string[] additionalDownloadOptions)
+        public ArchiveCreated(string id, params string[] additionalDownloadOptions)
         {
             if (String.IsNullOrWhiteSpace(id)) throw new ArgumentException(@"Value cannot be null or empty.", "id");
 
@@ -17,13 +17,6 @@ namespace Vertica.Integration.Infrastructure.Archiving
         }
 
         public string Id { get; private set; }
-
-        public static implicit operator string(CreatedArchive archive)
-        {
-            if (archive == null) throw new ArgumentNullException("archive");
-
-            return archive.ToString();
-        }
 
         public override string ToString()
         {
@@ -35,6 +28,13 @@ namespace Vertica.Integration.Infrastructure.Archiving
                         "From the web-based interface (Portal)",
                         String.Format("Run the following command: {0} {1}", typeof (DumpArchiveTask).Name, Id),
                     }.Concat(_additionalDownloadOptions).Select(x => String.Format(" - {0}", x))));
+        }
+
+        public static implicit operator string(ArchiveCreated archive)
+        {
+            if (archive == null) throw new ArgumentNullException("archive");
+
+            return archive.ToString();
         }
     }
 }

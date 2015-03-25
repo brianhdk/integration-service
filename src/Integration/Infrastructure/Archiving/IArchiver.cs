@@ -4,7 +4,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 {
     public interface IArchiver
     {
-        BeginArchive Create(string name, Action<CreatedArchive> onCreated);
+        BeginArchive Create(string name, Action<ArchiveCreated> onCreated);
 
         Archive[] GetAll();
         byte[] Get(string id);

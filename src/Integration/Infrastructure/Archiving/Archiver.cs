@@ -16,7 +16,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
             _dapper = dapper;
         }
 
-        public BeginArchive Create(string name, Action<CreatedArchive> onCreated)
+        public BeginArchive Create(string name, Action<ArchiveCreated> onCreated)
         {
             if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
             if (onCreated == null) throw new ArgumentNullException("onCreated");
@@ -44,7 +44,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
                     transaction.Commit();
                 }
 
-                onCreated(new CreatedArchive(archiveId.ToString()));
+                onCreated(new ArchiveCreated(archiveId.ToString()));
             });
         }
 
