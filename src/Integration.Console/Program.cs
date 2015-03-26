@@ -2,6 +2,7 @@
 using System.Linq;
 using Vertica.Integration.Azure;
 using Vertica.Integration.Experiments.Azure;
+using Vertica.Integration.Experiments.Custom_Database;
 using Vertica.Integration.Model;
 using Vertica.Integration.Portal;
 
@@ -16,10 +17,9 @@ namespace Vertica.Integration.Console
 
 			using (var context = ApplicationContext.Create(builder => builder
                 .UsePortal()
-                .UseAzure(azure =>
-                    azure.ReplaceArchiverWithBlobStorage("AzureBlobStorage.Archiver"))
-                .AutoRegistredTasks(auto =>
-                    auto.Scan(typeof(AzureArchiverTesterTask).Assembly))))
+                .UseAzure(azure => azure.ReplaceArchiverWithBlobStorage("AzureBlobStorage.Archiver"))
+                .AddDatabaseForDapperProvider(new CustomDb())
+                .AutoRegistredTasks(auto => auto.Scan(typeof(AzureArchiverTesterTask).Assembly))))
 			{
 				ITaskService taskService = context.TaskService;
 
