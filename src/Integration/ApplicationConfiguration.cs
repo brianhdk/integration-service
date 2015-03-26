@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Castle.MicroKernel.Registration;
+using Vertica.Integration.Infrastructure.Database.Dapper;
+using Vertica.Integration.Infrastructure.Database.Dapper.Castle.Windsor;
 using Vertica.Integration.Infrastructure.Database.Migrations;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Web;
@@ -42,7 +44,15 @@ namespace Vertica.Integration
             return this;
         }
 
-        public IWindsorInstaller[] CustomInstallers
+        public ApplicationConfiguration AddDatabaseForDapperProvider<TDbConnection>(TDbConnection connection)
+            where TDbConnection : Connection
+        {
+            AddCustomInstaller(new DapperInstaller<TDbConnection>(connection));
+
+            return this;
+        }
+
+        internal IWindsorInstaller[] CustomInstallers
         {
             get { return _customInstallers.ToArray(); }
         }
