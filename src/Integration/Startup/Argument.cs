@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Vertica.Integration.Model.Startup
+namespace Vertica.Integration.Startup
 {
     internal class Argument
     {
@@ -40,7 +40,7 @@ namespace Vertica.Integration.Model.Startup
             }, value => String.Format("'{0}' is not a valid repeating interval in seconds [{1}-{2}].", value, min, max));
         }
 
-        public static Argument Either(params Argument[] arguments)
+        public static Argument Any(params Argument[] arguments)
         {
             return new Argument(value => (arguments ?? new Argument[0]).Any(x => x.IsValid(value)), 
                 value => String.Format("'{0}' value is not an acceptable argument.", value));

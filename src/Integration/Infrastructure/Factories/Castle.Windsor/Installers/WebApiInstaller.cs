@@ -12,25 +12,29 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 {
     internal class WebApiInstaller : IWindsorInstaller
 	{
-        private readonly WebApiConfiguration _configuration;
+        private readonly Assembly[] _scanAssemblies;
+        private readonly Type[] _addControllers;
+        private readonly Type[] _removeControllers;
 
-        public WebApiInstaller(WebApiConfiguration configuration)
+        public WebApiInstaller(Assembly[] scanAssemblies, Type[] addControllers, Type[] removeControllers)
         {
-            _configuration = configuration;
+            _scanAssemblies = scanAssemblies ?? new Assembly[0];
+            _addControllers = addControllers ?? new Type[0];
+            _removeControllers = removeControllers ?? new Type[0];
         }
 
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
             var types = new List<Type>();
 
-            foreach (Assembly assembly in _configuration.ScanAssemblies)
+            foreach (Assembly assembly in _scanAssemblies)
             {
                 container.Register(
                     Classes.FromAssembly(assembly)
                         .BasedOn<ApiController>()
                         .Unless(x =>
                         {
-                            if (_configuration.RemoveControllers.Contains(x))
+                            if (_removeControllers.Contains(x))
                                 return true;
 
                             types.Add(x);
@@ -41,7 +45,7 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
             }
 
             container.Register(
-                Classes.From(_configuration.AddControllers)
+                Classes.From(_addControllers)
                     .BasedOn<ApiController>()
                     .Expose(types.Add)
                     .WithServiceSelf()

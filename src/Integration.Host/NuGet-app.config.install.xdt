@@ -1,12 +1,5 @@
 ﻿<?xml version="1.0"?>
 <configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
-  <!--http://stackoverflow.com/questions/18737022/xdt-transform-insertbefore-locator-condition-is-ignored-->
-  <configSections xdt:Transform="InsertBefore(/configuration/*[1])" />
-  <configSections xdt:Locator="XPath(/configuration/configSections[last()])">
-    <section name="castle" type="Castle.Windsor.Configuration.AppDomain.CastleSectionHandler, Castle.Windsor" xdt:Transform="InsertIfMissing" />
-  </configSections>
-  <configSections xdt:Transform="RemoveAll" xdt:Locator="Condition(count(*)=0)" />
-  <castle configSource="Tasks.config" xdt:Transform="Insert" />
   <connectionStrings xdt:Transform="InsertIfMissing">
     <add name="IntegrationDb" connectionString="Integrated Security=SSPI;Data Source=[NAME-OF-SQL-SERVER];Database=[NAME-OF-INTEGRATION-DATABASE]" xdt:Transform="InsertIfMissing" />
   </connectionStrings>

@@ -135,6 +135,7 @@
     <Compile Include="Infrastructure\Configuration\Configuration.cs" />
     <Compile Include="Infrastructure\Configuration\ConfigurationProvider.cs" />
     <Compile Include="Infrastructure\Configuration\IConfigurationProvider.cs" />
+    <Compile Include="Infrastructure\ConnectionString.cs" />
     <Compile Include="Infrastructure\Database\Dapper\Castle.Windsor\DapperInstaller.cs" />
     <Compile Include="Infrastructure\Database\Dapper\Castle.Windsor\DapperSelector.cs" />
     <Compile Include="Infrastructure\Database\Dapper\Connection.cs" />
@@ -143,13 +144,14 @@
     <Compile Include="Infrastructure\Database\Dapper\DefaultConnection.cs" />
     <Compile Include="Infrastructure\Database\Dapper\IDapperProvider.cs" />
     <Compile Include="Infrastructure\Database\Dapper\IDapperSession.cs" />
+    <Compile Include="Infrastructure\Database\Dapper\DapperConfiguration.cs" />
     <Compile Include="Infrastructure\Database\Migrations\DatabaseServer.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M1_Baseline.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M3_Configuration.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M2_Archive.cs" />
     <Compile Include="Infrastructure\Database\Migrations\MigrateTask.cs" />
     <Compile Include="Infrastructure\Database\Migrations\MigrationConfiguration.cs" />
-    <Compile Include="Infrastructure\Database\Migrations\MigrationDestination.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\MigrationTarget.cs" />
     <Compile Include="Infrastructure\Database\Migrations\MigrationExtensions.cs" />
     <Compile Include="Infrastructure\Delay.cs" />
     <Compile Include="Infrastructure\Email\EmailService.cs" />
@@ -163,7 +165,7 @@
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ConsoleWriterInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ConventionInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\AutoRegisterTasksInstaller.cs" />
-    <Compile Include="Model\AutoRegistredTasksConfiguration.cs" />
+    <Compile Include="Model\TasksConfiguration.cs" />
     <Compile Include="Model\Web\IWebApiControllers.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\TaskFactoryInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\WebApiInstaller.cs" />
@@ -192,36 +194,28 @@
     <Compile Include="Model\ITask.cs" />
     <Compile Include="Model\ITaskFactory.cs" />
     <Compile Include="Model\ITaskRunner.cs" />
-    <Compile Include="Model\ITaskService.cs" />
     <Compile Include="Model\Log.cs" />
     <Compile Include="Model\Output.cs" />
-    <Compile Include="Model\Startup\Argument.cs" />
-    <Compile Include="Model\Startup\ArgumentValidator.cs" />
-    <Compile Include="Model\Startup\ExecuteTask.cs" />
-    <Compile Include="Model\Startup\ExecuteTaskFromWebServiceInConsole.cs" />
-    <Compile Include="Model\Startup\ExecuteTaskInWindowsService.cs" />
-    <Compile Include="Model\Startup\ExecutionContext.cs" />
-    <Compile Include="Model\Startup\InstallWindowsServiceTaskHost.cs" />
-    <Compile Include="Model\Startup\StartupAction.cs" />
-    <Compile Include="Model\Startup\StartWebApiHost.cs" />
-    <Compile Include="Model\Startup\UninstallWindowsServiceTaskHost.cs" />
+    <Compile Include="Startup\Argument.cs" />
+    <Compile Include="Startup\ArgumentValidator.cs" />
+    <Compile Include="Startup\RunTask.cs" />
+    <Compile Include="Startup\RunTaskFromWebServiceInConsole.cs" />
+    <Compile Include="Startup\RunTaskFromWindowsService.cs" />
+    <Compile Include="Startup\ExecutionContext.cs" />
+    <Compile Include="Startup\InstallWindowsServiceTaskHost.cs" />
+    <Compile Include="Startup\StartupAction.cs" />
+    <Compile Include="Startup\StartWebApiHost.cs" />
+    <Compile Include="Startup\UninstallWindowsServiceTaskHost.cs" />
     <Compile Include="Model\Step.cs" />
     <Compile Include="Model\Task.cs" />
     <Compile Include="Model\TaskExecutionResult.cs" />
     <Compile Include="Model\TaskRunner.cs" />
-    <Compile Include="Model\TaskService.cs" />
     <Compile Include="Model\Web\ExceptionHandlingAttribute.cs" />
     <Compile Include="Model\Web\HomeController.cs" />
     <Compile Include="Model\Web\TaskController.cs" />
     <Compile Include="Model\Web\WebApiHost.cs" />
     <Compile Include="Model\Web\WebApiTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\ISettings.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
     <Compile Include="Model\Web\WebApiConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -232,10 +226,6 @@
     <None Include="Integration.nuspec" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Properties\Settings.settings">
-      <Generator>PublicSettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

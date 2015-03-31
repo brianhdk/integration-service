@@ -14,14 +14,12 @@ namespace Vertica.Integration.Domain.Monitoring
 	    private readonly List<ISpecification<MonitorEntry>> _ignoreFilters;
         private readonly ChainOfResponsibilityLink<MonitorEntry, Target> _targetRedirects; 
 
-	    public MonitorWorkItem(DateTimeOffset lastRun, bool updateLastCheck)
+	    public MonitorWorkItem(DateTimeOffset lastRun)
         {
 	        var upperBound = Time.UtcNow;
 
 		    if (lastRun > upperBound)
                 upperBound = lastRun;
-
-	        UpdateLastCheck = updateLastCheck;
 
 		    _checkRange = new Range<DateTimeOffset>(lastRun, upperBound);
 		    _entries = new List<Tuple<Target, MonitorEntry>>();
@@ -33,8 +31,6 @@ namespace Vertica.Integration.Domain.Monitoring
 		{
 			get { return _checkRange; }
 		}
-
-        public bool UpdateLastCheck { get; private set; }
 
         public MonitorWorkItem WithIgnoreFilter(ISpecification<MonitorEntry> filter)
         {

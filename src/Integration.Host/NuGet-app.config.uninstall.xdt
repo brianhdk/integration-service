@@ -1,9 +1,5 @@
 ﻿<?xml version="1.0"?>
 <configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
-  <configSections>
-    <section name="castle" type="Castle.Windsor.Configuration.AppDomain.CastleSectionHandler, Castle.Windsor" xdt:Transform="Remove" xdt:Locator="Match(name)" />
-  </configSections>
-  <castle xdt:Transform="Remove" />
   <connectionStrings>
     <add name="IntegrationDb" connectionString="Integrated Security=SSPI;Data Source=[NAME-OF-SQL-SERVER];Database=[NAME-OF-INTEGRATION-DATABASE]" xdt:Transform="Remove" xdt:Locator="Match(name)" />
   </connectionStrings>

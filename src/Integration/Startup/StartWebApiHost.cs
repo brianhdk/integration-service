@@ -1,18 +1,22 @@
 using System;
+using Castle.Windsor;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model.Web;
 
-namespace Vertica.Integration.Model.Startup
+namespace Vertica.Integration.Startup
 {
-    internal class ExecuteTaskFromWebServiceInConsole : StartupAction
+    internal class StartWebApiHost : StartupAction
     {
-        private readonly ILogger _logger;
-
-        public ExecuteTaskFromWebServiceInConsole(ILogger logger)
+        public StartWebApiHost(IWindsorContainer container)
+            : base(container)
         {
-            if (logger == null) throw new ArgumentNullException("logger");
+        }
 
-            _logger = logger;
+        public override bool IsSatisfiedBy(ExecutionContext context)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+
+            return context.Task is WebApiTask && base.IsSatisfiedBy(context);
         }
 
         protected override string ActionName
@@ -27,12 +31,12 @@ namespace Vertica.Integration.Model.Startup
 
         protected override void DoExecute(ExecutionContext context)
         {
-            using (new WebApiHost(context.ActionArguments[0], Console.Out, _logger, context.Task, context.TaskArguments))
+            using (new WebApiHost(context.ActionArguments[0], Console.Out, Resolve<ILogger>(), context.Task, context.TaskArguments))
             {
                 do
                 {
                     Console.WriteLine();
-                    Console.WriteLine(@"Press ESCAPE to stop web-service.");
+                    Console.WriteLine(@"Press ESCAPE to stop web-service..");
                     Console.WriteLine();
 
                 } while (WaitingForEscape());
@@ -41,7 +45,7 @@ namespace Vertica.Integration.Model.Startup
 
         private static bool WaitingForEscape()
         {
-            return Console.ReadKey(true /* will not display */).Key != ConsoleKey.Escape;
+            return Console.ReadKey(intercept: true /* don't display */).Key != ConsoleKey.Escape;
         }
     }
 }

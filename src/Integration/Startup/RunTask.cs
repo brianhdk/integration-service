@@ -1,14 +1,14 @@
 using System;
+using Castle.Windsor;
+using Vertica.Integration.Model;
 
-namespace Vertica.Integration.Model.Startup
+namespace Vertica.Integration.Startup
 {
-    internal class ExecuteTask : StartupAction
+    internal class RunTask : StartupAction
     {
-        private readonly ITaskRunner _runner;
-
-        public ExecuteTask(ITaskRunner runner)
+        public RunTask(IWindsorContainer container)
+            : base(container)
         {
-            _runner = runner;
         }
 
         protected override string ActionName
@@ -23,7 +23,7 @@ namespace Vertica.Integration.Model.Startup
 
         protected override void DoExecute(ExecutionContext context)
         {
-            _runner.Execute(context.Task, context.TaskArguments);
+            Resolve<ITaskRunner>().Execute(context.Task, context.TaskArguments);
         }
     }
 }

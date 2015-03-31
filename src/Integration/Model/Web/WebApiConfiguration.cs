@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web.Http;
+using Castle.Windsor;
+using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 
 namespace Vertica.Integration.Model.Web
 {
@@ -47,17 +49,24 @@ namespace Vertica.Integration.Model.Web
             return this;
         }
 
-        internal Assembly[] ScanAssemblies
+        internal void Install(IWindsorContainer container)
+        {
+            if (container == null) throw new ArgumentNullException("container");
+
+            container.Install(new WebApiInstaller(ScanAssemblies, AddControllers, RemoveControllers));
+        }
+
+        private Assembly[] ScanAssemblies
         {
             get { return _scan.Distinct().ToArray(); }
         }
 
-        internal Type[] AddControllers
+        private Type[] AddControllers
         {
             get { return _add.Except(_remove).Distinct().ToArray(); }
         }
 
-        internal Type[] RemoveControllers
+        private Type[] RemoveControllers
         {
             get { return _remove.Distinct().ToArray(); }
         }

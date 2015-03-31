@@ -13,12 +13,12 @@ namespace Vertica.Integration.Domain.Monitoring
     public class ExportIntegrationErrorsStep : Step<MonitorWorkItem>
     {
         private readonly IDapperProvider _dapper;
-        private readonly ITaskService _taskService;
+        private readonly ITaskFactory _taskFactory;
 
-        public ExportIntegrationErrorsStep(IDapperProvider dapper, ITaskService taskService)
+        public ExportIntegrationErrorsStep(IDapperProvider dapper, ITaskFactory taskFactory)
         {
             _dapper = dapper;
-            _taskService = taskService;
+            _taskFactory = taskFactory;
         }
 
         public override string Description
@@ -73,7 +73,7 @@ ORDER BY ErrorLog.Id DESC",
                         {
                             try
                             {
-                                task = _taskService.GetByName(taskName);
+                                task = _taskFactory.GetByName(taskName);
                                 tasksByName.Add(taskName, task);
                             }
                             catch (TaskNotFoundException)

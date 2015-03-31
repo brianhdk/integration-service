@@ -1,11 +1,9 @@
-using System.Collections.Generic;
-
 namespace Vertica.Integration.Model
 {
 	public interface ITaskFactory
 	{
-	    ITask GetTaskByName(string name);
+	    ITask GetByName(string name);
 
-	    IEnumerable<ITask> GetTasks();
+	    ITask[] GetAll();
 	}
 }

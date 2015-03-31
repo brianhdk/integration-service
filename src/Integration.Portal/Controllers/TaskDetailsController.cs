@@ -13,11 +13,11 @@ namespace Vertica.Integration.Portal.Controllers
     public class TaskDetailsController : ApiController
     {
         private readonly IDapperProvider _dapper;
-        private readonly ITaskService _taskService;
+        private readonly ITaskFactory _taskFactory;
 
-        public TaskDetailsController(ITaskService taskService, IDapperProvider dapper)
+        public TaskDetailsController(ITaskFactory taskFactory, IDapperProvider dapper)
         {
-            _taskService = taskService;
+            _taskFactory = taskFactory;
             _dapper = dapper;
         }
 
@@ -25,14 +25,13 @@ namespace Vertica.Integration.Portal.Controllers
         {
             return 
                 Request.CreateResponse(HttpStatusCode.OK,
-                    _taskService.GetAll()
-                        .Select(x => new { Name = x.Name(), x.Description })
-                        .OrderBy(x => x.Name));
+                    _taskFactory.GetAll()
+                        .Select(x => new { Name = x.Name(), x.Description }));
         }
 
         public HttpResponseMessage Get(string name)
         {
-            ITask task = _taskService.GetByName(name);
+            ITask task = _taskFactory.GetByName(name);
 
             return Request.CreateResponse(HttpStatusCode.OK, new
             {
