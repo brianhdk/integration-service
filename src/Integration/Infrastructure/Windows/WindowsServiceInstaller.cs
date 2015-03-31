@@ -104,7 +104,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 
         private static string PrefixEnvironment(string value)
         {
-            return String.Format("{0}: {1}", "TODO-Prefix", value);
+            return String.Format("Integration Service: {0}", value);
         }
 
         private static InstallContext GetInstallContext()

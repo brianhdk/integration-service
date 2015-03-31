@@ -54,6 +54,8 @@ namespace Vertica.Integration.Model.Web
 
                 configuration.Filters.Add(new ExceptionHandlingAttribute(logger));
 
+                // TODO: Hvis WebApi er startet som en Task, bør det udelukkende være denne task der er tilgængelig
+
                 var resolver = new CustomResolver(ObjectFactory.Instance);
                 configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
                 configuration.Services.Replace(typeof(IHttpControllerTypeResolver), resolver);
