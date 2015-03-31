@@ -2,8 +2,8 @@
 {
 	public abstract class DefaultConnection : Connection
 	{
-		protected DefaultConnection(string connectionStringName)
-			: base(connectionStringName)
+		protected DefaultConnection(ConnectionString connectionString)
+			: base(connectionString)
 		{
 		}
 	}

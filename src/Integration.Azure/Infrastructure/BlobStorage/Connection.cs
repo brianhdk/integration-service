@@ -1,36 +1,39 @@
 ﻿using System;
+using Vertica.Integration.Infrastructure;
 
 namespace Vertica.Integration.Azure.Infrastructure.BlobStorage
 {
 	public abstract class Connection
 	{
-		private readonly string _connectionStringName;
+		private readonly ConnectionString _connectionString;
+        private readonly string _postfix;
 
-	    protected Connection(string connectionStringName)
+        protected Connection(ConnectionString connectionString)
 		{
-            if (String.IsNullOrWhiteSpace(connectionStringName)) throw new ArgumentException("Value cannot be null or empty.");
+            if (connectionString == null) throw new ArgumentNullException("connectionString");
 
-			_connectionStringName = connectionStringName;
+			_connectionString = connectionString;
+            _postfix = GetType().FullName;
 		}
 
-	    public string ConnectionStringName
-		{
-			get { return _connectionStringName; }
-		}
+        internal ConnectionString ConnectionStringInternal
+        {
+            get { return _connectionString; }
+        }
 
         internal string CloudBlobClient
         {
-            get { return String.Format("AzureBlobStorage.Session.{0}", ConnectionStringName); }
+            get { return String.Format("AzureBlobStorage.Session.{0}", _postfix); }
         }
 
         internal string SelectorName
         {
-            get { return String.Format("AzureBlobStorage.Selector.{0}", ConnectionStringName); }
+            get { return String.Format("AzureBlobStorage.Selector.{0}", _postfix); }
         }
 
         internal string FactoryName
         {
-            get { return String.Format("AzureBlobStorage.Factory.{0}", ConnectionStringName); }
+            get { return String.Format("AzureBlobStorage.Factory.{0}", _postfix); }
         }
 	}
 }

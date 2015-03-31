@@ -1,17 +1,23 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using Vertica.Integration.Startup;
 
 namespace Vertica.Integration.Model.Exceptions
 {
     [Serializable]
     public class StartupActionNotFoundException : Exception
     {
-        public StartupActionNotFoundException()
+        internal StartupActionNotFoundException(ExecutionContext context)
+            : base(
+                String.Format("No startup actions found supporting the execution context. Task: {0}, TaskArguments: {1}, Action: {2}, ActionArguments: {3}.", 
+                    context.TaskName,
+                    String.Join(" ", context.TaskArguments),
+                    context.ActionName,
+                    String.Join(" ", context.ActionArguments)))
         {
         }
 
-        public StartupActionNotFoundException(string[] arguments)
-            : base(String.Format("No startup actions found supporting the execution context. {0}", String.Join(" ", arguments ?? new string[0])))
+        public StartupActionNotFoundException()
         {
         }
 

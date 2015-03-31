@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Configuration;
 using System.Data.SqlClient;
 using Vertica.Integration.Domain.Monitoring;
+using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
 
@@ -9,27 +9,20 @@ namespace Vertica.Integration.Logging.Elmah
 {
     public class ExportElmahErrorsStep : Step<MonitorWorkItem>
     {
-        private readonly string _connectionStringName;
+        private readonly ConnectionString _connectionString;
         private readonly string _sourceName;
 
         public ExportElmahErrorsStep(string connectionStringName, string sourceName)
         {
-            if (String.IsNullOrWhiteSpace(connectionStringName)) throw new ArgumentException(@"Value cannot be null or empty.", "connectionStringName");
             if (String.IsNullOrWhiteSpace(sourceName)) throw new ArgumentException(@"Value cannot be null or empty.", "sourceName");
 
-            _connectionStringName = connectionStringName;
+            _connectionString = ConnectionString.FromName(connectionStringName);
             _sourceName = sourceName;
         }
 
         public override void Execute(MonitorWorkItem workItem, Log log)
         {
-            ConnectionStringSettings settings = ConfigurationManager.ConnectionStrings[_connectionStringName];
-
-            if (settings == null)
-                throw new InvalidOperationException(
-                    String.Format("Found no ConnectionString with name '{0}'. Please add this to the <connectionString> element.", _connectionStringName));
-
-            using (var connection = new SqlConnection(settings.ConnectionString))
+            using (var connection = new SqlConnection(_connectionString))
             using (SqlCommand command = connection.CreateCommand())
             {
                 connection.Open();

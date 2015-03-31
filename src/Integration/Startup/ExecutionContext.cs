@@ -1,16 +1,16 @@
 using System;
 using System.Linq;
+using Vertica.Integration.Infrastructure.Extensions;
+using Vertica.Integration.Model;
 
-namespace Vertica.Integration.Model.Startup
+namespace Vertica.Integration.Startup
 {
     internal class ExecutionContext
     {
-        public ExecutionContext(string taskName, ITask task, params string[] arguments)
+        public ExecutionContext(ITask task, params string[] arguments)
         {
-            if (String.IsNullOrWhiteSpace(taskName)) throw new ArgumentException(@"Value cannot be null or empty.", "taskName");
             if (task == null) throw new ArgumentNullException("task");
 
-            TaskName = taskName;
             Task = task;
             arguments = arguments ?? new string[0];
 
@@ -32,10 +32,9 @@ namespace Vertica.Integration.Model.Startup
             }
         }
 
-        public string TaskName { get; private set; }
-        public string[] TaskArguments { get; private set; }
-
         public ITask Task { get; private set; }
+        public string TaskName { get { return Task.Name(); } }
+        public string[] TaskArguments { get; private set; }
 
         public string ActionName { get; private set; }
         public string[] ActionArguments { get; private set; }

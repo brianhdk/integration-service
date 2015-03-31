@@ -1,9 +1,24 @@
 using System;
+using Castle.Windsor;
 
-namespace Vertica.Integration.Model.Startup
+namespace Vertica.Integration.Startup
 {
     internal abstract class StartupAction
     {
+        private readonly IWindsorContainer _container;
+
+        protected StartupAction(IWindsorContainer container)
+        {
+            if (container == null) throw new ArgumentNullException("container");
+
+            _container = container;
+        }
+
+        protected T Resolve<T>()
+        {
+            return _container.Resolve<T>();
+        }
+
         protected abstract string ActionName { get; }
 
         public virtual bool IsSatisfiedBy(ExecutionContext context)

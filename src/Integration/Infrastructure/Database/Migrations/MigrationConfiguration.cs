@@ -1,70 +1,55 @@
 using System;
 using System.Collections.Generic;
-using System.Configuration;
+using Castle.MicroKernel.Registration;
+using Castle.Windsor;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
     public class MigrationConfiguration
     {
-        private readonly List<MigrationDestination> _customDestinations;
-        private bool _locked;
+        private readonly List<MigrationTarget> _customTargets;
 
         internal MigrationConfiguration()
         {
-            _customDestinations = new List<MigrationDestination>();
+            _customTargets = new List<MigrationTarget>();
 
             ChangeIntegrationDbDatabaseServer(DatabaseServer.SqlServer2014);
         }
 
         public MigrationConfiguration ChangeIntegrationDbDatabaseServer(DatabaseServer db)
         {
-            AssertNotLocked();
-
             IntegrationDbDatabaseServer = db;
 
             return this;
         }
 
-        public MigrationConfiguration IncludeFromNamespaceOfThis<T>(DatabaseServer db, string connectionStringName)
+        public MigrationConfiguration IncludeFromNamespaceOfThis<T>(DatabaseServer db, ConnectionString connectionString)
         {
-            if (String.IsNullOrWhiteSpace(connectionStringName)) throw new ArgumentException(@"Value cannot be null or empty.", "connectionStringName");
+            if (connectionString == null) throw new ArgumentNullException("connectionString");
 
-            AssertNotLocked();
-
-            ConnectionStringSettings connectionString =
-                ConfigurationManager.ConnectionStrings[connectionStringName];
-
-            if (connectionString == null)
-                throw new ArgumentException(
-                    String.Format("No ConnectionString found with name '{0}'.", connectionStringName));
-
-            _customDestinations.Add(new MigrationDestination(
+            _customTargets.Add(new MigrationTarget(
                 db,
-                connectionString.ConnectionString,
+                connectionString,
                 typeof(T).Assembly,
                 typeof(T).Namespace));
 
             return this;
         }
 
-        private void AssertNotLocked()
-        {
-            if (_locked)
-                throw new InvalidOperationException("You can only modify the state of this configuration object when calling ApplicationContext.Create().");
-        }
-
-        internal MigrationConfiguration Lock()
-        {
-            _locked = true;
-
-            return this;
-        }
-
         internal DatabaseServer IntegrationDbDatabaseServer { get; private set; }
 
-        internal MigrationDestination[] CustomDestinations
+        internal MigrationTarget[] CustomTargets
         {
-            get { return _customDestinations.ToArray(); }
+            get { return _customTargets.ToArray(); }
+        }
+
+        internal void Install(IWindsorContainer container)
+        {
+            if (container == null) throw new ArgumentNullException("container");
+
+            container.Register(
+                Component.For<MigrationConfiguration>()
+                    .UsingFactoryMethod(() => this));
         }
     }
 }

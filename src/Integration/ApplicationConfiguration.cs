@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Castle.MicroKernel.Registration;
+using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Database.Dapper;
-using Vertica.Integration.Infrastructure.Database.Dapper.Castle.Windsor;
 using Vertica.Integration.Infrastructure.Database.Migrations;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Web;
@@ -13,20 +13,25 @@ namespace Vertica.Integration
     public class ApplicationConfiguration
     {
         private readonly List<IWindsorInstaller> _customInstallers;
-        private readonly AutoRegistredTasksConfiguration _autoRegistredTasks;
+        private readonly TasksConfiguration _tasks;
+        private readonly DapperConfiguration _dapper;
         private readonly WebApiConfiguration _webApi;
         private readonly MigrationConfiguration _migration;
 
         internal ApplicationConfiguration()
         {
+            DatabaseConnectionString = ConnectionString.FromName("IntegrationDb");
+            IgnoreSslErrors = true;
+
             _customInstallers = new List<IWindsorInstaller>();
-            _autoRegistredTasks = new AutoRegistredTasksConfiguration();
+            _tasks = new TasksConfiguration();
+            _dapper = new DapperConfiguration(this);
             _webApi = new WebApiConfiguration();
             _migration = new MigrationConfiguration();
-
-            DatabaseConnectionStringName = "IntegrationDb";
-            IgnoreSslErrors = true;
         }
+
+        public ConnectionString DatabaseConnectionString { get; set; }
+        public bool IgnoreSslErrors { get; set; }
 
         public ApplicationConfiguration AddCustomInstaller(IWindsorInstaller installer)
         {
@@ -44,23 +49,23 @@ namespace Vertica.Integration
             return this;
         }
 
-        public ApplicationConfiguration AddDatabaseForDapperProvider<TDbConnection>(TDbConnection connection)
-            where TDbConnection : Connection
-        {
-            AddCustomInstaller(new DapperInstaller<TDbConnection>(connection));
-
-            return this;
-        }
-
         internal IWindsorInstaller[] CustomInstallers
         {
             get { return _customInstallers.ToArray(); }
         }
 
-        public ApplicationConfiguration AutoRegistredTasks(Action<AutoRegistredTasksConfiguration> autoRegistredTasks)
+        public ApplicationConfiguration Tasks(Action<TasksConfiguration> tasks)
         {
-            if (autoRegistredTasks != null)
-                autoRegistredTasks(_autoRegistredTasks);
+            if (tasks != null)
+                tasks(_tasks);
+
+            return this;
+        }
+
+        public ApplicationConfiguration Dapper(Action<DapperConfiguration> dapper)
+        {
+            if (dapper != null)
+                dapper(_dapper);
 
             return this;
         }
@@ -88,8 +93,5 @@ namespace Vertica.Integration
 
             return this;
         }
-
-        public string DatabaseConnectionStringName { get; set; }
-        public bool IgnoreSslErrors { get; set; }
     }
 }

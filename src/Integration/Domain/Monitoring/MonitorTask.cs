@@ -20,7 +20,11 @@ namespace Vertica.Integration.Domain.Monitoring
 		{
 			_configuration = configuration;
 			_emailService = emailService;
-			_ignoreErrorsWithMessagesContaining = ignoreErrorsWithMessagesContaining ?? new string[0];
+
+            _ignoreErrorsWithMessagesContaining = 
+                (ignoreErrorsWithMessagesContaining ?? new string[0])
+                    .Select(x => x.Replace("\\r\\n", Environment.NewLine))
+                    .ToArray();
 		}
 
 		public override string Description
@@ -37,26 +41,11 @@ namespace Vertica.Integration.Domain.Monitoring
 				configuration.IgnoreErrorsWithMessagesContaining
                     .EmptyIfNull()
 					.Concat(_ignoreErrorsWithMessagesContaining)
-					.SkipNulls()
+					.Where(x => !String.IsNullOrWhiteSpace(x))
 					.Distinct()
-					.Select(x => x.Replace("\\r\\n", Environment.NewLine))
 					.ToArray();
 
-		    bool updateLastRun;
-
-		    DateTimeOffset lastRun;
-            if (DateTimeOffset.TryParse(arguments.FirstOrDefault(), out lastRun))
-            {
-                log.Message("Monitor starting from {0}", lastRun);
-                updateLastRun = false;
-            }
-            else
-            {
-                lastRun = configuration.LastRun;
-                updateLastRun = true;
-            }
-
-			return new MonitorWorkItem(lastRun, updateLastRun)
+			return new MonitorWorkItem(configuration.LastRun)
                 .WithIgnoreFilter(new MessageContainsTextIgnoreFilter(ignoredMessages));
 		}
 
@@ -65,22 +54,19 @@ namespace Vertica.Integration.Domain.Monitoring
             MonitorConfiguration configuration = _configuration.Get<MonitorConfiguration>();
 
 		    foreach (MonitorTarget target in configuration.Targets)
-		        SendTo(target, workItem, log, target.Recipients);
+		        SendTo(target, workItem, log);
 
-		    if (workItem.UpdateLastCheck)
-		    {
-                configuration.LastRun = workItem.CheckRange.UpperBound;
-		        _configuration.Save(configuration, "MonitorTask");
-		    }
+            configuration.LastRun = workItem.CheckRange.UpperBound;
+		    _configuration.Save(configuration, "MonitorTask");
 		}
 
-	    private void SendTo(Target target, MonitorWorkItem workItem, Log log, string[] recipients)
+	    private void SendTo(MonitorTarget target, MonitorWorkItem workItem, Log log)
 	    {
             MonitorEntry[] entries = workItem.GetEntries(target);
 
 	        if (entries.Length > 0)
 	        {
-                if (recipients == null)
+                if (target.Recipients == null || target.Recipients.Length == 0)
                 {
                     log.Warning(Target.Service, "No recipients found for target '{0}'.", target);
                     return;
@@ -90,7 +76,11 @@ namespace Vertica.Integration.Domain.Monitoring
 
                 log.Message("Sending {0} entries to {1}.", entries.Length, target);
 
-                _emailService.Send(new MonitorEmailTemplate(workItem.CheckRange, entries), recipients);
+                // TODO: Include a prefix, e.g. with Environment/and or name of target
+                string subject = 
+                    String.Format("Integration Service: Monitoring ({0})", workItem.CheckRange);
+
+                _emailService.Send(new MonitorEmailTemplate(subject, entries), target.Recipients);
 	        }
 	    }
 	}

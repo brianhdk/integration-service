@@ -19,6 +19,8 @@ namespace Vertica.Integration.Portal.Controllers
 
         public HttpResponseMessage Get()
         {
+            // TODO: Fix denne.
+
             string sql = string.Format(@"
 SELECT
 	[Id],

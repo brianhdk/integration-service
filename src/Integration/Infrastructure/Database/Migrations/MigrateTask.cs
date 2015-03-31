@@ -17,7 +17,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
     public class MigrateTask : Task
     {
-        private readonly MigrationDestination[] _destinations;
+        private readonly MigrationTarget[] _targets;
         private readonly IDisposable _loggingDisabler;
         private readonly bool _databaseCreated;
 
@@ -25,20 +25,20 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
         {
             string connectionString = EnsureIntegrationDb(dapper, out _databaseCreated);
 
-            var selfDestination = new MigrationDestination(
+            var integrationDb = new MigrationTarget(
                 configuration.IntegrationDbDatabaseServer,
-                connectionString,
+                ConnectionString.FromText(connectionString),
                 typeof (M1_Baseline).Assembly,
                 typeof (M1_Baseline).Namespace);
 
             StringBuilder output;
-            MigrationRunner runner = CreateRunner(selfDestination, out output);
+            MigrationRunner runner = CreateRunner(integrationDb, out output);
 
             // Baseline has not been applied, so we'll have to disable any logging
             if (!runner.VersionLoader.VersionInfo.HasAppliedMigration(M1_Baseline.VersionNumber))
                 _loggingDisabler = logger.Disable();
 
-            _destinations = new[] { selfDestination }.Concat(configuration.CustomDestinations).ToArray();
+            _targets = new[] { integrationDb }.Concat(configuration.CustomTargets).ToArray();
         }
 
         public override string Description
@@ -48,7 +48,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
         public override void StartTask(Log log, params string[] arguments)
         {
-            foreach (MigrationDestination destination in _destinations)
+            foreach (MigrationTarget destination in _targets)
             {
                 StringBuilder output;
                 MigrationRunner runner = CreateRunner(destination, out output);
@@ -118,7 +118,7 @@ ELSE
             }
         }
 
-        private static MigrationRunner CreateRunner(MigrationDestination destination, out StringBuilder output)
+        private static MigrationRunner CreateRunner(MigrationTarget target, out StringBuilder output)
         {
             var sb = output = new StringBuilder();
 
@@ -130,16 +130,16 @@ ELSE
                 sb.Append(s);
             });
 
-            IMigrationProcessorFactory factory = CreateFactory(destination.DatabaseServer);
+            IMigrationProcessorFactory factory = CreateFactory(target.DatabaseServer);
 
-            IMigrationProcessor processor = factory.Create(destination.ConnectionString, announcer, new MigrationOptions());
+            IMigrationProcessor processor = factory.Create(target.ConnectionString, announcer, new MigrationOptions());
 
             var context = new RunnerContext(announcer)
             {
-                Namespace = destination.NamespaceContainingMigrations
+                Namespace = target.NamespaceContainingMigrations
             };
 
-            return new MigrationRunner(destination.Assembly, context, processor);
+            return new MigrationRunner(target.Assembly, context, processor);
         }
 
         private static IMigrationProcessorFactory CreateFactory(DatabaseServer databaseServer)

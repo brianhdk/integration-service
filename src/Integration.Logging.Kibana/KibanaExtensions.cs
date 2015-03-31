@@ -16,7 +16,7 @@ namespace Vertica.Integration.Logging.Kibana
                 kibana(configuration);
 
             builder.AddCustomInstaller(new AzureBlobStorageInstaller<KibanaConnection>(
-                new KibanaConnection(configuration.AzureBlobStorageConnectionStringName)));
+                new KibanaConnection(configuration.AzureBlobStorageConnectionString)));
 
             return builder;
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Castle.MicroKernel.Registration;
 using Vertica.Integration.Azure.Infrastructure.Castle.Windsor;
+using Vertica.Integration.Infrastructure;
 
 namespace Vertica.Integration.Azure
 {
@@ -19,12 +20,12 @@ namespace Vertica.Integration.Azure
             get { return _customInstallers.ToArray(); }
         }
 
-        public AzureConfiguration ReplaceArchiverWithBlobStorage(string connectionStringName, string containerName = "archives")
+        public AzureConfiguration ReplaceArchiverWithBlobStorage(ConnectionString connectionString, string containerName = "archives")
         {
-            if (String.IsNullOrWhiteSpace(connectionStringName)) throw new ArgumentException(@"Value cannot be null or empty.", "connectionStringName");
+            if (connectionString == null) throw new ArgumentNullException("connectionString");
             if (String.IsNullOrWhiteSpace(containerName)) throw new ArgumentException(@"Value cannot be null or empty.", "containerName");
 
-            _customInstallers.Add(new AzureArchiverInstaller(connectionStringName, containerName));
+            _customInstallers.Add(new AzureArchiverInstaller(connectionString, containerName));
 
             return this;
         }

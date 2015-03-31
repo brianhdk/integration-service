@@ -1,4 +1,5 @@
 ﻿using System;
+using Vertica.Integration.Infrastructure;
 
 namespace Vertica.Integration.Logging.Kibana
 {
@@ -6,7 +7,7 @@ namespace Vertica.Integration.Logging.Kibana
     {
         public KibanaConfiguration()
         {
-            AzureBlobStorageConnectionStringName = "AzureBlobStorage.Kibana";
+            AzureBlobStorageConnectionString = ConnectionString.FromName("AzureBlobStorage.Kibana");
         }
 
         public KibanaConfiguration Change(Action<KibanaConfiguration> change)
@@ -17,6 +18,6 @@ namespace Vertica.Integration.Logging.Kibana
             return this;
         }
 
-        public string AzureBlobStorageConnectionStringName { get; set; }
+        public ConnectionString AzureBlobStorageConnectionString { get; set; }
     }
 }

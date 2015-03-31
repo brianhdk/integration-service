@@ -4,38 +4,40 @@ namespace Vertica.Integration.Infrastructure.Database.Dapper
 {
 	public abstract class Connection
 	{
-		private readonly string _connectionStringName;
+		private readonly ConnectionString _connectionString;
+	    private readonly string _postfix;
 
-	    protected Connection(string connectionStringName)
+	    protected Connection(ConnectionString connectionString)
 		{
-            if (String.IsNullOrWhiteSpace(connectionStringName)) throw new ArgumentException("Value cannot be null or empty.");
+	        if (connectionString == null) throw new ArgumentNullException("connectionString");
 
-			_connectionStringName = connectionStringName;
+	        _connectionString = connectionString;
+	        _postfix = GetType().FullName;
 		}
 
-	    public string ConnectionStringName
+	    internal ConnectionString ConnectionStringInternal
 		{
-			get { return _connectionStringName; }
+            get { return _connectionString; }
 		}
 
         internal string DbConnectionName
         {
-            get { return String.Format("Dapper.DbConnection.{0}", ConnectionStringName); }
+            get { return String.Format("Dapper.DbConnection.{0}", _postfix); }
         }
 
         internal string SessionName
         {
-            get { return String.Format("Dapper.Session.{0}", ConnectionStringName); }
+            get { return String.Format("Dapper.Session.{0}", _postfix); }
         }
 
         internal string SelectorName
         {
-            get { return String.Format("Dapper.Selector.{0}", ConnectionStringName); }
+            get { return String.Format("Dapper.Selector.{0}", _postfix); }
         }
 
         internal string FactoryName
         {
-            get { return String.Format("Dapper.Factory.{0}", ConnectionStringName); }
+            get { return String.Format("Dapper.Factory.{0}", _postfix); }
         }
 	}
 }

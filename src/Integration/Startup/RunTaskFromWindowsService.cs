@@ -1,26 +1,21 @@
 using System;
 using System.IO;
 using System.ServiceProcess;
+using Castle.Windsor;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Infrastructure.Windows;
+using Vertica.Integration.Model;
 using Vertica.Integration.Model.Web;
 
-namespace Vertica.Integration.Model.Startup
+namespace Vertica.Integration.Startup
 {
-    internal class ExecuteTaskInWindowsService : StartupAction
+    internal class RunTaskFromWindowsService : StartupAction
     {
-        private readonly ITaskRunner _runner;
-        private readonly ILogger _logger;
-
-        public ExecuteTaskInWindowsService(ITaskRunner runner, ILogger logger)
+        public RunTaskFromWindowsService(IWindsorContainer container) 
+            : base(container)
         {
-            if (runner == null) throw new ArgumentNullException("runner");
-            if (logger == null) throw new ArgumentNullException("logger");
-
-            _runner = runner;
-            _logger = logger;
         }
 
         protected override string ActionName
@@ -39,13 +34,13 @@ namespace Vertica.Integration.Model.Startup
 
             if (Argument.AbsoluteUrl.IsValid(context.ActionArguments[0]))
             {
-                taskFactory = () => new WebApiHost(context.ActionArguments[0], TextWriter.Null, _logger, context.Task, context.TaskArguments);
+                taskFactory = () => new WebApiHost(context.ActionArguments[0], TextWriter.Null, Resolve<ILogger>(), context.Task, context.TaskArguments);
             }
             else
             {
                 uint seconds = UInt32.Parse(context.ActionArguments[0]);
 
-                Action task = () => _runner.Execute(context.Task, context.TaskArguments);
+                Action task = () => Resolve<ITaskRunner>().Execute(context.Task, context.TaskArguments);
 
                 taskFactory = () => task.Repeat(Delay.Custom(seconds), TextWriter.Null);
             }

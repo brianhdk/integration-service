@@ -11,23 +11,32 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 {
     public class ConventionInstaller : IWindsorInstaller
     {
-        private readonly Assembly[] _assemblies;
-        private readonly Type[] _ignoreTypes;
+        private readonly List<Assembly> _assemblies;
+        private readonly List<Type> _ignoreTypes;
 
-        public ConventionInstaller(IEnumerable<Assembly> assemblies, params Type[] ignoreTypes)
+        public ConventionInstaller()
         {
-            _assemblies = (assemblies ?? Enumerable.Empty<Assembly>()).Distinct().ToArray();
+            _assemblies = new List<Assembly>();
+            _ignoreTypes = new List<Type>();
+        }
 
-            _ignoreTypes = (ignoreTypes ?? Enumerable.Empty<Type>()).Concat(new[]
-            {
-                typeof(IWindsorInstaller)
+        public ConventionInstaller AddFromAssemblyOfThis<T>()
+        {
+            _assemblies.Add(typeof (T).Assembly);
 
-            }).Distinct().ToArray();
+            return this;
+        }
+
+        public ConventionInstaller Ignore<T>()
+        {
+            _ignoreTypes.Add(typeof (T));
+
+            return this;
         }
 
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            foreach (var assembly in _assemblies)
+            foreach (Assembly assembly in _assemblies.Distinct())
             {
                 container.Register(
                     Classes.FromAssembly(assembly)

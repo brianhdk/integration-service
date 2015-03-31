@@ -8,18 +8,18 @@ namespace Vertica.Integration.Domain.Core
 {
     public class WriteDocumentationTask : Task
     {
-        private readonly ITaskService _taskService;
+        private readonly ITaskFactory _taskFactory;
 
-	    public WriteDocumentationTask(ITaskService taskService)
+        public WriteDocumentationTask(ITaskFactory taskFactory)
         {
-	        _taskService = taskService;
+            _taskFactory = taskFactory;
         }
 
 		public override void StartTask(Log log, params string[] arguments)
         {
             var sb = new StringBuilder();
 
-		    foreach (ITask task in _taskService.GetAll())
+            foreach (ITask task in _taskFactory.GetAll())
             {
                 sb.AppendLine(task.Name());
                 sb.AppendLine();

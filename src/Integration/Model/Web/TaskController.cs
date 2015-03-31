@@ -6,11 +6,11 @@ namespace Vertica.Integration.Model.Web
 {
     public class TaskController : ApiController
     {
-        private readonly ITaskRunner _taskRunner;
+        private readonly ITaskRunner _runner;
 
-        public TaskController(ITaskRunner taskRunner)
+        public TaskController(ITaskRunner runner)
         {
-            _taskRunner = taskRunner;
+            _runner = runner;
         }
 
         public HttpResponseMessage Get()
@@ -22,7 +22,7 @@ namespace Vertica.Integration.Model.Web
         {
             WebApiHost.Context context = GetCurrentContext();
 
-            TaskExecutionResult result = _taskRunner.Execute(context.Task, context.Arguments);
+            TaskExecutionResult result = _runner.Execute(context.Task, context.Arguments);
 
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }

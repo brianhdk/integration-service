@@ -2,27 +2,25 @@
 using System.IO;
 using Vertica.Integration.Infrastructure.Email;
 using Vertica.Integration.Infrastructure.Templating;
-using Vertica.Utilities_v4;
 
 namespace Vertica.Integration.Domain.Monitoring
 {
-	public class MonitorEmailTemplate : EmailTemplate
+    internal class MonitorEmailTemplate : EmailTemplate
 	{
-	    private readonly Range<DateTimeOffset> _checkRange;
-	    private readonly MonitorEntry[] _entries;
+        private readonly string _subject;
+        private readonly MonitorEntry[] _entries;
 
-		public MonitorEmailTemplate(Range<DateTimeOffset> checkRange, MonitorEntry[] entries)
+		public MonitorEmailTemplate(string subject, MonitorEntry[] entries)
 		{
-		    if (checkRange == null) throw new ArgumentNullException("checkRange");
 		    if (entries == null) throw new ArgumentNullException("entries");
 
-		    _checkRange = checkRange;
+		    _subject = subject;
 		    _entries = entries;
 		}
 
 	    public override string Subject
 		{
-			get { return String.Format("Integration Service: Monitoring ({0})", _checkRange); }
+			get { return _subject; }
 		}
 
 		public override bool IsHtml

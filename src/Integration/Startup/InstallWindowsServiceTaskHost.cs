@@ -1,11 +1,17 @@
 using System.Linq;
+using Castle.Windsor;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Windows;
 
-namespace Vertica.Integration.Model.Startup
+namespace Vertica.Integration.Startup
 {
     internal class InstallWindowsServiceTaskHost : StartupAction
     {
+        public InstallWindowsServiceTaskHost(IWindsorContainer container)
+            : base(container)
+        {
+        }
+
         protected override string ActionName
         {
             get { return "install"; }

@@ -1,9 +1,11 @@
+using Vertica.Integration.Infrastructure;
+
 namespace Vertica.Integration.Azure.Infrastructure.BlobStorage.Archiving
 {
     public class ArchiveConnection : Connection
     {
-        public ArchiveConnection(string connectionStringName)
-            : base(connectionStringName)
+        public ArchiveConnection(ConnectionString connectionString)
+            : base(connectionString)
         {
         }
     }

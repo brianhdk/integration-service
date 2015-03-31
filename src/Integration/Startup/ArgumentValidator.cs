@@ -1,4 +1,4 @@
-namespace Vertica.Integration.Model.Startup
+namespace Vertica.Integration.Startup
 {
     internal class ArgumentValidator
     {
@@ -25,7 +25,7 @@ namespace Vertica.Integration.Model.Startup
             {
                 return new ArgumentValidator(
                     "[absolute-url | number-of-seconds-to-delay-between-repeats]",
-                    Argument.Either(Argument.AbsoluteUrl, Argument.Byte(min: 1)));                
+                    Argument.Any(Argument.AbsoluteUrl, Argument.Byte(min: 1)));                
             }
         }
     }

@@ -8,7 +8,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.ServiceProcess;
 using System.Text.RegularExpressions;
-using Vertica.Integration.Properties;
 
 namespace Vertica.Integration.Infrastructure.Windows
 {
@@ -17,6 +16,8 @@ namespace Vertica.Integration.Infrastructure.Windows
         private readonly string _name;
         private readonly string _displayName;
         private readonly ServiceInstaller _installer;
+
+        private Credentials _credentials;
 
         public WindowsServiceInstaller(string name, string displayName)
         {
@@ -29,15 +30,28 @@ namespace Vertica.Integration.Infrastructure.Windows
             _installer = new ServiceInstaller();
         }
 
+        public WindowsServiceInstaller WithCredentials(string username, string password)
+        {
+            if (String.IsNullOrWhiteSpace(username)) throw new ArgumentException(@"Value cannot be null or empty.", "username");
+
+            _credentials = new Credentials
+            {
+                Username = username,
+                Password = password
+            };
+
+            return this;
+        }
+
         public void Install(string description, string[] arguments)
         {
             using (var processInstaller = new ServiceProcessInstaller())
             {
-                if (!String.IsNullOrWhiteSpace(Settings.Default.WindowsServiceUsername))
+                if (_credentials != null)
                 {
                     processInstaller.Account = ServiceAccount.User;
-                    processInstaller.Username = Settings.Default.WindowsServiceUsername;
-                    processInstaller.Password = Settings.Default.WindowsServicePassword;
+                    processInstaller.Username = _credentials.Username;
+                    processInstaller.Password = _credentials.Password;
                 }
 
                 _installer.Context = GetInstallContext();
@@ -90,7 +104,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 
         private static string PrefixEnvironment(string value)
         {
-            return String.Format("{0}: {1}", Settings.Default.WindowsServiceNamePrefix, value);
+            return String.Format("{0}: {1}", "TODO-Prefix", value);
         }
 
         private static InstallContext GetInstallContext()
@@ -133,6 +147,12 @@ namespace Vertica.Integration.Infrastructure.Windows
             private static extern int ChangeServiceConfig(SafeHandle hService, int nServiceType, int nStartType,
                 int nErrorControl, string lpBinaryPathName, string lpLoadOrderGroup, IntPtr lpdwTagId,
                 [In] string lpDependencies, string lpServiceStartName, string lpPassword, string lpDisplayName);
+        }
+
+        private class Credentials
+        {
+            public string Username { get; set; }
+            public string Password { get; set; }
         }
     }
 }
