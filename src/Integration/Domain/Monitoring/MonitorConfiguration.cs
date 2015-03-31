@@ -12,12 +12,15 @@ namespace Vertica.Integration.Domain.Monitoring
             {
                 new MonitorTarget(Target.Service)
             };
+
+            SubjectPrefix = "Integration Service";
         }
 
         public DateTimeOffset LastRun { get; set; }
 
         public string[] IgnoreErrorsWithMessagesContaining { get; set; }
         public MonitorTarget[] Targets { get; set; }
+        public string SubjectPrefix { get; set; }
 
         public void Assert()
         {

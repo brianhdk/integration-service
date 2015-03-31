@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Vertica.Integration.Infrastructure.Configuration;
 using Vertica.Integration.Infrastructure.Email;
 using Vertica.Integration.Infrastructure.Logging;
@@ -54,13 +55,13 @@ namespace Vertica.Integration.Domain.Monitoring
             MonitorConfiguration configuration = _configuration.Get<MonitorConfiguration>();
 
 		    foreach (MonitorTarget target in configuration.Targets)
-		        SendTo(target, workItem, log);
+		        SendTo(target, workItem, log, configuration.SubjectPrefix);
 
             configuration.LastRun = workItem.CheckRange.UpperBound;
 		    _configuration.Save(configuration, "MonitorTask");
 		}
 
-	    private void SendTo(MonitorTarget target, MonitorWorkItem workItem, Log log)
+	    private void SendTo(MonitorTarget target, MonitorWorkItem workItem, Log log, string subjectPrefix)
 	    {
             MonitorEntry[] entries = workItem.GetEntries(target);
 
@@ -76,11 +77,14 @@ namespace Vertica.Integration.Domain.Monitoring
 
                 log.Message("Sending {0} entries to {1}.", entries.Length, target);
 
-                // TODO: Include a prefix, e.g. with Environment/and or name of target
-                string subject = 
-                    String.Format("Integration Service: Monitoring ({0})", workItem.CheckRange);
+	            var subject = new StringBuilder();
 
-                _emailService.Send(new MonitorEmailTemplate(subject, entries), target.Recipients);
+	            if (!String.IsNullOrWhiteSpace(subjectPrefix))
+	                subject.AppendFormat("{0}: ", subjectPrefix);
+
+	            subject.AppendFormat("Monitoring ({0})", workItem.CheckRange);
+
+                _emailService.Send(new MonitorEmailTemplate(subject.ToString(), entries), target.Recipients);
 	        }
 	    }
 	}

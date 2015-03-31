@@ -31,12 +31,12 @@ namespace Vertica.Integration
 
             _starters = new StartupAction[]
             {
-                new StartWebApiHost(_container),
-                new RunTask(_container),
-                new RunTaskFromWebServiceInConsole(_container),
-                new RunTaskFromWindowsService(_container),
-                new InstallWindowsServiceTaskHost(_container),
-                new UninstallWindowsServiceTaskHost(_container)
+                new StartWebApiHost(_container),                    // StartWebApiTask -url http://localhost:8123
+                new RunTask(_container),                            // WriteDocumentationTask
+                new RunTaskFromWebServiceInConsole(_container),     // WriteDocumentationTask -url http://localhost:8123
+                new RunTaskFromWindowsService(_container),          // WriteDocumentationTask -service [url|seconds]
+                new InstallWindowsServiceTaskHost(_container),      // WriteDocumentationTask -install [url|seconds]
+                new UninstallWindowsServiceTaskHost(_container)     // WriteDocumentationTask -uninstall
             };
 
             // TODO: se efter om vi skal placere denne så tidligt som muligt - også før IoC er på plads (EventViewer)
