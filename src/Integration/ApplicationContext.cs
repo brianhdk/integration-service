@@ -29,6 +29,8 @@ namespace Vertica.Integration
 
             _container = ObjectFactory.Create(() => CastleWindsor.Initialize(configuration));
 
+            AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) => LogException(eventArgs);
+
             _starters = new StartupAction[]
             {
                 new StartWebApiHost(_container),                    // StartWebApiTask -url http://localhost:8123
@@ -38,9 +40,6 @@ namespace Vertica.Integration
                 new InstallWindowsServiceTaskHost(_container),      // WriteDocumentationTask -install [url|seconds]
                 new UninstallWindowsServiceTaskHost(_container)     // WriteDocumentationTask -uninstall
             };
-
-            // TODO: se efter om vi skal placere denne så tidligt som muligt - også før IoC er på plads (EventViewer)
-			AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) => LogException(eventArgs);
 		}
 
 	    public static ApplicationContext Create(Action<ApplicationConfiguration> builder = null)
@@ -64,12 +63,12 @@ namespace Vertica.Integration
 
             var context = new ExecutionContext(task, args.Skip(1).ToArray());
 
-            StartupAction action = _starters.FirstOrDefault(x => x.IsSatisfiedBy(context));
+            StartupAction starter = _starters.FirstOrDefault(x => x.IsSatisfiedBy(context));
 
-            if (action == null)
+            if (starter == null)
                 throw new StartupActionNotFoundException(context);
 
-            action.Execute(context);
+            starter.Execute(context);
         }
 
         public void Dispose()
@@ -94,7 +93,6 @@ namespace Vertica.Integration
             if (exception is TaskExecutionFailedException)
                 return;
 
-            // TODO: Investigate into logging to event-viewer if everything else fails.
             _container.Resolve<ILogger>().LogError(exception);
         }
     }

@@ -90,7 +90,7 @@ namespace Vertica.Integration.Tests.Model
 
             public override void StartTask(Log log, params string[] arguments)
             {
-                throw new NotImplementedException();
+                throw new NotSupportedException();
             }
 
             public bool Equals(TestTask other)

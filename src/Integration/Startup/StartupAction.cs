@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Castle.Windsor;
 
 namespace Vertica.Integration.Startup
@@ -39,8 +40,10 @@ namespace Vertica.Integration.Startup
 
             if (Validator != null)
             {
-                if (Validator.Length != context.ActionArguments.Length)
-                    throw new ArgumentException(String.Format("Invalid number of arguments passed to this startup action. Usage: -{0} {1}", ActionName, Validator.Usage));
+                if (Validator.Count != context.ActionArguments.Length)
+                    throw new ArgumentException(
+                        String.Format(@"Invalid number of arguments passed. Usage: -{0} {1}
+Example: {2} -{0} {3}", ActionName, Validator.Usage, context.TaskName, String.Join(" ", Validator.Select(x => x.Example))));
 
                 for (int i = 0; i < context.ActionArguments.Length; i++)
                 {
