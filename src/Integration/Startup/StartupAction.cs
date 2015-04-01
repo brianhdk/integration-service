@@ -14,6 +14,11 @@ namespace Vertica.Integration.Startup
             _container = container;
         }
 
+        protected IWindsorContainer Container
+        {
+            get { return _container; }
+        }
+
         protected T Resolve<T>()
         {
             return _container.Resolve<T>();

@@ -1,6 +1,5 @@
 using System;
 using Castle.Windsor;
-using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model.Web;
 
 namespace Vertica.Integration.Startup
@@ -24,7 +23,7 @@ namespace Vertica.Integration.Startup
 
         protected override void DoExecute(ExecutionContext context)
         {
-            using (new WebApiHost(context.ActionArguments[0], Console.Out, Resolve<ILogger>(), context.Task, context.TaskArguments))
+            using (new TaskWebApiHost(context.ActionArguments[0], context.Task, context.TaskArguments, Console.Out, Container))
             {
                 do
                 {
