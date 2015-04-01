@@ -20,16 +20,16 @@ namespace Vertica.Integration.Model.Web
 
         public HttpResponseMessage Post(HttpRequestMessage request)
         {
-            WebApiHost.Context context = GetCurrentContext();
+            TaskWebApiHost.Context context = GetCurrentContext();
 
             TaskExecutionResult result = _runner.Execute(context.Task, context.Arguments);
 
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }
 
-        private WebApiHost.Context GetCurrentContext()
+        private TaskWebApiHost.Context GetCurrentContext()
         {
-            return WebApiHost.Context.Get(Configuration);
+            return TaskWebApiHost.Context.Get(Configuration);
         }
     }
 }

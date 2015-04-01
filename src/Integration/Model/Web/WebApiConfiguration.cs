@@ -22,6 +22,8 @@ namespace Vertica.Integration.Model.Web
 
             // scan own assembly
             Scan(GetType().Assembly);
+            // we'll remove TaskController but manually add it later - if we're hosting a specific Task through WebApi.
+            Remove<TaskController>();
         }
 
         public WebApiConfiguration Scan(Assembly assemblyToScan)

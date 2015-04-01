@@ -4,7 +4,6 @@ using System.ServiceProcess;
 using Castle.Windsor;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Extensions;
-using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Infrastructure.Windows;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Web;
@@ -34,7 +33,23 @@ namespace Vertica.Integration.Startup
 
             if (Argument.AbsoluteUrl.IsValid(context.ActionArguments[0]))
             {
-                taskFactory = () => new WebApiHost(context.ActionArguments[0], TextWriter.Null, Resolve<ILogger>(), context.Task, context.TaskArguments);
+                if (context.Task is WebApiTask)
+                {
+                    taskFactory = () => new WebApiHost(
+                        context.ActionArguments[0],
+                        context.Task,
+                        TextWriter.Null,
+                        Container);                    
+                }
+                else
+                {
+                    taskFactory = () => new TaskWebApiHost(
+                        context.ActionArguments[0],
+                        context.Task,
+                        context.TaskArguments,
+                        TextWriter.Null,
+                        Container);                    
+                }
             }
             else
             {

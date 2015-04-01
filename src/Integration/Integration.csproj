@@ -197,6 +197,7 @@
     <Compile Include="Model\ITaskRunner.cs" />
     <Compile Include="Model\Log.cs" />
     <Compile Include="Model\Output.cs" />
+    <Compile Include="Model\Web\TaskWebApiHost.cs" />
     <Compile Include="Startup\Argument.cs" />
     <Compile Include="Startup\ArgumentValidator.cs" />
     <Compile Include="Startup\RunTask.cs" />
