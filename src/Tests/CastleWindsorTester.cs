@@ -88,7 +88,7 @@ namespace Vertica.Integration.Tests
 
             public override TestWithStepsWorkItem Start(Log log, params string[] arguments)
             {
-                throw new NotImplementedException();
+                throw new NotSupportedException();
             }
         }
 
@@ -101,7 +101,7 @@ namespace Vertica.Integration.Tests
 
             public override void Execute(TestWithStepsWorkItem workItem, Log log)
             {
-                throw new NotImplementedException();
+                throw new NotSupportedException();
             }
         }
 

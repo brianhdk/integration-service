@@ -56,6 +56,7 @@
     <Compile Include="Azure\AzureArchiverTesterTask.cs" />
     <Compile Include="Custom_Database\CustomDb.cs" />
     <Compile Include="Custom_Database\CustomDbTesterTask.cs" />
+    <Compile Include="ExceptionTesterTask.cs" />
     <Compile Include="Extend_IntegrationDb\M1427839039_NewTable.cs" />
     <Compile Include="Extend_IntegrationDb\M1427839050_ChangeSubjectPrefixOnMonitorConfiguration.cs" />
     <Compile Include="Extend_IntegrationDb\M1427839041_AddRecipientToMonitorConfiguration.cs" />
