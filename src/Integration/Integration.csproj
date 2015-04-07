@@ -61,6 +61,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Microsoft.Owin.Hosting.3.0.1\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -145,6 +146,7 @@
     <Compile Include="Infrastructure\Database\Dapper\IDapperProvider.cs" />
     <Compile Include="Infrastructure\Database\Dapper\IDapperSession.cs" />
     <Compile Include="Infrastructure\Database\Dapper\DapperConfiguration.cs" />
+    <Compile Include="Infrastructure\Database\Dapper\IExposeTransaction.cs" />
     <Compile Include="Infrastructure\Database\Migrations\DatabaseServer.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M1_Baseline.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M3_Configuration.cs" />
@@ -166,6 +168,11 @@
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ConsoleWriterInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ConventionInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\AutoRegisterTasksInstaller.cs" />
+    <Compile Include="Infrastructure\Parsing\CsvParser.cs" />
+    <Compile Include="Infrastructure\Parsing\CsvReader.cs" />
+    <Compile Include="Infrastructure\Parsing\CsvRow.cs" />
+    <Compile Include="Infrastructure\Parsing\ICsvParser.cs" />
+    <Compile Include="Infrastructure\Parsing\ICsvReader.cs" />
     <Compile Include="Model\TasksConfiguration.cs" />
     <Compile Include="Model\Web\IWebApiControllers.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\TaskFactoryInstaller.cs" />
