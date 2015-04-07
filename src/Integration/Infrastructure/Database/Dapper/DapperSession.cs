@@ -64,7 +64,7 @@ namespace Vertica.Integration.Infrastructure.Database.Dapper
             }
         }
 
-        private class TransactionScope : IDbTransaction
+        private class TransactionScope : IDbTransaction, IExposeTransaction
         {
             private readonly IDbTransaction _transaction;
             private readonly Action _beforeDispose;
@@ -99,6 +99,11 @@ namespace Vertica.Integration.Infrastructure.Database.Dapper
             public IsolationLevel IsolationLevel
             {
                 get { return _transaction.IsolationLevel; }
+            }
+
+            public IDbTransaction Transaction
+            {
+                get { return _transaction; }
             }
         }
     }

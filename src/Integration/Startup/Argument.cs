@@ -56,7 +56,7 @@ namespace Vertica.Integration.Startup
             }
         }
 
-        public static Argument Number(uint min = 1, uint max = UInt32.MaxValue)
+        public static Argument Number(uint min = 0, uint max = UInt32.MaxValue)
         {
             Func<string, bool> parser = value =>
             {
