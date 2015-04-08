@@ -61,6 +61,7 @@
     <Compile Include="Extend_IntegrationDb\M1427839050_ChangeSubjectPrefixOnMonitorConfiguration.cs" />
     <Compile Include="Extend_IntegrationDb\M1427839041_AddRecipientToMonitorConfiguration.cs" />
     <Compile Include="Extend_IntegrationDb\M1427839040_DeleteNewTable.cs" />
+    <Compile Include="FtpTesterTask.cs" />
     <Compile Include="LogTesterTask.cs" />
     <Compile Include="ConfigurationTesterTask.cs" />
     <Compile Include="Custom_Database\Migrations\M1_Test.cs" />
