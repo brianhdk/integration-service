@@ -27,7 +27,7 @@ namespace Vertica.Integration.Portal
                     throw new InvalidOperationException(String.Format(
 @"Expected the following zip-file '{0}' to be present in the following folder '{1}'. 
 This zip is automatically added when installing the Vertica.Integration.Portal NuGet package. 
-Try re-installing the package.", zipFile.Name, zipFile.DirectoryName));
+Try re-installing the package and/or make sure that the zip-file is included part of your deployment of this platform and placed in the root-folder.", zipFile.Name, zipFile.DirectoryName));
                 }
 
                 ZipFile.ExtractToDirectory(zipFile.FullName, PortalConfiguration.BaseFolder);

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using Vertica.Integration;
-using Vertica.Integration.Model;
 
 namespace $rootnamespace$
 {

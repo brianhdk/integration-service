@@ -173,6 +173,13 @@
     <Compile Include="Infrastructure\Parsing\CsvRow.cs" />
     <Compile Include="Infrastructure\Parsing\ICsvParser.cs" />
     <Compile Include="Infrastructure\Parsing\ICsvReader.cs" />
+    <Compile Include="Infrastructure\Remote\Ftp\FtpClient.cs" />
+    <Compile Include="Infrastructure\Remote\Ftp\FtpClientConfiguration.cs" />
+    <Compile Include="Infrastructure\Remote\FtpClientFactory.cs" />
+    <Compile Include="Infrastructure\Remote\Ftp\FtpClientException.cs" />
+    <Compile Include="Infrastructure\Remote\Ftp\FtpClientExtensions.cs" />
+    <Compile Include="Infrastructure\Remote\Ftp\IFtpClient.cs" />
+    <Compile Include="Infrastructure\Remote\IFtpClientFactory.cs" />
     <Compile Include="Model\TasksConfiguration.cs" />
     <Compile Include="Model\Web\IWebApiControllers.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\TaskFactoryInstaller.cs" />
