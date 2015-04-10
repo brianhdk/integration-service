@@ -12,9 +12,11 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
         internal FtpClientConfiguration(string uri)
         {
             _request = path => (FtpWebRequest) WebRequest.Create(BuildPath(uri, path));
+
+            AssertPath();
         }
 
-        public FtpClientConfiguration(Uri uri)
+        internal FtpClientConfiguration(Uri uri)
         {
             _request = path =>
             {
@@ -23,6 +25,13 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
 
                 return (FtpWebRequest) WebRequest.Create(builder.Uri);
             };
+
+            AssertPath();
+        }
+
+        private void AssertPath()
+        {
+            _request(String.Empty);
         }
 
         public FtpClientConfiguration Credentials(string username, string password)

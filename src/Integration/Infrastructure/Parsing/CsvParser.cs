@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Vertica.Integration.Infrastructure.Parsing
 {
-	public class CsvParser : ICsvParser
+    public class CsvParser : ICsvParser
 	{
         private readonly ICsvReader _csvReader;
 
@@ -17,11 +16,11 @@ namespace Vertica.Integration.Infrastructure.Parsing
             _csvReader = csvReader;
         }
 
-	    public IEnumerable<CsvRow> Parse(Stream stream, bool firstLineIsHeader)
+        public IEnumerable<CsvRow> Parse(Stream stream, bool firstLineIsHeader, Action<CsvConfiguration> builder = null)
 		{
 	        if (stream == null) throw new ArgumentNullException("stream");
 
-	        string[][] lines = _csvReader.Read(stream, Encoding.UTF8).ToArray();
+            string[][] lines = _csvReader.Read(stream, builder).ToArray();
 
 	        Dictionary<string, int> headers = null;
 

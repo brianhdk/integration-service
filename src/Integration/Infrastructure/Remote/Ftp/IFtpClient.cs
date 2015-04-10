@@ -20,5 +20,8 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
 
         string DeleteFile(string name);
         string DeleteDirectory(string name);
+
+        long GetFileSize(string name);
+        DateTime GetFileLastModified(string name);
     }
 }

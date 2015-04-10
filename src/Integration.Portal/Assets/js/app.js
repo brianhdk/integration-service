@@ -1,22 +1,20 @@
 ﻿var integrationsApp = angular.module('integrationsApp', ['ngRoute', 'ngTable', 'ngResource', 'ui.ace']);
 
 // configure our routes
-integrationsApp.config(function ($routeProvider) {
+integrationsApp.config(function ($routeProvider, $locationProvider) {
+
+    $locationProvider.html5Mode(false);
+
     $routeProvider
-
-		.when('/', {
-		    templateUrl: '/assets/pages/errors.html',
-		    controller: 'errorsController'
-		})
-
-        .when('/errors', {
-            templateUrl: '/assets/pages/errors.html',
-            controller: 'errorsController',
-        })
 
         .when('/tasks', {
             templateUrl: '/assets/pages/tasks.html',
             controller: 'taskDetailsController'
+        })
+
+        .when('/errors', {
+            templateUrl: '/assets/pages/errors.html',
+            controller: 'errorsController',
         })
 
         .when('/taskdetail', {
@@ -53,13 +51,17 @@ integrationsApp.config(function ($routeProvider) {
         	templateUrl: '/assets/pages/configuration.html',
         	controller: 'configurationController'
         })
+
         .when('/configuration/:clrType', {
         	templateUrl: '/assets/pages/configurationDetail.html',
         	controller: 'configurationDetailController'
         })
+
         .when('/graph', {
             templateUrl: '/assets/pages/graph.html',
             controller: 'graphController'
         })
+
+        .otherwise('/tasks')
     ;
 });

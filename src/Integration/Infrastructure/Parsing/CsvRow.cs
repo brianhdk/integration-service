@@ -8,25 +8,41 @@ namespace Vertica.Integration.Infrastructure.Parsing
 	{
 	    private readonly string[] _data;
 	    private readonly IDictionary<string, int> _headers;
+	    private readonly string _delimiter;
 
-	    public CsvRow(string[] data, IDictionary<string, int> headers = null)
+	    public CsvRow(string[] data, IDictionary<string, int> headers = null, string delimiter = ";")
 		{
 			_headers = headers;
-			_data = data;
+	        _delimiter = delimiter;
+	        _data = data;
+
+            if (headers != null && data.Length != headers.Count)
+                throw new ArgumentException(
+                    String.Format("Data has {0} elements but we expected {1} elements (= headers).", data.Length, headers.Count));
 		}
 
 	    public string this[string name]
 	    {
 	        get
 	        {
-	            AssertHeaders();
-
-	            int index;
-	            if (_headers.TryGetValue(name, out index))
-	                return _data[index];
-
-	            return null;
+	            return _data[GetIndexByName(name)];
 	        }
+	        set
+	        {
+	            _data[GetIndexByName(name)] = value;
+	        }
+	    }
+
+	    private int GetIndexByName(string name)
+	    {
+            if (_headers == null)
+                throw new InvalidOperationException("Row was not initialized with headers.");
+
+	        int index;
+	        if (!_headers.TryGetValue(name, out index))
+	            throw new ArgumentException(String.Format("Could not find any header named '{0}'.", name));
+
+	        return index;
 	    }
 
 	    public string this[int index]
@@ -34,29 +50,41 @@ namespace Vertica.Integration.Infrastructure.Parsing
 	        get
 	        {
 	            if (index < 0 || index >= _data.Length)
-	                return null;
+	                throw new IndexOutOfRangeException();
 
 	            return _data[index];
 	        }
+	        set
+	        {
+	            if (index < 0 || index >= _data.Length)
+                    throw new IndexOutOfRangeException();
+
+	            _data[index] = value;
+	        }
+	    }
+
+	    public int Length
+	    {
+            get { return _data.Length; }
+	    }
+
+	    public override string ToString()
+	    {
+	        return String.Join(_delimiter, _data);
 	    }
 
 	    public override bool TryGetMember(GetMemberBinder binder, out object result)
 		{
-            AssertHeaders();
-
-			int index;
-			if (!_headers.TryGetValue(binder.Name, out index))
-				throw new InvalidOperationException(String.Format("Row does not contain column with name '{0}'.", binder.Name));
-
-			result = _data[index];
+			result = this[binder.Name];
 
 			return true;
 		}
 
-	    private void AssertHeaders()
+	    public override bool TrySetMember(SetMemberBinder binder, object value)
 	    {
-	        if (_headers == null)
-	            throw new InvalidOperationException("No headers preset.");
+	        this[binder.Name] = value != null ? value.ToString() : null;
+
+	        return true;
 	    }
 	}
 }
