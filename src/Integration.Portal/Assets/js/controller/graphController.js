@@ -1,4 +1,4 @@
-﻿integrationsApp.controller('graphController', function ($scope, $http, $filter, $resource, $location) {
+﻿integrationsApp.controller('graphController', function ($scope, $http) {
 
 	$scope.initGraph = function () {
 		$http.get("/graph?id=1").success(function (xhr) {
@@ -26,10 +26,6 @@
 		});
 	}
 	
-	$scope.isActive = function (route) {
-		return route === $location.path();
-	}
-
 	$scope.initPie = function() {
 			// Some raw data (not necessarily accurate)
 			var data = google.visualization.arrayToDataTable([

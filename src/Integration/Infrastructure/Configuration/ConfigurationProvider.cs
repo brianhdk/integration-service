@@ -32,14 +32,17 @@ namespace Vertica.Integration.Infrastructure.Configuration
                 return configuration;
             }
 
-            return new TConfiguration();
+            var newConfiguration = new TConfiguration();
+            Save(newConfiguration, "IntegrationService");
+
+            return newConfiguration;
         }
 
         public void Save<TConfiguration>(TConfiguration configuration, string updatedBy, bool createArchiveBackup = false) 
         {
             if (configuration == null) throw new ArgumentNullException("configuration");
             if (String.IsNullOrWhiteSpace(updatedBy)) throw new ArgumentException(@"Value cannot be null or empty.", "updatedBy");
-            if (configuration is Configuration) throw new ArgumentException("Use the specific Save method when saving this Configuration instance.", "configuration");
+            if (configuration is Configuration) throw new ArgumentException(@"Use the specific Save method when saving this Configuration instance.", "configuration");
 
             SaveInternal(
                 GetClrType(typeof (TConfiguration)),

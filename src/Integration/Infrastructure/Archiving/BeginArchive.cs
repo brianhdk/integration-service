@@ -5,6 +5,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
+using Vertica.Utilities_v4.Extensions.StringExt;
 
 namespace Vertica.Integration.Infrastructure.Archiving
 {
@@ -62,13 +63,15 @@ namespace Vertica.Integration.Infrastructure.Archiving
             _archive.CreateEntryFromFile(file.FullName, Path.Combine(relativePath ?? String.Empty, file.Name));
         }
 
-        public void IncludeContent(string name, string content, string extension = "txt")
+        public void IncludeContent(string name, string content, string extension = null)
         {
             if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
 
-            name = Regex.Replace(name, @"[^\w\s]", String.Empty);
+            name = Regex.Replace(name, @"[^\w\s\.]", String.Empty);
+            extension = extension.NullIfEmpty() ?? Path.GetExtension(name).NullIfEmpty() ?? ".txt";
+            name = Path.GetFileNameWithoutExtension(name);
 
-            ZipArchiveEntry entry = _archive.CreateEntry(String.Format("{0}.{1}", name, extension));
+            ZipArchiveEntry entry = _archive.CreateEntry(String.Format("{0}{1}", name, extension));
 
             using (var writer = new StreamWriter(entry.Open()))
                 writer.Write(content);

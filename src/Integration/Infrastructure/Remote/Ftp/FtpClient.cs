@@ -144,22 +144,23 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
             if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
             if (data == null) throw new ArgumentNullException("data");
 
-            using (Enter(name))
+            NavigateDown(name);
+
+            return WithExceptionHandling(() =>
             {
-                return WithExceptionHandling(() =>
+                FtpWebRequest request = CreateRequest();
+                request.Method = WebRequestMethods.Ftp.DownloadFile;
+
+                using (FtpWebResponse response = (FtpWebResponse) request.GetResponse())
+                using (Stream responseStream = response.GetResponseStream() ?? Stream.Null)
                 {
-                    FtpWebRequest request = CreateRequest();
-                    request.Method = WebRequestMethods.Ftp.DownloadFile;
+                    NavigateBack();
 
-                    using (FtpWebResponse response = (FtpWebResponse) request.GetResponse())
-                    using (Stream responseStream = response.GetResponseStream() ?? Stream.Null)
-                    {
-                        data(responseStream);
+                    data(responseStream);
 
-                        return CurrentPath;
-                    }
-                });
-            }
+                    return CurrentPath;
+                }
+            });
         }
 
         public string DeleteFile(string name)
@@ -198,6 +199,44 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
                         // request is fired deleting file.
                         return CurrentPath;
                     }                    
+                });
+            }
+        }
+
+        public long GetFileSize(string name)
+        {
+            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
+
+            using (Enter(name))
+            {
+                return WithExceptionHandling(() =>
+                {
+                    FtpWebRequest request = CreateRequest();
+                    request.Method = WebRequestMethods.Ftp.GetFileSize;
+
+                    using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
+                    {
+                        return response.ContentLength;
+                    }
+                });
+            }
+        }
+
+        public DateTime GetFileLastModified(string name)
+        {
+            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
+
+            using (Enter(name))
+            {
+                return WithExceptionHandling(() =>
+                {
+                    FtpWebRequest request = CreateRequest();
+                    request.Method = WebRequestMethods.Ftp.GetDateTimestamp;
+
+                    using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
+                    {
+                        return response.LastModified;
+                    }
                 });
             }
         }

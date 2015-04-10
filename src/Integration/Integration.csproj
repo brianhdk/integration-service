@@ -168,6 +168,7 @@
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ConsoleWriterInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ConventionInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\AutoRegisterTasksInstaller.cs" />
+    <Compile Include="Infrastructure\Parsing\CsvConfiguration.cs" />
     <Compile Include="Infrastructure\Parsing\CsvParser.cs" />
     <Compile Include="Infrastructure\Parsing\CsvReader.cs" />
     <Compile Include="Infrastructure\Parsing\CsvRow.cs" />
