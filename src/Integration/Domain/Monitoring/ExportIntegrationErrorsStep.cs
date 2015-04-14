@@ -12,10 +12,10 @@ namespace Vertica.Integration.Domain.Monitoring
 {
     public class ExportIntegrationErrorsStep : Step<MonitorWorkItem>
     {
-        private readonly IDapperProvider _dapper;
+        private readonly IDapperFactory _dapper;
         private readonly ITaskFactory _taskFactory;
 
-        public ExportIntegrationErrorsStep(IDapperProvider dapper, ITaskFactory taskFactory)
+        public ExportIntegrationErrorsStep(IDapperFactory dapper, ITaskFactory taskFactory)
         {
             _dapper = dapper;
             _taskFactory = taskFactory;

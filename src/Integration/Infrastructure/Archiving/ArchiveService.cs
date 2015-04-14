@@ -7,11 +7,11 @@ using Vertica.Utilities_v4;
 
 namespace Vertica.Integration.Infrastructure.Archiving
 {
-    public class Archiver : IArchiver
+    public class ArchiveService : IArchiveService
     {
-        private readonly IDapperProvider _dapper;
+        private readonly IDapperFactory _dapper;
 
-        public Archiver(IDapperProvider dapper)
+        public ArchiveService(IDapperFactory dapper)
         {
             _dapper = dapper;
         }

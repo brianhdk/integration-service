@@ -12,10 +12,10 @@ namespace Vertica.Integration.Portal.Controllers
 {
     public class TaskDetailsController : ApiController
     {
-        private readonly IDapperProvider _dapper;
+        private readonly IDapperFactory _dapper;
         private readonly ITaskFactory _taskFactory;
 
-        public TaskDetailsController(ITaskFactory taskFactory, IDapperProvider dapper)
+        public TaskDetailsController(ITaskFactory taskFactory, IDapperFactory dapper)
         {
             _taskFactory = taskFactory;
             _dapper = dapper;

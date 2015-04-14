@@ -8,33 +8,28 @@ namespace Vertica.Integration.Experiments
 {
     public class ConfigurationTesterTask : Task<ConfigurationTesterWorkItem>
     {
-        private readonly IConfigurationProvider _provider;
+        private readonly IConfigurationService _service;
 
-        public ConfigurationTesterTask(IEnumerable<IStep<ConfigurationTesterWorkItem>> steps, IConfigurationProvider provider)
+        public ConfigurationTesterTask(IEnumerable<IStep<ConfigurationTesterWorkItem>> steps, IConfigurationService service)
             : base(steps)
         {
-            _provider = provider;
+            _service = service;
         }
 
         public override ConfigurationTesterWorkItem Start(Log log, params string[] arguments)
         {
-            // load up configuration
-            // read it
-
-            ConfigurationTesterConfiguration configuration = _provider.Get<ConfigurationTesterConfiguration>();
+            ConfigurationTesterConfiguration configuration = _service.Get<ConfigurationTesterConfiguration>();
 
             return new ConfigurationTesterWorkItem(configuration);
         }
 
         public override void End(ConfigurationTesterWorkItem workItem, Log log, params string[] arguments)
         {
-            // load up configuration, 
-            //  - store it, back-up old version
+            var configuration = _service.Get<ConfigurationTesterConfiguration>();
 
-            var configuration = _provider.Get<ConfigurationTesterConfiguration>();
             configuration.LastRun = DateTime.Now;
 
-            _provider.Save(configuration, "ConfigurationTesterTask", createArchiveBackup: true);
+            _service.Save(configuration, "ConfigurationTesterTask", createArchiveBackup: true);
         }
 
         public override string Description

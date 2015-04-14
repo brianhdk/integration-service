@@ -73,9 +73,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Infrastructure\Castle.Windsor\AzureArchiverInstaller.cs" />
+    <Compile Include="Infrastructure\BlobStorage\IO\ArchiveConnection.cs" />
+    <Compile Include="Infrastructure\BlobStorage\IO\AzureFileSystemService.cs" />
+    <Compile Include="Infrastructure\Castle.Windsor\AzureFileSystemInstaller.cs" />
+    <Compile Include="Infrastructure\Castle.Windsor\AzureArchiveInstaller.cs" />
     <Compile Include="Infrastructure\BlobStorage\Archiving\ArchiveConnection.cs" />
-    <Compile Include="Infrastructure\BlobStorage\Archiving\AzureBlobArchiver.cs" />
+    <Compile Include="Infrastructure\BlobStorage\Archiving\AzureBlobArchiveService.cs" />
     <Compile Include="AzureConfiguration.cs" />
     <Compile Include="AzureExtensions.cs" />
     <Compile Include="Infrastructure\BlobStorage\Connection.cs" />

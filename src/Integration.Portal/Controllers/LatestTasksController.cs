@@ -10,9 +10,9 @@ namespace Vertica.Integration.Portal.Controllers
 {
     public class LatestTasksController : ApiController
     {
-        private readonly IDapperProvider _dapper;
+        private readonly IDapperFactory _dapper;
 
-        public LatestTasksController(IDapperProvider dapper)
+        public LatestTasksController(IDapperFactory dapper)
         {
             _dapper = dapper;
         }

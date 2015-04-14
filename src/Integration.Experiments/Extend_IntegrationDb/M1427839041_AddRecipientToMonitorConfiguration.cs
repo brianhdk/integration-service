@@ -10,13 +10,13 @@ namespace Vertica.Integration.Experiments.Extend_IntegrationDb
     {
         public override void Up()
         {
-            IConfigurationProvider provider = 
-                ObjectFactory.Instance.Resolve<IConfigurationProvider>();
+            IConfigurationService service = 
+                ObjectFactory.Instance.Resolve<IConfigurationService>();
 
-            MonitorConfiguration configuration = provider.Get<MonitorConfiguration>();
+            MonitorConfiguration configuration = service.Get<MonitorConfiguration>();
             configuration.Targets[0].Recipients = new[] { "bhk@vertica.dk" };
 
-            provider.Save(configuration, "Migration", createArchiveBackup: true);
+            service.Save(configuration, "Migration", createArchiveBackup: true);
         }
 
         public override void Down()

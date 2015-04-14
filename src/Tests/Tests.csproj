@@ -73,8 +73,7 @@
     <Compile Include="CastleWindsorTester.cs" />
     <Compile Include="Domain\Monitoring\MessageContainsTextIgnoreFilterTester.cs" />
     <Compile Include="Domain\Monitoring\MonitorWorkItemTester.cs" />
-    <Compile Include="Infrastructure\Archiving\ArchiverTester.cs" />
-    <Compile Include="Infrastructure\Remote\Ftp\FtpClientTester.cs" />
+    <Compile Include="Infrastructure\Archiving\ArchiveServiceTester.cs" />
     <Compile Include="Model\TaskFactoryTester.cs" />
     <Compile Include="Model\TaskRunnerTester.cs" />
     <Compile Include="Model\Web\ErrorsControllerTests.cs" />

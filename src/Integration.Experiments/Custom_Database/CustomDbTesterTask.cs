@@ -6,9 +6,9 @@ namespace Vertica.Integration.Experiments.Custom_Database
 {
     public class CustomDbTesterTask : Task
     {
-        private readonly IDapperProvider<CustomDb> _customDb;
+        private readonly IDapperFactory<CustomDb> _customDb;
 
-        public CustomDbTesterTask(IDapperProvider<CustomDb> customDb)
+        public CustomDbTesterTask(IDapperFactory<CustomDb> customDb)
         {
             _customDb = customDb;
         }

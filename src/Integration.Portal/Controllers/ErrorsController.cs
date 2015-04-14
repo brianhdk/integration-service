@@ -10,9 +10,9 @@ namespace Vertica.Integration.Portal.Controllers
 {
     public class ErrorsController : ApiController
     {
-        private readonly IDapperProvider _dapper;
+        private readonly IDapperFactory _dapper;
 
-        public ErrorsController(IDapperProvider dapper)
+        public ErrorsController(IDapperFactory dapper)
         {
             _dapper = dapper;
         }

@@ -9,11 +9,11 @@ namespace Vertica.Integration.Domain.Core
 {
 	public class CleanUpIntegrationDbStep : Step<MaintenanceWorkItem>
 	{
-	    private readonly IDapperProvider _dapper;
+	    private readonly IDapperFactory _dapper;
 	    private readonly TimeSpan _tasksOlderThan;
 		private readonly TimeSpan _errorsOlderThan;
 
-		public CleanUpIntegrationDbStep(IDapperProvider dapper, TimeSpan tasksOlderThan, TimeSpan errorsOlderThan)
+		public CleanUpIntegrationDbStep(IDapperFactory dapper, TimeSpan tasksOlderThan, TimeSpan errorsOlderThan)
 		{
 		    _dapper = dapper;
 		    _tasksOlderThan = tasksOlderThan;

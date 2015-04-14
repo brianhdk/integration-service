@@ -7,12 +7,12 @@ using Vertica.Integration.Infrastructure.Archiving;
 
 namespace Vertica.Integration.Azure.Infrastructure.BlobStorage.Archiving
 {
-    internal class AzureBlobArchiver : IArchiver
+    internal class AzureBlobArchiveService : IArchiveService
     {
         private readonly IAzureBlobClientFactory<ArchiveConnection> _factory;
         private readonly string _containerName;
 
-        public AzureBlobArchiver(IAzureBlobClientFactory<ArchiveConnection> factory, string containerName)
+        public AzureBlobArchiveService(IAzureBlobClientFactory<ArchiveConnection> factory, string containerName)
         {
             if (factory == null) throw new ArgumentNullException("factory");
             if (String.IsNullOrWhiteSpace(containerName)) throw new ArgumentException(@"Value cannot be null or empty.", "containerName");

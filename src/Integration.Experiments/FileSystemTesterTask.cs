@@ -1,0 +1,25 @@
+﻿using Vertica.Integration.Infrastructure.IO;
+using Vertica.Integration.Model;
+
+namespace Vertica.Integration.Experiments
+{
+    public class FileSystemTesterTask : Task
+    {
+        private readonly IFileSystemService _fileSystem;
+
+        public FileSystemTesterTask(IFileSystemService fileSystem)
+        {
+            _fileSystem = fileSystem;
+        }
+
+        public override void StartTask(Log log, params string[] arguments)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override string Description
+        {
+            get { return "TBD"; }
+        }
+    }
+}

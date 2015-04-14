@@ -93,7 +93,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
             string content = JsonConvert.SerializeObject(obj, Formatting.Indented);
 
-            IncludeContent(fileNameWithoutExtension ?? obj.GetType().Name, content, "json");
+            IncludeContent(fileNameWithoutExtension ?? obj.GetType().Name, content, ".json");
         }
 
         public void Dispose()

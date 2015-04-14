@@ -7,13 +7,13 @@ using Vertica.Integration.Infrastructure.Database.Dapper;
 namespace Vertica.Integration.Tests.Infrastructure.Archiving
 {
     [TestFixture]
-    public class ArchiverTester
+    public class ArchiveServiceTester
     {
         [Test]
         public void ArchiveText_Verify_DapperInteraction()
         {
             IDapperSession session;
-            Archiver subject = Initialize(out session);
+            ArchiveService subject = Initialize(out session);
 
             const int expectedId = 1;
             session.ExecuteScalar<int>(null).ReturnsForAnyArgs(expectedId);
@@ -23,9 +23,9 @@ namespace Vertica.Integration.Tests.Infrastructure.Archiving
             Assert.That(archive.Id, Is.EqualTo(expectedId.ToString()));
         }
 
-        private Archiver Initialize(out IDapperSession session)
+        private ArchiveService Initialize(out IDapperSession session)
         {
-            var dapper = Substitute.For<IDapperProvider>();
+            var dapper = Substitute.For<IDapperFactory>();
             session = Substitute.For<IDapperSession>();
 
             dapper
@@ -35,7 +35,7 @@ namespace Vertica.Integration.Tests.Infrastructure.Archiving
             IDbTransaction transaction = Substitute.For<IDbTransaction>();
             session.BeginTransaction().Returns(transaction);
 
-            return new Archiver(dapper);
+            return new ArchiveService(dapper);
         }
     }
 }

@@ -9,23 +9,23 @@ namespace Vertica.Integration.Portal.Controllers
 {
     public class ArchivesController : ApiController
     {
-        private readonly IArchiver _archiver;
+        private readonly IArchiveService _archive;
 
-        public ArchivesController(IArchiver archiver)
+        public ArchivesController(IArchiveService archive)
         {
-            _archiver = archiver;
+            _archive = archive;
         }
 
         public HttpResponseMessage Get()
         {
-            Archive[] archives = _archiver.GetAll();
+            Archive[] archives = _archive.GetAll();
 
             return Request.CreateResponse(HttpStatusCode.OK, archives);
         }
 
         public HttpResponseMessage Get(string id)
         {
-            byte[] archive = _archiver.Get(id);
+            byte[] archive = _archive.Get(id);
 
             if (archive == null)
             {

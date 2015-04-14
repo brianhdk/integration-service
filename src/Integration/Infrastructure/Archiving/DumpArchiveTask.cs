@@ -6,11 +6,11 @@ namespace Vertica.Integration.Infrastructure.Archiving
 {
     public class DumpArchiveTask : Task
     {
-        private readonly IArchiver _archiver;
+        private readonly IArchiveService _archive;
 
-        public DumpArchiveTask(IArchiver archiver)
+        public DumpArchiveTask(IArchiveService archive)
         {
-            _archiver = archiver;
+            _archive = archive;
         }
 
         public override string Description
@@ -25,7 +25,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
             string id = arguments[0];
 
-            byte[] archive = _archiver.Get(id);
+            byte[] archive = _archive.Get(id);
 
             if (archive != null)
             {

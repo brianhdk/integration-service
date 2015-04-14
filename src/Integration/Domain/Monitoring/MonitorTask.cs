@@ -12,11 +12,11 @@ namespace Vertica.Integration.Domain.Monitoring
 {
 	public class MonitorTask : Task<MonitorWorkItem>
 	{
-		private readonly IConfigurationProvider _configuration;
+		private readonly IConfigurationService _configuration;
 		private readonly IEmailService _emailService;
 		private readonly string[] _ignoreErrorsWithMessagesContaining;
 
-        public MonitorTask(IEnumerable<IStep<MonitorWorkItem>> steps, IConfigurationProvider configuration, IEmailService emailService, string[] ignoreErrorsWithMessagesContaining)
+        public MonitorTask(IEnumerable<IStep<MonitorWorkItem>> steps, IConfigurationService configuration, IEmailService emailService, string[] ignoreErrorsWithMessagesContaining)
 			: base(steps)
 		{
 			_configuration = configuration;

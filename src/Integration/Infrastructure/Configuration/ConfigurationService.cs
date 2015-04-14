@@ -8,14 +8,14 @@ using Vertica.Utilities_v4;
 
 namespace Vertica.Integration.Infrastructure.Configuration
 {
-    public class ConfigurationProvider : IConfigurationProvider
+    public class ConfigurationService : IConfigurationService
     {
-        private readonly IDapperProvider _dapper;
-        private readonly IArchiver _archiver;
+        private readonly IDapperFactory _dapper;
+        private readonly IArchiveService _archive;
 
-        public ConfigurationProvider(IDapperProvider dapper, IArchiver archiver)
+        public ConfigurationService(IDapperFactory dapper, IArchiveService archive)
         {
-            _archiver = archiver;
+            _archive = archive;
             _dapper = dapper;
         }
 
@@ -94,7 +94,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
 
                 if (configuration != null)
                 {
-                    _archiver.Archive(String.Format("Configuration.Backup-{0}", clrType), archive =>
+                    _archive.Archive(String.Format("Configuration.Backup-{0}", clrType), archive =>
                     {
                         archive.IncludeContent("data", configuration.JsonData, "json");
                         archive.IncludeContent("meta", String.Join(Environment.NewLine,
