@@ -17,13 +17,13 @@ namespace Vertica.Integration.Infrastructure.Database.Dapper.Castle.Windsor
 
 		public override void Install(IWindsorContainer container, IConfigurationStore store)
 		{
-            if (container.Kernel.HasComponent(typeof(IDapperProvider)))
+            if (container.Kernel.HasComponent(typeof(IDapperFactory)))
                 throw new InvalidOperationException("Only one DefaultConnection can be installed. Use the generic installer for additional instances.");
 
 			base.Install(container, store);
 
 			container.Register(
-                Component.For<IDapperProvider>()
+                Component.For<IDapperFactory>()
 				    .AsFactory(cfg => cfg.SelectedWith(Connection.SelectorName)));
 		}
 	}
@@ -62,7 +62,7 @@ namespace Vertica.Integration.Infrastructure.Database.Dapper.Castle.Windsor
 		            .UsingFactoryMethod(() => new DapperSelector<TConnection>(_connection)));
 
 		    container.Register(
-		        Component.For<IDapperProvider<TConnection>>()
+		        Component.For<IDapperFactory<TConnection>>()
 		            .Named(_connection.FactoryName)
 		            .AsFactory(cfg => cfg.SelectedWith(_connection.SelectorName)));
 		}

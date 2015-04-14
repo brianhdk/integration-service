@@ -2,11 +2,11 @@
 
 namespace Vertica.Integration.Infrastructure.Database.Dapper
 {
-    public interface IDapperProvider : IDapperProvider<DefaultConnection>
+    public interface IDapperFactory : IDapperFactory<DefaultConnection>
 	{
 	}
 
-    public interface IDapperProvider<TConnection>
+    public interface IDapperFactory<TConnection>
 		where TConnection : Connection
     {
         IDbConnection GetConnection();

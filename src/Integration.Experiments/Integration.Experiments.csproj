@@ -53,7 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Azure\AzureArchiverTesterTask.cs" />
+    <Compile Include="ArchiveTesterTask.cs" />
     <Compile Include="Custom_Database\CustomDb.cs" />
     <Compile Include="Custom_Database\CustomDbTesterTask.cs" />
     <Compile Include="ExceptionTesterTask.cs" />
@@ -61,6 +61,7 @@
     <Compile Include="Extend_IntegrationDb\M1427839050_ChangeSubjectPrefixOnMonitorConfiguration.cs" />
     <Compile Include="Extend_IntegrationDb\M1427839041_AddRecipientToMonitorConfiguration.cs" />
     <Compile Include="Extend_IntegrationDb\M1427839040_DeleteNewTable.cs" />
+    <Compile Include="FileSystemTesterTask.cs" />
     <Compile Include="FtpTesterTask.cs" />
     <Compile Include="LogTesterTask.cs" />
     <Compile Include="ConfigurationTesterTask.cs" />

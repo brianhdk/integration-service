@@ -2,7 +2,7 @@
 
 namespace Vertica.Integration.Infrastructure.Archiving
 {
-    public interface IArchiver
+    public interface IArchiveService
     {
         BeginArchive Create(string name, Action<ArchiveCreated> onCreated);
 

@@ -3,18 +3,18 @@ using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using Vertica.Integration.Azure.Infrastructure.BlobStorage;
-using Vertica.Integration.Azure.Infrastructure.BlobStorage.Archiving;
+using Vertica.Integration.Azure.Infrastructure.BlobStorage.IO;
 using Vertica.Integration.Infrastructure;
-using Vertica.Integration.Infrastructure.Archiving;
+using Vertica.Integration.Infrastructure.IO;
 
 namespace Vertica.Integration.Azure.Infrastructure.Castle.Windsor
 {
-    internal class AzureArchiverInstaller : IWindsorInstaller
+    internal class AzureFileSystemInstaller : IWindsorInstaller
     {
         private readonly ConnectionString _connectionString;
         private readonly string _containerName;
 
-        public AzureArchiverInstaller(ConnectionString connectionString, string containerName)
+        public AzureFileSystemInstaller(ConnectionString connectionString, string containerName)
         {
             if (connectionString == null) throw new ArgumentNullException("connectionString");
             if (String.IsNullOrWhiteSpace(containerName)) throw new ArgumentException(@"Value cannot be null or empty.", "containerName");
@@ -26,14 +26,14 @@ namespace Vertica.Integration.Azure.Infrastructure.Castle.Windsor
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
             container.Install(
-                new AzureBlobStorageInstaller<ArchiveConnection>(
-                    new ArchiveConnection(_connectionString)));
+                new AzureBlobStorageInstaller<FileSystemConnection>(
+                    new FileSystemConnection(_connectionString)));
 
             container.Register(
                 Component
-                    .For<IArchiver>()
-                    .UsingFactoryMethod(kernel => new AzureBlobArchiver(
-                        kernel.Resolve<IAzureBlobClientFactory<ArchiveConnection>>(), _containerName))
+                    .For<IFileSystemService>()
+                    .UsingFactoryMethod(kernel => new AzureFileSystemService(
+                        kernel.Resolve<IAzureBlobClientFactory<FileSystemConnection>>(), _containerName))
                     .IsDefault());
         }
     }

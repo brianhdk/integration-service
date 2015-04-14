@@ -12,7 +12,7 @@ namespace Vertica.Integration.Infrastructure.Database.Dapper
 	        if (connectionString == null) throw new ArgumentNullException("connectionString");
 
 	        _connectionString = connectionString;
-	        _postfix = GetType().FullName;
+	        _postfix = String.Format("{0}.{1}", GetType().Name, GetType().GetHashCode());
 		}
 
 	    internal ConnectionString ConnectionStringInternal

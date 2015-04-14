@@ -17,7 +17,7 @@ namespace Vertica.Integration.Tests.Model.Web
         public void Get_ErrorsLogged_ReturnErrors()
         {
             // Arrange
-            IDapperProvider dapper = Substitute.For<IDapperProvider>();
+            IDapperFactory dapper = Substitute.For<IDapperFactory>();
             var errorList = new List<ErrorLogModel> { new ErrorLogModel() };
             dapper.OpenSession().Query<ErrorLogModel>(Arg.Any<string>()).Returns(errorList);
 

@@ -21,7 +21,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
         private readonly IDisposable _loggingDisabler;
         private readonly bool _databaseCreated;
 
-        public MigrateTask(IDapperProvider dapper, ILogger logger, MigrationConfiguration configuration)
+        public MigrateTask(IDapperFactory dapper, ILogger logger, MigrationConfiguration configuration)
         {
             string connectionString = EnsureIntegrationDb(dapper, out _databaseCreated);
 
@@ -73,7 +73,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
             }
         }
 
-        private static string EnsureIntegrationDb(IDapperProvider dapper, out bool databaseCreated)
+        private static string EnsureIntegrationDb(IDapperFactory dapper, out bool databaseCreated)
         {
             using (IDbConnection connection = dapper.GetConnection())
             using (IDbCommand command = connection.CreateCommand())

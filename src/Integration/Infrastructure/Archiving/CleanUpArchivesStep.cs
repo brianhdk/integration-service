@@ -8,12 +8,12 @@ namespace Vertica.Integration.Infrastructure.Archiving
 {
     public class CleanUpArchivesStep : Step<MaintenanceWorkItem>
     {
-        private readonly IArchiver _archiver;
+        private readonly IArchiveService _archive;
         private readonly TimeSpan _olderThan;
 
-        public CleanUpArchivesStep(IArchiver archiver, TimeSpan olderThan)
+        public CleanUpArchivesStep(IArchiveService archive, TimeSpan olderThan)
         {
-            _archiver = archiver;
+            _archive = archive;
             _olderThan = olderThan;
         }
 
@@ -21,7 +21,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
         {
             DateTimeOffset lowerBound = Time.UtcNow.Subtract(_olderThan);
 
-            int count = _archiver.Delete(lowerBound);
+            int count = _archive.Delete(lowerBound);
 
             if (count > 0)
                 log.Message("Deleted {0} archives older than '{1}'.", count, lowerBound);

@@ -1,6 +1,6 @@
 ﻿namespace Vertica.Integration.Infrastructure.Configuration
 {
-    public interface IConfigurationProvider
+    public interface IConfigurationService
     {
         TConfiguration Get<TConfiguration>()
             where TConfiguration : class, new();

@@ -33,7 +33,7 @@ foreach ($project in $settings.src.Keys) {
 	}
 
 	# https://docs.nuget.org/consume/command-line-reference
-    &$settings.tools.nuget pack -Build -Symbols -Properties Configuration=Release -IncludeReferencedProjects -Exclude "Assets/**/*.*" -Exclude "Default.html"
+    &$settings.tools.nuget pack -Build -Properties Configuration=Release -IncludeReferencedProjects -Exclude "Assets/**/*.*" -Exclude "Default.html"
 
 	if (Test-Path "NuGet-After-Pack.ps1") {
 		

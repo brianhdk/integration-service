@@ -8,9 +8,9 @@ namespace Vertica.Integration.Portal.Controllers
 {
 	public class GraphController : ApiController
 	{
-		private readonly IDapperProvider _dapper;
+		private readonly IDapperFactory _dapper;
 
-		public GraphController(IDapperProvider dapper)
+		public GraphController(IDapperFactory dapper)
 		{
 			_dapper = dapper;
 		}

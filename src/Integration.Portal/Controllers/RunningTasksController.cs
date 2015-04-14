@@ -10,9 +10,9 @@ namespace Vertica.Integration.Portal.Controllers
 {
     public class RunningTasksController : ApiController
     {
-        private readonly IDapperProvider _dappper;
+        private readonly IDapperFactory _dappper;
 
-        public RunningTasksController(IDapperProvider dappper)
+        public RunningTasksController(IDapperFactory dappper)
         {
             _dappper = dappper;
         }

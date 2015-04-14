@@ -8,14 +8,14 @@ namespace Vertica.Integration.Infrastructure.Logging
 {
     public class Logger : ILogger
     {
-        private readonly IDapperProvider _dapper;
+        private readonly IDapperFactory _dapper;
 
         private readonly object _dummy = new object();
         private readonly Stack<object> _disablers;
 
         private readonly ChainOfResponsibilityLink<LogEntry> _chainOfResponsibility;
 
-        public Logger(IDapperProvider dapper)
+        public Logger(IDapperFactory dapper)
         {
             _dapper = dapper;
 
@@ -118,9 +118,9 @@ namespace Vertica.Integration.Infrastructure.Logging
         private abstract class LogEntryLink<TLogEntry> : IChainOfResponsibilityLink<LogEntry>
             where TLogEntry : LogEntry
         {
-            private readonly IDapperProvider _dapper;
+            private readonly IDapperFactory _dapper;
 
-            protected LogEntryLink(IDapperProvider dapper)
+            protected LogEntryLink(IDapperFactory dapper)
             {
                 _dapper = dapper;
             }
@@ -154,7 +154,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 
         private class MessageLogLink : LogEntryLink<MessageLog>
         {
-            public MessageLogLink(IDapperProvider dapper)
+            public MessageLogLink(IDapperFactory dapper)
                 : base(dapper)
             {
             }
@@ -185,7 +185,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 
         private class StepLogLink : LogEntryLink<StepLog>
         {
-            public StepLogLink(IDapperProvider dapper)
+            public StepLogLink(IDapperFactory dapper)
                 : base(dapper)
             {
             }
@@ -222,7 +222,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 
         private class TaskLogLink : LogEntryLink<TaskLog>
         {
-            public TaskLogLink(IDapperProvider dapper)
+            public TaskLogLink(IDapperFactory dapper)
                 : base(dapper)
             {
             }

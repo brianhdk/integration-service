@@ -37,9 +37,9 @@
     <Reference Include="Castle.Windsor">
       <HintPath>..\..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="Dapper, Version=1.39.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Dapper, Version=1.40.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Dapper.1.39\lib\net45\Dapper.dll</HintPath>
+      <HintPath>..\..\packages\Dapper.1.40\lib\net45\Dapper.dll</HintPath>
     </Reference>
     <Reference Include="FluentMigrator, Version=1.5.0.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -126,16 +126,16 @@
     </Compile>
     <Compile Include="Infrastructure\ActionRepeater.cs" />
     <Compile Include="Infrastructure\Archiving\BeginArchive.cs" />
-    <Compile Include="Infrastructure\Archiving\Archiver.cs" />
-    <Compile Include="Infrastructure\Archiving\ArchiverExtensions.cs" />
+    <Compile Include="Infrastructure\Archiving\ArchiveService.cs" />
+    <Compile Include="Infrastructure\Archiving\ArchiveExtensions.cs" />
     <Compile Include="Infrastructure\Archiving\CleanUpArchivesStep.cs" />
     <Compile Include="Infrastructure\Archiving\ArchiveCreated.cs" />
     <Compile Include="Infrastructure\Archiving\DumpArchiveTask.cs" />
-    <Compile Include="Infrastructure\Archiving\IArchiver.cs" />
+    <Compile Include="Infrastructure\Archiving\IArchiveService.cs" />
     <Compile Include="Infrastructure\Archiving\Archive.cs" />
     <Compile Include="Infrastructure\Configuration\Configuration.cs" />
-    <Compile Include="Infrastructure\Configuration\ConfigurationProvider.cs" />
-    <Compile Include="Infrastructure\Configuration\IConfigurationProvider.cs" />
+    <Compile Include="Infrastructure\Configuration\ConfigurationService.cs" />
+    <Compile Include="Infrastructure\Configuration\IConfigurationService.cs" />
     <Compile Include="Infrastructure\ConnectionString.cs" />
     <Compile Include="Infrastructure\Database\Dapper\Castle.Windsor\DapperInstaller.cs" />
     <Compile Include="Infrastructure\Database\Dapper\Castle.Windsor\DapperSelector.cs" />
@@ -143,7 +143,7 @@
     <Compile Include="Infrastructure\Database\Dapper\DapperSession.cs" />
     <Compile Include="Infrastructure\Database\Dapper\Databases\IntegrationDb.cs" />
     <Compile Include="Infrastructure\Database\Dapper\DefaultConnection.cs" />
-    <Compile Include="Infrastructure\Database\Dapper\IDapperProvider.cs" />
+    <Compile Include="Infrastructure\Database\Dapper\IDapperFactory.cs" />
     <Compile Include="Infrastructure\Database\Dapper\IDapperSession.cs" />
     <Compile Include="Infrastructure\Database\Dapper\DapperConfiguration.cs" />
     <Compile Include="Infrastructure\Database\Dapper\IExposeTransaction.cs" />
@@ -168,6 +168,10 @@
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ConsoleWriterInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ConventionInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\AutoRegisterTasksInstaller.cs" />
+    <Compile Include="Infrastructure\IO\FileSystemService.cs" />
+    <Compile Include="Infrastructure\IO\IDirectory.cs" />
+    <Compile Include="Infrastructure\IO\IFile.cs" />
+    <Compile Include="Infrastructure\IO\IFileSystemService.cs" />
     <Compile Include="Infrastructure\Parsing\CsvConfiguration.cs" />
     <Compile Include="Infrastructure\Parsing\CsvParser.cs" />
     <Compile Include="Infrastructure\Parsing\CsvReader.cs" />

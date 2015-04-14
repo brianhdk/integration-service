@@ -20,14 +20,24 @@ namespace Vertica.Integration.Azure
             get { return _customInstallers.ToArray(); }
         }
 
-        public AzureConfiguration ReplaceArchiverWithBlobStorage(ConnectionString connectionString, string containerName = "archives")
+        public AzureConfiguration ReplaceArchiveWithBlobStorage(ConnectionString connectionString, string containerName = "archives")
         {
             if (connectionString == null) throw new ArgumentNullException("connectionString");
             if (String.IsNullOrWhiteSpace(containerName)) throw new ArgumentException(@"Value cannot be null or empty.", "containerName");
 
-            _customInstallers.Add(new AzureArchiverInstaller(connectionString, containerName));
+            _customInstallers.Add(new AzureArchiveInstaller(connectionString, containerName));
 
             return this;
+        }
+
+        public AzureConfiguration ReplaceFileSystemWithBlobStorage(ConnectionString connectionString, string containerName = "filesystem")
+        {
+            if (connectionString == null) throw new ArgumentNullException("connectionString");
+            if (String.IsNullOrWhiteSpace(containerName)) throw new ArgumentException(@"Value cannot be null or empty.", "containerName");
+
+            _customInstallers.Add(new AzureFileSystemInstaller(connectionString, containerName));
+
+            return this;            
         }
     }
 }
