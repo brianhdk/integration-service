@@ -74,6 +74,7 @@
     <Compile Include="Domain\Monitoring\MessageContainsTextIgnoreFilterTester.cs" />
     <Compile Include="Domain\Monitoring\MonitorWorkItemTester.cs" />
     <Compile Include="Infrastructure\Archiving\ArchiveServiceTester.cs" />
+    <Compile Include="Infrastructure\Parsing\CsvParserTester.cs" />
     <Compile Include="Model\TaskFactoryTester.cs" />
     <Compile Include="Model\TaskRunnerTester.cs" />
     <Compile Include="Model\Web\ErrorsControllerTests.cs" />

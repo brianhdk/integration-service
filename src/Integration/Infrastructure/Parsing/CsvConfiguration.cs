@@ -5,10 +5,12 @@ namespace Vertica.Integration.Infrastructure.Parsing
 {
     public class CsvConfiguration
     {
+        public const string DefaultDelimiter = ",";
+
         public CsvConfiguration()
         {
             Encoding = Encoding.UTF8;
-            Delimiter = ";";
+            Delimiter = DefaultDelimiter;
         }
 
         public CsvConfiguration ChangeEncoding(Encoding encoding)
