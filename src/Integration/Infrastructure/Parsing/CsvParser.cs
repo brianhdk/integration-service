@@ -20,7 +20,17 @@ namespace Vertica.Integration.Infrastructure.Parsing
 		{
 	        if (stream == null) throw new ArgumentNullException("stream");
 
-            string[][] lines = _csvReader.Read(stream, builder).ToArray();
+            string delimiter = CsvConfiguration.DefaultDelimiter;
+
+            string[][] lines = _csvReader.Read(stream, configuration =>
+            {
+                if (builder != null)
+                    builder(configuration);
+
+                delimiter = configuration.Delimiter;
+
+            }).ToArray();
+
 
 	        Dictionary<string, int> headers = null;
 
@@ -31,7 +41,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
 	                .ToDictionary(x => x.name, x => x.index, StringComparer.OrdinalIgnoreCase);
 	        }
 
-			return	lines.Skip(1).Select(x => new CsvRow(x, headers));
+			return	lines.Skip(firstLineIsHeader ? 1 : 0).Select(x => new CsvRow(x, headers, delimiter));
 		}
 	}
 }

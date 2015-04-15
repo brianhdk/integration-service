@@ -10,7 +10,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
 	    private readonly IDictionary<string, int> _headers;
 	    private readonly string _delimiter;
 
-	    public CsvRow(string[] data, IDictionary<string, int> headers = null, string delimiter = ";")
+	    public CsvRow(string[] data, IDictionary<string, int> headers = null, string delimiter = CsvConfiguration.DefaultDelimiter)
 		{
 			_headers = headers;
 	        _delimiter = delimiter;
