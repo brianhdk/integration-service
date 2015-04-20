@@ -1,24 +1,31 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
+using Vertica.Utilities_v4.Extensions.EnumerableExt;
 
 namespace Vertica.Integration.Infrastructure.Parsing
 {
-	public class CsvRow : DynamicObject
+	public class CsvRow : DynamicObject, IEnumerable<string>
 	{
 	    private readonly string[] _data;
 	    private readonly IDictionary<string, int> _headers;
-	    private readonly string _delimiter;
 
-	    public CsvRow(string[] data, IDictionary<string, int> headers = null, string delimiter = CsvConfiguration.DefaultDelimiter)
+	    public CsvRow(string[] data, string delimiter = CsvConfiguration.DefaultDelimiter, IDictionary<string, int> headers = null, uint? lineNumber = null)
 		{
-			_headers = headers;
-	        _delimiter = delimiter;
-	        _data = data;
+	        if (data == null) throw new ArgumentNullException("data");
 
-            if (headers != null && data.Length != headers.Count)
+            if (headers != null && headers.Count > 0 && data.Length != headers.Count)
                 throw new ArgumentException(
-                    String.Format("Data has {0} elements but we expected {1} elements (= headers).", data.Length, headers.Count));
+                    String.Format("Row{0} has {1} columns but we expected {2} columns (equal to number of header columns).",
+                        lineNumber.HasValue ? String.Concat(" #", lineNumber.Value) : String.Empty,
+                        data.Length,
+                        headers.Count));
+
+	        _data = data;
+	        _headers = headers;
+            Meta = new CsvRowMetadata(this, delimiter, lineNumber);
 		}
 
 	    public string this[string name]
@@ -36,11 +43,13 @@ namespace Vertica.Integration.Infrastructure.Parsing
 	    private int GetIndexByName(string name)
 	    {
             if (_headers == null)
-                throw new InvalidOperationException("Row was not initialized with headers.");
+                throw new InvalidOperationException(
+                    String.Format("Row was not initialized with headers."));
 
 	        int index;
 	        if (!_headers.TryGetValue(name, out index))
-	            throw new ArgumentException(String.Format("Could not find any header named '{0}'.", name));
+	            throw new ArgumentException(
+                    String.Format("Could not find any header named '{0}'.", name));
 
 	        return index;
 	    }
@@ -68,9 +77,20 @@ namespace Vertica.Integration.Infrastructure.Parsing
             get { return _data.Length; }
 	    }
 
+	    IEnumerator IEnumerable.GetEnumerator()
+	    {
+	        return GetEnumerator();
+	    }
+
+	    public IEnumerator<string> GetEnumerator()
+	    {
+	        return _data.OfType<string>().GetEnumerator();
+	    }
+
 	    public override string ToString()
 	    {
-	        return String.Join(_delimiter, _data);
+            // TODO: Handle escaping of data.
+	        return String.Join(Meta.Delimiter, this);
 	    }
 
 	    public override bool TryGetMember(GetMemberBinder binder, out object result)
@@ -85,6 +105,149 @@ namespace Vertica.Integration.Infrastructure.Parsing
 	        this[binder.Name] = value != null ? value.ToString() : null;
 
 	        return true;
+	    }
+
+	    public CsvRowMetadata Meta { get; private set; }
+
+	    public class CsvRowMetadata
+	    {
+	        private readonly CsvRow _row;
+
+	        internal CsvRowMetadata(CsvRow row, string delimiter, uint? lineNumber = null)
+	        {
+	            if (row == null) throw new ArgumentNullException("row");
+	            if (String.IsNullOrWhiteSpace(delimiter)) throw new ArgumentException(@"Value cannot be null or empty.", "delimiter");
+
+	            _row = row;
+
+	            if (_row._headers != null)
+	                Headers = new CsvRowHeaders(this);
+
+	            Delimiter = delimiter;
+	            LineNumber = lineNumber;
+	        }
+
+	        public CsvRowHeaders Headers { get; private set; }
+	        public string Delimiter { get; private set; }
+	        public uint? LineNumber { get; private set; }
+
+	        public class CsvRowHeaders : IEnumerable<string>
+	        {
+	            private readonly CsvRowMetadata _metadata;
+
+	            internal CsvRowHeaders(CsvRowMetadata metadata)
+	            {
+	                if (metadata == null) throw new ArgumentNullException("metadata");
+	                if (metadata._row._headers == null) throw new ArgumentException(@"No headers present.", "metadata");
+
+	                _metadata = metadata;
+	            }
+
+	            public int Length
+	            {
+                    get { return _metadata._row._headers.Count; }
+	            }
+
+	            IEnumerator IEnumerable.GetEnumerator()
+	            {
+	                return GetEnumerator();
+	            }
+
+	            public IEnumerator<string> GetEnumerator()
+	            {
+	                return _metadata._row._headers.Keys.GetEnumerator();
+	            }
+
+	            public override string ToString()
+	            {
+                    // TODO: Handle escaping of data.
+                    return String.Join(_metadata.Delimiter, this);
+	            }
+
+	            public static implicit operator string[](CsvRowHeaders headers)
+                {
+                    if (headers == null) throw new ArgumentNullException("headers");
+
+	                return headers._metadata._row._headers.Keys.ToArray();
+                }
+	        }
+	    }
+
+	    public class CsvRowBuilder : ICsvRowBuilder, ICsvRowBuilderFinisher
+	    {
+	        private string _delimiter;
+	        private readonly IDictionary<string, int> _headers;
+	        private readonly List<CsvRow> _rows; 
+
+	        internal CsvRowBuilder(string[] headers)
+	        {
+	            _delimiter = CsvConfiguration.DefaultDelimiter;
+
+	            if (headers != null)
+	            {
+	                _headers = headers
+                        .Select((x, i) => new {Header = x, Index = i})
+                        .ToDictionary(x => x.Header, x => x.Index, StringComparer.OrdinalIgnoreCase);
+	            }
+
+	            _rows = new List<CsvRow>();
+	        }
+
+	        public ICsvRowBuilderAdder ChangeDelimiter(string delimiter)
+	        {
+                if (String.IsNullOrWhiteSpace(delimiter)) throw new ArgumentException(@"Value cannot be null or empty.", "delimiter");
+
+	            _delimiter = delimiter;
+
+	            return this;
+	        }
+
+	        public ICsvRowBuilderFinisher Add(params string[] data)
+	        {
+	            _rows.Add(new CsvRow(data, _delimiter, _headers));
+
+	            return this;
+	        }
+
+	        public ICsvRowBuilderFinisher From<T>(IEnumerable<T> elements, Func<T, string[]> action)
+	        {
+	            elements.ForEach(x => Add(action(x)));
+
+	            return this;
+	        }
+
+	        public CsvRow[] ToRows()
+	        {
+                return _rows.ToArray();
+	        }
+
+            public static implicit operator CsvRow[](CsvRowBuilder builder)
+            {
+                if (builder == null) throw new ArgumentNullException("builder");
+
+                return builder.ToRows();
+            }
+	    }
+
+	    public static ICsvRowBuilder BeginRows(params string[] headers)
+	    {
+	        return new CsvRowBuilder(headers);
+	    }
+
+        public interface ICsvRowBuilderAdder
+        {
+            ICsvRowBuilderFinisher Add(params string[] data);
+            ICsvRowBuilderFinisher From<T>(IEnumerable<T> elements, Func<T, string[]> action);
+        }
+
+        public interface ICsvRowBuilder : ICsvRowBuilderAdder
+        {
+            ICsvRowBuilderAdder ChangeDelimiter(string delimiter);
+        }
+
+	    public interface ICsvRowBuilderFinisher : ICsvRowBuilderAdder
+	    {
+            CsvRow[] ToRows();	        
 	    }
 	}
 }

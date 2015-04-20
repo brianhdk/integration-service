@@ -160,6 +160,7 @@
     <Compile Include="Infrastructure\Email\EmailService.cs" />
     <Compile Include="Infrastructure\Email\EmailTemplate.cs" />
     <Compile Include="Infrastructure\Email\IEmailService.cs" />
+    <Compile Include="Infrastructure\Email\TextBasedEmailTemplate.cs" />
     <Compile Include="Infrastructure\Extensions\ActionRepeaterExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\ExceptionExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\NameExtensions.cs" />

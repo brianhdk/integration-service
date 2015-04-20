@@ -57,6 +57,37 @@ Row2-Field1,Row2-Field2",
             Assert.That(rows[1].ToString(), Is.EqualTo("Row2-Field1,Row2-Field2"));
         }
 
+        [Test]
+        public void Parse_NoHeader_Returns_Delimiter_LinesNumbers_But_No_Headers()
+        {
+            CsvRow[] rows = Parse(@"Row1-Field1,Row1-Field2
+Row2-Field1,Row2-Field2",
+                false);
+
+            Assert.That(rows[0].Meta.LineNumber, Is.EqualTo(1));
+            Assert.That(rows[0].Meta.Delimiter, Is.EqualTo(CsvConfiguration.DefaultDelimiter));
+            Assert.That(rows[0].Meta.Headers, Is.EqualTo(null));
+            Assert.That(rows[1].Meta.LineNumber, Is.EqualTo(2));
+            Assert.That(rows[1].Meta.Delimiter, Is.EqualTo(CsvConfiguration.DefaultDelimiter));
+            Assert.That(rows[1].Meta.Headers, Is.EqualTo(null));
+        }
+
+        [Test]
+        public void Parse_WithHeader_Returns_Delimiter_LinesNumbers_But_No_Headers()
+        {
+            CsvRow[] rows = Parse(@"Field1,Field2
+Row1-Field1,Row1-Field2
+Row2-Field1,Row2-Field2",
+                true);
+
+            Assert.That(rows[0].Meta.LineNumber, Is.EqualTo(2));
+            Assert.That(rows[0].Meta.Delimiter, Is.EqualTo(CsvConfiguration.DefaultDelimiter));
+            CollectionAssert.AreEqual(new[] {"Field1", "Field2"}, rows[0].Meta.Headers);
+            Assert.That(rows[1].Meta.LineNumber, Is.EqualTo(3));
+            Assert.That(rows[1].Meta.Delimiter, Is.EqualTo(CsvConfiguration.DefaultDelimiter));
+            CollectionAssert.AreEqual(new[] { "Field1", "Field2" }, rows[1].Meta.Headers);
+        }
+
         private CsvRow[] Parse(string data, bool firstLineIsHeader, Action<CsvConfiguration> builder = null)
         {
             using (var stream = new MemoryStream())

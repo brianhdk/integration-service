@@ -31,7 +31,6 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
             }).ToArray();
 
-
 	        Dictionary<string, int> headers = null;
 
 	        if (firstLineIsHeader && lines.Length > 0)
@@ -41,7 +40,11 @@ namespace Vertica.Integration.Infrastructure.Parsing
 	                .ToDictionary(x => x.name, x => x.index, StringComparer.OrdinalIgnoreCase);
 	        }
 
-			return	lines.Skip(firstLineIsHeader ? 1 : 0).Select(x => new CsvRow(x, headers, delimiter));
+            int lineNumberOffset = headers != null ? 2 : 1;
+
+            return lines
+                .Skip(headers != null ? 1 : 0)
+                .Select((x, i) => new CsvRow(x, delimiter, headers, (uint?) (i + lineNumberOffset)));
 		}
 	}
 }
