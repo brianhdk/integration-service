@@ -19,7 +19,7 @@ namespace Vertica.Integration.Logging.Elmah
             _olderThan = olderThan;
         }
 
-        public override void Execute(MaintenanceWorkItem workItem, Log log)
+        public override void Execute(MaintenanceWorkItem workItem, ILog log)
         {
             DateTime lowerBound = DateTime.UtcNow.Date.Subtract(_olderThan);
 

@@ -86,7 +86,7 @@ namespace Vertica.Integration.Tests
                 get { return "TBD"; }
             }
 
-            public override TestWithStepsWorkItem Start(Log log, params string[] arguments)
+            public override TestWithStepsWorkItem Start(ILog log, params string[] arguments)
             {
                 throw new NotSupportedException();
             }
@@ -99,7 +99,7 @@ namespace Vertica.Integration.Tests
                 get { return "TBD"; }
             }
 
-            public override void Execute(TestWithStepsWorkItem workItem, Log log)
+            public override void Execute(TestWithStepsWorkItem workItem, ILog log)
             {
                 throw new NotSupportedException();
             }

@@ -173,27 +173,37 @@ namespace Vertica.Integration.Infrastructure.Parsing
 	        }
 	    }
 
-	    public class CsvRowBuilder : ICsvRowBuilder, ICsvRowBuilderFinisher
+        public class CsvRowBuilder : ICsvRowBuilder, ICsvRowBuilderFinisher, ICsvRowBuilderConfiguration
 	    {
-	        private string _delimiter;
-	        private readonly IDictionary<string, int> _headers;
-	        private readonly List<CsvRow> _rows; 
+	        private bool _returnHeaderAsRow;
+            private bool _headerInserted;
 
-	        internal CsvRowBuilder(string[] headers)
+            private string _delimiter;
+            private readonly IDictionary<string, int> _headers;
+            private readonly List<CsvRow> _rows;
+
+            internal CsvRowBuilder(string[] headers)
 	        {
 	            _delimiter = CsvConfiguration.DefaultDelimiter;
 
 	            if (headers != null)
 	            {
 	                _headers = headers
-                        .Select((x, i) => new {Header = x, Index = i})
+                        .Select((x, i) => new { Header = x, Index = i })
                         .ToDictionary(x => x.Header, x => x.Index, StringComparer.OrdinalIgnoreCase);
 	            }
 
 	            _rows = new List<CsvRow>();
 	        }
 
-	        public ICsvRowBuilderAdder ChangeDelimiter(string delimiter)
+            public ICsvRowBuilderConfiguration ReturnHeaderAsRow()
+	        {
+	            _returnHeaderAsRow = true;
+
+	            return this;
+	        }
+
+            public ICsvRowBuilderConfiguration ChangeDelimiter(string delimiter)
 	        {
                 if (String.IsNullOrWhiteSpace(delimiter)) throw new ArgumentException(@"Value cannot be null or empty.", "delimiter");
 
@@ -202,26 +212,84 @@ namespace Vertica.Integration.Infrastructure.Parsing
 	            return this;
 	        }
 
-	        public ICsvRowBuilderFinisher Add(params string[] data)
+            public ICsvRowBuilderAdder Configure(Action<ICsvRowBuilderConfiguration> configure)
+            {
+                if (configure != null)
+                    configure(this);
+
+                return this;
+            }
+
+            public ICsvRowBuilderFinisher Add(params string[] data)
 	        {
-	            _rows.Add(new CsvRow(data, _delimiter, _headers));
+	            if (data == null) throw new ArgumentNullException("data");
+
+	            int lineNumber = _rows.Count + 1 + (_returnHeaderAsRow ? 1 : 0);
+
+	            _rows.Add(new CsvRow(data, _delimiter, _headers, (uint)lineNumber));
 
 	            return this;
 	        }
 
-	        public ICsvRowBuilderFinisher From<T>(IEnumerable<T> elements, Func<T, string[]> action)
+	        public ICsvRowBuilderFinisher AddUsingMapper(Action<ICsvRowMapper> mapper)
 	        {
-	            elements.ForEach(x => Add(action(x)));
+	            if (mapper == null) throw new ArgumentNullException("mapper");
+	            if (_headers == null) throw new InvalidOperationException(@"No headers were passed so this method is not allowed.");
+
+	            var internalMapper = new CsvRowMapper(_headers);
+
+	            mapper(internalMapper);
+
+	            Add(internalMapper.ToData());
+
+	            return this;
+	        }
+
+	        public ICsvRowBuilderFinisher From<T>(IEnumerable<T> elements, Func<T, string[]> createData)
+	        {
+	            if (elements == null) throw new ArgumentNullException("elements");
+	            if (createData == null) throw new ArgumentNullException("createData");
+
+	            elements.ForEach(x => Add(createData(x)));
+
+	            return this;
+	        }
+
+            public ICsvRowBuilderFinisher FromUsingMapper<T>(IEnumerable<T> elements, Action<ICsvRowMapper, T> mapper)
+	        {
+	            if (elements == null) throw new ArgumentNullException("elements");
+	            if (mapper == null) throw new ArgumentNullException("mapper");
+                if (_headers == null) throw new InvalidOperationException(@"No headers were passed so this method is not allowed.");
+
+                elements.ForEach(x =>
+                {
+                    var internalMapper = new CsvRowMapper(_headers);
+
+                    mapper(internalMapper, x);
+
+                    Add(internalMapper.ToData());
+                });
 
 	            return this;
 	        }
 
 	        public CsvRow[] ToRows()
 	        {
+	            if (_returnHeaderAsRow && !_headerInserted)
+	            {
+	                _rows.Insert(0, new CsvRow(_headers.Keys.ToArray(), _delimiter, _headers, lineNumber: 1));
+	                _headerInserted = true;
+	            }
+
                 return _rows.ToArray();
 	        }
 
-            public static implicit operator CsvRow[](CsvRowBuilder builder)
+	        public override string ToString()
+	        {
+                return String.Join(Environment.NewLine, ToRows().Select(x => x.ToString()));
+	        }
+
+	        public static implicit operator CsvRow[](CsvRowBuilder builder)
             {
                 if (builder == null) throw new ArgumentNullException("builder");
 
@@ -237,13 +305,59 @@ namespace Vertica.Integration.Infrastructure.Parsing
         public interface ICsvRowBuilderAdder
         {
             ICsvRowBuilderFinisher Add(params string[] data);
-            ICsvRowBuilderFinisher From<T>(IEnumerable<T> elements, Func<T, string[]> action);
+            ICsvRowBuilderFinisher AddUsingMapper(Action<ICsvRowMapper> mapper);
+
+            ICsvRowBuilderFinisher From<T>(IEnumerable<T> elements, Func<T, string[]> createData);
+            ICsvRowBuilderFinisher FromUsingMapper<T>(IEnumerable<T> elements, Action<ICsvRowMapper, T> mapper);
         }
 
         public interface ICsvRowBuilder : ICsvRowBuilderAdder
         {
-            ICsvRowBuilderAdder ChangeDelimiter(string delimiter);
+            ICsvRowBuilderAdder Configure(Action<ICsvRowBuilderConfiguration> configure);
         }
+
+	    public interface ICsvRowBuilderConfiguration
+	    {
+            ICsvRowBuilderConfiguration ReturnHeaderAsRow();
+            ICsvRowBuilderConfiguration ChangeDelimiter(string delimiter);	        
+	    }
+
+	    public interface ICsvRowMapper
+	    {
+	        ICsvRowMapper Map(string name, string value);
+	    }
+
+	    private class CsvRowMapper : ICsvRowMapper
+	    {
+	        private readonly IDictionary<string, int> _headers;
+	        private readonly Dictionary<string, string> _data;
+
+	        public CsvRowMapper(IDictionary<string, int> headers)
+	        {
+	            if (headers == null) throw new ArgumentNullException("headers");
+
+	            _headers = headers;
+	            _data = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+                foreach (string keys in _headers.Keys)
+                    _data[keys] = String.Empty;
+	        }
+
+	        public ICsvRowMapper Map(string name, string value)
+	        {
+                if (!_data.ContainsKey(name))
+                    throw new KeyNotFoundException(String.Format(@"Could not find any header named '{0}'.", name));
+
+                _data[name] = value;
+
+	            return this;
+	        }
+
+	        public string[] ToData()
+	        {
+	            return _headers.OrderBy(x => x.Value).Select(x => _data[x.Key]).ToArray();
+	        }
+	    }
 
 	    public interface ICsvRowBuilderFinisher : ICsvRowBuilderAdder
 	    {

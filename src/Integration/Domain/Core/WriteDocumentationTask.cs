@@ -15,7 +15,7 @@ namespace Vertica.Integration.Domain.Core
             _taskFactory = taskFactory;
         }
 
-		public override void StartTask(Log log, params string[] arguments)
+        public override void StartTask(ILog log, params string[] arguments)
         {
             var sb = new StringBuilder();
 

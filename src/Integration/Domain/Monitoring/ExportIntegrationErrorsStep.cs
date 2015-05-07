@@ -26,7 +26,7 @@ namespace Vertica.Integration.Domain.Monitoring
             get { return "Exports errors from integration error log."; }
         }
 
-        public override void Execute(MonitorWorkItem workItem, Log log)
+        public override void Execute(MonitorWorkItem workItem, ILog log)
         {
             using (var session = _dapper.OpenSession())
             {

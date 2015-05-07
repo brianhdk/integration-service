@@ -20,7 +20,7 @@ namespace Vertica.Integration.Domain.Core
 			_errorsOlderThan = errorsOlderThan;
 		}
 
-        public override void Execute(MaintenanceWorkItem workItem, Log log)
+        public override void Execute(MaintenanceWorkItem workItem, ILog log)
 		{
 			DateTimeOffset tasksLowerBound = DateTimeOffset.UtcNow.BeginningOfDay().Subtract(_tasksOlderThan),
 				errorsLowerBound = DateTimeOffset.UtcNow.BeginningOfDay().Subtract(_errorsOlderThan);

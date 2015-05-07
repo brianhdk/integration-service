@@ -38,9 +38,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="FluentMigrator, Version=1.5.0.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
+    <Reference Include="FluentMigrator, Version=1.5.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\FluentMigrator.1.5.0.0\lib\40\FluentMigrator.dll</HintPath>
+      <HintPath>..\..\packages\FluentMigrator.1.5.1.0\lib\40\FluentMigrator.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -56,6 +56,7 @@
     <Compile Include="ArchiveTesterTask.cs" />
     <Compile Include="Custom_Database\CustomDb.cs" />
     <Compile Include="Custom_Database\CustomDbTesterTask.cs" />
+    <Compile Include="EmailWithAttachmentTesterTask.cs" />
     <Compile Include="ExceptionTesterTask.cs" />
     <Compile Include="Extend_IntegrationDb\M1427839039_NewTable.cs" />
     <Compile Include="Extend_IntegrationDb\M1427839050_ChangeSubjectPrefixOnMonitorConfiguration.cs" />

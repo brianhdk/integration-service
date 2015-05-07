@@ -11,7 +11,7 @@ namespace Vertica.Integration.Model
 		{
 		}
 
-		public override EmptyWorkItem Start(Log log, params string[] arguments)
+		public override EmptyWorkItem Start(ILog log, params string[] arguments)
 		{
 			if (log == null) throw new ArgumentNullException("log");
 
@@ -20,7 +20,7 @@ namespace Vertica.Integration.Model
 			return new EmptyWorkItem();
 		}
 
-		public abstract void StartTask(Log log, params string[] arguments);
+		public abstract void StartTask(ILog log, params string[] arguments);
 	}
 
 	public abstract class Task<TWorkItem> : ITask<TWorkItem>
@@ -44,9 +44,9 @@ namespace Vertica.Integration.Model
 
 		public abstract string Description { get; }
 
-		public abstract TWorkItem Start(Log log, params string[] arguments);
+		public abstract TWorkItem Start(ILog log, params string[] arguments);
 
-		public virtual void End(TWorkItem workItem, Log log, params string[] arguments)
+        public virtual void End(TWorkItem workItem, ILog log, params string[] arguments)
 		{
 		}
 	}

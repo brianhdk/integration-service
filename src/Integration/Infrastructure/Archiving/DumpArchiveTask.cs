@@ -18,7 +18,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
             get { return "Dumps a specified archive to the file system."; }
         }
 
-        public override void StartTask(Log log, params string[] arguments)
+        public override void StartTask(ILog log, params string[] arguments)
         {
             if (arguments == null || arguments.Length == 0)
                 throw new InvalidOperationException(@"Parameter usage: [ArchiveID]");

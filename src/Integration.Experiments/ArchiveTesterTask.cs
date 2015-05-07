@@ -12,7 +12,7 @@ namespace Vertica.Integration.Experiments
             _archive = archive;
         }
 
-        public override void StartTask(Log log, params string[] arguments)
+        public override void StartTask(ILog log, params string[] arguments)
         {
             log.Warning("{0}", _archive.ArchiveText("Some name", "Some content"));
 
