@@ -3,7 +3,7 @@ using Vertica.Integration.Infrastructure.Logging;
 
 namespace Vertica.Integration.Model
 {
-	public class Log
+	public class Log : ILog
 	{
 		private readonly Action<string> _message;
 	    private readonly Action<Target, string> _warning;

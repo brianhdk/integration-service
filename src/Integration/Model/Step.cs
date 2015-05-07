@@ -9,6 +9,6 @@ namespace Vertica.Integration.Model
             return Execution.Execute;
         }
 
-        public abstract void Execute(TWorkItem workItem, Log log);
+        public abstract void Execute(TWorkItem workItem, ILog log);
     }
 }

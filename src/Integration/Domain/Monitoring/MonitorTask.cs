@@ -33,7 +33,7 @@ namespace Vertica.Integration.Domain.Monitoring
 			get { return "Monitors the solution and sends out e-mails if there is any errors."; }
 		}
 
-		public override MonitorWorkItem Start(Log log, params string[] arguments)
+        public override MonitorWorkItem Start(ILog log, params string[] arguments)
 		{
 		    MonitorConfiguration configuration = _configuration.Get<MonitorConfiguration>();
 		    configuration.Assert();
@@ -50,7 +50,7 @@ namespace Vertica.Integration.Domain.Monitoring
                 .WithIgnoreFilter(new MessageContainsTextIgnoreFilter(ignoredMessages));
 		}
 
-		public override void End(MonitorWorkItem workItem, Log log, params string[] arguments)
+        public override void End(MonitorWorkItem workItem, ILog log, params string[] arguments)
 		{
             MonitorConfiguration configuration = _configuration.Get<MonitorConfiguration>();
 
@@ -61,7 +61,7 @@ namespace Vertica.Integration.Domain.Monitoring
 		    _configuration.Save(configuration, "MonitorTask");
 		}
 
-	    private void SendTo(MonitorTarget target, MonitorWorkItem workItem, Log log, string subjectPrefix)
+        private void SendTo(MonitorTarget target, MonitorWorkItem workItem, ILog log, string subjectPrefix)
 	    {
             MonitorEntry[] entries = workItem.GetEntries(target);
 

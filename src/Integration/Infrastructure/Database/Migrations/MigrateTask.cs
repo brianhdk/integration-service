@@ -23,7 +23,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
         public MigrateTask(IDapperFactory dapper, ILogger logger, MigrationConfiguration configuration)
         {
-            string connectionString = EnsureIntegrationDb(dapper, out _databaseCreated);
+            string connectionString = EnsureIntegrationDb(dapper, configuration.CheckExistsIntegrationDb, out _databaseCreated);
 
             var integrationDb = new MigrationTarget(
                 configuration.IntegrationDbDatabaseServer,
@@ -46,7 +46,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
             get { return "Runs migrations."; }
         }
 
-        public override void StartTask(Log log, params string[] arguments)
+        public override void StartTask(ILog log, params string[] arguments)
         {
             foreach (MigrationTarget destination in _targets)
             {
@@ -60,7 +60,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
             }
         }
 
-        public override void End(EmptyWorkItem workItem, Log log, params string[] arguments)
+        public override void End(EmptyWorkItem workItem, ILog log, params string[] arguments)
         {
             if (_loggingDisabler != null)
                 _loggingDisabler.Dispose();
@@ -73,25 +73,32 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
             }
         }
 
-        private static string EnsureIntegrationDb(IDapperFactory dapper, out bool databaseCreated)
+        private static string EnsureIntegrationDb(IDapperFactory dapper, bool checkExistsIntegrationDb, out bool databaseCreated)
         {
             using (IDbConnection connection = dapper.GetConnection())
-            using (IDbCommand command = connection.CreateCommand())
             {
-                string databaseName = connection.Database;
-
-                var builder = new SqlConnectionStringBuilder(connection.ConnectionString);
-
-                Func<string, string> changeDatabase = dbName =>
+                if (!checkExistsIntegrationDb)
                 {
-                    builder["Initial Catalog"] = dbName;
-                    return builder.ConnectionString;
-                };
+                    databaseCreated = false;
+                    return connection.ConnectionString;
+                }
 
-                connection.ConnectionString = changeDatabase("master");
-                connection.Open();
+                using (IDbCommand command = connection.CreateCommand())
+                {
+                    string databaseName = connection.Database;
 
-                command.CommandText = @"
+                    var builder = new SqlConnectionStringBuilder(connection.ConnectionString);
+
+                    Func<string, string> changeDatabase = dbName =>
+                    {
+                        builder["Initial Catalog"] = dbName;
+                        return builder.ConnectionString;
+                    };
+
+                    connection.ConnectionString = changeDatabase("master");
+                    connection.Open();
+
+                    command.CommandText = @"
 IF NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = @DbName)
 	BEGIN
 
@@ -106,15 +113,16 @@ ELSE
 	SELECT 'EXISTS'
 ";
 
-                IDbDataParameter parameter = command.CreateParameter();
-                parameter.ParameterName = "DbName";
-                parameter.Value = databaseName;
-                
-                command.Parameters.Add(parameter);
+                    IDbDataParameter parameter = command.CreateParameter();
+                    parameter.ParameterName = "DbName";
+                    parameter.Value = databaseName;
 
-                databaseCreated = ((string) command.ExecuteScalar() == "CREATED");
+                    command.Parameters.Add(parameter);
 
-                return changeDatabase(databaseName);
+                    databaseCreated = ((string)command.ExecuteScalar() == "CREATED");
+
+                    return changeDatabase(databaseName);
+                }                
             }
         }
 

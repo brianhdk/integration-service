@@ -20,7 +20,7 @@ namespace Vertica.Integration.Logging.Elmah
             _sourceName = sourceName;
         }
 
-        public override void Execute(MonitorWorkItem workItem, Log log)
+        public override void Execute(MonitorWorkItem workItem, ILog log)
         {
             using (var connection = new SqlConnection(_connectionString))
             using (SqlCommand command = connection.CreateCommand())

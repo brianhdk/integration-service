@@ -17,7 +17,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
             _olderThan = olderThan;
         }
 
-        public override void Execute(MaintenanceWorkItem workItem, Log log)
+        public override void Execute(MaintenanceWorkItem workItem, ILog log)
         {
             DateTimeOffset lowerBound = Time.UtcNow.Subtract(_olderThan);
 

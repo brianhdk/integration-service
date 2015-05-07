@@ -14,6 +14,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
             _customTargets = new List<MigrationTarget>();
 
             ChangeIntegrationDbDatabaseServer(DatabaseServer.SqlServer2014);
+            CheckExistsIntegrationDb = true;
         }
 
         public MigrationConfiguration ChangeIntegrationDbDatabaseServer(DatabaseServer db)
@@ -36,7 +37,15 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
             return this;
         }
 
+        public MigrationConfiguration DisableCheckExistsIntegrationDb()
+        {
+            CheckExistsIntegrationDb = false;
+
+            return this;
+        }
+
         internal DatabaseServer IntegrationDbDatabaseServer { get; private set; }
+        internal bool CheckExistsIntegrationDb { get; private set; }
 
         internal MigrationTarget[] CustomTargets
         {

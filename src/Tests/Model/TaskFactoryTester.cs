@@ -88,7 +88,7 @@ namespace Vertica.Integration.Tests.Model
                 return Description;
             }
 
-            public override void StartTask(Log log, params string[] arguments)
+            public override void StartTask(ILog log, params string[] arguments)
             {
                 throw new NotSupportedException();
             }

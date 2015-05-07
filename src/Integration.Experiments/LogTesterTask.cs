@@ -15,14 +15,14 @@ namespace Vertica.Integration.Experiments
             _logger = logger;
         }
 
-        public override LogTesterWorkItem Start(Log log, params string[] arguments)
+        public override LogTesterWorkItem Start(ILog log, params string[] arguments)
         {
             log.Message("task");
 
             return new LogTesterWorkItem();
         }
 
-        public override void End(LogTesterWorkItem workItem, Log log, params string[] arguments)
+        public override void End(LogTesterWorkItem workItem, ILog log, params string[] arguments)
         {
             log.Warning(Target.Service, "warning");
             _logger.LogError(new ApplicationException(), Target.Service);
@@ -41,7 +41,7 @@ namespace Vertica.Integration.Experiments
             get { return "TBD"; }
         }
 
-        public override void Execute(LogTesterWorkItem workItem, Log log)
+        public override void Execute(LogTesterWorkItem workItem, ILog log)
         {
             log.Message("step");
             log.Error(Target.Service, "Test message");

@@ -1,27 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Mail;
 
 namespace Vertica.Integration.Infrastructure.Email
 {
 	public class EmailService : IEmailService
 	{
-		public void Send(EmailTemplate template, IEnumerable<string> recipients)
+		public void Send(EmailTemplate template, string[] recipients)
 		{
 			if (template == null) throw new ArgumentNullException("template");
+		    if (recipients == null) throw new ArgumentNullException("recipients");
 
-			using (var message = new MailMessage())
+		    using (var message = new MailMessage())
 			using (var smtpClient = new SmtpClient())
 			{
 				message.Subject = template.Subject;
 				message.Body = template.GetBody();
 				message.IsBodyHtml = template.IsHtml;
 
-				foreach (var recipient in recipients)
+				foreach (string recipient in recipients)
 				{
 					if (!String.IsNullOrWhiteSpace(recipient))
 						message.To.Add(recipient.Trim());
 				}
+
+			    foreach (Attachment attachment in template.Attachments ?? new Attachment[0])
+			        message.Attachments.Add(attachment);
 
 				smtpClient.Send(message);
 			}

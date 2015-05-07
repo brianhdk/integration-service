@@ -7,7 +7,7 @@
             get { return "WebApi task."; }
         }
 
-        public override void StartTask(Log log, params string[] arguments)
+        public override void StartTask(ILog log, params string[] arguments)
         {
         }
     }

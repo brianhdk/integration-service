@@ -10,7 +10,7 @@ namespace Vertica.Integration.Experiments
             get { return "TBD"; }
         }
 
-        public override void StartTask(Log log, params string[] arguments)
+        public override void StartTask(ILog log, params string[] arguments)
         {
             throw new InvalidOperationException("Some exception.");
         }

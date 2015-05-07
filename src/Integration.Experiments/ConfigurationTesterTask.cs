@@ -16,14 +16,14 @@ namespace Vertica.Integration.Experiments
             _service = service;
         }
 
-        public override ConfigurationTesterWorkItem Start(Log log, params string[] arguments)
+        public override ConfigurationTesterWorkItem Start(ILog log, params string[] arguments)
         {
             ConfigurationTesterConfiguration configuration = _service.Get<ConfigurationTesterConfiguration>();
 
             return new ConfigurationTesterWorkItem(configuration);
         }
 
-        public override void End(ConfigurationTesterWorkItem workItem, Log log, params string[] arguments)
+        public override void End(ConfigurationTesterWorkItem workItem, ILog log, params string[] arguments)
         {
             var configuration = _service.Get<ConfigurationTesterConfiguration>();
 
@@ -55,7 +55,7 @@ namespace Vertica.Integration.Experiments
             get { return "TBD"; }
         }
 
-        public override void Execute(ConfigurationTesterWorkItem workItem, Log log)
+        public override void Execute(ConfigurationTesterWorkItem workItem, ILog log)
         {
             log.Message(workItem.Configuration.LastRun.ToString(CultureInfo.InvariantCulture));
         }

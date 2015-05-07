@@ -18,8 +18,8 @@ namespace Vertica.Integration.Console
                     .ReplaceArchiveWithBlobStorage(ConnectionString.FromName("AzureBlobStorage.Archive"))
                     .ReplaceFileSystemWithBlobStorage(ConnectionString.FromName("AzureBlobStorage.FileSystem")))
                 .Dapper(dapper => dapper.AddConnection(new CustomDb()))
-                .Migration(migration => 
-                    migration.IncludeFromNamespaceOfThis<M1427839039_NewTable>(DatabaseServer.SqlServer2014, builder.DatabaseConnectionString))
+                .Migration(migration => migration
+                    .IncludeFromNamespaceOfThis<M1427839039_NewTable>(DatabaseServer.SqlServer2014, builder.DatabaseConnectionString))
                 .Tasks(tasks => tasks.ScanFromAssemblyOfThis<ArchiveTesterTask>())))
 			{
 			    context.Execute(args);

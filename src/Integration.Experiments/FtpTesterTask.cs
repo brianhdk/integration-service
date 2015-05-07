@@ -13,7 +13,7 @@ namespace Vertica.Integration.Experiments
             _factory = factory;
         }
 
-        public override void StartTask(Log log, params string[] arguments)
+        public override void StartTask(ILog log, params string[] arguments)
         {
             IFtpClient client = _factory.Create("ftp://ftp.vertica.dk/BHK", builder => builder
                 .Credentials("GuestFTP", "VerticaPass1010"));
