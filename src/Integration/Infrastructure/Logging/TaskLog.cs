@@ -29,17 +29,20 @@ namespace Vertica.Integration.Infrastructure.Logging
 			_steps = new List<StepLog>();
 			_messages = new List<MessageLog>();
 
-			MachineName = Environment.MachineName;
-			IdentityName = WindowsUtils.GetIdentityName();
+            MachineName = Environment.MachineName;
+            IdentityName = WindowsUtils.GetIdentityName();
+            CommandLine = Environment.CommandLine.MaxLength(4000);
 
 			Persist(this);
             _output.Message(TaskName);
 		}
 
-		public string MachineName { get; protected set; }
-		public string IdentityName { get; protected set; }
 		public string Message { get; protected set; }
 		public string StepName { get; protected set; }
+
+        public string MachineName { get; private set; }
+        public string IdentityName { get; private set; }
+        public string CommandLine { get; private set; }
 
 		public ReadOnlyCollection<StepLog> Steps
 		{

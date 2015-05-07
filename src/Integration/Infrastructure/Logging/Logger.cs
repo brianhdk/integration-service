@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using Vertica.Integration.Infrastructure.Database.Dapper;
+using Vertica.Integration.Infrastructure.Database.Dapper.Extensions;
 using Vertica.Utilities_v4.Patterns;
 
 namespace Vertica.Integration.Infrastructure.Logging
@@ -93,7 +94,7 @@ namespace Vertica.Integration.Infrastructure.Logging
             using (IDapperSession session = _dapper.OpenSession())
             using (IDbTransaction transaction = session.BeginTransaction())
             {
-                errorLog.Id = session.ExecuteScalar<int>(
+                errorLog.Id = session.Wrap(s => s.ExecuteScalar<int>(
                     @"INSERT INTO [ErrorLog] (MachineName, IdentityName, CommandLine, Severity, Message, FormattedMessage, TimeStamp, Target)
                       VALUES (@MachineName, @IdentityName, @CommandLine, @Severity, @Message, @FormattedMessage, @TimeStamp, @Target)
                       SELECT CAST(SCOPE_IDENTITY() AS INT)",
@@ -107,7 +108,7 @@ namespace Vertica.Integration.Infrastructure.Logging
                         errorLog.FormattedMessage, 
                         errorLog.TimeStamp,
                         Target = errorLog.Target.ToString()
-                    });
+                    }));
 
                 transaction.Commit();
 
@@ -161,9 +162,9 @@ namespace Vertica.Integration.Infrastructure.Logging
 
             protected override void HandleInsert(IDapperSession session, MessageLog logEntry)
             {
-                logEntry.Id = session.ExecuteScalar<int>(
-                    @"INSERT INTO TaskLog (TaskName, ExecutionTimeSeconds, TimeStamp, StepName, Message, TaskLog_Id, StepLog_Id, Type)
-                      VALUES (@TaskName, @ExecutionTimeSeconds, @TimeStamp, @StepName, @Message, @TaskLog_Id, @StepLog_Id, 'M')
+                logEntry.Id = session.Wrap(s => s.ExecuteScalar<int>(
+                    @"INSERT INTO TaskLog (Type, TaskName, ExecutionTimeSeconds, TimeStamp, StepName, Message, TaskLog_Id, StepLog_Id)
+                      VALUES ('M', @TaskName, @ExecutionTimeSeconds, @TimeStamp, @StepName, @Message, @TaskLog_Id, @StepLog_Id)
                       SELECT CAST(SCOPE_IDENTITY() AS INT)",
                     new
                     {
@@ -174,7 +175,7 @@ namespace Vertica.Integration.Infrastructure.Logging
                         logEntry.Message,
                         TaskLog_Id = logEntry.TaskLog.Id,
                         StepLog_Id = logEntry.StepLog != null ? logEntry.StepLog.Id : default(int?)
-                    });
+                    }));
             }
 
             protected override void HandleUpdate(IDapperSession session, MessageLog logEntry)
@@ -192,7 +193,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 
             protected override void HandleInsert(IDapperSession session, StepLog logEntry)
             {
-                logEntry.Id = session.ExecuteScalar<int>(
+                logEntry.Id = session.Wrap(s => s.ExecuteScalar<int>(
                     @"INSERT INTO TaskLog (Type, TaskName, StepName, ExecutionTimeSeconds, TimeStamp, TaskLog_Id, ErrorLog_Id)
                       VALUES ('S', @TaskName, @StepName, @ExecutionTimeSeconds, @TimeStamp, @TaskLog_Id, @ErrorLog_Id)
                       SELECT CAST(SCOPE_IDENTITY() AS INT)",
@@ -203,8 +204,9 @@ namespace Vertica.Integration.Infrastructure.Logging
                         logEntry.ExecutionTimeSeconds,
                         logEntry.TimeStamp,
                         TaskLog_Id = logEntry.TaskLog.Id,
-                        ErrorLog_Id = logEntry.ErrorLog != null ? logEntry.ErrorLog.Id : default(int?)
-                    });
+                        ErrorLog_Id = logEntry.ErrorLog != null ? logEntry.ErrorLog.Id : default(int?),
+
+                    }));
             }
 
             protected override void HandleUpdate(IDapperSession session, StepLog logEntry)
@@ -229,17 +231,20 @@ namespace Vertica.Integration.Infrastructure.Logging
 
             protected override void HandleInsert(IDapperSession session, TaskLog logEntry)
             {
-                logEntry.Id = session.ExecuteScalar<int>(
-                    @"INSERT INTO TaskLog (Type, TaskName, ExecutionTimeSeconds, TimeStamp, ErrorLog_Id)
-                      VALUES ('T', @TaskName, @ExecutionTimeSeconds, @TimeStamp, @ErrorLog_Id)
+                logEntry.Id = session.Wrap(s => s.ExecuteScalar<int>(
+                    @"INSERT INTO TaskLog (Type, TaskName, ExecutionTimeSeconds, TimeStamp, MachineName, IdentityName, CommandLine, ErrorLog_Id)
+                      VALUES ('T', @TaskName, @ExecutionTimeSeconds, @TimeStamp, @MachineName, @IdentityName, @CommandLine, @ErrorLog_Id)
                       SELECT CAST(SCOPE_IDENTITY() AS INT)",
                     new
                     {
                         logEntry.TaskName,
                         logEntry.ExecutionTimeSeconds,
                         logEntry.TimeStamp,
+                        logEntry.MachineName,
+                        logEntry.IdentityName,
+                        logEntry.CommandLine,
                         ErrorLog_Id = logEntry.ErrorLog != null ? logEntry.ErrorLog.Id : default(int?)
-                    });
+                    }));
             }
 
             protected override void HandleUpdate(IDapperSession session, TaskLog logEntry)

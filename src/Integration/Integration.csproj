@@ -143,12 +143,15 @@
     <Compile Include="Infrastructure\Database\Dapper\DapperSession.cs" />
     <Compile Include="Infrastructure\Database\Dapper\Databases\IntegrationDb.cs" />
     <Compile Include="Infrastructure\Database\Dapper\DefaultConnection.cs" />
+    <Compile Include="Infrastructure\Database\Dapper\Extensions\DapperExtensions.cs" />
+    <Compile Include="Infrastructure\Database\Dapper\Databases\IntegrationDbException.cs" />
     <Compile Include="Infrastructure\Database\Dapper\IDapperFactory.cs" />
     <Compile Include="Infrastructure\Database\Dapper\IDapperSession.cs" />
     <Compile Include="Infrastructure\Database\Dapper\DapperConfiguration.cs" />
     <Compile Include="Infrastructure\Database\Dapper\IExposeTransaction.cs" />
     <Compile Include="Infrastructure\Database\Migrations\DatabaseServer.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M1_Baseline.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\M4_ExtendTaskLogWithExecutionContext.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M3_Configuration.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M2_Archive.cs" />
     <Compile Include="Infrastructure\Database\Migrations\MigrateTask.cs" />
