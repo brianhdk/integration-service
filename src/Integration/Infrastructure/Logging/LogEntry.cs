@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using Vertica.Integration.Infrastructure.Extensions;
+using Vertica.Integration.Infrastructure.Windows;
 using Vertica.Utilities_v4;
 
 namespace Vertica.Integration.Infrastructure.Logging
@@ -7,11 +9,6 @@ namespace Vertica.Integration.Infrastructure.Logging
     public abstract class LogEntry : IDisposable
     {
         private readonly Stopwatch _watch;
-
-        public int Id { get; internal set; }
-        public string TaskName { get; private set; }
-        public double ExecutionTimeSeconds { get; protected set; }
-        public DateTimeOffset TimeStamp { get; private set; }
 
         protected LogEntry(string taskName, bool startStopwatch = true)
         {
@@ -23,6 +20,11 @@ namespace Vertica.Integration.Infrastructure.Logging
             TaskName = taskName;
             TimeStamp = Time.UtcNow;
         }
+
+        public int Id { get; internal set; }
+        public string TaskName { get; private set; }
+        public double ExecutionTimeSeconds { get; protected set; }
+        public DateTimeOffset TimeStamp { get; private set; }
 
         public virtual void Dispose()
         {

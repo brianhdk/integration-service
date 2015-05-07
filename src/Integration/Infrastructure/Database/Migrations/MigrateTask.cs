@@ -35,7 +35,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
             MigrationRunner runner = CreateRunner(integrationDb, out output);
 
             // Baseline has not been applied, so we'll have to disable any logging
-            if (!runner.VersionLoader.VersionInfo.HasAppliedMigration(M1_Baseline.VersionNumber))
+            if (!runner.VersionLoader.VersionInfo.HasAppliedMigration(M4_ExtendTaskLogWithExecutionContext.VersionNumber))
                 _loggingDisabler = logger.Disable();
 
             _targets = new[] { integrationDb }.Concat(configuration.CustomTargets).ToArray();
