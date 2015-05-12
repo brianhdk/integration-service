@@ -21,10 +21,8 @@ namespace Vertica.Integration.Domain.Core
 
         public override void Execute(MaintenanceWorkItem workItem, ILog log)
         {
-            MaintenanceConfiguration configuration = _configuration.Get<MaintenanceConfiguration>();
-
-			DateTimeOffset tasksLowerBound = Time.UtcNow.BeginningOfDay().Subtract(configuration.CleanUpTaskLogEntriesOlderThan),
-				errorsLowerBound = Time.UtcNow.BeginningOfDay().Subtract(configuration.CleanUpErrorLogEntriesOlderThan);
+			DateTimeOffset tasksLowerBound = Time.UtcNow.BeginningOfDay().Subtract(workItem.Configuration.CleanUpTaskLogEntriesOlderThan),
+				errorsLowerBound = Time.UtcNow.BeginningOfDay().Subtract(workItem.Configuration.CleanUpErrorLogEntriesOlderThan);
 
 			using (IDapperSession session = _dapper.OpenSession())
 			using (IDbTransaction transaction = session.BeginTransaction())

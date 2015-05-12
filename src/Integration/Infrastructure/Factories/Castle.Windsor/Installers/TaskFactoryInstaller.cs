@@ -28,6 +28,11 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
                 _kernel = kernel;
             }
 
+            public ITask Get<TTask>() where TTask : ITask
+            {
+                return GetByName(typeof (TTask).Name);
+            }
+
             public ITask GetByName(string name)
             {
                 if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", name);

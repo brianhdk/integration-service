@@ -30,19 +30,17 @@ namespace Vertica.Integration.Domain.Monitoring
 		    MonitorConfiguration configuration = _configuration.Get<MonitorConfiguration>();
 		    configuration.Assert();
 
-			return new MonitorWorkItem(configuration.LastRun)
+			return new MonitorWorkItem(configuration)
                 .WithIgnoreFilter(new MessageContainsTextIgnoreFilter(configuration.IgnoreErrorsWithMessagesContaining));
 		}
 
         public override void End(MonitorWorkItem workItem, ILog log, params string[] arguments)
 		{
-            MonitorConfiguration configuration = _configuration.Get<MonitorConfiguration>();
+		    foreach (MonitorTarget target in workItem.Configuration.Targets)
+		        SendTo(target, workItem, log, workItem.Configuration.SubjectPrefix);
 
-		    foreach (MonitorTarget target in configuration.Targets)
-		        SendTo(target, workItem, log, configuration.SubjectPrefix);
-
-            configuration.LastRun = workItem.CheckRange.UpperBound;
-		    _configuration.Save(configuration, "MonitorTask");
+            workItem.Configuration.LastRun = workItem.CheckRange.UpperBound;
+		    _configuration.Save(workItem.Configuration, "MonitorTask");
 		}
 
         private void SendTo(MonitorTarget target, MonitorWorkItem workItem, ILog log, string subjectPrefix)

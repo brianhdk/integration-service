@@ -12,25 +12,30 @@ namespace Vertica.Integration.Domain.Monitoring
         private readonly Range<DateTimeOffset> _checkRange;
 	    private readonly List<Tuple<Target, MonitorEntry>> _entries;
 	    private readonly List<ISpecification<MonitorEntry>> _ignoreFilters;
-        private readonly ChainOfResponsibilityLink<MonitorEntry, Target> _targetRedirects; 
+        private readonly ChainOfResponsibilityLink<MonitorEntry, Target> _targetRedirects;
 
-	    public MonitorWorkItem(DateTimeOffset lastRun)
+	    public MonitorWorkItem(MonitorConfiguration configuration)
         {
-	        var upperBound = Time.UtcNow;
+	        if (configuration == null) throw new ArgumentNullException("configuration");
 
-		    if (lastRun > upperBound)
-                upperBound = lastRun;
+	        DateTimeOffset upperBound = Time.UtcNow;
 
-		    _checkRange = new Range<DateTimeOffset>(lastRun, upperBound);
-		    _entries = new List<Tuple<Target, MonitorEntry>>();
+	        if (configuration.LastRun > upperBound)
+                upperBound = configuration.LastRun;
+
+	        _checkRange = new Range<DateTimeOffset>(configuration.LastRun, upperBound);
+	        _entries = new List<Tuple<Target, MonitorEntry>>();
 	        _ignoreFilters = new List<ISpecification<MonitorEntry>>();
 	        _targetRedirects = ChainOfResponsibility.Empty<MonitorEntry, Target>();
+	        Configuration = configuration;
         }
 
         public Range<DateTimeOffset> CheckRange
 		{
 			get { return _checkRange; }
 		}
+
+        public MonitorConfiguration Configuration { get; private set; }
 
         public MonitorWorkItem WithIgnoreFilter(ISpecification<MonitorEntry> filter)
         {

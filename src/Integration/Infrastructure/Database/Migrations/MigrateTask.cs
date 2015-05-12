@@ -68,6 +68,8 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
         public override void StartTask(ILog log, params string[] arguments)
         {
+            bool integrationDbMigration = true;
+
             foreach (MigrationTarget destination in _targets)
             {
                 StringBuilder output;
@@ -77,14 +79,16 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
                 if (output.Length > 0)
                     log.Message(output.ToString());
+
+                if (integrationDbMigration && _loggingDisabler != null)
+                    _loggingDisabler.Dispose();
+
+                integrationDbMigration = false;
             }
         }
 
         public override void End(EmptyWorkItem workItem, ILog log, params string[] arguments)
         {
-            if (_loggingDisabler != null)
-                _loggingDisabler.Dispose();
-
             if (_databaseCreated)
             {
                 log.Warning(

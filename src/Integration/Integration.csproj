@@ -122,7 +122,6 @@
     <Compile Include="Domain\Monitoring\MonitorTask.cs" />
     <Compile Include="Domain\Monitoring\MonitorTaskExtensions.cs" />
     <Compile Include="Domain\Monitoring\MonitorWorkItem.cs" />
-    <Compile Include="Domain\Monitoring\PingUrlsConfiguration.cs" />
     <Compile Include="Domain\Monitoring\PingUrlsStep.cs" />
     <Compile Include="Domain\Monitoring\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

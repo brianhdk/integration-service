@@ -9,7 +9,9 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
         public override void Up()
         {
             Create.Table("Configuration")
-                .WithColumn("ClrType").AsString(255).PrimaryKey()
+                .WithColumn("Id").AsString(255).PrimaryKey()
+                .WithColumn("Name").AsString(50)
+                .WithColumn("Description").AsString(255).Nullable()
                 .WithColumn("JsonData").AsString(Int32.MaxValue)
                 .WithColumn("Created").AsDateTimeOffset()
                 .WithColumn("Updated").AsDateTimeOffset()

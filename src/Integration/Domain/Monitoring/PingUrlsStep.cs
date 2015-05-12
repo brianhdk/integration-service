@@ -4,32 +4,38 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Vertica.Integration.Infrastructure.Configuration;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Infrastructure.Remote;
 using Vertica.Integration.Model;
 using Vertica.Utilities_v4;
-using Response=System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage>;
+using Response= System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage>;
 
 namespace Vertica.Integration.Domain.Monitoring
 {
     public class PingUrlsStep : Step<MonitorWorkItem>
     {
-        private readonly IConfigurationService _configurationService;
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public PingUrlsStep(IConfigurationService configurationService, IHttpClientFactory httpClientFactory)
+        public PingUrlsStep(IHttpClientFactory httpClientFactory)
         {
-            _configurationService = configurationService;
             _httpClientFactory = httpClientFactory;
+        }
+
+        public override Execution ContinueWith(MonitorWorkItem workItem)
+        {
+            if (workItem.Configuration.PingUrls.Urls == null ||
+                workItem.Configuration.PingUrls.Urls.Length == 0)
+            {
+                return Execution.StepOver;
+            }
+
+            return Execution.Execute;
         }
 
         public override void Execute(MonitorWorkItem workItem, ILog log)
         {
-            PingUrlsConfiguration configuration = _configurationService.Get<PingUrlsConfiguration>();
-
-            Uri[] urls = GetUrls(configuration, log);
+            Uri[] urls = ParseUrls(workItem.Configuration.PingUrls.Urls, log);
 
             if (urls.Length == 0)
                 return;
@@ -42,7 +48,7 @@ namespace Vertica.Integration.Domain.Monitoring
 
                     try
                     {
-                        Response response  = HttpGet(url, configuration);
+                        Response response = HttpGet(url, workItem.Configuration.PingUrls.MaximumWaitTimeSeconds);
                         response.Wait();
                         response.Result.EnsureSuccessStatusCode();
                     }
@@ -69,17 +75,17 @@ namespace Vertica.Integration.Domain.Monitoring
             }
         }
 
-        private static Uri[] GetUrls(PingUrlsConfiguration configuration, ILog log)
+        private static Uri[] ParseUrls(string[] urls, ILog log)
         {
-            var urls = new List<Uri>();
+            var result = new List<Uri>();
 
-            foreach (string url in configuration.Urls ?? new string[0])
+            foreach (string url in urls)
             {
                 Uri absoluteUri;
                 if (Uri.TryCreate(url, UriKind.Absolute, out absoluteUri))
                 {
-                    if (!urls.Contains(absoluteUri))
-                        urls.Add(absoluteUri);
+                    if (!result.Contains(absoluteUri))
+                        result.Add(absoluteUri);
                 }
                 else
                 {
@@ -87,7 +93,7 @@ namespace Vertica.Integration.Domain.Monitoring
                 }
             }
 
-            return urls.ToArray();
+            return result.ToArray();
         }
 
         private static PingException[] AssertExceptions(AggregateException ex)
@@ -115,11 +121,11 @@ namespace Vertica.Integration.Domain.Monitoring
                 Target.Service);
         }
 
-        private async Response HttpGet(Uri absoluteUri, PingUrlsConfiguration configuration)
+        private async Response HttpGet(Uri absoluteUri, uint maximumWaitTimeSeconds)
         {
             using (HttpClient client = _httpClientFactory.Create())
             {
-                client.Timeout = TimeSpan.FromSeconds(configuration.MaximumWaitTimeSeconds);
+                client.Timeout = TimeSpan.FromSeconds(maximumWaitTimeSeconds);
 
                 return await client.GetAsync(absoluteUri, HttpCompletionOption.ResponseHeadersRead);
             }
