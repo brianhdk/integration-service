@@ -2,10 +2,10 @@
 	<table ng-table="tableParams" show-filter="true" class="table" ng-init="initConfig()">
 		<tbody>
 			<tr ng-repeat="config in $data">
-				<td data-title="'Created'" sortable="'Created'"><a ng-href="#/configuration/{{config.ClrType}}">{{config.Created | date:'yyyy-MM-dd HH:mm:ss' }}</a></td>
-				<td data-title="'CLR Type'" sortable="'ClrType'" filter="{ 'Name': 'text' }"><a ng-href="#/configuration/{{config.ClrType}}">{{config.ClrType}}</a></td>
-				<td data-title="'Updated'" sortable="'Updated'"><a ng-href="#/configuration/{{config.ClrType}}">{{config.Updated | date:'yyyy-MM-dd HH:mm:ss' }}</a></td>
-				<td data-title="'Updated By'" sortable="'UpdatedBy'" filter="{ 'Name': 'text' }"><a ng-href="#/configuration/{{config.ClrType}}">{{config.UpdatedBy}}</a></td>
+				<td data-title="'Created'" sortable="'Created'"><a ng-href="#/configuration/{{config.Id}}">{{config.Created | date:'yyyy-MM-dd HH:mm:ss' }}</a></td>
+                <td data-title="'Name'" sortable="'Name'" filter="{ 'Name': 'text' }"><a ng-href="#/configuration/{{config.Id}}">{{config.Name}}</a></td>
+				<td data-title="'Updated'" sortable="'Updated'"><a ng-href="#/configuration/{{config.Id}}">{{config.Updated | date:'yyyy-MM-dd HH:mm:ss' }}</a></td>
+				<td data-title="'Updated By'" sortable="'UpdatedBy'" filter="{ 'UpdatedBy': 'text' }"><a ng-href="#/configuration/{{config.Id}}">{{config.UpdatedBy}}</a></td>
 			</tr>
 		</tbody>
 	</table>

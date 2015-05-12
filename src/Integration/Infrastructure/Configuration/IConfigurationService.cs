@@ -5,10 +5,12 @@
         TConfiguration Get<TConfiguration>()
             where TConfiguration : class, new();
 
-        void Save<TConfiguration>(TConfiguration configuration, string updatedBy, bool createArchiveBackup = false);
+        TConfiguration Save<TConfiguration>(TConfiguration configuration, string updatedBy, bool createArchiveBackup = false)
+            where TConfiguration : class, new();
 
         Configuration[] GetAll();
-        Configuration Get(string clrType);
-        Configuration Save(Configuration configuration, bool createArchiveBackup = false);
+        Configuration Get(string id);
+        Configuration Save(Configuration configuration, string updatedBy, bool createArchiveBackup = false);
+        void Delete(string id);
     }
 }

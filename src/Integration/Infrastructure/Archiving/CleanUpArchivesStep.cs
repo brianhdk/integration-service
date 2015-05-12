@@ -20,9 +20,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
         public override void Execute(MaintenanceWorkItem workItem, ILog log)
         {
-            MaintenanceConfiguration configuration = _configuration.Get<MaintenanceConfiguration>();
-
-            DateTimeOffset lowerBound = Time.UtcNow.BeginningOfDay().Subtract(configuration.CleanUpArchivesOlderThan);
+            DateTimeOffset lowerBound = Time.UtcNow.BeginningOfDay().Subtract(workItem.Configuration.CleanUpArchivesOlderThan);
 
             int count = _archive.Delete(lowerBound);
 

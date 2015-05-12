@@ -53,10 +53,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Migrations\M1431459508_MergeMaintenanceConfiguration.cs" />
     <Compile Include="Migrations\M1427839041_SetupMonitorConfiguration.cs" />
     <Compile Include="FileSystemTesterTask.cs" />
     <Compile Include="FtpTesterTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TaskExecutingTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Integration\Integration.csproj">

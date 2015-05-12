@@ -1,23 +1,27 @@
 ﻿using System.Collections.Generic;
+using Vertica.Integration.Infrastructure.Configuration;
 using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Domain.Core
 {
 	public class MaintenanceTask : Task<MaintenanceWorkItem>
 	{
-		public MaintenanceTask(IEnumerable<IStep<MaintenanceWorkItem>> steps) 
+	    private readonly IConfigurationService _service;
+
+		public MaintenanceTask(IEnumerable<IStep<MaintenanceWorkItem>> steps, IConfigurationService service) 
 			: base(steps)
 		{
+		    _service = service;
 		}
 
-		public override string Description
+	    public override string Description
 		{
 			get { return "Performs a number of steps to clean up the solution."; }
 		}
 
         public override MaintenanceWorkItem Start(ILog log, params string[] arguments)
 		{
-			return new MaintenanceWorkItem();
+			return new MaintenanceWorkItem(_service.Get<MaintenanceConfiguration>());
 		}
 	}
 }

@@ -3,11 +3,9 @@ using System.Linq;
 using NSubstitute;
 using NUnit.Framework;
 using Vertica.Integration.Domain.Monitoring;
-using Vertica.Integration.Infrastructure.Configuration;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Infrastructure.Remote;
 using Vertica.Integration.Model;
-using Vertica.Utilities_v4;
 
 namespace Vertica.Integration.Tests.Domain.Monitoring
 {
@@ -17,21 +15,21 @@ namespace Vertica.Integration.Tests.Domain.Monitoring
         [Test]
         public void Execute()
         {
-            var configurationService = Substitute.For<IConfigurationService>();
-            var configuration = new PingUrlsConfiguration
+            var configuration = new MonitorConfiguration
             {
-                Urls = new[]
+                PingUrls =
                 {
-                    "http://www.google.com"
-                },
-                MaximumWaitTimeSeconds = 10
+                    Urls = new[]
+                    {
+                        "http://www.google.com"
+                    },
+                    MaximumWaitTimeSeconds = 10
+                }
             };
 
-            configurationService.Get<PingUrlsConfiguration>().Returns(configuration);
+            var subject = new PingUrlsStep(new HttpClientFactory());
 
-            var subject = new PingUrlsStep(configurationService, new HttpClientFactory());
-
-            var workItem = new MonitorWorkItem(Time.UtcNow);
+            var workItem = new MonitorWorkItem(configuration);
 
             subject.Execute(workItem, Substitute.For<ILog>());
 

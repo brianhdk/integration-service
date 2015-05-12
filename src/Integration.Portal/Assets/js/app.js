@@ -52,7 +52,7 @@ integrationsApp.config(function ($routeProvider, $locationProvider) {
         	controller: 'configurationController'
         })
 
-        .when('/configuration/:clrType', {
+        .when('/configuration/:id', {
         	templateUrl: '/assets/pages/configurationDetail.html',
         	controller: 'configurationDetailController'
         })

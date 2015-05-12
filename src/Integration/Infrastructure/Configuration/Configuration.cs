@@ -4,7 +4,9 @@ namespace Vertica.Integration.Infrastructure.Configuration
 {
     public class Configuration
     {
-        public string ClrType { get; set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
         public string JsonData { get; set; }
 
         public DateTimeOffset Created { get; set; }

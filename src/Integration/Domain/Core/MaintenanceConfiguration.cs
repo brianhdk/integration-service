@@ -1,7 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
 
 namespace Vertica.Integration.Domain.Core
 {
+    [Guid("FBF783F5-0210-448D-BEB9-FD0E9AD6CABF")]
+    [Description("Used by the MaintenanceTask.")]
     public class MaintenanceConfiguration
     {
         public MaintenanceConfiguration()

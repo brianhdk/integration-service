@@ -67,7 +67,7 @@ namespace Vertica.Integration.Model
 					if (continueWith == Execution.StepOver)
 						continue;
 
-					using (var stepLog = taskLog.LogStep(step))
+					using (StepLog stepLog = taskLog.LogStep(step))
 					{
 						try
 						{
@@ -80,7 +80,8 @@ namespace Vertica.Integration.Model
 							taskLog.ErrorLog = errorLog;
 							stepLog.ErrorLog = errorLog;
 
-							throw new TaskExecutionFailedException(String.Format("Step '{0}' failed.", stepLog.StepName), ex);
+							throw new TaskExecutionFailedException(
+                                String.Format("Step '{0}' failed.", stepLog.StepName), ex);
 						}
 					}
 				}

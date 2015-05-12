@@ -29,10 +29,12 @@ SELECT
 	[Message],
 	[TimeStamp]
 FROM [TaskLog]
-WHERE ExecutionTimeSeconds = 0
-AND ErrorLog_Id IS NULL
- ORDER BY TimeStamp desc
-");
+WHERE (
+    [Type] = N'T' AND
+    [ExecutionTimeSeconds] IS NULL AND
+    [ErrorLog_Id] IS NULL
+)
+ORDER BY [Id] DESC");
 
             IEnumerable<TaskLogModel> tasks;
 

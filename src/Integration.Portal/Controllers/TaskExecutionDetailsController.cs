@@ -19,21 +19,22 @@ namespace Vertica.Integration.Portal.Controllers
 
         public HttpResponseMessage Get(int id)
         {
-            string sql = @"
+            const string sql = @"
 SELECT [Id]
       ,[TaskName]
       ,[StepName]
       ,[Message]
       ,[ExecutionTimeSeconds]
       ,[TimeStamp]
-  FROM [dbo].[TaskLog]
-  WHERE [Id] = @id OR TaskLog_Id = @taskLogId";
+FROM [TaskLog]
+WHERE ([Id] = @id OR TaskLog_Id = @id)
+ORDER BY [Id] DESC";
 
             IEnumerable<TaskExecutionDetailModel> taskLogs;
 
             using (IDapperSession session = _dapper.OpenSession())
             {
-                taskLogs = session.Query<TaskExecutionDetailModel>(sql, new { id, taskLogId = id }).ToList();
+                taskLogs = session.Query<TaskExecutionDetailModel>(sql, new { id }).ToList();
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, taskLogs);

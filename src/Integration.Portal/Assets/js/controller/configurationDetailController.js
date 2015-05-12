@@ -1,12 +1,12 @@
 ﻿integrationsApp.controller('configurationDetailController', function ($scope, $http, $routeParams) {
 
-	$http.get('/configuration?clrType=' + $routeParams.clrType).success(function (xhr) {
-        $scope.clr = xhr;
+	$http.get('/configuration?id=' + $routeParams.id).success(function (xhr) {
+        $scope.model = xhr;
 	});
 
 	$scope.saveConfiguration = function () {
-	    $http.put('/configuration', $scope.clr).success(function (xhr) {
-	        $scope.clr = xhr;
+	    $http.put('/configuration', $scope.model).success(function (xhr) {
+	        $scope.model = xhr;
 	    });
     }
 
