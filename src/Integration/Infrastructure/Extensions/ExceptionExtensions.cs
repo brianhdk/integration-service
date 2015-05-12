@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Vertica.Integration.Infrastructure.Extensions
 {
-    public static class ExceptionExtensions
+    internal static class ExceptionExtensions
     {
         public static string GetFullStacktrace(this Exception exception)
         {
@@ -30,6 +30,30 @@ namespace Vertica.Integration.Infrastructure.Extensions
             }
 
             return sb.ToString();
+        }
+
+        public static string AggregateMessages(this Exception exception)
+        {
+            var sb = new StringBuilder();
+
+            int[] indents = { 0 };
+
+            Func<string, string> makeIndent = msg => String.Concat(new string('-', indents[0] * 3), " ", msg).Trim();
+
+            while (exception != null)
+            {
+                sb.AppendLine(makeIndent(exception.GetType().FullName));
+                sb.Append(makeIndent(exception.Message));
+
+                exception = exception.InnerException;
+
+                if (exception != null)
+                    sb.AppendLine();
+
+                indents[0]++;
+            }
+
+            return sb.ToString();            
         }
     }
 }

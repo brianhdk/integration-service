@@ -4,7 +4,7 @@ using Vertica.Integration.Infrastructure.Logging;
 
 namespace Vertica.Integration.Model.Web
 {
-    public class ExceptionHandlingAttribute : ExceptionFilterAttribute
+    internal class ExceptionHandlingAttribute : ExceptionFilterAttribute
     {
         private readonly ILogger _logger;
 

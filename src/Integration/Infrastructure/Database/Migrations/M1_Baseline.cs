@@ -3,11 +3,9 @@ using FluentMigrator;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
-    [Migration(VersionNumber)]
+    [Migration(1)]
 	public class M1_Baseline : Migration
 	{
-        public const int VersionNumber = 1;
-
 		public override void Up()
 		{
             Create.Table("ErrorLog")

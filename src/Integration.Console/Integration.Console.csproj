@@ -62,27 +62,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Integration.Experiments\Tasks.Experiments.config">
-      <Link>Tasks.Experiments.config</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\Integration.Host\Tasks.Core.config">
-      <Link>Tasks.Core.config</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\Integration.Logging.Elmah\Tasks.Elmah.config">
-      <Link>Tasks.Elmah.config</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\Integration.Logging.Kibana\Tasks.Kibana.config">
-      <Link>Tasks.Kibana.config</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="Tasks.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Integration.Azure\Integration.Azure.csproj">

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Xml;
 using Vertica.Integration.Domain.Monitoring;
-using Vertica.Integration.Infrastructure;
+using Vertica.Integration.Infrastructure.Configuration;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
 
@@ -9,20 +10,28 @@ namespace Vertica.Integration.Logging.Elmah
 {
     public class ExportElmahErrorsStep : Step<MonitorWorkItem>
     {
-        private readonly ConnectionString _connectionString;
-        private readonly string _sourceName;
+        private readonly IConfigurationService _configuration;
 
-        public ExportElmahErrorsStep(string connectionStringName, string sourceName)
+        public ExportElmahErrorsStep(IConfigurationService configuration)
         {
-            if (String.IsNullOrWhiteSpace(sourceName)) throw new ArgumentException(@"Value cannot be null or empty.", "sourceName");
+            _configuration = configuration;
+        }
 
-            _connectionString = ConnectionString.FromName(connectionStringName);
-            _sourceName = sourceName;
+        public override Execution ContinueWith(MonitorWorkItem workItem)
+        {
+            ElmahConfiguration configuration = _configuration.GetElmahConfiguration();
+
+            if (String.IsNullOrWhiteSpace(configuration.ConnectionStringName))
+                return Execution.StepOver;
+
+            return Execution.Execute;
         }
 
         public override void Execute(MonitorWorkItem workItem, ILog log)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            ElmahConfiguration configuration = _configuration.GetElmahConfiguration();
+
+            using (var connection = new SqlConnection(configuration.ToConnectionString()))
             using (SqlCommand command = connection.CreateCommand())
             {
                 connection.Open();
@@ -46,13 +55,17 @@ FOR XML AUTO";
                 command.Parameters.AddWithValue("l", workItem.CheckRange.LowerBound);
                 command.Parameters.AddWithValue("u", workItem.CheckRange.UpperBound);
 
-                using (var xmlReader = command.ExecuteXmlReader())
+                using (XmlReader reader = command.ExecuteXmlReader())
                 {
-                    while (xmlReader.IsStartElement("error"))
+                    while (reader.IsStartElement("error"))
                     {
-                        var error = new ElmahError(xmlReader);
+                        var error = new ElmahError(reader);
 
-                        workItem.Add(error.Created, _sourceName, error.ToString(), Target.Service);
+                        workItem.Add(
+                            error.Created,
+                            configuration.LogName, 
+                            error.ToString(), 
+                            Target.Service);
                     }
                 }
             }

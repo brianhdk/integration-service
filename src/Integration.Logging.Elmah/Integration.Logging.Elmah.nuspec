@@ -16,10 +16,4 @@
     <copyright>Copyright 2015</copyright>
     <tags>Vertica Integration Service IntegrationService Elmah</tags>
   </metadata>
-  <files>
-    <file src="Tasks*.config" target="content" />
-    <file src="NuGet-install.ps1" target="tools/install.ps1" />
-    <file src="NuGet-Tasks.config.install.xdt" target="content/Tasks.config.install.xdt" />
-    <file src="NuGet-Tasks.config.uninstall.xdt" target="content/Tasks.config.uninstall.xdt" />    
-  </files>
 </package>

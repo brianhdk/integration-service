@@ -2,7 +2,7 @@
 
 namespace Vertica.Integration.Model.Web
 {
-    public interface IWebApiControllers
+    internal interface IWebApiControllers
     {
         Type[] Controllers { get; }
     }

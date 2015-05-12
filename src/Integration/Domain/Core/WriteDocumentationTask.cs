@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Model;
@@ -19,26 +20,45 @@ namespace Vertica.Integration.Domain.Core
         {
             var sb = new StringBuilder();
 
+            Func<string, int, string> makeIndent = (msg, count) => 
+                String.Concat(new string(' ', count), msg);
+
             foreach (ITask task in _taskFactory.GetAll())
             {
                 sb.AppendLine(task.Name());
+                sb.AppendLine(makeIndent(task.Description, 3));
                 sb.AppendLine();
-                sb.AppendLine(String.Format("\t- {0}", task.Description));
 
                 foreach (IStep step in task.Steps)
-                    sb.AppendLine(String.Format("\t\t- {0}", step.Description));
-
-                sb.AppendLine();
-                sb.AppendLine("-------------------------------------");
-                sb.AppendLine();
+                {
+                    sb.AppendLine(makeIndent(step.Name(), 3));
+                    sb.AppendLine(makeIndent(step.Description, 6));
+                    sb.AppendLine();
+                }
             }
 
-			File.WriteAllText("Tasks-Documentation.txt", sb.ToString());
+            string text = sb.ToString();
+
+            if (arguments != null && arguments.Contains("ToFile", StringComparer.OrdinalIgnoreCase))
+            {
+                var file = new FileInfo("Tasks-Documentation.txt");
+
+                File.WriteAllText(file.Name, text);
+
+                log.Message("File generated. Location: {0}", file.FullName);
+            }
+            else
+            {
+                log.Message(text);
+            }
         }
 
         public override string Description
         {
-            get { return "Outputs all integration tasks and related steps."; }
+            get
+            {
+                return @"Outputs all integration tasks and related steps. Use argument ""ToFile"" to generate a text-file with this documentation.";
+            }
         }
     }
 }

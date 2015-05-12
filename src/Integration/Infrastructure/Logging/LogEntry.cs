@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using Vertica.Integration.Infrastructure.Extensions;
-using Vertica.Integration.Infrastructure.Windows;
 using Vertica.Utilities_v4;
 
 namespace Vertica.Integration.Infrastructure.Logging
@@ -10,11 +8,11 @@ namespace Vertica.Integration.Infrastructure.Logging
     {
         private readonly Stopwatch _watch;
 
-        protected LogEntry(string taskName, bool startStopwatch = true)
+        protected LogEntry(string taskName, bool measureExecutionTime = true)
         {
             _watch = new Stopwatch();
 
-            if (startStopwatch)
+            if (measureExecutionTime)
                 _watch.Start();
 
             TaskName = taskName;
@@ -23,15 +21,17 @@ namespace Vertica.Integration.Infrastructure.Logging
 
         public int Id { get; internal set; }
         public string TaskName { get; private set; }
-        public double ExecutionTimeSeconds { get; protected set; }
+        public double? ExecutionTimeSeconds { get; protected set; }
         public DateTimeOffset TimeStamp { get; private set; }
 
         public virtual void Dispose()
         {
             if (_watch.IsRunning)
+            {
                 _watch.Stop();
 
-            ExecutionTimeSeconds = _watch.Elapsed.TotalSeconds;
+                ExecutionTimeSeconds = _watch.Elapsed.TotalSeconds;
+            }
         }
     }
 }

@@ -15,9 +15,8 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 		public void Install(IWindsorContainer container, IConfigurationStore store)
 		{
 		    container.Register(
-		        Component
-		            .For<ITaskFactory>()
-		                .UsingFactoryMethod(kernel => new TaskFactory(kernel)));
+		        Component.For<ITaskFactory>()
+		            .UsingFactoryMethod(kernel => new TaskFactory(kernel)));
 		}
 
         private class TaskFactory : ITaskFactory

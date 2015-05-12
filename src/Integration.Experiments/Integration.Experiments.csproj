@@ -53,21 +53,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArchiveTesterTask.cs" />
-    <Compile Include="Custom_Database\CustomDb.cs" />
-    <Compile Include="Custom_Database\CustomDbTesterTask.cs" />
-    <Compile Include="EmailWithAttachmentTesterTask.cs" />
-    <Compile Include="ExceptionTesterTask.cs" />
-    <Compile Include="Extend_IntegrationDb\M1427839039_NewTable.cs" />
-    <Compile Include="Extend_IntegrationDb\M1427839050_ChangeSubjectPrefixOnMonitorConfiguration.cs" />
-    <Compile Include="Extend_IntegrationDb\M1427839041_AddRecipientToMonitorConfiguration.cs" />
-    <Compile Include="Extend_IntegrationDb\M1427839040_DeleteNewTable.cs" />
+    <Compile Include="Migrations\M1427839041_SetupMonitorConfiguration.cs" />
     <Compile Include="FileSystemTesterTask.cs" />
     <Compile Include="FtpTesterTask.cs" />
-    <Compile Include="LogTesterTask.cs" />
-    <Compile Include="ConfigurationTesterTask.cs" />
-    <Compile Include="Custom_Database\Migrations\M1_Test.cs" />
-    <Compile Include="Custom_Database\Migrations\M2_Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -79,7 +67,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="Tasks.Experiments.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

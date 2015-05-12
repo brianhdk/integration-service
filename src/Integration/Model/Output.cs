@@ -2,7 +2,7 @@ using System;
 
 namespace Vertica.Integration.Model
 {
-    public class Output
+    internal class Output
     {
         private readonly Action<string> _message;
 

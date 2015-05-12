@@ -60,7 +60,7 @@ namespace Vertica.Integration.Tests.Model
         {
             var configuration = new ApplicationConfiguration();
             configuration.Tasks(x => x.Skip<MigrateTask>()); // skip this because it requires a bit more setup to work (e.g).
-            configuration.Tasks(x => x.ScanFromAssemblyOfThis<TaskFactoryTester>());
+            configuration.Tasks(x => x.AddTasksFromAssemblyOfThis<TaskFactoryTester>());
 
             var container = CastleWindsor.Initialize(configuration);
 

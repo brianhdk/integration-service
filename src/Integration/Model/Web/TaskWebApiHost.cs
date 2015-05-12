@@ -9,7 +9,7 @@ using Castle.Windsor;
 
 namespace Vertica.Integration.Model.Web
 {
-    public class TaskWebApiHost : WebApiHost
+    internal class TaskWebApiHost : WebApiHost
     {
         private const string ContextKey = "Context_7A89A4949AC44CCB8D7417AA78BB000B";
 

@@ -3,7 +3,7 @@ using Vertica.Integration.Infrastructure.Logging;
 
 namespace Vertica.Integration.Model
 {
-	public class Log : ILog
+    internal class Log : ILog
 	{
 		private readonly Action<string> _message;
 	    private readonly Action<Target, string> _warning;
@@ -27,11 +27,17 @@ namespace Vertica.Integration.Model
 
 	    public void Warning(Target target, string format, params object[] args)
 	    {
-	        _warning(target, String.Format(format, args));
+	        string message = String.Format(format, args);
+
+	        _message(String.Format("[WARNING] {0}", message));
+	        _warning(target, message);
 	    }
 
 	    public void Error(Target target, string format, params object[] args)
 	    {
+            string message = String.Format(format, args);
+
+            _message(String.Format("[ERROR] {0}", message));
 	        _error(target, String.Format(format, args));
 	    }
 	}

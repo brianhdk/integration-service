@@ -38,17 +38,8 @@ namespace Vertica.Integration.Model
 	            output.Add(message);
 	        };
 
-	        Action<Target, string> logWarning = (target, message) =>
-	        {
-	            outputter(message);
-	            _logger.LogWarning(target, message);
-	        };
-
-	        Action<Target, string> logError = (target, message) =>
-	        {
-	            outputter(message);
-	            _logger.LogError(target, message);
-	        };
+	        Action<Target, string> logWarning = (target, message) => _logger.LogWarning(target, message);
+	        Action<Target, string> logError = (target, message) => _logger.LogError(target, message);
 
             using (var taskLog = new TaskLog(task, _logger.LogEntry, new Output(outputter)))
 			{
