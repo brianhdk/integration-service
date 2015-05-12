@@ -7,7 +7,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 	public class MessageLog : LogEntry
 	{
         internal MessageLog(TaskLog taskLog, string message, Output output)
-            : base(taskLog.TaskName)
+            : base(taskLog.TaskName, measureExecutionTime: false)
         {
             if (output == null) throw new ArgumentNullException("output");
 
@@ -16,7 +16,7 @@ namespace Vertica.Integration.Infrastructure.Logging
         }
 
 		internal MessageLog(StepLog stepLog, string message, Output output)
-            : base(stepLog.TaskName)
+            : base(stepLog.TaskName, measureExecutionTime: false)
         {
 		    if (output == null) throw new ArgumentNullException("output");
 
@@ -46,8 +46,6 @@ namespace Vertica.Integration.Infrastructure.Logging
 		public override void Dispose()
 		{
 			base.Dispose();
-
-			ExecutionTimeSeconds = 0;
 
 			TaskLog.Persist(this);
 		}

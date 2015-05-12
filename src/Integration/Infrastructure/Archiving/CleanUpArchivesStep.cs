@@ -1,25 +1,28 @@
 ﻿using System;
 using Vertica.Integration.Domain.Core;
+using Vertica.Integration.Infrastructure.Configuration;
 using Vertica.Integration.Model;
 using Vertica.Utilities_v4;
-using Vertica.Utilities_v4.Extensions.StringExt;
+using Vertica.Utilities_v4.Extensions.TimeExt;
 
 namespace Vertica.Integration.Infrastructure.Archiving
 {
     public class CleanUpArchivesStep : Step<MaintenanceWorkItem>
     {
         private readonly IArchiveService _archive;
-        private readonly TimeSpan _olderThan;
+        private readonly IConfigurationService _configuration;
 
-        public CleanUpArchivesStep(IArchiveService archive, TimeSpan olderThan)
+        public CleanUpArchivesStep(IArchiveService archive, IConfigurationService configuration)
         {
             _archive = archive;
-            _olderThan = olderThan;
+            _configuration = configuration;
         }
 
         public override void Execute(MaintenanceWorkItem workItem, ILog log)
         {
-            DateTimeOffset lowerBound = Time.UtcNow.Subtract(_olderThan);
+            MaintenanceConfiguration configuration = _configuration.Get<MaintenanceConfiguration>();
+
+            DateTimeOffset lowerBound = Time.UtcNow.BeginningOfDay().Subtract(configuration.CleanUpArchivesOlderThan);
 
             int count = _archive.Delete(lowerBound);
 
@@ -31,7 +34,10 @@ namespace Vertica.Integration.Infrastructure.Archiving
         {
             get
             {
-                return "Deletes archives older than {0} days".FormatWith(_olderThan.TotalDays);
+                MaintenanceConfiguration configuration = _configuration.Get<MaintenanceConfiguration>();
+
+                return String.Format("Deletes archives older than {0} days.",
+                    configuration.CleanUpArchivesOlderThan.TotalDays);
             }
         }
     }

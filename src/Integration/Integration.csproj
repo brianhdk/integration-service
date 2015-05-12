@@ -108,7 +108,9 @@
     <Compile Include="ApplicationContext.cs" />
     <Compile Include="CastleWindsor.cs" />
     <Compile Include="Domain\Core\CleanUpIntegrationDbStep.cs" />
+    <Compile Include="Domain\Core\MaintenanceConfiguration.cs" />
     <Compile Include="Domain\Core\MaintenanceTask.cs" />
+    <Compile Include="Domain\Core\MaintenanceTaskExtensions.cs" />
     <Compile Include="Domain\Core\MaintenanceWorkItem.cs" />
     <Compile Include="Domain\Core\WriteDocumentationTask.cs" />
     <Compile Include="Domain\Monitoring\ExportIntegrationErrorsStep.cs" />
@@ -118,7 +120,10 @@
     <Compile Include="Domain\Monitoring\MonitorEntry.cs" />
     <Compile Include="Domain\Monitoring\MonitorTarget.cs" />
     <Compile Include="Domain\Monitoring\MonitorTask.cs" />
+    <Compile Include="Domain\Monitoring\MonitorTaskExtensions.cs" />
     <Compile Include="Domain\Monitoring\MonitorWorkItem.cs" />
+    <Compile Include="Domain\Monitoring\PingUrlsConfiguration.cs" />
+    <Compile Include="Domain\Monitoring\PingUrlsStep.cs" />
     <Compile Include="Domain\Monitoring\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -151,6 +156,7 @@
     <Compile Include="Infrastructure\Database\Dapper\IExposeTransaction.cs" />
     <Compile Include="Infrastructure\Database\Migrations\DatabaseServer.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M1_Baseline.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\M5_TaskLogNullableExecutionTimeSeconds.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M4_ExtendTaskLogWithExecutionContext.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M3_Configuration.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M2_Archive.cs" />
@@ -171,7 +177,7 @@
     <Compile Include="Infrastructure\Factories\Castle.Windsor\CastleWindsorExtensions.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ConsoleWriterInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ConventionInstaller.cs" />
-    <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\AutoRegisterTasksInstaller.cs" />
+    <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\TaskInstaller.cs" />
     <Compile Include="Infrastructure\IO\FileSystemService.cs" />
     <Compile Include="Infrastructure\IO\IDirectory.cs" />
     <Compile Include="Infrastructure\IO\IFile.cs" />
@@ -188,9 +194,12 @@
     <Compile Include="Infrastructure\Remote\Ftp\FtpClientException.cs" />
     <Compile Include="Infrastructure\Remote\Ftp\FtpClientExtensions.cs" />
     <Compile Include="Infrastructure\Remote\Ftp\IFtpClient.cs" />
+    <Compile Include="Infrastructure\Remote\HttpClientFactory.cs" />
     <Compile Include="Infrastructure\Remote\IFtpClientFactory.cs" />
+    <Compile Include="Infrastructure\Remote\IHttpClientFactory.cs" />
     <Compile Include="Model\ILog.cs" />
     <Compile Include="Model\TasksConfiguration.cs" />
+    <Compile Include="Model\TaskConfiguration.cs" />
     <Compile Include="Model\Web\IWebApiControllers.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\TaskFactoryInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\WebApiInstaller.cs" />

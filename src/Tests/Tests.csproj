@@ -70,9 +70,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CastleWindsorTester.cs" />
     <Compile Include="Domain\Monitoring\MessageContainsTextIgnoreFilterTester.cs" />
     <Compile Include="Domain\Monitoring\MonitorWorkItemTester.cs" />
+    <Compile Include="Domain\Monitoring\PingUrlsStepIntegrationTester.cs" />
     <Compile Include="Infrastructure\Archiving\ArchiveServiceTester.cs" />
     <Compile Include="Infrastructure\Parsing\CsvParserTester.cs" />
     <Compile Include="Infrastructure\Parsing\CsvRowTester.cs" />

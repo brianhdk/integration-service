@@ -15,7 +15,7 @@ using Vertica.Integration.Infrastructure.Logging;
 
 namespace Vertica.Integration.Model.Web
 {
-    public class WebApiHost : IDisposable
+    internal class WebApiHost : IDisposable
     {
         private readonly TaskLog _taskLog;
         private readonly IDisposable _httpServer;

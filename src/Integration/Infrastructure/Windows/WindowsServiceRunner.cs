@@ -3,7 +3,7 @@ using System.ServiceProcess;
 
 namespace Vertica.Integration.Infrastructure.Windows
 {
-    public class WindowsServiceRunner : ServiceBase
+    internal class WindowsServiceRunner : ServiceBase
     {
         private readonly Func<IDisposable> _taskFactory;
         private readonly string _name;

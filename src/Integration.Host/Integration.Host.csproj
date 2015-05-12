@@ -46,14 +46,7 @@
     <None Include="Integration.Host.nuspec" />
     <None Include="NuGet-app.config.install.xdt" />
     <None Include="NuGet-app.config.uninstall.xdt" />
-    <None Include="NuGet-install.ps1" />
     <None Include="NuGet-IntegrationStartup.cs.pp" />
-    <None Include="Tasks.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Tasks.Core.config">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Integration\Integration.csproj">

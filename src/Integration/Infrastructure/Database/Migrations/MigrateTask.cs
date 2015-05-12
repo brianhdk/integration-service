@@ -12,6 +12,7 @@ using FluentMigrator.Runner.Processors.SqlServer;
 using Vertica.Integration.Infrastructure.Database.Dapper;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
+using Vertica.Utilities_v4.Extensions.AttributeExt;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
@@ -34,11 +35,30 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
             StringBuilder output;
             MigrationRunner runner = CreateRunner(integrationDb, out output);
 
-            // Baseline has not been applied, so we'll have to disable any logging
-            if (!runner.VersionLoader.VersionInfo.HasAppliedMigration(M4_ExtendTaskLogWithExecutionContext.VersionNumber))
+            // Latest migration has not been applied, so we'll have to disable any logging.
+            if (!runner.VersionLoader.VersionInfo.HasAppliedMigration(FindLatestMigration()))
                 _loggingDisabler = logger.Disable();
 
             _targets = new[] { integrationDb }.Concat(configuration.CustomTargets).ToArray();
+        }
+
+        private static long FindLatestMigration()
+        {
+            long latestMigration =
+                typeof (M1_Baseline).Assembly.GetTypes()
+                    .Where(x =>
+                        x.IsClass &&
+                        x.Namespace == typeof (M1_Baseline).Namespace)
+                    .Select(x =>
+                    {
+                        var migration = x.GetAttribute<MigrationAttribute>();
+
+                        return migration != null ? migration.Version : -1;
+                    })
+                    .OrderByDescending(x => x)
+                    .First();
+
+            return latestMigration;
         }
 
         public override string Description

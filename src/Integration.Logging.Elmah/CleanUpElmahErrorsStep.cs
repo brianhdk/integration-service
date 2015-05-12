@@ -2,28 +2,37 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using Vertica.Integration.Domain.Core;
-using Vertica.Integration.Infrastructure;
+using Vertica.Integration.Infrastructure.Configuration;
 using Vertica.Integration.Model;
-using Vertica.Utilities_v4.Extensions.StringExt;
 
 namespace Vertica.Integration.Logging.Elmah
 {
     public class CleanUpElmahErrorsStep : Step<MaintenanceWorkItem>
     {
-        private readonly ConnectionString _connectionString;
-        private readonly TimeSpan _olderThan;
+        private readonly IConfigurationService _configuration;
 
-        public CleanUpElmahErrorsStep(string connectionStringName, TimeSpan olderThan)
+        public CleanUpElmahErrorsStep(IConfigurationService configuration)
         {
-            _connectionString = ConnectionString.FromName(connectionStringName);
-            _olderThan = olderThan;
+            _configuration = configuration;
+        }
+
+        public override Execution ContinueWith(MaintenanceWorkItem workItem)
+        {
+            ElmahConfiguration configuration = _configuration.GetElmahConfiguration();
+
+            if (String.IsNullOrWhiteSpace(configuration.ConnectionStringName))
+                return Execution.StepOver;
+
+            return Execution.Execute;
         }
 
         public override void Execute(MaintenanceWorkItem workItem, ILog log)
         {
-            DateTime lowerBound = DateTime.UtcNow.Date.Subtract(_olderThan);
+            ElmahConfiguration configuration = _configuration.GetElmahConfiguration();
 
-            using (var connection = new SqlConnection(_connectionString))
+            DateTime lowerBound = DateTime.UtcNow.Date.Subtract(configuration.CleanUpEntriesOlderThan);
+
+            using (var connection = new SqlConnection(configuration.ToConnectionString()))
             using (SqlCommand command = connection.CreateCommand())
             {
                 connection.Open();
@@ -43,7 +52,8 @@ namespace Vertica.Integration.Logging.Elmah
         {
             get
             {
-                return "Deletes Elmah entries older than {0} days".FormatWith(_olderThan.TotalDays);
+                return String.Format("Deletes Elmah entries older than {0} days",
+                    _configuration.GetElmahConfiguration().CleanUpEntriesOlderThan.TotalDays);
             }
         }
     }

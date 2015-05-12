@@ -163,13 +163,12 @@ namespace Vertica.Integration.Infrastructure.Logging
             protected override void HandleInsert(IDapperSession session, MessageLog logEntry)
             {
                 logEntry.Id = session.Wrap(s => s.ExecuteScalar<int>(
-                    @"INSERT INTO TaskLog (Type, TaskName, ExecutionTimeSeconds, TimeStamp, StepName, Message, TaskLog_Id, StepLog_Id)
-                      VALUES ('M', @TaskName, @ExecutionTimeSeconds, @TimeStamp, @StepName, @Message, @TaskLog_Id, @StepLog_Id)
+                    @"INSERT INTO TaskLog (Type, TaskName, TimeStamp, StepName, Message, TaskLog_Id, StepLog_Id)
+                      VALUES ('M', @TaskName, @TimeStamp, @StepName, @Message, @TaskLog_Id, @StepLog_Id)
                       SELECT CAST(SCOPE_IDENTITY() AS INT)",
                     new
                     {
                         logEntry.TaskName,
-                        logEntry.ExecutionTimeSeconds,
                         logEntry.TimeStamp,
                         logEntry.StepName,
                         logEntry.Message,
@@ -194,14 +193,13 @@ namespace Vertica.Integration.Infrastructure.Logging
             protected override void HandleInsert(IDapperSession session, StepLog logEntry)
             {
                 logEntry.Id = session.Wrap(s => s.ExecuteScalar<int>(
-                    @"INSERT INTO TaskLog (Type, TaskName, StepName, ExecutionTimeSeconds, TimeStamp, TaskLog_Id, ErrorLog_Id)
-                      VALUES ('S', @TaskName, @StepName, @ExecutionTimeSeconds, @TimeStamp, @TaskLog_Id, @ErrorLog_Id)
+                    @"INSERT INTO TaskLog (Type, TaskName, StepName, TimeStamp, TaskLog_Id, ErrorLog_Id)
+                      VALUES ('S', @TaskName, @StepName, @TimeStamp, @TaskLog_Id, @ErrorLog_Id)
                       SELECT CAST(SCOPE_IDENTITY() AS INT)",
                     new
                     {
                         logEntry.TaskName,
                         logEntry.StepName,
-                        logEntry.ExecutionTimeSeconds,
                         logEntry.TimeStamp,
                         TaskLog_Id = logEntry.TaskLog.Id,
                         ErrorLog_Id = logEntry.ErrorLog != null ? logEntry.ErrorLog.Id : default(int?),
@@ -216,7 +214,7 @@ namespace Vertica.Integration.Infrastructure.Logging
                     new
                     {
                         logEntry.Id,
-                        logEntry.ExecutionTimeSeconds,
+                        ExecutionTimeSeconds = logEntry.ExecutionTimeSeconds.GetValueOrDefault(),
                         ErrorLog_Id = logEntry.ErrorLog != null ? logEntry.ErrorLog.Id : default(int?)
                     });
             }
@@ -232,13 +230,12 @@ namespace Vertica.Integration.Infrastructure.Logging
             protected override void HandleInsert(IDapperSession session, TaskLog logEntry)
             {
                 logEntry.Id = session.Wrap(s => s.ExecuteScalar<int>(
-                    @"INSERT INTO TaskLog (Type, TaskName, ExecutionTimeSeconds, TimeStamp, MachineName, IdentityName, CommandLine, ErrorLog_Id)
-                      VALUES ('T', @TaskName, @ExecutionTimeSeconds, @TimeStamp, @MachineName, @IdentityName, @CommandLine, @ErrorLog_Id)
+                    @"INSERT INTO TaskLog (Type, TaskName, TimeStamp, MachineName, IdentityName, CommandLine, ErrorLog_Id)
+                      VALUES ('T', @TaskName, @TimeStamp, @MachineName, @IdentityName, @CommandLine, @ErrorLog_Id)
                       SELECT CAST(SCOPE_IDENTITY() AS INT)",
                     new
                     {
                         logEntry.TaskName,
-                        logEntry.ExecutionTimeSeconds,
                         logEntry.TimeStamp,
                         logEntry.MachineName,
                         logEntry.IdentityName,
@@ -254,7 +251,7 @@ namespace Vertica.Integration.Infrastructure.Logging
                     new
                     {
                         logEntry.Id,
-                        logEntry.ExecutionTimeSeconds,
+                        ExecutionTimeSeconds = logEntry.ExecutionTimeSeconds.GetValueOrDefault(),
                         ErrorLog_Id = logEntry.ErrorLog != null ? logEntry.ErrorLog.Id : default(int?)
                     });
             }

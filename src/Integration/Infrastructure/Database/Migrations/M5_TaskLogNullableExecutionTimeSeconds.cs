@@ -3,15 +3,15 @@ using FluentMigrator;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
-    [Migration(4)]
-    public class M4_ExtendTaskLogWithExecutionContext : Migration
+    [Migration(5)]
+    public class M5_TaskLogNullableExecutionTimeSeconds : Migration
     {
         public override void Up()
         {
             Alter.Table("TaskLog")
-				.AddColumn("MachineName").AsString(255).Nullable()
-                .AddColumn("IdentityName").AsString(255).Nullable()
-                .AddColumn("CommandLine").AsString(Int32.MaxValue).Nullable();
+                .AlterColumn("ExecutionTimeSeconds").AsDouble().Nullable();
+
+            Execute.Sql("UPDATE TaskLog SET ExecutionTimeSeconds = NULL WHERE ([Type] = 'M');");
         }
 
         public override void Down()

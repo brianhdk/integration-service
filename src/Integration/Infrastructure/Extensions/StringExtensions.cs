@@ -1,6 +1,6 @@
 ﻿namespace Vertica.Integration.Infrastructure.Extensions
 {
-    public static class StringExtensions
+    internal static class StringExtensions
 	{
 		public static string MaxLength(this string value, uint maxLength)
 		{

@@ -2,7 +2,7 @@
 
 namespace Vertica.Integration.Infrastructure
 {
-    public struct Delay
+    internal struct Delay
     {
         private readonly int _seconds;
 

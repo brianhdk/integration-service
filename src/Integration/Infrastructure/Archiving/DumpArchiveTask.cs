@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Infrastructure.Archiving
@@ -39,7 +40,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
             }
             else
             {
-                log.Warning("Archive '{0}' not found.", id);
+                log.Warning(Target.Service, "Archive '{0}' not found.", id);
             }
         }
     }

@@ -8,7 +8,7 @@ using Castle.Windsor;
 
 namespace Vertica.Integration.Infrastructure.Database.Dapper.Castle.Windsor
 {
-	public class DapperInstaller : DapperInstaller<DefaultConnection>
+    internal class DapperInstaller : DapperInstaller<DefaultConnection>
 	{
 		public DapperInstaller(DefaultConnection connection)
 			: base(connection)

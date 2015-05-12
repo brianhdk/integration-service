@@ -2,7 +2,7 @@
 
 namespace Vertica.Integration.Infrastructure.Windows
 {
-	public static class WindowsUtils
+    internal static class WindowsUtils
 	{
 		public static string GetIdentityName()
 		{

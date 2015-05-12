@@ -1,31 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Vertica.Integration.Infrastructure.Configuration;
 using Vertica.Integration.Infrastructure.Email;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
-using Vertica.Utilities_v4.Extensions.EnumerableExt;
 
 namespace Vertica.Integration.Domain.Monitoring
 {
-	public class MonitorTask : Task<MonitorWorkItem>
+    public class MonitorTask : Task<MonitorWorkItem>
 	{
 		private readonly IConfigurationService _configuration;
 		private readonly IEmailService _emailService;
-		private readonly string[] _ignoreErrorsWithMessagesContaining;
 
-        public MonitorTask(IEnumerable<IStep<MonitorWorkItem>> steps, IConfigurationService configuration, IEmailService emailService, string[] ignoreErrorsWithMessagesContaining)
+        public MonitorTask(IEnumerable<IStep<MonitorWorkItem>> steps, IConfigurationService configuration, IEmailService emailService)
 			: base(steps)
 		{
 			_configuration = configuration;
 			_emailService = emailService;
-
-            _ignoreErrorsWithMessagesContaining = 
-                (ignoreErrorsWithMessagesContaining ?? new string[0])
-                    .Select(x => x.Replace("\\r\\n", Environment.NewLine))
-                    .ToArray();
 		}
 
 		public override string Description
@@ -38,16 +30,8 @@ namespace Vertica.Integration.Domain.Monitoring
 		    MonitorConfiguration configuration = _configuration.Get<MonitorConfiguration>();
 		    configuration.Assert();
 
-			string[] ignoredMessages =
-				configuration.IgnoreErrorsWithMessagesContaining
-                    .EmptyIfNull()
-					.Concat(_ignoreErrorsWithMessagesContaining)
-					.Where(x => !String.IsNullOrWhiteSpace(x))
-					.Distinct()
-					.ToArray();
-
 			return new MonitorWorkItem(configuration.LastRun)
-                .WithIgnoreFilter(new MessageContainsTextIgnoreFilter(ignoredMessages));
+                .WithIgnoreFilter(new MessageContainsTextIgnoreFilter(configuration.IgnoreErrorsWithMessagesContaining));
 		}
 
         public override void End(MonitorWorkItem workItem, ILog log, params string[] arguments)

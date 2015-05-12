@@ -47,7 +47,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CleanUpElmahErrorsStep.cs" />
+    <Compile Include="ElmahConfiguration.cs" />
     <Compile Include="ElmahError.cs" />
+    <Compile Include="ElmahHelper.cs" />
     <Compile Include="ExportElmahErrorsStep.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -60,11 +62,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Integration.Logging.Elmah.nuspec" />
-    <None Include="NuGet-Tasks.config.uninstall.xdt" />
-    <None Include="NuGet-Tasks.config.install.xdt" />
-    <None Include="NuGet-install.ps1" />
     <None Include="packages.config" />
-    <None Include="Tasks.Elmah.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

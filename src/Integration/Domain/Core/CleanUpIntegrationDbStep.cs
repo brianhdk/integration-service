@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Data;
+using Vertica.Integration.Infrastructure.Configuration;
 using Vertica.Integration.Infrastructure.Database.Dapper;
 using Vertica.Integration.Model;
-using Vertica.Utilities_v4.Extensions.StringExt;
+using Vertica.Utilities_v4;
 using Vertica.Utilities_v4.Extensions.TimeExt;
 
 namespace Vertica.Integration.Domain.Core
@@ -10,20 +11,20 @@ namespace Vertica.Integration.Domain.Core
 	public class CleanUpIntegrationDbStep : Step<MaintenanceWorkItem>
 	{
 	    private readonly IDapperFactory _dapper;
-	    private readonly TimeSpan _tasksOlderThan;
-		private readonly TimeSpan _errorsOlderThan;
+	    private readonly IConfigurationService _configuration;
 
-		public CleanUpIntegrationDbStep(IDapperFactory dapper, TimeSpan tasksOlderThan, TimeSpan errorsOlderThan)
+		public CleanUpIntegrationDbStep(IDapperFactory dapper, IConfigurationService configuration)
 		{
 		    _dapper = dapper;
-		    _tasksOlderThan = tasksOlderThan;
-			_errorsOlderThan = errorsOlderThan;
+		    _configuration = configuration;
 		}
 
         public override void Execute(MaintenanceWorkItem workItem, ILog log)
-		{
-			DateTimeOffset tasksLowerBound = DateTimeOffset.UtcNow.BeginningOfDay().Subtract(_tasksOlderThan),
-				errorsLowerBound = DateTimeOffset.UtcNow.BeginningOfDay().Subtract(_errorsOlderThan);
+        {
+            MaintenanceConfiguration configuration = _configuration.Get<MaintenanceConfiguration>();
+
+			DateTimeOffset tasksLowerBound = Time.UtcNow.BeginningOfDay().Subtract(configuration.CleanUpTaskLogEntriesOlderThan),
+				errorsLowerBound = Time.UtcNow.BeginningOfDay().Subtract(configuration.CleanUpErrorLogEntriesOlderThan);
 
 			using (IDapperSession session = _dapper.OpenSession())
 			using (IDbTransaction transaction = session.BeginTransaction())
@@ -55,8 +56,13 @@ namespace Vertica.Integration.Domain.Core
 		{
 			get
 			{
-				return "Deletes integration task entries older than '{0}' days and error entries older than '{1}'"
-					.FormatWith(_tasksOlderThan.TotalDays, _errorsOlderThan.TotalDays);
+                MaintenanceConfiguration configuration = _configuration.Get<MaintenanceConfiguration>();
+
+			    return
+			        String.Format(
+			            "Deletes TaskLog entries older than {0} days and ErrorLog entries older than {1} days from IntegrationDb.",
+			            configuration.CleanUpTaskLogEntriesOlderThan.TotalDays,
+			            configuration.CleanUpErrorLogEntriesOlderThan.TotalDays);
 			}
 		}
 	}

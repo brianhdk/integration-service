@@ -5,7 +5,7 @@ using Vertica.Integration.Startup;
 namespace Vertica.Integration.Model.Exceptions
 {
     [Serializable]
-    public class StartupActionNotFoundException : Exception
+    internal class StartupActionNotFoundException : Exception
     {
         internal StartupActionNotFoundException(ExecutionContext context)
             : base(

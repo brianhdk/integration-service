@@ -17,7 +17,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 		private readonly IList<StepLog> _steps;
 		private readonly IList<MessageLog> _messages;
 
-		public TaskLog(ITask task, Action<LogEntry> persist, Output output)
+	    internal TaskLog(ITask task, Action<LogEntry> persist, Output output)
 			: base(task.Name())
 		{
 		    if (persist == null) throw new ArgumentNullException("persist");

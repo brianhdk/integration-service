@@ -2,13 +2,13 @@
 {
     public class WebApiTask : Task
     {
-        public override string Description
-        {
-            get { return "WebApi task."; }
-        }
-
         public override void StartTask(ILog log, params string[] arguments)
         {
+        }
+
+        public override string Description
+        {
+            get { return @"WebApiTask is used to host and expose WebApi ApiControllers registred. To run this Task, use the following command: ""WebApiTask -url http://localhost:8080"" (you can choose any valid URL)."; }
         }
     }
 }

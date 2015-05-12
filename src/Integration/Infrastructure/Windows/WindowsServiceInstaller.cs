@@ -11,7 +11,7 @@ using System.Text.RegularExpressions;
 
 namespace Vertica.Integration.Infrastructure.Windows
 {
-    public class WindowsServiceInstaller : IDisposable
+    internal class WindowsServiceInstaller : IDisposable
     {
         private readonly string _name;
         private readonly string _displayName;
