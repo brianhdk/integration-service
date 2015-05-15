@@ -6,7 +6,7 @@ namespace Vertica.Integration.Infrastructure.Remote
     {
         public HttpClient Create()
         {
-            return new HttpClient();
+            return new HttpClient(new HttpClientHandler { UseDefaultCredentials = true });
         }
     }
 }
