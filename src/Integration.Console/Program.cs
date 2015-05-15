@@ -2,6 +2,7 @@
 using Vertica.Integration.Domain.Monitoring;
 using Vertica.Integration.Experiments;
 using Vertica.Integration.Experiments.Migrations;
+using Vertica.Integration.Logging.Elmah;
 using Vertica.Integration.Portal;
 
 namespace Vertica.Integration.Console
@@ -16,8 +17,7 @@ namespace Vertica.Integration.Console
                     .IncludeFromNamespaceOfThis<M1427839041_SetupMonitorConfiguration>())
                 .Tasks(tasks => tasks
                     .AddTasksFromAssemblyOfThis<TaskOutputtingHi>()
-                    .AddMonitorTask(/*task => task
-                        .Step<ExportElmahErrorsStep>()*/)
+                    .AddMonitorTask(task => task.IncludeElmah().Skip<ExportElmahErrorsStep>())
                     .AddMaintenanceTask(/*task => task
                         .Step<CleanUpElmahErrorsStep>()*/))))
 			{

@@ -37,17 +37,21 @@ namespace Vertica.Integration.Logging.Elmah
             get { return _error.Time.ToUniversalTime(); }
         }
 
+        public string Source
+        {
+            get { return _error.Source; }
+        }
+
         public override string ToString()
         {
-            return String.Join(Environment.NewLine, new[]
-            {
+            return String.Join(Environment.NewLine,
                 _error.Type,
                 _error.Message,
                 String.Empty,
                 String.Format("User: {0}", _error.User),
                 String.Format("Host: {0}", _error.HostName),
                 String.Format("Details: /elmah.axd/detail?id={0}", _id)
-            });
+            );
         }
     }
 }

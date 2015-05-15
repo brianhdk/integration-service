@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Xml;
 using Vertica.Integration.Domain.Monitoring;
 using Vertica.Integration.Infrastructure.Configuration;
@@ -57,16 +58,35 @@ FOR XML AUTO";
 
                 using (XmlReader reader = command.ExecuteXmlReader())
                 {
-                    while (reader.IsStartElement("error"))
+                    try
                     {
-                        var error = new ElmahError(reader);
+                        while (reader.IsStartElement("error"))
+                        {
+                            var error = new ElmahError(reader);
 
-                        workItem.Add(
-                            error.Created,
-                            configuration.LogName, 
-                            error.ToString(), 
-                            Target.Service);
+                            workItem.Add(
+                                error.Created,
+                                String.Join(",", new[] { configuration.LogName, error.Source }.Select(x => !String.IsNullOrWhiteSpace(x))),
+                                error.ToString(),
+                                Target.Service);
+                        }
                     }
+                    catch (XmlException ex)
+                    {
+                        throw new InvalidOperationException(String.Format(@"Unable to parse XML. Error:
+
+{0}
+
+---
+You need to locate the row causing this error. The easiest way is to query those rows that were part of the initial selection. 
+Open the XML result in SQL Server Management Studio, and find the one(s) with a red squiggles. They need to be removed.
+Find out where errors like that are being generated and make sure to encode these messages, so that it won't happen again.
+
+CommandText was: 
+
+{1}", ex.Message, command.CommandText), ex);
+                    }
+
                 }
             }
         }
