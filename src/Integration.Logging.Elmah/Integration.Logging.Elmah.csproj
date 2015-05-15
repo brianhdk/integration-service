@@ -49,6 +49,7 @@
     <Compile Include="CleanUpElmahErrorsStep.cs" />
     <Compile Include="ElmahConfiguration.cs" />
     <Compile Include="ElmahError.cs" />
+    <Compile Include="ElmahExtensions.cs" />
     <Compile Include="ElmahHelper.cs" />
     <Compile Include="ExportElmahErrorsStep.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
