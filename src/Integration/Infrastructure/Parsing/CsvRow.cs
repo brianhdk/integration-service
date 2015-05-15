@@ -84,7 +84,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
 	    public IEnumerator<string> GetEnumerator()
 	    {
-	        return _data.OfType<string>().GetEnumerator();
+	        return _data.Select(x => x ?? String.Empty).GetEnumerator();
 	    }
 
 	    public override string ToString()

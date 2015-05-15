@@ -3,7 +3,7 @@ using Castle.Windsor;
 
 namespace Vertica.Integration.Infrastructure.Factories
 {
-    public static class ObjectFactory
+    internal static class ObjectFactory
 	{
 		private static readonly Func<IWindsorContainer> DefaultCreation = () => new WindsorContainer();
 

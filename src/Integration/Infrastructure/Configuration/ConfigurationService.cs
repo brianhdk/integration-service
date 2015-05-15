@@ -174,34 +174,43 @@ ELSE
 
         private string GetId<TConfiguration>(bool warnIfMissingGuid = false)
         {
+            string id = GetGuidId<TConfiguration>();
+
+            if (id != null)
+                return id;
+
             Type type = typeof (TConfiguration);
 
-            GuidAttribute attribute = type.GetAttribute<GuidAttribute>();
-
-            Guid guid;
-            if (attribute != null && Guid.TryParse(attribute.Value, out guid))
-            {
-                return guid.ToString("D");
-            }
-
-            string id = String.Join(", ", type.FullName, type.Assembly.GetName().Name);
+            id = String.Join(", ", type.FullName, type.Assembly.GetName().Name);
 
             if (warnIfMissingGuid)
             {
-                _logger.LogWarning(Target.Service, 
+                _logger.LogWarning(Target.Service,
 @"Class '{0}' used for configuration should have been decorated with a [Guid(""[insert-new-Guid-here]"")]-attribute.
 This is to ensure a unique and Refactor-safe Global ID.
 
 Remember when (or if) you add this Guid-attribute, that you (manually) have to merge the data to the new instance.
 If you don't like to do it manually, you can of course use a Migration.
 
-IMPORTANT: Remember to use the ""D"" format for Guids, e.g. 1EB3F675-C634-412F-A76F-FC3F9A4A68D5",
-                    id);
+IMPORTANT: Remember to use the ""D"" format for Guids, e.g. 1EB3F675-C634-412F-A76F-FC3F9A4A68D5", id);
 
                 // TODO: Create an example for this on GitHub and link to that example.
             }
 
             return id;
+        }
+
+        internal static string GetGuidId<TConfiguration>()
+        {
+            Type type = typeof(TConfiguration);
+
+            GuidAttribute attribute = type.GetAttribute<GuidAttribute>();
+
+            Guid guid;
+            if (attribute != null && Guid.TryParse(attribute.Value, out guid))
+                return guid.ToString("D");
+
+            return null;
         }
     }
 }

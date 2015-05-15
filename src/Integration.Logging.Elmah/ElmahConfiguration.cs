@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using Vertica.Integration.Infrastructure;
 
 namespace Vertica.Integration.Logging.Elmah
 {
+    [Guid("CA1BDD98-C619-490D-A741-C79B238A9891")]
     public class ElmahConfiguration
     {
         public ElmahConfiguration()

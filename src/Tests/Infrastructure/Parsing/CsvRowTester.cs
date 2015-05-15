@@ -77,6 +77,19 @@ Jane Doe,31"));
         }
 
         [Test]
+        public void Create_Csv_Null_Value_ToString()
+        {
+            string csv = CsvRow
+                .BeginRows("Name", "Age")
+                .Add("John Doe", "30")
+                .Add("Jane Doe", null)
+                .ToString();
+
+            Assert.That(csv, Is.EqualTo(@"John Doe,30
+Jane Doe,"));
+        }
+
+        [Test]
         public void Create_Csv_From_List()
         {
             CsvRow[] rows = CsvRow.BeginRows("Name")

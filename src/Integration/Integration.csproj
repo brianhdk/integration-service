@@ -154,6 +154,7 @@
     <Compile Include="Infrastructure\Database\Dapper\DapperConfiguration.cs" />
     <Compile Include="Infrastructure\Database\Dapper\IExposeTransaction.cs" />
     <Compile Include="Infrastructure\Database\Migrations\DatabaseServer.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\IntegrationMigration.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M1_Baseline.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M5_TaskLogNullableExecutionTimeSeconds.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M4_ExtendTaskLogWithExecutionContext.cs" />
