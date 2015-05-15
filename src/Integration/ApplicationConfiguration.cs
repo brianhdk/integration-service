@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Castle.MicroKernel.Registration;
-using Vertica.Integration.Domain.Core;
 using Vertica.Integration.Infrastructure;
-using Vertica.Integration.Infrastructure.Archiving;
 using Vertica.Integration.Infrastructure.Database.Dapper;
 using Vertica.Integration.Infrastructure.Database.Migrations;
 using Vertica.Integration.Model;

@@ -6,7 +6,6 @@ using Vertica.Integration.Infrastructure.Factories;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Exceptions;
-using Vertica.Integration.Model.Web;
 using Vertica.Integration.Startup;
 
 namespace Vertica.Integration

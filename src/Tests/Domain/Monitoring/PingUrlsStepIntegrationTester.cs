@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using NSubstitute;
 using NUnit.Framework;
 using Vertica.Integration.Domain.Monitoring;
@@ -15,6 +16,8 @@ namespace Vertica.Integration.Tests.Domain.Monitoring
         [Test]
         public void Execute()
         {
+            ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+
             var configuration = new MonitorConfiguration
             {
                 PingUrls =

@@ -50,6 +50,12 @@ namespace Vertica.Integration.Domain.Monitoring
                     {
                         Response response = HttpGet(url, workItem.Configuration.PingUrls.MaximumWaitTimeSeconds);
                         response.Wait();
+
+                        //if (response.Result.StatusCode == HttpStatusCode.Unauthorized)
+                        //{
+                        //    HttpGet(url, workItem.Configuration.PingUrls.MaximumWaitTimeSeconds, )
+                        //}
+
                         response.Result.EnsureSuccessStatusCode();
                     }
                     catch (Exception ex)
