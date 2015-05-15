@@ -29,7 +29,7 @@ namespace Vertica.Integration
             _tasks = new TasksConfiguration();
             _dapper = new DapperConfiguration(this);
             _webApi = new WebApiConfiguration();
-            _migration = new MigrationConfiguration();
+            _migration = new MigrationConfiguration(this);
 
         }
 

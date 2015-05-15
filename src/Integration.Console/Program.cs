@@ -2,7 +2,6 @@
 using Vertica.Integration.Domain.Monitoring;
 using Vertica.Integration.Experiments;
 using Vertica.Integration.Experiments.Migrations;
-using Vertica.Integration.Infrastructure.Database.Migrations;
 using Vertica.Integration.Portal;
 
 namespace Vertica.Integration.Console
@@ -14,9 +13,9 @@ namespace Vertica.Integration.Console
 			using (ApplicationContext context = ApplicationContext.Create(builder => builder
                 .UsePortal()
                 .Migration(migration => migration
-                    .IncludeFromNamespaceOfThis<M1427839041_SetupMonitorConfiguration>(DatabaseServer.SqlServer2014, builder.DatabaseConnectionString))
+                    .IncludeFromNamespaceOfThis<M1427839041_SetupMonitorConfiguration>())
                 .Tasks(tasks => tasks
-                    .Add<TaskExecutingTask>()
+                    .AddTasksFromAssemblyOfThis<TaskOutputtingHi>()
                     .AddMonitorTask(/*task => task
                         .Step<ExportElmahErrorsStep>()*/)
                     .AddMaintenanceTask(/*task => task
