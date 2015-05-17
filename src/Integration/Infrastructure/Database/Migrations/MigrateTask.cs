@@ -9,10 +9,10 @@ using FluentMigrator.Runner.Announcers;
 using FluentMigrator.Runner.Initialization;
 using FluentMigrator.Runner.Processors;
 using FluentMigrator.Runner.Processors.SqlServer;
-using Vertica.Integration.Infrastructure.Database.Dapper;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
 using Vertica.Utilities_v4.Extensions.AttributeExt;
+using IDbFactory = Vertica.Integration.Infrastructure.Database.IDbFactory;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
@@ -22,9 +22,9 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
         private readonly IDisposable _loggingDisabler;
         private readonly bool _databaseCreated;
 
-        public MigrateTask(IDapperFactory dapper, ILogger logger, MigrationConfiguration configuration)
+        public MigrateTask(IDbFactory db, ILogger logger, MigrationConfiguration configuration)
         {
-            string connectionString = EnsureIntegrationDb(dapper, configuration.CheckExistsIntegrationDb, out _databaseCreated);
+            string connectionString = EnsureIntegrationDb(db, configuration.CheckExistsIntegrationDb, out _databaseCreated);
 
             var integrationDb = new MigrationTarget(
                 configuration.IntegrationDbDatabaseServer,
@@ -97,9 +97,9 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
             }
         }
 
-        private static string EnsureIntegrationDb(IDapperFactory dapper, bool checkExistsIntegrationDb, out bool databaseCreated)
+        private static string EnsureIntegrationDb(IDbFactory db, bool checkExistsIntegrationDb, out bool databaseCreated)
         {
-            using (IDbConnection connection = dapper.GetConnection())
+            using (IDbConnection connection = db.GetConnection())
             {
                 if (!checkExistsIntegrationDb)
                 {

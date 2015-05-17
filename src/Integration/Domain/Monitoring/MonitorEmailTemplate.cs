@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Web;
 using Vertica.Integration.Infrastructure.Email;
 using Vertica.Integration.Infrastructure.Templating;
 
@@ -37,7 +38,8 @@ namespace Vertica.Integration.Domain.Monitoring
                     reader.ReadToEnd(),
                     _entries,
                     new { },
-                    typeof(MonitorEmailTemplate).Assembly);                
+                    typeof(MonitorEmailTemplate).Assembly,
+                    typeof(HttpServerUtility).Assembly);
             }
 	    }
 	}

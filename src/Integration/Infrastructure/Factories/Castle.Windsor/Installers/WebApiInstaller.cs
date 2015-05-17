@@ -27,7 +27,7 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
         {
             var types = new List<Type>();
 
-            foreach (Assembly assembly in _scanAssemblies)
+            foreach (Assembly assembly in _scanAssemblies.Distinct())
             {
                 container.Register(
                     Classes.FromAssembly(assembly)
@@ -45,7 +45,7 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
             }
 
             container.Register(
-                Classes.From(_addControllers)
+                Classes.From(_addControllers.Except(_removeControllers).Distinct())
                     .BasedOn<ApiController>()
                     .Expose(types.Add)
                     .WithServiceSelf()

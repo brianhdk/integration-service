@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Data;
 using Dapper;
 
-namespace Vertica.Integration.Infrastructure.Database.Dapper
+namespace Vertica.Integration.Infrastructure.Database
 {
-    internal class DapperSession : IDapperSession
+    internal class DbSession : IDbSession
     {
         private readonly IDbConnection _connection;
         private readonly Stack<IDbTransaction> _transactions;
 
-        public DapperSession(IDbConnection connection)
+        public DbSession(IDbConnection connection)
         {
             if (connection == null) throw new ArgumentNullException("connection");
 

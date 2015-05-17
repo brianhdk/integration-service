@@ -56,14 +56,14 @@ namespace Vertica.Integration.Model
             return this;
         }
 
-        public TaskConfiguration<TWorkItem> RemoveAll()
+        public TaskConfiguration<TWorkItem> Clear()
         {
             Steps.Clear();
 
             return this;
         }
 
-        public TaskConfiguration<TWorkItem> Skip<TStep>()
+        public TaskConfiguration<TWorkItem> Remove<TStep>()
             where TStep : IStep<TWorkItem>
         {
             Steps.RemoveAll(x => x == typeof (TStep));

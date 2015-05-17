@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 using Vertica.Integration.Infrastructure.Archiving;
-using Vertica.Integration.Infrastructure.Database.Dapper;
+using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Utilities_v4;
@@ -16,15 +16,15 @@ namespace Vertica.Integration.Infrastructure.Configuration
 {
     public class ConfigurationService : IConfigurationService
     {
-        private readonly IDapperFactory _dapper;
+        private readonly IDbFactory _db;
         private readonly IArchiveService _archive;
         private readonly ILogger _logger;
 
-        public ConfigurationService(IDapperFactory dapper, IArchiveService archive, ILogger logger)
+        public ConfigurationService(IDbFactory db, IArchiveService archive, ILogger logger)
         {
             _archive = archive;
             _logger = logger;
-            _dapper = dapper;
+            _db = db;
         }
 
         public TConfiguration Get<TConfiguration>() where TConfiguration : class, new()
@@ -63,7 +63,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
 
         public Configuration[] GetAll()
         {
-            using (IDapperSession session = _dapper.OpenSession())
+            using (IDbSession session = _db.OpenSession())
             {
                 return
                     session
@@ -76,7 +76,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
         {
             if (String.IsNullOrWhiteSpace(id)) throw new ArgumentException(@"Value cannot be null or empty.", "id");
 
-            using (IDapperSession session = _dapper.OpenSession())
+            using (IDbSession session = _db.OpenSession())
             {
                 return
                     session
@@ -100,7 +100,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
         {
             if (String.IsNullOrWhiteSpace(id)) throw new ArgumentException(@"Value cannot be null or empty.");
 
-            using (IDapperSession session = _dapper.OpenSession())
+            using (IDbSession session = _db.OpenSession())
             using (IDbTransaction transaction = session.BeginTransaction())
             {
                 session.Execute("DELETE FROM Configuration WHERE (Id = @id)", new {id});
@@ -131,7 +131,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
                 }
             }
 
-            using (IDapperSession session = _dapper.OpenSession())
+            using (IDbSession session = _db.OpenSession())
             using (IDbTransaction transaction = session.BeginTransaction())
             {
                 string description = GetDescription(configurationType).MaxLength(255);

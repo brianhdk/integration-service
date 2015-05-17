@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Vertica.Integration.Infrastructure.Database.Dapper;
+using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Exceptions;
@@ -12,12 +12,12 @@ namespace Vertica.Integration.Domain.Monitoring
 {
     public class ExportIntegrationErrorsStep : Step<MonitorWorkItem>
     {
-        private readonly IDapperFactory _dapper;
+        private readonly IDbFactory _db;
         private readonly ITaskFactory _taskFactory;
 
-        public ExportIntegrationErrorsStep(IDapperFactory dapper, ITaskFactory taskFactory)
+        public ExportIntegrationErrorsStep(IDbFactory db, ITaskFactory taskFactory)
         {
-            _dapper = dapper;
+            _db = db;
             _taskFactory = taskFactory;
         }
 
@@ -28,7 +28,7 @@ namespace Vertica.Integration.Domain.Monitoring
 
         public override void Execute(MonitorWorkItem workItem, ILog log)
         {
-            using (var session = _dapper.OpenSession())
+            using (var session = _db.OpenSession())
             {
                 ErrorEntry[] errors = session.Query<ErrorEntry>(@"
 SELECT

@@ -2,17 +2,17 @@
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using Vertica.Integration.Infrastructure.Database.Dapper;
+using Vertica.Integration.Infrastructure.Database;
 
 namespace Vertica.Integration.Portal.Controllers
 {
 	public class GraphController : ApiController
 	{
-		private readonly IDapperFactory _dapper;
+		private readonly IDbFactory _db;
 
-		public GraphController(IDapperFactory dapper)
+		public GraphController(IDbFactory db)
 		{
-			_dapper = dapper;
+			_db = db;
 		}
 
 		public HttpResponseMessage Get(int id)
@@ -43,7 +43,7 @@ order by Date desc";
 
 			IEnumerable<object> errors;
 
-			using (IDapperSession session = _dapper.OpenSession())
+			using (IDbSession session = _db.OpenSession())
 			{
 				errors = session.Query<object>(sql);
 			}

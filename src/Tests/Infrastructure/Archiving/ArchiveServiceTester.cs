@@ -2,7 +2,7 @@
 using NSubstitute;
 using NUnit.Framework;
 using Vertica.Integration.Infrastructure.Archiving;
-using Vertica.Integration.Infrastructure.Database.Dapper;
+using Vertica.Integration.Infrastructure.Database;
 
 namespace Vertica.Integration.Tests.Infrastructure.Archiving
 {
@@ -10,9 +10,9 @@ namespace Vertica.Integration.Tests.Infrastructure.Archiving
     public class ArchiveServiceTester
     {
         [Test]
-        public void ArchiveText_Verify_DapperInteraction()
+        public void ArchiveText_Verify_DbInteraction()
         {
-            IDapperSession session;
+            IDbSession session;
             ArchiveService subject = Initialize(out session);
 
             const int expectedId = 1;
@@ -23,19 +23,17 @@ namespace Vertica.Integration.Tests.Infrastructure.Archiving
             Assert.That(archive.Id, Is.EqualTo(expectedId.ToString()));
         }
 
-        private ArchiveService Initialize(out IDapperSession session)
+        private ArchiveService Initialize(out IDbSession session)
         {
-            var dapper = Substitute.For<IDapperFactory>();
-            session = Substitute.For<IDapperSession>();
+            var dbFactory = Substitute.For<IDbFactory>();
+            session = Substitute.For<IDbSession>();
 
-            dapper
-                .OpenSession()
-                .Returns(session);
+            dbFactory.OpenSession().Returns(session);
 
             IDbTransaction transaction = Substitute.For<IDbTransaction>();
             session.BeginTransaction().Returns(transaction);
 
-            return new ArchiveService(dapper);
+            return new ArchiveService(dbFactory);
         }
     }
 }

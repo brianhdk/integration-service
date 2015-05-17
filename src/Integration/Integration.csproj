@@ -128,6 +128,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="IInitializable.cs" />
     <Compile Include="Infrastructure\ActionRepeater.cs" />
     <Compile Include="Infrastructure\Archiving\BeginArchive.cs" />
     <Compile Include="Infrastructure\Archiving\ArchiveService.cs" />
@@ -141,18 +142,18 @@
     <Compile Include="Infrastructure\Configuration\ConfigurationService.cs" />
     <Compile Include="Infrastructure\Configuration\IConfigurationService.cs" />
     <Compile Include="Infrastructure\ConnectionString.cs" />
-    <Compile Include="Infrastructure\Database\Dapper\Castle.Windsor\DapperInstaller.cs" />
-    <Compile Include="Infrastructure\Database\Dapper\Castle.Windsor\DapperSelector.cs" />
-    <Compile Include="Infrastructure\Database\Dapper\Connection.cs" />
-    <Compile Include="Infrastructure\Database\Dapper\DapperSession.cs" />
-    <Compile Include="Infrastructure\Database\Dapper\Databases\IntegrationDb.cs" />
-    <Compile Include="Infrastructure\Database\Dapper\DefaultConnection.cs" />
-    <Compile Include="Infrastructure\Database\Dapper\Extensions\DapperExtensions.cs" />
-    <Compile Include="Infrastructure\Database\Dapper\Databases\IntegrationDbException.cs" />
-    <Compile Include="Infrastructure\Database\Dapper\IDapperFactory.cs" />
-    <Compile Include="Infrastructure\Database\Dapper\IDapperSession.cs" />
-    <Compile Include="Infrastructure\Database\Dapper\DapperConfiguration.cs" />
-    <Compile Include="Infrastructure\Database\Dapper\IExposeTransaction.cs" />
+    <Compile Include="Infrastructure\Database\Castle.Windsor\DbInstaller.cs" />
+    <Compile Include="Infrastructure\Database\Connection.cs" />
+    <Compile Include="Infrastructure\Database\DbFactory.cs" />
+    <Compile Include="Infrastructure\Database\DbSession.cs" />
+    <Compile Include="Infrastructure\Database\Databases\IntegrationDb.cs" />
+    <Compile Include="Infrastructure\Database\DefaultConnection.cs" />
+    <Compile Include="Infrastructure\Database\Extensions\DbExtensions.cs" />
+    <Compile Include="Infrastructure\Database\Databases\IntegrationDbException.cs" />
+    <Compile Include="Infrastructure\Database\IDbFactory.cs" />
+    <Compile Include="Infrastructure\Database\IDbSession.cs" />
+    <Compile Include="Infrastructure\Database\DatabaseConfiguration.cs" />
+    <Compile Include="Infrastructure\Database\IExposeTransaction.cs" />
     <Compile Include="Infrastructure\Database\Migrations\DatabaseServer.cs" />
     <Compile Include="Infrastructure\Database\Migrations\IntegrationMigration.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M1_Baseline.cs" />

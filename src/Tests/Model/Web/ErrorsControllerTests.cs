@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Web.Http;
 using NSubstitute;
 using NUnit.Framework;
-using Vertica.Integration.Infrastructure.Database.Dapper;
+using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Portal.Controllers;
 using Vertica.Integration.Portal.Models;
 
@@ -17,11 +17,11 @@ namespace Vertica.Integration.Tests.Model.Web
         public void Get_ErrorsLogged_ReturnErrors()
         {
             // Arrange
-            IDapperFactory dapper = Substitute.For<IDapperFactory>();
+            IDbFactory db = Substitute.For<IDbFactory>();
             var errorList = new List<ErrorLogModel> { new ErrorLogModel() };
-            dapper.OpenSession().Query<ErrorLogModel>(Arg.Any<string>()).Returns(errorList);
+            db.OpenSession().Query<ErrorLogModel>(Arg.Any<string>()).Returns(errorList);
 
-            var subject = new ErrorsController(dapper)
+            var subject = new ErrorsController(db)
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()

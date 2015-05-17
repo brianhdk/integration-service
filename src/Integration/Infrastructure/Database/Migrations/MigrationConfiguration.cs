@@ -6,7 +6,7 @@ using FluentMigrator;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
-    public class MigrationConfiguration
+    public class MigrationConfiguration : IInitializable<IWindsorContainer>
     {
         private readonly ApplicationConfiguration _application;
         private readonly List<MigrationTarget> _customTargets;
@@ -33,10 +33,10 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
         /// Makes it possible to execute custom migrations where the VersionInfo table will be stored in the IntegrationDb.
         /// Tip: Inherit from <see cref="IntegrationMigration"/> to have access to all services from the Integration Service.
         /// </summary>
-        public MigrationConfiguration IncludeFromNamespaceOfThis<T>()
+        public MigrationConfiguration AddFromNamespaceOfThis<T>()
             where T : Migration
         {
-            return IncludeCustomDbFromNamespaceOfThis<T>(IntegrationDbDatabaseServer, _application.DatabaseConnectionString);
+            return AddFromNamespaceOfThis<T>(IntegrationDbDatabaseServer, _application.DatabaseConnectionString);
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
         /// </summary>
         /// <param name="db">Specifies the version of the database where the migrations are executed against.</param>
         /// <param name="connectionString">Specifies the ConnectionString to the database.</param>
-        public MigrationConfiguration IncludeCustomDbFromNamespaceOfThis<T>(DatabaseServer db, ConnectionString connectionString)
+        public MigrationConfiguration AddFromNamespaceOfThis<T>(DatabaseServer db, ConnectionString connectionString)
             where T : Migration
         {
             if (connectionString == null) throw new ArgumentNullException("connectionString");
@@ -73,10 +73,8 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
             get { return _customTargets.ToArray(); }
         }
 
-        internal void Install(IWindsorContainer container)
+        void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
         {
-            if (container == null) throw new ArgumentNullException("container");
-
             container.Register(
                 Component.For<MigrationConfiguration>()
                     .UsingFactoryMethod(() => this));

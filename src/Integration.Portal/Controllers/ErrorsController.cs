@@ -3,18 +3,18 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using Vertica.Integration.Infrastructure.Database.Dapper;
+using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Portal.Models;
 
 namespace Vertica.Integration.Portal.Controllers
 {
     public class ErrorsController : ApiController
     {
-        private readonly IDapperFactory _dapper;
+        private readonly IDbFactory _db;
 
-        public ErrorsController(IDapperFactory dapper)
+        public ErrorsController(IDbFactory db)
         {
-            _dapper = dapper;
+            _db = db;
         }
 
         public HttpResponseMessage Get()
@@ -30,7 +30,7 @@ SELECT [Id]
 
             IEnumerable<ErrorLogModel> errors;
 
-            using (IDapperSession session = _dapper.OpenSession())
+            using (IDbSession session = _db.OpenSession())
             {
                 errors = session.Query<ErrorLogModel>(sql);
             }
@@ -56,7 +56,7 @@ SELECT [Id]
 
             ErrorLogDetailedModel error;
 
-            using (IDapperSession session = _dapper.OpenSession())
+            using (IDbSession session = _db.OpenSession())
             {
                 error = session.Query<ErrorLogDetailedModel>(sql, new { id }).SingleOrDefault();
             }

@@ -3,16 +3,16 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using Vertica.Integration.Infrastructure.Database.Dapper;
+using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Portal.Models;
 
 namespace Vertica.Integration.Portal.Controllers
 {
     public class RunningTasksController : ApiController
     {
-        private readonly IDapperFactory _dappper;
+        private readonly IDbFactory _dappper;
 
-        public RunningTasksController(IDapperFactory dappper)
+        public RunningTasksController(IDbFactory dappper)
         {
             _dappper = dappper;
         }
@@ -38,7 +38,7 @@ ORDER BY [Id] DESC");
 
             IEnumerable<TaskLogModel> tasks;
 
-            using (IDapperSession session = _dappper.OpenSession())
+            using (IDbSession session = _dappper.OpenSession())
             {
                 tasks = session.Query<TaskLogModel>(sql).ToList();
             }

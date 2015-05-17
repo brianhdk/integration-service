@@ -3,18 +3,18 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using Vertica.Integration.Infrastructure.Database.Dapper;
+using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Portal.Models;
 
 namespace Vertica.Integration.Portal.Controllers
 {
     public class LatestTasksController : ApiController
     {
-        private readonly IDapperFactory _dapper;
+        private readonly IDbFactory _db;
 
-        public LatestTasksController(IDapperFactory dapper)
+        public LatestTasksController(IDbFactory db)
         {
-            _dapper = dapper;
+            _db = db;
         }
 
         public HttpResponseMessage Get(int count)
@@ -32,7 +32,7 @@ ORDER BY timestamp DESC", count);
 
             IEnumerable<TaskLogModel> tasks;
 
-            using (IDapperSession session = _dapper.OpenSession())
+            using (IDbSession session = _db.OpenSession())
             {
                 tasks = session.Query<TaskLogModel>(sql).ToList();
             }

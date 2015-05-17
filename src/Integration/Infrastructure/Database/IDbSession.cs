@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 
-namespace Vertica.Integration.Infrastructure.Database.Dapper
+namespace Vertica.Integration.Infrastructure.Database
 {
-    public interface IDapperSession : IDisposable
+    public interface IDbSession : IDisposable
     {
         IDbTransaction BeginTransaction(IsolationLevel? isolationLevel = null);
 

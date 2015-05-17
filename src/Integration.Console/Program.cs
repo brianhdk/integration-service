@@ -2,7 +2,7 @@
 using Vertica.Integration.Domain.Monitoring;
 using Vertica.Integration.Experiments;
 using Vertica.Integration.Experiments.Migrations;
-using Vertica.Integration.Logging.Elmah;
+using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Portal;
 
 namespace Vertica.Integration.Console
@@ -13,13 +13,17 @@ namespace Vertica.Integration.Console
 		{
 			using (ApplicationContext context = ApplicationContext.Create(builder => builder
                 .UsePortal()
-                .Migration(migration => migration
-                    .IncludeFromNamespaceOfThis<M1427839041_SetupMonitorConfiguration>())
+                .Database(db => db
+                    .Change(x => x.ConnectionString = ConnectionString.FromName("IntegrationDb"))
+                    .AddConnection(new CustomDb(builder.DatabaseConnectionString)))
                 .Tasks(tasks => tasks
-                    .AddTasksFromAssemblyOfThis<TaskOutputtingHi>()
-                    .AddMonitorTask(task => task.IncludeElmah().Skip<ExportElmahErrorsStep>())
-                    .AddMaintenanceTask(/*task => task
-                        .Step<CleanUpElmahErrorsStep>()*/))))
+                    .AddFromAssemblyOfThis<TaskOutputtingHi>()
+                    .MonitorTask(task => task
+                        .Step<XssTestingStep>())
+                    .MaintenanceTask(/*task => task
+                        .Step<CleanUpElmahErrorsStep>()*/))
+                .Migration(migration => migration
+                    .AddFromNamespaceOfThis<M1427839041_SetupMonitorConfiguration>())))
 			{
 			    context.Execute(args);
 			}

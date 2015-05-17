@@ -1,29 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using Vertica.Integration.Infrastructure.Database.Dapper;
-using Vertica.Integration.Infrastructure.Database.Dapper.Extensions;
+using Vertica.Integration.Infrastructure.Database;
+using Vertica.Integration.Infrastructure.Database.Extensions;
 using Vertica.Utilities_v4.Patterns;
 
 namespace Vertica.Integration.Infrastructure.Logging
 {
     public class Logger : ILogger
     {
-        private readonly IDapperFactory _dapper;
+        private readonly IDbFactory _db;
 
         private readonly object _dummy = new object();
         private readonly Stack<object> _disablers;
 
         private readonly ChainOfResponsibilityLink<LogEntry> _chainOfResponsibility;
 
-        public Logger(IDapperFactory dapper)
+        public Logger(IDbFactory db)
         {
-            _dapper = dapper;
+            _db = db;
 
             _chainOfResponsibility = ChainOfResponsibility.Empty<LogEntry>()
-                .Chain(new TaskLogLink(_dapper))
-                .Chain(new StepLogLink(_dapper))
-                .Chain(new MessageLogLink(_dapper));
+                .Chain(new TaskLogLink(_db))
+                .Chain(new StepLogLink(_db))
+                .Chain(new MessageLogLink(_db));
 
             _disablers = new Stack<object>();
         }
@@ -91,7 +91,7 @@ namespace Vertica.Integration.Infrastructure.Logging
             if (LoggingDisabled)
                 return null;
 
-            using (IDapperSession session = _dapper.OpenSession())
+            using (IDbSession session = _db.OpenSession())
             using (IDbTransaction transaction = session.BeginTransaction())
             {
                 errorLog.Id = session.Wrap(s => s.ExecuteScalar<int>(
@@ -119,11 +119,11 @@ namespace Vertica.Integration.Infrastructure.Logging
         private abstract class LogEntryLink<TLogEntry> : IChainOfResponsibilityLink<LogEntry>
             where TLogEntry : LogEntry
         {
-            private readonly IDapperFactory _dapper;
+            private readonly IDbFactory _db;
 
-            protected LogEntryLink(IDapperFactory dapper)
+            protected LogEntryLink(IDbFactory db)
             {
-                _dapper = dapper;
+                _db = db;
             }
 
             public bool CanHandle(LogEntry context)
@@ -133,7 +133,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 
             public void DoHandle(LogEntry context)
             {
-                using (IDapperSession session = _dapper.OpenSession())
+                using (IDbSession session = _db.OpenSession())
                 using (IDbTransaction transaction = session.BeginTransaction())
                 {
                     if (context.Id == 0)
@@ -149,18 +149,18 @@ namespace Vertica.Integration.Infrastructure.Logging
                 }
             }
 
-            protected abstract void HandleInsert(IDapperSession session, TLogEntry logEntry);
-            protected abstract void HandleUpdate(IDapperSession session, TLogEntry logEntry);
+            protected abstract void HandleInsert(IDbSession session, TLogEntry logEntry);
+            protected abstract void HandleUpdate(IDbSession session, TLogEntry logEntry);
         }
 
         private class MessageLogLink : LogEntryLink<MessageLog>
         {
-            public MessageLogLink(IDapperFactory dapper)
-                : base(dapper)
+            public MessageLogLink(IDbFactory db)
+                : base(db)
             {
             }
 
-            protected override void HandleInsert(IDapperSession session, MessageLog logEntry)
+            protected override void HandleInsert(IDbSession session, MessageLog logEntry)
             {
                 logEntry.Id = session.Wrap(s => s.ExecuteScalar<int>(
                     @"INSERT INTO TaskLog (Type, TaskName, TimeStamp, StepName, Message, TaskLog_Id, StepLog_Id)
@@ -177,7 +177,7 @@ namespace Vertica.Integration.Infrastructure.Logging
                     }));
             }
 
-            protected override void HandleUpdate(IDapperSession session, MessageLog logEntry)
+            protected override void HandleUpdate(IDbSession session, MessageLog logEntry)
             {
                 throw new NotSupportedException();
             }
@@ -185,12 +185,12 @@ namespace Vertica.Integration.Infrastructure.Logging
 
         private class StepLogLink : LogEntryLink<StepLog>
         {
-            public StepLogLink(IDapperFactory dapper)
-                : base(dapper)
+            public StepLogLink(IDbFactory db)
+                : base(db)
             {
             }
 
-            protected override void HandleInsert(IDapperSession session, StepLog logEntry)
+            protected override void HandleInsert(IDbSession session, StepLog logEntry)
             {
                 logEntry.Id = session.Wrap(s => s.ExecuteScalar<int>(
                     @"INSERT INTO TaskLog (Type, TaskName, StepName, TimeStamp, TaskLog_Id, ErrorLog_Id)
@@ -207,7 +207,7 @@ namespace Vertica.Integration.Infrastructure.Logging
                     }));
             }
 
-            protected override void HandleUpdate(IDapperSession session, StepLog logEntry)
+            protected override void HandleUpdate(IDbSession session, StepLog logEntry)
             {
                 session.Execute(
                     @"UPDATE TaskLog SET ExecutionTimeSeconds = @ExecutionTimeSeconds, ErrorLog_Id = @ErrorLog_Id WHERE Id = @Id",
@@ -222,12 +222,12 @@ namespace Vertica.Integration.Infrastructure.Logging
 
         private class TaskLogLink : LogEntryLink<TaskLog>
         {
-            public TaskLogLink(IDapperFactory dapper)
-                : base(dapper)
+            public TaskLogLink(IDbFactory db)
+                : base(db)
             {
             }
 
-            protected override void HandleInsert(IDapperSession session, TaskLog logEntry)
+            protected override void HandleInsert(IDbSession session, TaskLog logEntry)
             {
                 logEntry.Id = session.Wrap(s => s.ExecuteScalar<int>(
                     @"INSERT INTO TaskLog (Type, TaskName, TimeStamp, MachineName, IdentityName, CommandLine, ErrorLog_Id)
@@ -244,7 +244,7 @@ namespace Vertica.Integration.Infrastructure.Logging
                     }));
             }
 
-            protected override void HandleUpdate(IDapperSession session, TaskLog logEntry)
+            protected override void HandleUpdate(IDbSession session, TaskLog logEntry)
             {
                 session.Execute(
                     @"UPDATE TaskLog SET ExecutionTimeSeconds = @ExecutionTimeSeconds, ErrorLog_Id = @ErrorLog_Id WHERE Id = @Id",

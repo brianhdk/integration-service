@@ -1,4 +1,6 @@
-﻿@using Vertica.Integration.Domain.Monitoring
+﻿@using System
+@using System.Web
+@using Vertica.Integration.Domain.Monitoring
 @{ 
     @model MonitorEntry[]
 }
@@ -19,8 +21,8 @@
     {
         <tr>
             <td valign="top">@entry.DateTime</td>
-            <td valign="top">@entry.Source</td>
-            <td valign="top">@((entry.Message ?? String.Empty).Replace(Environment.NewLine, "<br />"))</td>
+            <td valign="top">@HttpUtility.HtmlEncode(entry.Source)</td>
+            <td valign="top">@HttpUtility.HtmlEncode(entry.Message ?? String.Empty).Replace(Environment.NewLine, "<br />")</td>
         </tr>
     }
 </table>

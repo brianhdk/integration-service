@@ -10,7 +10,7 @@ namespace Vertica.Integration.Infrastructure
         private ConnectionString(Func<string> value)
         {
             _value = new Lazy<string>(value);
-        }
+        }   
 
         public static ConnectionString FromName(string name)
         {
