@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using Vertica.Integration.Infrastructure.Database.Dapper;
+using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Model;
 
@@ -12,13 +12,13 @@ namespace Vertica.Integration.Portal.Controllers
 {
     public class TaskDetailsController : ApiController
     {
-        private readonly IDapperFactory _dapper;
+        private readonly IDbFactory _db;
         private readonly ITaskFactory _taskFactory;
 
-        public TaskDetailsController(ITaskFactory taskFactory, IDapperFactory dapper)
+        public TaskDetailsController(ITaskFactory taskFactory, IDbFactory db)
         {
             _taskFactory = taskFactory;
-            _dapper = dapper;
+            _db = db;
         }
 
         public HttpResponseMessage Get()
@@ -57,7 +57,7 @@ ORDER BY [TimeStamp] DESC
 
             IEnumerable<DateTimeOffset> lastRun;
 
-            using (IDapperSession session = _dapper.OpenSession())
+            using (IDbSession session = _db.OpenSession())
             {
                 lastRun = session.Query<DateTimeOffset>(sql).ToList();
             }

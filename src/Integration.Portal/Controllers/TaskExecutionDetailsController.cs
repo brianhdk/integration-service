@@ -3,18 +3,18 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using Vertica.Integration.Infrastructure.Database.Dapper;
+using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Portal.Models;
 
 namespace Vertica.Integration.Portal.Controllers
 {
     public class TaskExecutionDetailsController : ApiController
     {
-        private readonly IDapperFactory _dapper;
+        private readonly IDbFactory _db;
 
-        public TaskExecutionDetailsController(IDapperFactory dapper)
+        public TaskExecutionDetailsController(IDbFactory db)
         {
-            _dapper = dapper;
+            _db = db;
         }
 
         public HttpResponseMessage Get(int id)
@@ -32,7 +32,7 @@ ORDER BY [Id] DESC";
 
             IEnumerable<TaskExecutionDetailModel> taskLogs;
 
-            using (IDapperSession session = _dapper.OpenSession())
+            using (IDbSession session = _db.OpenSession())
             {
                 taskLogs = session.Query<TaskExecutionDetailModel>(sql, new { id }).ToList();
             }

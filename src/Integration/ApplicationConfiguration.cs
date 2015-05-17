@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Castle.MicroKernel.Registration;
+using Castle.Windsor;
 using Vertica.Integration.Infrastructure;
-using Vertica.Integration.Infrastructure.Database.Dapper;
+using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Database.Migrations;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Web;
@@ -10,29 +11,27 @@ using Vertica.Utilities_v4.Extensions.EnumerableExt;
 
 namespace Vertica.Integration
 {
-    public class ApplicationConfiguration
+    public class ApplicationConfiguration : IInitializable<IWindsorContainer>
     {
         private readonly List<IWindsorInstaller> _customInstallers;
+        private readonly DatabaseConfiguration _database;
         private readonly TasksConfiguration _tasks;
-        private readonly DapperConfiguration _dapper;
         private readonly WebApiConfiguration _webApi;
         private readonly MigrationConfiguration _migration;
 
         internal ApplicationConfiguration()
         {
-            DatabaseConnectionString = ConnectionString.FromName("IntegrationDb");
             IgnoreSslErrors = true;
 
             _customInstallers = new List<IWindsorInstaller>();
+            _database = new DatabaseConfiguration(this);
             _tasks = new TasksConfiguration();
-            _dapper = new DapperConfiguration(this);
             _webApi = new WebApiConfiguration();
             _migration = new MigrationConfiguration(this);
-
         }
 
-        public ConnectionString DatabaseConnectionString { get; set; }
         public bool IgnoreSslErrors { get; set; }
+        public ConnectionString DatabaseConnectionString { get { return _database.ConnectionString; } }
 
         public ApplicationConfiguration AddCustomInstaller(IWindsorInstaller installer)
         {
@@ -50,11 +49,6 @@ namespace Vertica.Integration
             return this;
         }
 
-        internal IWindsorInstaller[] CustomInstallers
-        {
-            get { return _customInstallers.ToArray(); }
-        }
-
         public ApplicationConfiguration Tasks(Action<TasksConfiguration> tasks)
         {
             if (tasks != null)
@@ -63,10 +57,10 @@ namespace Vertica.Integration
             return this;
         }
 
-        public ApplicationConfiguration Dapper(Action<DapperConfiguration> dapper)
+        public ApplicationConfiguration Database(Action<DatabaseConfiguration> database)
         {
-            if (dapper != null)
-                dapper(_dapper);
+            if (database != null)
+                database(_database);
 
             return this;
         }
@@ -93,6 +87,23 @@ namespace Vertica.Integration
                 change(this);
 
             return this;
+        }
+
+        void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
+        {
+            container.Install(_customInstallers.ToArray());
+        }
+
+        internal IEnumerable<IInitializable<IWindsorContainer>> ContainerInitializations
+        {
+            get
+            {
+                yield return _database;
+                yield return _tasks;
+                yield return _webApi;
+                yield return _migration;
+                yield return this;
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Vertica.Integration.Infrastructure.Database.Dapper.Databases
+﻿namespace Vertica.Integration.Infrastructure.Database.Databases
 {
     internal class IntegrationDb : DefaultConnection
 	{

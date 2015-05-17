@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Data.SqlClient;
-using Vertica.Integration.Infrastructure.Database.Dapper.Databases;
+using Vertica.Integration.Infrastructure.Database.Databases;
 
-namespace Vertica.Integration.Infrastructure.Database.Dapper.Extensions
+namespace Vertica.Integration.Infrastructure.Database.Extensions
 {
-    internal static class DapperExtensions
+    internal static class DbExtensions
     {
         /// <summary>
         /// Wraps the session and catches SqlException providing the client a better error message with actions on how to resolve it.
         /// </summary>
-        public static T Wrap<T>(this IDapperSession session, Func<IDapperSession, T> action)
+        public static T Wrap<T>(this IDbSession session, Func<IDbSession, T> action)
         {
             if (session == null) throw new ArgumentNullException("session");
             if (action == null) throw new ArgumentNullException("action");

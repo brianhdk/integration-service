@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Vertica.Integration.Infrastructure.Database.Dapper.Databases
+namespace Vertica.Integration.Infrastructure.Database.Databases
 {
     [Serializable]
     public class IntegrationDbException : Exception

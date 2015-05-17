@@ -15,29 +15,29 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
     internal class TaskInstaller : IWindsorInstaller
     {
         private readonly Assembly[] _scanAssemblies;
-        private readonly Type[] _addTypes;
-        private readonly Type[] _skipTypes;
+        private readonly Type[] _addTasks;
+        private readonly Type[] _ignoreTasks;
 
-        public TaskInstaller(Assembly[] scanAssemblies, Type[] addTypes, Type[] skipTypes)
+        public TaskInstaller(Assembly[] scanAssemblies, Type[] addTasks, Type[] ignoreTasks)
         {
             _scanAssemblies = scanAssemblies ?? new Assembly[0];
-            _addTypes = addTypes ?? new Type[0];
-            _skipTypes = skipTypes ?? new Type[0];
+            _addTasks = addTasks ?? new Type[0];
+            _ignoreTasks = ignoreTasks ?? new Type[0];
         }
 
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            foreach (Assembly assembly in _scanAssemblies)
+            foreach (Assembly assembly in _scanAssemblies.Distinct())
             {
                 container.Register(
                     Classes.FromAssembly(assembly)
                         .BasedOn<Task>()
-                        .Unless(_skipTypes.Contains)
+                        .Unless(_ignoreTasks.Contains)
                         .Configure(configure => { configure.Named(configure.Implementation.Name); })
                         .WithServiceDefaultInterfaces());
             }
 
-            foreach (Type addType in _addTypes)
+            foreach (Type addType in _addTasks.Except(_ignoreTasks).Distinct())
             {
                 container.Register(
                     Component.For<Task>()

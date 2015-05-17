@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Linq;
-using Vertica.Integration.Infrastructure.Database.Dapper;
+using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Utilities_v4;
 
@@ -9,11 +9,11 @@ namespace Vertica.Integration.Infrastructure.Archiving
 {
     public class ArchiveService : IArchiveService
     {
-        private readonly IDapperFactory _dapper;
+        private readonly IDbFactory _db;
 
-        public ArchiveService(IDapperFactory dapper)
+        public ArchiveService(IDbFactory db)
         {
-            _dapper = dapper;
+            _db = db;
         }
 
         public BeginArchive Create(string name, Action<ArchiveCreated> onCreated)
@@ -25,7 +25,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
             {
                 int archiveId;
 
-                using (IDapperSession session = _dapper.OpenSession())
+                using (IDbSession session = _db.OpenSession())
                 using (IDbTransaction transaction = session.BeginTransaction())
                 {
                     byte[] binaryData = stream.ToArray();
@@ -50,7 +50,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
         public Archive[] GetAll()
         {
-            using (IDapperSession session = _dapper.OpenSession())
+            using (IDbSession session = _db.OpenSession())
             {
                 return session.Query<Archive>("SELECT Id, Name, ByteSize, Created FROM Archive")
                     .ToArray();
@@ -63,7 +63,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
             if (!Int32.TryParse(id, out value))
                 return null;
 
-            using (IDapperSession session = _dapper.OpenSession())
+            using (IDbSession session = _db.OpenSession())
             {
                 return
                     session.Query<byte[]>("SELECT BinaryData FROM Archive WHERE Id = @Id", new { Id = value })
@@ -73,7 +73,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
         public int Delete(DateTimeOffset olderThan)
         {
-            using (IDapperSession session = _dapper.OpenSession())
+            using (IDbSession session = _db.OpenSession())
             using (IDbTransaction transaction = session.BeginTransaction())
             {
                 int count = session.Execute("DELETE FROM Archive WHERE Created <= @olderThan", new { olderThan });
