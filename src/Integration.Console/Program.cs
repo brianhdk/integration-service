@@ -1,4 +1,5 @@
-﻿using Vertica.Integration.Domain.Core;
+﻿using Vertica.Integration.Azure;
+using Vertica.Integration.Domain.Core;
 using Vertica.Integration.Domain.Monitoring;
 using Vertica.Integration.Experiments;
 using Vertica.Integration.Experiments.Migrations;
@@ -12,6 +13,8 @@ namespace Vertica.Integration.Console
 		private static void Main(string[] args)
 		{
 			using (ApplicationContext context = ApplicationContext.Create(builder => builder
+                //.UseAzure(azure => azure
+                //    .ReplaceArchiveWithBlobStorage(ConnectionString.FromName("AzureBlobStorage.Archive")))
                 .UsePortal()
                 .Database(db => db
                     .Change(x => x.ConnectionString = ConnectionString.FromName("IntegrationDb"))

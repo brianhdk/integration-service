@@ -183,6 +183,7 @@
     <Compile Include="Infrastructure\IO\IDirectory.cs" />
     <Compile Include="Infrastructure\IO\IFile.cs" />
     <Compile Include="Infrastructure\IO\IFileSystemService.cs" />
+    <Compile Include="Infrastructure\Logging\ITarget.cs" />
     <Compile Include="Infrastructure\Parsing\CsvConfiguration.cs" />
     <Compile Include="Infrastructure\Parsing\CsvParser.cs" />
     <Compile Include="Infrastructure\Parsing\CsvReader.cs" />

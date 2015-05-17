@@ -11,7 +11,7 @@ namespace Vertica.Integration
 		{
 		    if (configuration == null) throw new ArgumentNullException("configuration");
 
-            IWindsorContainer container = new WindsorContainer();
+            var container = new WindsorContainer();
 
             foreach (IInitializable<IWindsorContainer> subject in configuration.ContainerInitializations)
                 subject.Initialize(container);

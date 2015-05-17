@@ -6,10 +6,10 @@ namespace Vertica.Integration.Model
     internal class Log : ILog
 	{
 		private readonly Action<string> _message;
-	    private readonly Action<Target, string> _warning;
-	    private readonly Action<Target, string> _error;
+	    private readonly Action<ITarget, string> _warning;
+	    private readonly Action<ITarget, string> _error;
 
-	    internal Log(Action<string> message, Action<Target, string> warning, Action<Target, string> error)
+	    internal Log(Action<string> message, Action<ITarget, string> warning, Action<ITarget, string> error)
 		{
 			if (message == null) throw new ArgumentNullException("message");
 	        if (warning == null) throw new ArgumentNullException("warning");
@@ -25,7 +25,7 @@ namespace Vertica.Integration.Model
 			_message(String.Format(format, args));
 		}
 
-	    public void Warning(Target target, string format, params object[] args)
+	    public void Warning(ITarget target, string format, params object[] args)
 	    {
 	        string message = String.Format(format, args);
 
@@ -33,7 +33,7 @@ namespace Vertica.Integration.Model
 	        _warning(target, message);
 	    }
 
-	    public void Error(Target target, string format, params object[] args)
+	    public void Error(ITarget target, string format, params object[] args)
 	    {
             string message = String.Format(format, args);
 
