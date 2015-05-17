@@ -28,19 +28,19 @@ namespace Vertica.Integration.Infrastructure.Logging
             _disablers = new Stack<object>();
         }
 
-        public ErrorLog LogError(Target target, string message, params object[] args)
+        public ErrorLog LogError(ITarget target, string message, params object[] args)
         {
             return Log(new ErrorLog(Severity.Error, String.Format(message, args), target));
         }
 
-        public ErrorLog LogError(Exception exception, Target target = null)
+        public ErrorLog LogError(Exception exception, ITarget target = null)
         {
             if (exception == null) throw new ArgumentNullException("exception");
 
             return Log(new ErrorLog(exception, target));
         }
 
-        public ErrorLog LogWarning(Target target, string message, params object[] args)
+        public ErrorLog LogWarning(ITarget target, string message, params object[] args)
         {
             return Log(new ErrorLog(Severity.Warning, String.Format(message, args), target));
         }

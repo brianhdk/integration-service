@@ -2,7 +2,7 @@ using System;
 
 namespace Vertica.Integration.Infrastructure.Logging
 {
-    public class Target : IEquatable<Target>
+    public class Target : ITarget, IEquatable<Target>
     {
         private readonly string _name;
 

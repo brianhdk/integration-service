@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArchiveTesterTask.cs" />
     <Compile Include="CustomDb.cs" />
     <Compile Include="CustomDbTask.cs" />
     <Compile Include="Migrations\M1431659508_RunTask.cs" />
