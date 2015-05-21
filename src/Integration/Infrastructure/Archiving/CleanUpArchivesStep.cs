@@ -18,14 +18,14 @@ namespace Vertica.Integration.Infrastructure.Archiving
             _configuration = configuration;
         }
 
-        public override void Execute(MaintenanceWorkItem workItem, ILog log)
+        public override void Execute(MaintenanceWorkItem workItem, ITaskExecutionContext context)
         {
             DateTimeOffset lowerBound = Time.UtcNow.BeginningOfDay().Subtract(workItem.Configuration.CleanUpArchivesOlderThan);
 
             int count = _archive.Delete(lowerBound);
 
             if (count > 0)
-                log.Message("Deleted {0} archives older than '{1}'.", count, lowerBound);
+                context.Log.Message("Deleted {0} archives older than '{1}'.", count, lowerBound);
         }
 
         public override string Description

@@ -16,7 +16,7 @@ namespace Vertica.Integration.Domain.Core
             _taskFactory = taskFactory;
         }
 
-        public override void StartTask(ILog log, params string[] arguments)
+        public override void StartTask(ITaskExecutionContext context)
         {
             var sb = new StringBuilder();
 
@@ -39,17 +39,17 @@ namespace Vertica.Integration.Domain.Core
 
             string text = sb.ToString();
 
-            if (arguments != null && arguments.Contains("ToFile", StringComparer.OrdinalIgnoreCase))
+            if (context.Arguments.Contains("ToFile", StringComparer.OrdinalIgnoreCase))
             {
                 var file = new FileInfo("Tasks-Documentation.txt");
 
                 File.WriteAllText(file.Name, text);
 
-                log.Message("File generated. Location: {0}", file.FullName);
+                context.Log.Message("File generated. Location: {0}", file.FullName);
             }
             else
             {
-                log.Message(text);
+                context.Log.Message(text);
             }
         }
 

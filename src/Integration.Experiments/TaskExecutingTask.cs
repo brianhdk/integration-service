@@ -19,15 +19,15 @@ namespace Vertica.Integration.Experiments
             get { return "TBD"; }
         }
 
-        public override void StartTask(ILog log, params string[] arguments)
+        public override void StartTask(ITaskExecutionContext context)
         {
-            log.Message("This task is executing that task...");
+            context.Log.Message("This task is executing that task...");
 
             ITask task = _factory.Get<WriteDocumentationTask>();
 
             TaskExecutionResult result = _runner.Execute(task);
 
-            log.Message("That task resulted in {0} messages.", result.Output.Length);
+            context.Log.Message("That task resulted in {0} messages.", result.Output.Length);
         }
     }
 }

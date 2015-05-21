@@ -25,7 +25,7 @@ namespace Vertica.Integration.Domain.Monitoring
 			get { return "Monitors the solution and sends out e-mails if there is any errors."; }
 		}
 
-        public override MonitorWorkItem Start(ILog log, params string[] arguments)
+        public override MonitorWorkItem Start(ITaskExecutionContext context)
 		{
 		    MonitorConfiguration configuration = _configuration.Get<MonitorConfiguration>();
 		    configuration.Assert();
@@ -34,10 +34,10 @@ namespace Vertica.Integration.Domain.Monitoring
                 .WithIgnoreFilter(new MessageContainsTextIgnoreFilter(configuration.IgnoreErrorsWithMessagesContaining));
 		}
 
-        public override void End(MonitorWorkItem workItem, ILog log, params string[] arguments)
+        public override void End(MonitorWorkItem workItem, ITaskExecutionContext context)
 		{
 		    foreach (MonitorTarget target in workItem.Configuration.Targets)
-		        SendTo(target, workItem, log, workItem.Configuration.SubjectPrefix);
+		        SendTo(target, workItem, context.Log, workItem.Configuration.SubjectPrefix);
 
             workItem.Configuration.LastRun = workItem.CheckRange.UpperBound;
 		    _configuration.Save(workItem.Configuration, "MonitorTask");

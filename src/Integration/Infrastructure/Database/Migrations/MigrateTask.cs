@@ -12,7 +12,6 @@ using FluentMigrator.Runner.Processors.SqlServer;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
 using Vertica.Utilities_v4.Extensions.AttributeExt;
-using IDbFactory = Vertica.Integration.Infrastructure.Database.IDbFactory;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
@@ -66,7 +65,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
             get { return "Runs migrations."; }
         }
 
-        public override void StartTask(ILog log, params string[] arguments)
+        public override void StartTask(ITaskExecutionContext context)
         {
             bool integrationDbMigration = true;
 
@@ -78,7 +77,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
                 runner.MigrateUp(useAutomaticTransactionManagement: true);
 
                 if (output.Length > 0)
-                    log.Message(output.ToString());
+                    context.Log.Message(output.ToString());
 
                 if (integrationDbMigration && _loggingDisabler != null)
                     _loggingDisabler.Dispose();
@@ -87,11 +86,11 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
             }
         }
 
-        public override void End(EmptyWorkItem workItem, ILog log, params string[] arguments)
+        public override void End(EmptyWorkItem workItem, ITaskExecutionContext context)
         {
             if (_databaseCreated)
             {
-                log.Warning(
+                context.Log.Warning(
                     Target.Service,
                     "Created new database (using Simple Recovery) and applied migrations to this. Make sure to configure this new database (auto growth, backup etc).");
             }

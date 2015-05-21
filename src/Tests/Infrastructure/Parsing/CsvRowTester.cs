@@ -159,5 +159,23 @@ Jane"));
 John Doe;30
 Jane Doe;"));
         }
+
+        [Test]
+        public void Escape_Header_Content_Quote_Delimiter()
+        {
+            CsvRow.ICsvRowBuilderAdder builder = CsvRow.BeginRows("\"Name\"", "Age")
+                .Configure(x => x
+                    .ReturnHeaderAsRow()
+                    .ChangeDelimiter(";"));
+
+            builder.AddUsingMapper(x => x
+                .Map("\"Name\"", "John;Doe")
+                .Map("Age", "30\""));
+
+            string csv = builder.ToString();
+
+            Assert.That(csv, Is.EqualTo(@"""""""Name"""""";Age
+""John;Doe"";""30"""""""));
+        }
     }
 }

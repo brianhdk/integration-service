@@ -23,7 +23,7 @@ namespace Vertica.Integration.Logging.Kibana
             get { return "Exports log files to LogStash."; }
         }
 
-        public override ExportLogsToLogStashWorkItem Start(ILog log, params string[] arguments)
+        public override ExportLogsToLogStashWorkItem Start(ITaskExecutionContext context)
         {
             CloudBlobClient client = _factory.Create();
 
@@ -35,7 +35,7 @@ namespace Vertica.Integration.Logging.Kibana
                 CloudBlockBlob blockBlob = container.GetBlockBlobReference(name);
                 blockBlob.UploadFromStream(stream);
 
-                log.Message("{0} uploaded.", name);
+                context.Log.Message("{0} uploaded.", name);
             };
 
             return new ExportLogsToLogStashWorkItem(upload);

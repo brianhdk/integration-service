@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Text;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
+using Vertica.Integration.Infrastructure.Database.Databases;
 
 namespace Vertica.Integration.Infrastructure.Database.Castle.Windsor
 {
@@ -39,9 +41,32 @@ namespace Vertica.Integration.Infrastructure.Database.Castle.Windsor
 
 		public virtual void Install(IWindsorContainer container, IConfigurationStore store)
 		{
-		    container.Register(
-		        Component.For<IDbFactory<TConnection>>()
-		            .UsingFactoryMethod(() => new DbFactory<TConnection>(Connection.ConnectionString)));
+		    var disabled = Connection as IDisabledConnection;
+
+		    if (disabled != null)
+		    {
+		        container.Register(
+		            Component.For<IDbFactory<TConnection>>()
+		                .UsingFactoryMethod<IDbFactory<TConnection>>((kernel, model, context) =>
+		                {
+		                    var sb = new StringBuilder();
+		                    sb.AppendLine(disabled.ExceptionMessage);
+		                    sb.AppendLine();
+
+		                    sb.AppendLine("Examine the DependencyChain below to see which component has a dependency of this:");
+		                    sb.AppendLine();
+
+		                    context.BuildCycleMessageFor(context.Handler, sb);
+
+		                    throw new DatabaseDisabledException(sb.ToString());
+		                }));
+		    }
+		    else
+		    {
+                container.Register(
+                    Component.For<IDbFactory<TConnection>>()
+                        .UsingFactoryMethod(() => new DbFactory<TConnection>(Connection.ConnectionString)));
+		    }
 		}
 
 		protected TConnection Connection

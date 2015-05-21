@@ -10,17 +10,18 @@ namespace Vertica.Integration.Infrastructure.Database.Databases
         {
         }
 
-        public IntegrationDbException(string message) : base(message)
+        public IntegrationDbException(string message)
+            : base(message)
         {
         }
 
-        public IntegrationDbException(string message, Exception inner) : base(message, inner)
+        public IntegrationDbException(string message, Exception inner)
+            : base(message, inner)
         {
         }
 
-        protected IntegrationDbException(
-            SerializationInfo info,
-            StreamingContext context) : base(info, context)
+        protected IntegrationDbException(SerializationInfo info, StreamingContext context) 
+            : base(info, context)
         {
         }
     }

@@ -19,7 +19,7 @@ namespace Vertica.Integration.Domain.Core
 		    _configuration = configuration;
 		}
 
-        public override void Execute(MaintenanceWorkItem workItem, ILog log)
+        public override void Execute(MaintenanceWorkItem workItem, ITaskExecutionContext context)
         {
 			DateTimeOffset tasksLowerBound = Time.UtcNow.BeginningOfDay().Subtract(workItem.Configuration.CleanUpTaskLogEntriesOlderThan),
 				errorsLowerBound = Time.UtcNow.BeginningOfDay().Subtract(workItem.Configuration.CleanUpErrorLogEntriesOlderThan);
@@ -33,10 +33,10 @@ namespace Vertica.Integration.Domain.Core
 				transaction.Commit();
 
 				if (taskCount > 0)
-					log.Message("Deleted {0} task entries older than '{1}'.", taskCount, tasksLowerBound);
+					context.Log.Message("Deleted {0} task entries older than '{1}'.", taskCount, tasksLowerBound);
 
 				if (errorCount > 0)
-					log.Message("Deleted {0} error entries older than '{1}'.", errorCount, errorsLowerBound);
+                    context.Log.Message("Deleted {0} error entries older than '{1}'.", errorCount, errorsLowerBound);
 			}
 		}
 

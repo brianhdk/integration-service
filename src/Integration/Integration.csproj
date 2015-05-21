@@ -144,6 +144,8 @@
     <Compile Include="Infrastructure\ConnectionString.cs" />
     <Compile Include="Infrastructure\Database\Castle.Windsor\DbInstaller.cs" />
     <Compile Include="Infrastructure\Database\Connection.cs" />
+    <Compile Include="Infrastructure\Database\Databases\DatabaseDisabledException.cs" />
+    <Compile Include="Infrastructure\Database\Databases\IDisabledConnection.cs" />
     <Compile Include="Infrastructure\Database\DbFactory.cs" />
     <Compile Include="Infrastructure\Database\DbSession.cs" />
     <Compile Include="Infrastructure\Database\Databases\IntegrationDb.cs" />
@@ -184,6 +186,9 @@
     <Compile Include="Infrastructure\IO\IFile.cs" />
     <Compile Include="Infrastructure\IO\IFileSystemService.cs" />
     <Compile Include="Infrastructure\Logging\ITarget.cs" />
+    <Compile Include="Infrastructure\Logging\LoggerConfiguration.cs" />
+    <Compile Include="Infrastructure\Logging\Loggers\Logger.cs" />
+    <Compile Include="Infrastructure\Logging\Loggers\VoidLogger.cs" />
     <Compile Include="Infrastructure\Parsing\CsvConfiguration.cs" />
     <Compile Include="Infrastructure\Parsing\CsvParser.cs" />
     <Compile Include="Infrastructure\Parsing\CsvReader.cs" />
@@ -200,6 +205,8 @@
     <Compile Include="Infrastructure\Remote\IFtpClientFactory.cs" />
     <Compile Include="Infrastructure\Remote\IHttpClientFactory.cs" />
     <Compile Include="Model\ILog.cs" />
+    <Compile Include="Model\ITaskExecutionContext.cs" />
+    <Compile Include="Model\TaskExecutionContext.cs" />
     <Compile Include="Model\TasksConfiguration.cs" />
     <Compile Include="Model\TaskConfiguration.cs" />
     <Compile Include="Model\Web\IWebApiControllers.cs" />
@@ -209,7 +216,7 @@
     <Compile Include="Infrastructure\Logging\ErrorLog.cs" />
     <Compile Include="Infrastructure\Logging\ILogger.cs" />
     <Compile Include="Infrastructure\Logging\LogEntry.cs" />
-    <Compile Include="Infrastructure\Logging\Logger.cs" />
+    <Compile Include="Infrastructure\Logging\Loggers\DefaultLogger.cs" />
     <Compile Include="Infrastructure\Logging\MessageLog.cs" />
     <Compile Include="Infrastructure\Logging\Severity.cs" />
     <Compile Include="Infrastructure\Logging\StepLog.cs" />

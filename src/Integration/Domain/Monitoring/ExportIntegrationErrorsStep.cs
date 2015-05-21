@@ -26,7 +26,7 @@ namespace Vertica.Integration.Domain.Monitoring
             get { return "Exports errors from integration error log."; }
         }
 
-        public override void Execute(MonitorWorkItem workItem, ILog log)
+        public override void Execute(MonitorWorkItem workItem, ITaskExecutionContext context)
         {
             using (var session = _db.OpenSession())
             {
@@ -59,7 +59,7 @@ ORDER BY ErrorLog.Id DESC",
 
                 if (errors.Length > 0)
                 {
-                    log.Message("{0} errors/warnings within time-period {1}.", errors.Length, workItem.CheckRange);
+                    context.Log.Message("{0} errors/warnings within time-period {1}.", errors.Length, workItem.CheckRange);
 
                     var tasksByName = new Dictionary<string, ITask>(StringComparer.OrdinalIgnoreCase);
 

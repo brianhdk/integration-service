@@ -12,7 +12,7 @@ namespace Vertica.Integration.Experiments
             _fileSystem = fileSystem;
         }
 
-        public override void StartTask(ILog log, params string[] arguments)
+        public override void StartTask(ITaskExecutionContext context)
         {
             throw new System.NotImplementedException();
         }

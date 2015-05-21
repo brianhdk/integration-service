@@ -19,12 +19,12 @@ namespace Vertica.Integration.Infrastructure.Archiving
             get { return "Dumps a specified archive to the file system."; }
         }
 
-        public override void StartTask(ILog log, params string[] arguments)
+        public override void StartTask(ITaskExecutionContext context)
         {
-            if (arguments == null || arguments.Length == 0)
-                throw new InvalidOperationException(@"Parameter usage: [ArchiveID]");
+            if (context.Arguments.Length == 0)
+                throw new InvalidOperationException(@"Arguments usage: [ArchiveID]");
 
-            string id = arguments[0];
+            string id = context.Arguments[0];
 
             byte[] archive = _archive.Get(id);
 
@@ -36,11 +36,11 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
                 File.WriteAllBytes(file, archive);
 
-                log.Message("Archive dumped to {0}.", file);
+                context.Log.Message("Archive dumped to {0}.", file);
             }
             else
             {
-                log.Warning(Target.Service, "Archive '{0}' not found.", id);
+                context.Log.Warning(Target.Service, "Archive '{0}' not found.", id);
             }
         }
     }

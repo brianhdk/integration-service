@@ -13,7 +13,7 @@ namespace Vertica.Integration.Logging.Kibana
             get { return "Exports Log files from IIS"; }
         }
 
-        public override void Execute(ExportLogsToLogStashWorkItem workItem, ILog log)
+        public override void Execute(ExportLogsToLogStashWorkItem workItem, ITaskExecutionContext context)
         {
             // konfiguration af tidspunkt
             var within = new Range<DateTimeOffset>(DateTimeOffset.UtcNow.AddYears(-2), DateTimeOffset.UtcNow);

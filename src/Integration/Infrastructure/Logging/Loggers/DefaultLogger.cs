@@ -1,22 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Database.Extensions;
 using Vertica.Utilities_v4.Patterns;
 
-namespace Vertica.Integration.Infrastructure.Logging
+namespace Vertica.Integration.Infrastructure.Logging.Loggers
 {
-    public class Logger : ILogger
+    internal class DefaultLogger : Logger
     {
         private readonly IDbFactory _db;
 
-        private readonly object _dummy = new object();
-        private readonly Stack<object> _disablers;
-
         private readonly ChainOfResponsibilityLink<LogEntry> _chainOfResponsibility;
 
-        public Logger(IDbFactory db)
+        public DefaultLogger(IDbFactory db)
         {
             _db = db;
 
@@ -24,28 +20,26 @@ namespace Vertica.Integration.Infrastructure.Logging
                 .Chain(new TaskLogLink(_db))
                 .Chain(new StepLogLink(_db))
                 .Chain(new MessageLogLink(_db));
-
-            _disablers = new Stack<object>();
         }
 
-        public ErrorLog LogError(ITarget target, string message, params object[] args)
+        public override ErrorLog LogError(ITarget target, string message, params object[] args)
         {
             return Log(new ErrorLog(Severity.Error, String.Format(message, args), target));
         }
 
-        public ErrorLog LogError(Exception exception, ITarget target = null)
+        public override ErrorLog LogError(Exception exception, ITarget target = null)
         {
             if (exception == null) throw new ArgumentNullException("exception");
 
             return Log(new ErrorLog(exception, target));
         }
 
-        public ErrorLog LogWarning(ITarget target, string message, params object[] args)
+        public override ErrorLog LogWarning(ITarget target, string message, params object[] args)
         {
             return Log(new ErrorLog(Severity.Warning, String.Format(message, args), target));
         }
 
-        public void LogEntry(LogEntry logEntry)
+        public override void LogEntry(LogEntry logEntry)
         {
             if (logEntry == null) throw new ArgumentNullException("logEntry");
 
@@ -53,37 +47,6 @@ namespace Vertica.Integration.Infrastructure.Logging
                 return;
 
             _chainOfResponsibility.Handle(logEntry);
-        }
-
-        public IDisposable Disable()
-        {
-            _disablers.Push(_dummy);
-            return new Disabler(() => _disablers.Pop());
-        }
-
-        private bool LoggingDisabled
-        {
-            get { return _disablers.Count > 0; }
-        }
-
-        private class Disabler : IDisposable
-        {
-            private readonly Action _disposed;
-            private bool _wasDisposed;
-
-            public Disabler(Action disposed)
-            {
-                _disposed = disposed;
-            }
-
-            public void Dispose()
-            {
-                if (!_wasDisposed)
-                {
-                    _disposed();
-                    _wasDisposed = true;
-                }
-            }
         }
 
         private ErrorLog Log(ErrorLog errorLog)
