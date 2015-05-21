@@ -18,12 +18,12 @@ namespace Vertica.Integration.Experiments
             get { return "TBD"; }
         }
 
-        public override void StartTask(ILog log, params string[] arguments)
+        public override void StartTask(ITaskExecutionContext context)
         {
-            log.Message(_archiver.ArchiveText("Test", "Some Text"));
-            log.Warning(Target.All, "Test-All");
-            log.Warning(Target.Service, "Test-Service");
-            log.Error(Target.Service, "Test-Error");
+            context.Log.Message(_archiver.ArchiveText("Test", "Some Text"));
+            context.Log.Warning(Target.All, "Test-All");
+            context.Log.Warning(Target.Service, "Test-Service");
+            context.Log.Error(Target.Service, "Test-Error");
         }
     }
 }

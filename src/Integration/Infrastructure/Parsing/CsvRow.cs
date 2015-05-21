@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Text;
 using Vertica.Utilities_v4.Extensions.EnumerableExt;
 
 namespace Vertica.Integration.Infrastructure.Parsing
@@ -84,13 +85,31 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
 	    public IEnumerator<string> GetEnumerator()
 	    {
-	        return _data.Select(x => x ?? String.Empty).GetEnumerator();
+	        return _data.Select(Escape).GetEnumerator();
 	    }
 
 	    public override string ToString()
 	    {
-            // TODO: Handle escaping of data.
 	        return String.Join(Meta.Delimiter, this);
+	    }
+
+	    internal string Escape(string data)
+	    {
+	        const string doubleQuote = @"""""";
+
+	        data = new StringBuilder(data)
+	            .Replace("\"", "\"\"")
+                .Replace("“", doubleQuote)
+                .Replace("”", doubleQuote)
+                .Replace("„", doubleQuote)
+	            .ToString();
+
+	        if (data.IndexOf(Meta.Delimiter, StringComparison.OrdinalIgnoreCase) >= 0 || data.Contains('"'))
+	        {
+	            data = String.Format("\"{0}\"", data);
+	        }
+
+	        return data;
 	    }
 
 	    public override bool TryGetMember(GetMemberBinder binder, out object result)
@@ -155,12 +174,11 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
 	            public IEnumerator<string> GetEnumerator()
 	            {
-	                return _metadata._row._headers.Keys.GetEnumerator();
+	                return _metadata._row._headers.Keys.Select(x => _metadata._row.Escape(x)).GetEnumerator();
 	            }
 
 	            public override string ToString()
 	            {
-                    // TODO: Handle escaping of data.
                     return String.Join(_metadata.Delimiter, this);
 	            }
 

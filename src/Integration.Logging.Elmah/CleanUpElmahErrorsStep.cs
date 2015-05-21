@@ -26,7 +26,7 @@ namespace Vertica.Integration.Logging.Elmah
             return Execution.Execute;
         }
 
-        public override void Execute(MaintenanceWorkItem workItem, ILog log)
+        public override void Execute(MaintenanceWorkItem workItem, ITaskExecutionContext context)
         {
             ElmahConfiguration configuration = _configuration.GetElmahConfiguration();
 
@@ -44,7 +44,7 @@ namespace Vertica.Integration.Logging.Elmah
                 int count = command.ExecuteNonQuery();
 
                 if (count > 0)
-                    log.Message("Deleted {0} entries older than '{1}'.", count, lowerBound);
+                    context.Log.Message("Deleted {0} entries older than '{1}'.", count, lowerBound);
             }
         }
 

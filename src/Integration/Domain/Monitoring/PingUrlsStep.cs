@@ -24,7 +24,8 @@ namespace Vertica.Integration.Domain.Monitoring
 
         public override Execution ContinueWith(MonitorWorkItem workItem)
         {
-            if (workItem.Configuration.PingUrls.Urls == null ||
+            if (!workItem.Configuration.PingUrls.Enabled ||
+                workItem.Configuration.PingUrls.Urls == null ||
                 workItem.Configuration.PingUrls.Urls.Length == 0)
             {
                 return Execution.StepOver;
@@ -33,9 +34,9 @@ namespace Vertica.Integration.Domain.Monitoring
             return Execution.Execute;
         }
 
-        public override void Execute(MonitorWorkItem workItem, ILog log)
+        public override void Execute(MonitorWorkItem workItem, ITaskExecutionContext context)
         {
-            Uri[] urls = ParseUrls(workItem.Configuration.PingUrls.Urls, log);
+            Uri[] urls = ParseUrls(workItem.Configuration.PingUrls.Urls, context.Log);
 
             if (urls.Length == 0)
                 return;
@@ -50,11 +51,6 @@ namespace Vertica.Integration.Domain.Monitoring
                     {
                         Response response = HttpGet(url, workItem.Configuration.PingUrls.MaximumWaitTimeSeconds);
                         response.Wait();
-
-                        //if (response.Result.StatusCode == HttpStatusCode.Unauthorized)
-                        //{
-                        //    HttpGet(url, workItem.Configuration.PingUrls.MaximumWaitTimeSeconds, )
-                        //}
 
                         response.Result.EnsureSuccessStatusCode();
                     }

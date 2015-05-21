@@ -28,7 +28,7 @@ namespace Vertica.Integration.Logging.Elmah
             return Execution.Execute;
         }
 
-        public override void Execute(MonitorWorkItem workItem, ILog log)
+        public override void Execute(MonitorWorkItem workItem, ITaskExecutionContext context)
         {
             ElmahConfiguration configuration = _configuration.GetElmahConfiguration();
 
@@ -66,7 +66,7 @@ FOR XML AUTO";
 
                             workItem.Add(
                                 error.Created,
-                                String.Join(",", new[] { configuration.LogName, error.Source }.Select(x => !String.IsNullOrWhiteSpace(x))),
+                                String.Join(",", new[] { configuration.LogName, error.Source }.Where(x => !String.IsNullOrWhiteSpace(x))),
                                 error.ToString(),
                                 Target.Service);
                         }

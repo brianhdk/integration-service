@@ -49,6 +49,7 @@ namespace Vertica.Integration.Domain.Monitoring
                 MaximumWaitTimeSeconds = (uint)TimeSpan.FromMinutes(2).TotalSeconds;
             }
 
+            public bool Enabled { get; set; }
             public uint MaximumWaitTimeSeconds { get; set; }
             public string[] Urls { get; set; }
         }

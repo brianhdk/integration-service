@@ -10,8 +10,8 @@ namespace Vertica.Integration.Model
 
 	public interface ITask<TWorkItem> : ITask
 	{
-		TWorkItem Start(ILog log, params string[] arguments);
-		void End(TWorkItem workItem, ILog log, params string[] arguments);
+		TWorkItem Start(ITaskExecutionContext context);
+        void End(TWorkItem workItem, ITaskExecutionContext context);
 
 		new IEnumerable<IStep<TWorkItem>> Steps { get; }
 	}

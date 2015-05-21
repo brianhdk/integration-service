@@ -1,4 +1,5 @@
 ﻿using System;
+using Castle.Facilities.TypedFactory;
 using Castle.Windsor;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Model;
@@ -12,6 +13,7 @@ namespace Vertica.Integration
 		    if (configuration == null) throw new ArgumentNullException("configuration");
 
             var container = new WindsorContainer();
+            container.Kernel.AddFacility<TypedFactoryFacility>();
 
             foreach (IInitializable<IWindsorContainer> subject in configuration.ContainerInitializations)
                 subject.Initialize(container);

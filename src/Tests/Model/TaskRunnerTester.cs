@@ -23,7 +23,7 @@ namespace Vertica.Integration.Tests.Model
 
 			var workItem = new SomeWorkItem();
 
-			task.Start(Arg.Any<Log>()).ReturnsForAnyArgs(workItem);
+            task.Start(Arg.Any<ITaskExecutionContext>()).ReturnsForAnyArgs(workItem);
 			task.Steps.Returns(new[] { step1, step2 });
 
 			step1.ContinueWith(workItem).Returns(Execution.Execute);
@@ -37,10 +37,10 @@ namespace Vertica.Integration.Tests.Model
 			logger.Received().LogEntry(Arg.Is<StepLog>(x => x.StepName == TaskRunner.GetStepName(step1)));
 			logger.Received().LogEntry(Arg.Is<StepLog>(x => x.StepName == TaskRunner.GetStepName(step2)));
 
-			step1.Received().Execute(workItem, Arg.Any<Log>());
-			step2.Received().Execute(workItem, Arg.Any<Log>());
+            step1.Received().Execute(workItem, Arg.Any<ITaskExecutionContext>());
+            step2.Received().Execute(workItem, Arg.Any<ITaskExecutionContext>());
 
-			task.Received().End(workItem, Arg.Any<Log>());
+            task.Received().End(workItem, Arg.Any<ITaskExecutionContext>());
 		}
 
 		[Test]
@@ -56,13 +56,13 @@ namespace Vertica.Integration.Tests.Model
 
 			var workItem = new SomeWorkItem();
 
-			task.Start(Arg.Any<Log>()).Returns(workItem);
+            task.Start(Arg.Any<ITaskExecutionContext>()).Returns(workItem);
 			task.Steps.Returns(new[] { step1, step2 });
 
 			step1.ContinueWith(workItem).Returns(Execution.Execute);
 
 			step1
-				.When(x => x.Execute(workItem, Arg.Any<Log>()))
+                .When(x => x.Execute(workItem, Arg.Any<ITaskExecutionContext>()))
 				.Do(x => { throw throwingException; });
 
 			var subject = new TaskRunner(logger, outputter);
@@ -73,12 +73,12 @@ namespace Vertica.Integration.Tests.Model
 			logger.Received().LogEntry(Arg.Any<TaskLog>());
 			logger.Received().LogEntry(Arg.Is<StepLog>(x => x.StepName == TaskRunner.GetStepName(step1)));
 
-			step1.Received().Execute(workItem, Arg.Any<Log>());
-			step2.DidNotReceive().Execute(workItem, Arg.Any<Log>());
+            step1.Received().Execute(workItem, Arg.Any<ITaskExecutionContext>());
+            step2.DidNotReceive().Execute(workItem, Arg.Any<ITaskExecutionContext>());
 
 			logger.Received().LogError(Arg.Is(throwingException));
 
-			task.DidNotReceive().End(workItem, Arg.Any<Log>());
+            task.DidNotReceive().End(workItem, Arg.Any<ITaskExecutionContext>());
 		}
 
 		public class SomeWorkItem

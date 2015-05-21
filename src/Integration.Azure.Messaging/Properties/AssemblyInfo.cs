@@ -1,11 +1,12 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Vertica.Integration.Logging.Elmah")]
-[assembly: AssemblyDescription("Extension to Vertica Integration Service that supports Elmah framework.")]
+[assembly: AssemblyTitle("Vertica.Integration.Azure.Messaging")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Vertica A/S")]
 [assembly: AssemblyProduct("")]
@@ -19,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("411272de-4866-463b-959e-85dbeab9ae2e")]
+[assembly: Guid("a935fe82-d5d8-4ad8-916d-411a91addd2a")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -31,4 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.4.*")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

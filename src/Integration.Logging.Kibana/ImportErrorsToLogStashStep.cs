@@ -6,7 +6,7 @@ namespace Vertica.Integration.Logging.Kibana
 {
     public class ImportErrorsToLogStashStep : Step<MonitorWorkItem>
     {
-        public override void Execute(MonitorWorkItem workItem, ILog log)
+        public override void Execute(MonitorWorkItem workItem, ITaskExecutionContext context)
         {
             foreach (MonitorEntry entries in workItem.GetEntries(Target.All))
             {

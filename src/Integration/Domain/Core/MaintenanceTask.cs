@@ -19,7 +19,7 @@ namespace Vertica.Integration.Domain.Core
 			get { return "Performs a number of steps to clean up the solution."; }
 		}
 
-        public override MaintenanceWorkItem Start(ILog log, params string[] arguments)
+        public override MaintenanceWorkItem Start(ITaskExecutionContext context)
 		{
 			return new MaintenanceWorkItem(_service.Get<MaintenanceConfiguration>());
 		}

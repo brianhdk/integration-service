@@ -21,7 +21,7 @@ namespace Vertica.Integration.Logging.Kibana
             get { return "Loads Log files from BlobStorage in Azure."; }
         }
 
-        public override void StartTask(ILog log, params string[] arguments)
+        public override void StartTask(ITaskExecutionContext context)
         {
             CloudBlobClient client = _factory.Create();
 

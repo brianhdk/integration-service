@@ -9,9 +9,9 @@ namespace Vertica.Integration.Experiments
             get { return "TBD"; }
         }
 
-        public override void StartTask(ILog log, params string[] arguments)
+        public override void StartTask(ITaskExecutionContext context)
         {
-            log.Message("Hi from Task.");
+            context.Log.Message("Hi from Task.");
         }
     }
 }

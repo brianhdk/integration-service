@@ -7,7 +7,7 @@ namespace Vertica.Integration.Experiments
 {
     public class XssTestingStep : Step<MonitorWorkItem>
     {
-        public override void Execute(MonitorWorkItem workItem, ILog log)
+        public override void Execute(MonitorWorkItem workItem, ITaskExecutionContext context)
         {
             workItem.Add(new MonitorEntry(DateTimeOffset.Now, "Source", "<b>Some message</b>"), Target.Service);
         }

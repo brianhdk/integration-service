@@ -2,7 +2,7 @@
 {
     public class WebApiTask : Task
     {
-        public override void StartTask(ILog log, params string[] arguments)
+        public override void StartTask(ITaskExecutionContext context)
         {
         }
 

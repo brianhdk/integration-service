@@ -5,6 +5,7 @@ using Castle.Windsor;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Database.Migrations;
+using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Web;
 using Vertica.Utilities_v4.Extensions.EnumerableExt;
@@ -16,6 +17,7 @@ namespace Vertica.Integration
         private readonly List<IWindsorInstaller> _customInstallers;
         private readonly DatabaseConfiguration _database;
         private readonly TasksConfiguration _tasks;
+        private readonly LoggerConfiguration _logger;
         private readonly WebApiConfiguration _webApi;
         private readonly MigrationConfiguration _migration;
 
@@ -26,6 +28,7 @@ namespace Vertica.Integration
             _customInstallers = new List<IWindsorInstaller>();
             _database = new DatabaseConfiguration(this);
             _tasks = new TasksConfiguration();
+            _logger = new LoggerConfiguration();
             _webApi = new WebApiConfiguration();
             _migration = new MigrationConfiguration(this);
         }
@@ -53,6 +56,14 @@ namespace Vertica.Integration
         {
             if (tasks != null)
                 tasks(_tasks);
+
+            return this;
+        }
+
+        public ApplicationConfiguration Logger(Action<LoggerConfiguration> logger)
+        {
+            if (logger != null)
+                logger(_logger);
 
             return this;
         }
@@ -100,6 +111,7 @@ namespace Vertica.Integration
             {
                 yield return _database;
                 yield return _tasks;
+                yield return _logger;
                 yield return _webApi;
                 yield return _migration;
                 yield return this;
