@@ -291,6 +291,16 @@ namespace Vertica.Integration.Infrastructure.Parsing
 	            return this;
 	        }
 
+            public int DataRowCount
+            {
+                get
+                {
+                    int count = _rows.Count;
+
+                    return _headerInserted ? count - 1 : count;
+                }
+            }
+
 	        public CsvRow[] ToRows()
 	        {
 	            if (_returnHeaderAsRow && !_headerInserted)
@@ -327,6 +337,8 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
             ICsvRowBuilderFinisher From<T>(IEnumerable<T> elements, Func<T, string[]> createData);
             ICsvRowBuilderFinisher FromUsingMapper<T>(IEnumerable<T> elements, Action<ICsvRowMapper, T> mapper);
+
+            int DataRowCount { get; }
         }
 
         public interface ICsvRowBuilder : ICsvRowBuilderAdder

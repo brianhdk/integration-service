@@ -32,3 +32,10 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.3.0")]
+
+namespace Vertica.Integration.Host.Properties
+{
+    internal sealed class EnsureDependencyToIntegrationProject : Infrastructure.Configuration.Configuration
+    {
+    }
+}

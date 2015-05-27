@@ -86,20 +86,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Integration.Messaging\Integration.Messaging.csproj">
-      <Project>{17065F64-27C5-4451-8D09-1F92B92ABCD2}</Project>
-      <Name>Integration.Messaging</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Integration.Portal\Integration.Portal.csproj">
-      <Project>{BE14DA0E-31C6-4417-8EC6-ED1658B51FA9}</Project>
+      <Project>{be14da0e-31c6-4417-8ec6-ed1658b51fa9}</Project>
       <Name>Integration.Portal</Name>
     </ProjectReference>
     <ProjectReference Include="..\Integration\Integration.csproj">
-      <Project>{460F774F-2C89-47F4-84BD-B97653060E68}</Project>
+      <Project>{460f774f-2c89-47f4-84bd-b97653060e68}</Project>
       <Name>Integration</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

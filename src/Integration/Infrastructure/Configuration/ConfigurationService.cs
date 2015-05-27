@@ -19,12 +19,18 @@ namespace Vertica.Integration.Infrastructure.Configuration
         private readonly IDbFactory _db;
         private readonly IArchiveService _archive;
         private readonly ILogger _logger;
+        private readonly JsonSerializerSettings _serializerSettings;
 
         public ConfigurationService(IDbFactory db, IArchiveService archive, ILogger logger)
         {
             _archive = archive;
             _logger = logger;
             _db = db;
+
+            _serializerSettings = new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto
+            };
         }
 
         public TConfiguration Get<TConfiguration>() where TConfiguration : class, new()
@@ -35,7 +41,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
 
             if (existing != null)
             {
-                return JsonConvert.DeserializeObject<TConfiguration>(existing.JsonData);
+                return JsonConvert.DeserializeObject<TConfiguration>(existing.JsonData, _serializerSettings);
             }
 
             var configuration = new TConfiguration();
@@ -53,7 +59,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
 
             SaveInternal(
                 GetId<TConfiguration>(warnIfMissingGuid: true),
-                JsonConvert.SerializeObject(configuration, Formatting.Indented),
+                JsonConvert.SerializeObject(configuration, Formatting.Indented, _serializerSettings),
                 updatedBy,
                 createArchiveBackup,
                 typeof(TConfiguration));

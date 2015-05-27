@@ -2,7 +2,7 @@ using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Experiments
 {
-    public class TaskOutputtingHi : Task
+    public class HelloTask : Task
     {
         public override string Description
         {

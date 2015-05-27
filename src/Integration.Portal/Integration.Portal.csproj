@@ -80,12 +80,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Integration\Integration.csproj">
-      <Project>{460F774F-2C89-47F4-84BD-B97653060E68}</Project>
-      <Name>Integration</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Assets\js\ace\ace.js" />
     <Content Include="Assets\js\ace\mode-json.js" />
     <Content Include="Assets\js\ace\theme-github.js" />
@@ -138,7 +132,12 @@
     <Content Include="Default.html" />
     <Content Include="App_Readme\Integration.Portal-readme.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Integration\Integration.csproj">
+      <Project>{460f774f-2c89-47f4-84bd-b97653060e68}</Project>
+      <Name>Integration</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Assets\js\angular\angular-resource.min.js.map" />
