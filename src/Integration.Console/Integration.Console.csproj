@@ -74,24 +74,16 @@
       <Project>{a418ff22-74e1-42eb-a0bf-97da7993647b}</Project>
       <Name>Integration.Experiments</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Integration.Host\Integration.Host.csproj">
-      <Project>{6bb8c3ae-1e2e-40bd-9b84-542bd2644590}</Project>
-      <Name>Integration.Host</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Integration.Logging.Elmah\Integration.Logging.Elmah.csproj">
       <Project>{6d28c1ce-7eae-44a2-8624-a879f7af7021}</Project>
       <Name>Integration.Logging.Elmah</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Integration.Logging.Kibana\Integration.Logging.Kibana.csproj">
-      <Project>{a5c7e78e-065e-4903-adaf-7b4224beea1d}</Project>
-      <Name>Integration.Logging.Kibana</Name>
     </ProjectReference>
     <ProjectReference Include="..\Integration.Portal\Integration.Portal.csproj">
       <Project>{be14da0e-31c6-4417-8ec6-ed1658b51fa9}</Project>
       <Name>Integration.Portal</Name>
     </ProjectReference>
     <ProjectReference Include="..\Integration\Integration.csproj">
-      <Project>{460F774F-2C89-47F4-84BD-B97653060E68}</Project>
+      <Project>{460f774f-2c89-47f4-84bd-b97653060e68}</Project>
       <Name>Integration</Name>
     </ProjectReference>
   </ItemGroup>

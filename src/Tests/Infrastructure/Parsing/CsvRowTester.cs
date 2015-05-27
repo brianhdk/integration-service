@@ -153,6 +153,8 @@ Jane"));
 
             builder.FromUsingMapper(new[] {"Jane Doe"}, (m, x) => m.Map("Name", x));
 
+            Assert.That(builder.DataRowCount, Is.EqualTo(2));
+
             string csv = builder.ToString();
 
             Assert.That(csv, Is.EqualTo(@"Name;Age

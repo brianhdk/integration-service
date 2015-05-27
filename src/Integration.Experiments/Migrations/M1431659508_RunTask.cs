@@ -8,7 +8,7 @@ namespace Vertica.Integration.Experiments.Migrations
     {
         public override void Up()
         {
-            RunTask<TaskOutputtingHi>();
+            RunTask<HelloTask>();
         }
 
         public override void Down()

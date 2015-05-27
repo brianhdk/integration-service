@@ -15,10 +15,10 @@ namespace Vertica.Integration.Console
 		private static void Main(string[] args)
 		{
 			using (ApplicationContext context = ApplicationContext.Create(builder => builder
-                //.Logger(logger => logger.Use<VoidLogger>())
-                //.Database(database => database.Change(x => x.ConnectionString = null))
-                .Database(database => database.DisableIntegrationDb())
-                .Tasks(tasks => tasks.Clear().Task<TaskOutputtingHi>())))
+                .Logger(logger => logger.Use<VoidLogger>())
+                //.Database(database => database.DisableIntegrationDb())
+                //.Tasks(tasks => tasks.Clear().Task<HelloTask>())))
+                .Tasks(tasks => tasks.AddFromAssemblyOfThis<HelloTask>())))
                 //.UseAzure(azure => azure
                 //    .ReplaceArchiveWithBlobStorage(ConnectionString.FromName("AzureBlobStorage.Archive")))))
                 //.UsePortal()
@@ -26,7 +26,7 @@ namespace Vertica.Integration.Console
                 //.Database(db => db
                 //    .AddConnection(new CustomDb(builder.DatabaseConnectionString)))
                 //.Tasks(tasks => tasks
-                //    .AddFromAssemblyOfThis<TaskOutputtingHi>()
+                //    .AddFromAssemblyOfThis<HelloTask>()
                 //    .MonitorTask(task => task
                 //        //.IncludeElmah()
                 //        .Step<XssTestingStep>())

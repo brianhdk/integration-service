@@ -91,18 +91,18 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Integration.Azure\Integration.Azure.csproj">
-      <Project>{FC35A1E3-52DD-4B8D-AF2C-B01CE8AE2EE8}</Project>
+      <Project>{fc35a1e3-52dd-4b8d-af2c-b01ce8ae2ee8}</Project>
       <Name>Integration.Azure</Name>
     </ProjectReference>
     <ProjectReference Include="..\Integration\Integration.csproj">
-      <Project>{460F774F-2C89-47F4-84BD-B97653060E68}</Project>
+      <Project>{460f774f-2c89-47f4-84bd-b97653060e68}</Project>
       <Name>Integration</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
