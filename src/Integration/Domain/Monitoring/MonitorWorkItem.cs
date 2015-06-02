@@ -84,5 +84,17 @@ namespace Vertica.Integration.Domain.Monitoring
                 .OrderByDescending(x => x.DateTime)
                 .ToArray();
         }
+
+        public bool HasEntriesForUnconfiguredTargets(out Target[] targets)
+        {
+            Target[] entriesTargets = _entries.Select(x => x.Item1).Distinct().ToArray();
+            Target[] configuredTargets = (Configuration.Targets ?? new MonitorTarget[0]).Cast<Target>().Distinct().ToArray();
+
+            targets = entriesTargets
+                .Except(configuredTargets.Concat(new[] { Target.All }))
+                .ToArray();
+
+            return targets.Length > 0;
+        }
     }
 }

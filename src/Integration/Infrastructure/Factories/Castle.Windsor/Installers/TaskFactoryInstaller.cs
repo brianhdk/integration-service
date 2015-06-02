@@ -40,16 +40,7 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
                 if (!_kernel.HasComponent(name))
                     throw new TaskNotFoundException(name);
 
-                ITask task = _kernel.Resolve<ITask>(name);
-
-                if (!String.Equals(task.Name(), name, StringComparison.OrdinalIgnoreCase))
-                    throw new InvalidOperationException(
-                        String.Format("Task {0} is expected to be configured with name '{1}' but name is '{2}'. Make sure the XML registration is <component id=\"{1}\" ...",
-                            task.GetType().FullName,
-                            task.Name(),
-                            name));
-
-                return task;
+                return _kernel.Resolve<ITask>(name);
             }
 
             public ITask[] GetAll()

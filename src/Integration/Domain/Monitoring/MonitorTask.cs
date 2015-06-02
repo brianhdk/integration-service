@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Vertica.Integration.Infrastructure.Configuration;
 using Vertica.Integration.Infrastructure.Email;
@@ -36,7 +37,11 @@ namespace Vertica.Integration.Domain.Monitoring
 
         public override void End(MonitorWorkItem workItem, ITaskExecutionContext context)
 		{
-		    foreach (MonitorTarget target in workItem.Configuration.Targets)
+            Target[] unconfiguredTargets;
+            if (workItem.HasEntriesForUnconfiguredTargets(out unconfiguredTargets))
+                context.Log.Error(Target.Service, "Create missing configuration for the following targets: [{0}].", String.Join(", ", unconfiguredTargets.Select(x => x.Name)));
+
+		    foreach (MonitorTarget target in workItem.Configuration.Targets ?? new MonitorTarget[0])
 		        SendTo(target, workItem, context.Log, workItem.Configuration.SubjectPrefix);
 
             workItem.Configuration.LastRun = workItem.CheckRange.UpperBound;

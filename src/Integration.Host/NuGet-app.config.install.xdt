@@ -3,4 +3,12 @@
   <connectionStrings xdt:Transform="InsertIfMissing">
     <add name="IntegrationDb" connectionString="Integrated Security=SSPI;Data Source=[NAME-OF-SQL-SERVER];Database=[NAME-OF-INTEGRATION-DATABASE]" xdt:Transform="InsertIfMissing" />
   </connectionStrings>
+
+  <system.net xdt:Transform="InsertIfMissing">
+    <mailSettings xdt:Transform="InsertIfMissing">
+      <smtp from="[EMAIL-ADDRESS]" xdt:Transform="InsertIfMissing">
+        <network host="[SMTP-HOST]" />
+      </smtp>
+    </mailSettings>
+  </system.net>
 </configuration>

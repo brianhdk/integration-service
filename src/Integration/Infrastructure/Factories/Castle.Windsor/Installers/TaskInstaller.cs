@@ -33,14 +33,15 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
                     Classes.FromAssembly(assembly)
                         .BasedOn<Task>()
                         .Unless(_ignoreTasks.Contains)
-                        .Configure(configure => { configure.Named(configure.Implementation.Name); })
+                        .Unless(_addTasks.Contains)
+                        .Configure(x => { x.Named(x.Implementation.Name); })
                         .WithServiceDefaultInterfaces());
             }
 
             foreach (Type addType in _addTasks.Except(_ignoreTasks).Distinct())
             {
                 container.Register(
-                    Component.For<Task>()
+                    Component.For<ITask>()
                         .ImplementedBy(addType)
                         .Named(addType.Name));
             }

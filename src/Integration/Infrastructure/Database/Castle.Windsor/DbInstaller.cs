@@ -41,7 +41,7 @@ namespace Vertica.Integration.Infrastructure.Database.Castle.Windsor
 
 		public virtual void Install(IWindsorContainer container, IConfigurationStore store)
 		{
-		    var disabled = Connection as IDisabledConnection;
+            var disabled = _connection as IDisabledConnection;
 
 		    if (disabled != null)
 		    {
@@ -65,13 +65,8 @@ namespace Vertica.Integration.Infrastructure.Database.Castle.Windsor
 		    {
                 container.Register(
                     Component.For<IDbFactory<TConnection>>()
-                        .UsingFactoryMethod(() => new DbFactory<TConnection>(Connection.ConnectionString)));
+                        .UsingFactoryMethod(() => new DbFactory<TConnection>(_connection.ConnectionString)));
 		    }
-		}
-
-		protected TConnection Connection
-		{
-			get { return _connection; }
 		}
 	}
 }

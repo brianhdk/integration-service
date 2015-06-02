@@ -188,6 +188,8 @@
     <Compile Include="Infrastructure\Logging\ITarget.cs" />
     <Compile Include="Infrastructure\Logging\LoggerConfiguration.cs" />
     <Compile Include="Infrastructure\Logging\Loggers\Logger.cs" />
+    <Compile Include="Infrastructure\Logging\Loggers\TextFileLogger.cs" />
+    <Compile Include="Infrastructure\Logging\Loggers\TextFileLoggerConfiguration.cs" />
     <Compile Include="Infrastructure\Logging\Loggers\VoidLogger.cs" />
     <Compile Include="Infrastructure\Parsing\CsvConfiguration.cs" />
     <Compile Include="Infrastructure\Parsing\CsvParser.cs" />
