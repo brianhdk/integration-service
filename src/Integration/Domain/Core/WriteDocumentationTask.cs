@@ -19,6 +19,7 @@ namespace Vertica.Integration.Domain.Core
         public override void StartTask(ITaskExecutionContext context)
         {
             var sb = new StringBuilder();
+            sb.AppendLine();
 
             Func<string, int, string> makeIndent = (msg, count) => 
                 String.Concat(new string(' ', count), msg);

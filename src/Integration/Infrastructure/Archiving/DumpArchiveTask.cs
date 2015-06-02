@@ -22,25 +22,26 @@ namespace Vertica.Integration.Infrastructure.Archiving
         public override void StartTask(ITaskExecutionContext context)
         {
             if (context.Arguments.Length == 0)
-                throw new InvalidOperationException(@"Arguments usage: [ArchiveID]");
+                throw new InvalidOperationException(@"Arguments usage: [ArchiveID]-1..N");
 
-            string id = context.Arguments[0];
-
-            byte[] archive = _archive.Get(id);
-
-            if (archive != null)
+            foreach (var id in context.Arguments)
             {
-                DirectoryInfo directory = Directory.CreateDirectory("Archive-Dumps");
+                byte[] archive = _archive.Get(id);
 
-                string file = Path.Combine(directory.FullName, String.Format("{0}.zip", id));
+                if (archive != null)
+                {
+                    DirectoryInfo directory = Directory.CreateDirectory("Archive-Dumps");
 
-                File.WriteAllBytes(file, archive);
+                    string file = Path.Combine(directory.FullName, String.Format("{0}.zip", id));
 
-                context.Log.Message("Archive dumped to {0}.", file);
-            }
-            else
-            {
-                context.Log.Warning(Target.Service, "Archive '{0}' not found.", id);
+                    File.WriteAllBytes(file, archive);
+
+                    context.Log.Message("Archive dumped to {0}.", file);
+                }
+                else
+                {
+                    context.Log.Warning(Target.Service, "Archive '{0}' not found.", id);
+                }                
             }
         }
     }

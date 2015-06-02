@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using NSubstitute;
 using NUnit.Framework;
@@ -17,14 +18,10 @@ namespace Vertica.Integration.Tests.Model
 			var logger = Substitute.For<ILogger>();
 			TextWriter outputter = TextWriter.Null;
 
-			var task = Substitute.For<ITask<SomeWorkItem>>();
-			var step1 = Substitute.For<IStep<SomeWorkItem>>();
-			var step2 = Substitute.For<IStep<SomeWorkItem>>();
-
-			var workItem = new SomeWorkItem();
-
-            task.Start(Arg.Any<ITaskExecutionContext>()).ReturnsForAnyArgs(workItem);
-			task.Steps.Returns(new[] { step1, step2 });
+            var step1 = Substitute.For<IStep<SomeWorkItem>>();
+            var step2 = Substitute.For<IStep<SomeWorkItem>>();
+            var workItem = new SomeWorkItem();
+		    var task = new TaskRunnerTesterTask(new[] {step1, step2}, workItem);
 
 			step1.ContinueWith(workItem).Returns(Execution.Execute);
 			step2.ContinueWith(workItem).Returns(Execution.Execute);
@@ -40,7 +37,7 @@ namespace Vertica.Integration.Tests.Model
             step1.Received().Execute(workItem, Arg.Any<ITaskExecutionContext>());
             step2.Received().Execute(workItem, Arg.Any<ITaskExecutionContext>());
 
-            task.Received().End(workItem, Arg.Any<ITaskExecutionContext>());
+		    Assert.That(task.EndCalled, Is.True);
 		}
 
 		[Test]
@@ -49,16 +46,13 @@ namespace Vertica.Integration.Tests.Model
 			var logger = Substitute.For<ILogger>();
 			TextWriter outputter = TextWriter.Null;
 
-			var task = Substitute.For<ITask<SomeWorkItem>>();
 			var step1 = Substitute.For<IStep<SomeWorkItem>>();
 			var step2 = Substitute.For<IStep<SomeWorkItem>>();
+            var workItem = new SomeWorkItem();
+		    var task = new TaskRunnerTesterTask(new[] { step1, step2 }, workItem);
+
 			var throwingException = new DivideByZeroException("error");
-
-			var workItem = new SomeWorkItem();
-
-            task.Start(Arg.Any<ITaskExecutionContext>()).Returns(workItem);
-			task.Steps.Returns(new[] { step1, step2 });
-
+            
 			step1.ContinueWith(workItem).Returns(Execution.Execute);
 
 			step1
@@ -78,10 +72,38 @@ namespace Vertica.Integration.Tests.Model
 
 			logger.Received().LogError(Arg.Is(throwingException));
 
-            task.DidNotReceive().End(workItem, Arg.Any<ITaskExecutionContext>());
+            Assert.That(task.EndCalled, Is.False);
 		}
 
-		public class SomeWorkItem
+	    public class TaskRunnerTesterTask : Task<SomeWorkItem>
+	    {
+	        private readonly SomeWorkItem _workItem;
+
+	        public TaskRunnerTesterTask(IEnumerable<IStep<SomeWorkItem>> steps, SomeWorkItem workItem)
+                : base(steps)
+	        {
+	            _workItem = workItem;
+	        }
+
+	        public override SomeWorkItem Start(ITaskExecutionContext context)
+	        {
+	            return _workItem;
+	        }
+
+	        public override void End(SomeWorkItem workItem, ITaskExecutionContext context)
+	        {
+	            EndCalled = true;
+	        }
+
+	        public bool EndCalled { get; set; }
+
+	        public override string Description
+	        {
+	            get { return String.Empty; }
+	        }
+	    }
+
+	    public class SomeWorkItem
 		{
 		}
 	}

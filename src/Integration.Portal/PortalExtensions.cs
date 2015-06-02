@@ -35,7 +35,7 @@ Try re-installing the package and/or make sure that the zip-file is included par
 
             builder.WebApi(x => x
                 .Remove<HomeController>()
-                .Scan(typeof (PortalExtensions).Assembly));
+                .AddFromAssemblyOfThis<PortalConfiguration>());
 
             return builder;
         }

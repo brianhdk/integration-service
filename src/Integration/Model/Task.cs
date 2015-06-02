@@ -32,15 +32,15 @@ namespace Vertica.Integration.Model
 			_steps = steps ?? Enumerable.Empty<IStep<TWorkItem>>();
 		}
 
-		IEnumerable<IStep> ITask.Steps
-		{
-			get { return Steps; }
-		}
+        IEnumerable<IStep> ITask.Steps
+        {
+            get { return Steps; }
+        }
 
-		public IEnumerable<IStep<TWorkItem>> Steps
-		{
-			get { return _steps; }
-		}
+        public IEnumerable<IStep<TWorkItem>> Steps
+        {
+            get { return _steps; }
+        }
 
 		public abstract string Description { get; }
 

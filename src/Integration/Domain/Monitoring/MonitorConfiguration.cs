@@ -30,6 +30,21 @@ namespace Vertica.Integration.Domain.Monitoring
 
         public PingUrlsConfiguration PingUrls { get; private set; }
 
+        public MonitorTarget EnsureMonitorTarget(Target target)
+        {
+            var existingTargets = Targets ?? new MonitorTarget[0];
+
+            MonitorTarget monitorTarget = existingTargets.FirstOrDefault(x => x.Equals(target));
+
+            if (monitorTarget == null)
+            {
+                monitorTarget = new MonitorTarget(target.Name);
+                Targets = existingTargets.Concat(new[] { monitorTarget }).ToArray();
+            }
+
+            return monitorTarget;
+        }
+
         public void Assert()
         {
             if (Targets == null)

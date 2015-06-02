@@ -20,32 +20,43 @@ namespace Vertica.Integration.Model.Web
             _remove = new List<Type>();
 
             // scan own assembly
-            Scan(GetType().Assembly);
+            AddFromAssemblyOfThis<WebApiConfiguration>();
             // we'll remove TaskController but manually add it later - if we're hosting a specific Task through WebApi.
             Remove<TaskController>();
         }
 
-        public WebApiConfiguration Scan(Assembly assemblyToScan)
+        /// <summary>
+        /// Scans the assembly of the defined <typeparamref name="T"></typeparamref> for public classes inheriting <see cref="ApiController"/>.
+        /// <para />
+        /// </summary>
+        /// <typeparam name="T">The type in which its assembly will be scanned.</typeparam>
+        public WebApiConfiguration AddFromAssemblyOfThis<T>()
         {
-            if (assemblyToScan == null) throw new ArgumentNullException("assemblyToScan");
-
-            _scan.Add(assemblyToScan);
+            _scan.Add(typeof (T).Assembly);
 
             return this;
         }
 
-        public WebApiConfiguration Add<T>()
-            where T : ApiController
+        /// <summary>
+        /// Adds the specified <typeparamref name="TController"/>.
+        /// </summary>
+        /// <typeparam name="TController">Specifies the <see cref="ApiController"/> to be added.</typeparam>
+        public WebApiConfiguration Add<TController>()
+            where TController : ApiController
         {
-            _add.Add(typeof (T));
+            _add.Add(typeof(TController));
 
             return this;
         }
 
-        public WebApiConfiguration Remove<T>()
-            where T : ApiController
+        /// <summary>
+        /// Skips the specified <typeparamref name="TController" />.
+        /// </summary>
+        /// <typeparam name="TController">Specifies the <see cref="ApiController"/> that will be skipped.</typeparam>
+        public WebApiConfiguration Remove<TController>()
+            where TController : ApiController
         {
-            _remove.Add(typeof (T));
+            _remove.Add(typeof (TController));
 
             return this;
         }
