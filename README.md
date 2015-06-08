@@ -12,7 +12,7 @@ Typically Integration Service is hosted through a simple .NET Console Applicatio
   ```
   Install-Package Vertica.Integration.Host
   ```
-  The package above will add all necessary projects to get you up and running.
+  The package above will add all necessary files to get you up and running soon.
 3. Modify "Program.cs" as mentioned in the "Readme.txt"
   ```
   namespace NameOfProject
@@ -27,7 +27,7 @@ Typically Integration Service is hosted through a simple .NET Console Applicatio
   }
  
   ```
-4. Open file app.config, and fill-out the [Placeholder]'s with actual values
+4. Open file app.config, and fill-out the [Placeholder]'s with actual values:
  
   ### Database configuration
   ```
@@ -59,9 +59,13 @@ Typically Integration Service is hosted through a simple .NET Console Applicatio
   </smtp>
   ```    
 
-4. Run "MigrateTask" to ensure up-to-date-schema
+4. Run "MigrateTask" to ensure an up-to-date-schema
  - From Visual Studio, open the Project Properties of your Console Application project, navigate to "Debug"-tab, and write "MigrateTask" (without quotes) in the "Command line arguments"-textbox.
  - Run it => (CTRL+F5 or F5)
  - If the MigrateTask fails you need to make sure that you have all necessary permissions to the database specified earlier (effectively we're changing the Db schema, and potentially creating a new database - so you need a lot of permission!)
 
-5. To be continued....
+5. Next step is to create a new Class Library project to contain your actual code/implementations. This is recommended to enforce separation, but it's not required. After creating your new Class Library project, install the following NuGet package to that project:
+  ```
+  Install-Package Vertica.Integration
+  ```
+6. You're now up and running with the Integration Service. Search the documentation to find examples on how to start using it, e.g. how to Tasks, how to setup custom Migrations, expose HTTP services, setup the Management Portal and much more. Good luck! Remember - any feedback is very much appreciated.
