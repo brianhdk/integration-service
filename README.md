@@ -1,6 +1,9 @@
 # Integration Service
 General purpose platform for running Tasks and Migrations expose (internally) HTTP Services and much much more!
 
+## Table of contents
+ - [How to get started - setting up Integration Service](docs/getting-started.md)
+
 ## Get started
 
 1. Choosing a Host for Integration Service
