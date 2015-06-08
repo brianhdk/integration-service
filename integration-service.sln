@@ -45,7 +45,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.IIS", "src\Inte
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docs", ".docs", "{6A60CF89-AFED-4BF8-8700-B94E2657285C}"
 	ProjectSection(SolutionItems) = preProject
-		docs\GETTING-STARTED.md = docs\GETTING-STARTED.md
 		README.md = README.md
 	EndProjectSection
 EndProject
