@@ -2,9 +2,9 @@
 General purpose platform for running Tasks and Migrations expose (internally) HTTP Services and much much more!
 
 ## Table of contents
- - [How to get started - setting up Integration Service](docs/getting-started.md)
+ - [How to get started - setting up Integration Service](#how-to-get-started)
 
-## Get started
+## How to get started
 
 1. Choosing a Host for Integration Service
 Typically Integration Service is hosted through a simple .NET Console Application (.exe). Add a new "Console Application" project to your existing (or new solution). 
