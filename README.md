@@ -14,7 +14,7 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
  - [Maintenance](#maintenance)
  - [Setting up Portal](#setting-up-portal)
  - [Integrating Elmah](#integrating-elmah)
- - [Integrating Azure - BlobStorage](#integrating-azure-blobstorage)
+ - [Integrating Azure - BlobStorage](#integrating-azure---blobstorage)
  - [How to Disable IntegrationDb](#how-to-disable-integrationdb)
 
 ## How to Get Started
@@ -30,7 +30,7 @@ Typically Integration Service is hosted through a simple .NET Console Applicatio
   ```
   The package above will add all necessary files to get you up and running soon.
 3. Modify "Program.cs" as mentioned in the "Readme.txt"
-  ```
+  ```c#
   namespace NameOfProject
   {
       class Program
@@ -46,21 +46,21 @@ Typically Integration Service is hosted through a simple .NET Console Applicatio
 4. Open file app.config, and fill-out the [Placeholder]'s with actual values:
  
   ### Database configuration
-  ```
+  ```xml
   <connectionStrings>
       <add name="IntegrationDb" connectionString="Integrated Security=SSPI;Data Source=[NAME-OF-SQL-SERVER];Database=[NAME-OF-INTEGRATION-DATABASE]" />
   </connectionStrings>  
   ```
 
   Azure example:
-  ```
+  ```xml
   <add name="IntegrationDb" connectionString="Server=tcp:xxxx.database.windows.net,1433;Database=IntegrationDb;User ID=xxxx@xxxx;Password=xxxx;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" />
   ```  
 
   *By default Integration Service requires a database - but this can be disabled. Look for "Disabling database" to read more about the option of running Integration Service without a database.*
   
   ### SMTP
-  ```
+  ```xml
   <mailSettings>
       <smtp from="[EMAIL-ADDRESS]">
           <network host="[SMTP-HOST]" />
@@ -69,7 +69,7 @@ Typically Integration Service is hosted through a simple .NET Console Applicatio
   ```
   
   Mandrill example:
-  ```
+  ```xml
   <smtp from="xxxx@yyyy.zzzz">
         <network host="smtp.mandrillapp.com" userName="xxxx" password="xxxx" port="587" />
   </smtp>
@@ -91,7 +91,38 @@ Typically Integration Service is hosted through a simple .NET Console Applicatio
 
 ## Basics of Tasks
 
-TBD.
+A Task is, in it's simplest form, a .NET class that inherits from **Vertica.Integration.Model.Task**. A Task must implement two members:
+
+
+1. Description (Property)
+  * Use this to describe the purpose of this task. This description will be used by the Logging infrastructure as well as the Portal. Make sure to provide a short precise description of the task.
+2. StartTask (Method)
+  * This method will be called once the Task is being executed. This is the place to implement your logic.
+  * The method will be passed a **ITaskExecutionContext** object which provides access to e.g. logging.
+
+**Example of implementing a Task**
+  ```c#
+using Vertica.Integration.Model;
+
+namespace ClassLibrary2
+{
+    public class MyFirstTask : Task
+    {
+        public override string Description
+        {
+            get { return "This Task is to illustrate how to create tasks. Very meta."; }
+        }
+
+        public override void StartTask(ITaskExecutionContext context)
+        {
+            // Implement your logic here.
+            context.Log.Message("This shows how to add messages to the log.");
+        }
+    }
+}
+```
+ 
+
 [Back to Table of Contents](#table-of-contents)
 
 ## Basics of WebApi
@@ -149,7 +180,7 @@ TBD.
 TBD. 
 [Back to Table of Contents](#table-of-contents)
 
-## How to Disable IntegrationDb](#how-to-disable-integrationdb)
+## How to Disable IntegrationDb
 
 TBD. 
 [Back to Table of Contents](#table-of-contents)
