@@ -5,7 +5,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
 {
     public class CsvConfiguration
     {
-        public const string DefaultDelimiter = ",";
+        public const string DefaultDelimiter = ";";
 
         public CsvConfiguration()
         {

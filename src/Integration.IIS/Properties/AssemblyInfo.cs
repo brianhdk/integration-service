@@ -1,11 +1,12 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Vertica.Integration.RavenDB")]
-[assembly: AssemblyDescription("Provides integrations and extensions towards RavenDb")]
+[assembly: AssemblyTitle("Vertica.Integration.IIS")]
+[assembly: AssemblyDescription("Integration to IIS, tasks and services.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("")]
@@ -19,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("da62570a-4e81-44c0-953c-c0b3a26225ad")]
+[assembly: Guid("04b2eba4-5537-4221-9afe-252f59ac1b76")]
 
 // Version information for an assembly consists of the following four values:
 //
