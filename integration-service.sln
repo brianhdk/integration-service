@@ -20,7 +20,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".misc", ".misc", "{E76306EF
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		Invoke-Test.ps1 = Invoke-Test.ps1
-		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Portal", "src\Integration.Portal\Integration.Portal.csproj", "{BE14DA0E-31C6-4417-8EC6-ED1658B51FA9}"
@@ -43,6 +42,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.RavenDB", "src\Integration.RavenDB\Integration.RavenDB.csproj", "{E192B3E2-2870-490D-9A4B-9D2DCF0E89F6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.IIS", "src\Integration.IIS\Integration.IIS.csproj", "{4273E246-5F7D-4385-8451-AFA8E2680441}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docs", ".docs", "{6A60CF89-AFED-4BF8-8700-B94E2657285C}"
+	ProjectSection(SolutionItems) = preProject
+		docs\GETTING-STARTED.md = docs\GETTING-STARTED.md
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
