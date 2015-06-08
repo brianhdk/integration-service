@@ -2,9 +2,22 @@
 General purpose platform for running Tasks and Migrations expose (internally) HTTP Services and much much more!
 
 ## Table of contents
- - [How to get started - setting up Integration Service](#how-to-get-started)
+ - [How to Get Started](#how-to-get-started)
+ - [Basics of Tasks](#basics-of-tasks)
+ - [Basics of WebApi](#basics-of-webapi)
+ - [Migrations](#migrations)
+ - [Configurations](#configurations)
+ - [Archives](#archives)
+ - [CSV](#csv)
+ - [FTP](#ftp)
+ - [Monitoring](#monitoring)
+ - [Maintenance](#maintenance)
+ - [Setting up Portal](#setting-up-portal)
+ - [Integrating Elmah](#integrating-elmah)
+ - [Integrating Azure - BlobStorage](#integrating-azure-blobstorage)
+ - [How to Disable IntegrationDb](#how-to-disable-integrationdb)
 
-## How to get started
+## How to Get Started
 
 1. Choosing a Host for Integration Service
 Typically Integration Service is hosted through a simple .NET Console Application (.exe). Add a new "Console Application" project to your existing (or new solution). 
@@ -71,4 +84,72 @@ Typically Integration Service is hosted through a simple .NET Console Applicatio
   ```
   Install-Package Vertica.Integration
   ```
+  Finally make sure to add a reference from your Console Application project to this new Class Library project.
 6. You're now up and running with the Integration Service. Search the documentation to find examples on how to start using it, e.g. how to Tasks, how to setup custom Migrations, expose HTTP services, setup the Management Portal and much more. Good luck! Remember - any feedback is very much appreciated.
+
+[Back to Table of Contents](#table-of-contents)
+
+## Basics of Tasks
+
+TBD.
+[Back to Table of Contents](#table-of-contents)
+
+## Basics of WebApi
+
+TBD. 
+[Back to Table of Contents](#table-of-contents)
+
+## Migrations
+
+TBD. 
+[Back to Table of Contents](#table-of-contents)
+
+## Configurations
+
+TBD. 
+[Back to Table of Contents](#table-of-contents)
+
+## Archives
+
+TBD. 
+[Back to Table of Contents](#table-of-contents)
+
+## CSV
+
+TBD. 
+[Back to Table of Contents](#table-of-contents)
+
+## FTP
+
+TBD. 
+[Back to Table of Contents](#table-of-contents)
+
+## Monitoring
+
+TBD. 
+[Back to Table of Contents](#table-of-contents)
+
+## Maintenance
+
+TBD. 
+[Back to Table of Contents](#table-of-contents)
+
+## Setting up Portal
+
+TBD. 
+[Back to Table of Contents](#table-of-contents)
+
+## Integrating Elmah
+
+TBD. 
+[Back to Table of Contents](#table-of-contents)
+
+## Integrating Azure - BlobStorage
+
+TBD. 
+[Back to Table of Contents](#table-of-contents)
+
+## How to Disable IntegrationDb](#how-to-disable-integrationdb)
+
+TBD. 
+[Back to Table of Contents](#table-of-contents)
