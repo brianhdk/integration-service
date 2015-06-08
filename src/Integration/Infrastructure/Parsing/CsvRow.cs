@@ -88,6 +88,11 @@ namespace Vertica.Integration.Infrastructure.Parsing
 	        return _data.Select(Escape).GetEnumerator();
 	    }
 
+	    public bool IsEmpty
+	    {
+            get { return _data.All(String.IsNullOrEmpty); }
+	    }
+
 	    public override string ToString()
 	    {
 	        return String.Join(Meta.Delimiter, this);

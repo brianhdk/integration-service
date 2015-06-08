@@ -179,5 +179,19 @@ Jane Doe;"));
             Assert.That(csv, Is.EqualTo(@"""""""Name"""""";Age
 ""John;Doe"";""30"""""""));
         }
+
+        [Test]
+        public void Row_IsEmpty_Multiple()
+        {
+            CsvRow[] rows = CsvRow.BeginRows()
+                .Add("John", null)
+                .Add("", null)
+                .Add(null, null)
+                .ToRows();
+
+            Assert.That(rows[0].IsEmpty, Is.False);
+            Assert.That(rows[1].IsEmpty, Is.True);
+            Assert.That(rows[2].IsEmpty, Is.True);
+        }
     }
 }

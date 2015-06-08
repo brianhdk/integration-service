@@ -1,4 +1,7 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Mail;
+using System.Text;
 
 namespace Vertica.Integration.Infrastructure.Email
 {
@@ -6,11 +9,13 @@ namespace Vertica.Integration.Infrastructure.Email
     {
         private readonly string _subject;
         private readonly StringBuilder _text;
+        private readonly List<Attachment> _attachments;
 
-        public TextBasedEmailTemplate(string subject)
+        public TextBasedEmailTemplate(string subject, params object[] args)
         {
-            _subject = subject;
+            _subject = String.Format(subject, args);
             _text = new StringBuilder();
+            _attachments = new List<Attachment>();
         }
 
         public TextBasedEmailTemplate Write(string format, params object[] args)
@@ -23,6 +28,15 @@ namespace Vertica.Integration.Infrastructure.Email
         {
             Write(format, args);
             _text.AppendLine();
+
+            return this;
+        }
+
+        public TextBasedEmailTemplate AddAttachment(Attachment attachment)
+        {
+            if (attachment == null) throw new ArgumentNullException("attachment");
+
+            _attachments.Add(attachment);
 
             return this;
         }
@@ -40,6 +54,11 @@ namespace Vertica.Integration.Infrastructure.Email
         public override string GetBody()
         {
             return _text.ToString();
+        }
+
+        public override IEnumerable<Attachment> Attachments
+        {
+            get { return _attachments; }
         }
     }
 }
