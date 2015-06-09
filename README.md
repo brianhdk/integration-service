@@ -4,8 +4,14 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
 ## Table of contents
  - [How to Get Started](#how-to-get-started)
  - [Basics of Tasks](#basics-of-tasks)
+ - [Bootstrapping Tasks](#bootstrapping-tasks)
+ - [Built-in Tasks](#built-in-tasks) 
+ - [Task Execution Flow](#task-execution-flow)  
  - [Basics of WebApi](#basics-of-webapi)
+ - [Logging and Exceptions](#logging-and-exceptions) 
+ - [Command Line Reference](#command-line-reference)
  - [Migrations](#migrations)
+ - [Built-in Services](#built-in-services)
  - [Configurations](#configurations)
  - [Archives](#archives)
  - [CSV](#csv)
@@ -16,11 +22,12 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
  - [Integrating Elmah](#integrating-elmah)
  - [Integrating Azure - BlobStorage](#integrating-azure---blobstorage)
  - [How to Disable IntegrationDb](#how-to-disable-integrationdb)
+ - [How to Register Custom dependencies/services](#how-to-register-custom-dependencies-services)
 
 ## How to Get Started
 
 1. Choosing a Host for Integration Service
-Typically Integration Service is hosted through a simple .NET Console Application (.exe). Add a new "Console Application" project to your existing (or new solution). 
+	Typically Integration Service is hosted through a simple .NET Console Application (.exe). Add a new "Console Application" project to your existing (or new solution). 
 
   **NOTE:** Later you'll add a Class Library project where all your actual implementation code will be placed.
 
@@ -31,7 +38,7 @@ Typically Integration Service is hosted through a simple .NET Console Applicatio
   The package above will add all necessary files to get you up and running soon.
 3. Modify "Program.cs" as mentioned in the "Readme.txt"
   ```c#
-  namespace NameOfProject
+  namespace ConsoleApplication16
   {
       class Program
       {
@@ -91,8 +98,8 @@ Typically Integration Service is hosted through a simple .NET Console Applicatio
 
 ## Basics of Tasks
 
-A Task is, in it's simplest form, a .NET class that inherits from **Vertica.Integration.Model.Task**. A Task must implement two members:
-
+A Task is, in it's simplest form, a .NET class that inherits from **Vertica.Integration.Model.Task**. 
+A Task must implement two members:
 
 1. Description (Property)
   * Use this to describe the purpose of this task. This description will be used by the Logging infrastructure as well as the Portal. Make sure to provide a short precise description of the task.
@@ -121,7 +128,69 @@ namespace ClassLibrary2
     }
 }
 ```
- 
+
+In order to be able to _execute_ "MyFirstTask", you will need to register it. There are multiple ways of doing this, the example below demonstrates the simple version, which will automatically add any (public) simple Tasks (Tasks without Steps - which you will learn about later) that exists in the same assembly as the type defined in the Generic Argument.
+
+```c#
+using ClassLibrary2;
+
+namespace ConsoleApplication16
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            IntegrationStartup.Run(args, builder => builder
+                .Tasks(tasks => tasks
+                    .AddFromAssemblyOfThis<MyFirstTask>()));
+        }
+    }
+}
+```
+
+See section [Bootstrapping Tasks](#bootstrapping-tasks) for more examples about bootstrapping tasks.
+
+The Integration Service also offers the possibility to create Tasks where the [Task Execution Flow](#task-execution-flow) can be divided into logical Steps. 
+To implement a Task that has Steps, you need to define a class, refered to as a _WorkItem_, which will be passed from the Task to all Steps part of the [Task Execution Flow](#task-execution-flow).
+
+<<EXAMPLE>>
+
+For now Steps are executed sequentially in the exact same sequence/order as they are registred. **But** an async flavour _might_ be added later, if there's a demand for it.
+
+
+Tasks are _Singletons_. You should therefore never keep any state within the lifetime of this object. 
+To ensure a nice decoupled architecture the Integration Service provides Constructor Injection for any dependency you should take in your Tasks. 
+By itself the Integration Service offers a number of services (see section [Built-in Services](#built-in-services)
+for more information about this) but you can of course register your own classes to be resolved by the IoC container (read more about this here [How to Register Custom dependencies/services](#how-to-register-custom-dependencies-services)).
+
+[Back to Table of Contents](#table-of-contents)
+
+## Bootstrapping Tasks
+
+<<ADD>>
+<<REMOVE>>
+<<CLEAR>>
+<<TASKS WITH STEPS>>
+<<EXTENSION METHODS>>
+
+[Back to Table of Contents](#table-of-contents)
+
+## Built-in Tasks
+
+1. MonitorTask
+  * Monitors the ...
+2. MaintenanceTask
+  * Performs a number of clean-up related tasks, including...
+3. WriteDocumentationTask
+  * Outputs the Tasks registred ...
+4. MigrateTask
+  * Runs migrations of own ... custom...
+
+[Back to Table of Contents](#table-of-contents)
+
+## Task Execution Flow
+
+<<LOGGING, CONTINUE WITH/BREAK - VISUAL EXAMPLE>>
 
 [Back to Table of Contents](#table-of-contents)
 
@@ -130,7 +199,22 @@ namespace ClassLibrary2
 TBD. 
 [Back to Table of Contents](#table-of-contents)
 
+## Logging and Exceptions
+
+TBD. 
+[Back to Table of Contents](#table-of-contents)
+
+## Command Line Reference
+
+TBD. 
+[Back to Table of Contents](#table-of-contents)
+
 ## Migrations
+
+TBD. 
+[Back to Table of Contents](#table-of-contents)
+
+## Built-in Services
 
 TBD. 
 [Back to Table of Contents](#table-of-contents)
@@ -181,6 +265,11 @@ TBD.
 [Back to Table of Contents](#table-of-contents)
 
 ## How to Disable IntegrationDb
+
+TBD. 
+[Back to Table of Contents](#table-of-contents)
+
+## How to Register Custom dependencies/services
 
 TBD. 
 [Back to Table of Contents](#table-of-contents)
