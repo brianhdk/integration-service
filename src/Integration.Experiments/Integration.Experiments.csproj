@@ -56,6 +56,7 @@
     <Compile Include="ArchiveTesterTask.cs" />
     <Compile Include="CustomDb.cs" />
     <Compile Include="CustomDbTask.cs" />
+    <Compile Include="MakeDeploymentTask.cs" />
     <Compile Include="Migrations\M1431659508_RunTask.cs" />
     <Compile Include="Migrations\M1431459508_MergeMaintenanceConfiguration.cs" />
     <Compile Include="Migrations\M1427839041_SetupMonitorConfiguration.cs" />

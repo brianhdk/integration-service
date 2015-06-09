@@ -56,7 +56,7 @@ namespace Vertica.Integration.Infrastructure.Database
             _connection.Dispose();
         }
 
-        private IDbTransaction CurrentTransaction
+        public IDbTransaction CurrentTransaction
         {
             get
             {
@@ -64,7 +64,7 @@ namespace Vertica.Integration.Infrastructure.Database
             }
         }
 
-        private class TransactionScope : IDbTransaction, IExposeTransaction
+        private class TransactionScope : IDbTransaction
         {
             private readonly IDbTransaction _transaction;
             private readonly Action _beforeDispose;
@@ -99,11 +99,6 @@ namespace Vertica.Integration.Infrastructure.Database
             public IsolationLevel IsolationLevel
             {
                 get { return _transaction.IsolationLevel; }
-            }
-
-            public IDbTransaction Transaction
-            {
-                get { return _transaction; }
             }
         }
     }

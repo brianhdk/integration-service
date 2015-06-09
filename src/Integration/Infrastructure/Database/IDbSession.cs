@@ -13,5 +13,7 @@ namespace Vertica.Integration.Infrastructure.Database
         IEnumerable<T> Query<T>(string sql, dynamic param = null);
 
         IDbConnection Connection { get; }
+
+        IDbTransaction CurrentTransaction { get; }
     }
 }
