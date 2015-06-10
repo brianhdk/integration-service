@@ -286,20 +286,29 @@ for more information about this) but you can of course register your own classes
 
 ## Built-in Tasks
 
-1. MonitorTask
+1. **MonitorTask**
   * Has built-in steps
-	* ExportIntegrationErrorsStep - exports errors and warnings from the IntegrationDb itself
-	* PingUrlsStep - performs an http(s) request to a predefined set of URL's
+	* **ExportIntegrationErrorsStep** - exports errors and warnings from the IntegrationDb itself
+	* **PingUrlsStep** - performs an http(s) request to a predefined set of URL's
   * Can easily be extended with additional Steps to Monitor other parts of the solution
+	* E.g. extended by the Elmah-package [Integrating Elmah](#integrating-elmah)
 	* See [How to Extend MonitorTask](#how-to-extend-monitortask)
   * Sends out an e-mail with the error/warning messages
   * Use **MonitorConfiguration** for configuration
 	* Also see [Migration of MonitorConfiguration](#migration-of-monitorconfiguration)
-2. MaintenanceTask
-  * Performs a number of clean-up related tasks, including...
-3. WriteDocumentationTask
-  * Simple Task that uses the **ITaskFactory** to iterate all registred Tasks. This can produce a simple TXT file with all tasks and steps mentioned.
-4. MigrateTask
+2. **MaintenanceTask**
+  * Performs a number of clean-up related tasks, including:
+	* **CleanUpIntegrationDbStep** - Deletes entries from Task- and ErrorLog that are older than a predefined period
+	* **CleanUpArchivesStep** - Deletes archives that are older than a predefined period
+  * Can easily be extended with additional Steps to perform maintenance of other parts of the solution
+	* E.g. extended by the Elmah-package [Integrating Elmah](#integrating-elmah)
+	* See [How to Extend MaintenanceTask](#how-to-extend-maintenancetask)
+  * Use **MaintenanceWorkItem** for configuration
+	* Also see [Migration of MaintenanceWorkItem](#migration-of-maintenanceconfiguration)
+3. **WriteDocumentationTask**
+  * Simple Task that uses the **ITaskFactory** to iterate all registred Tasks. If *-ToFile* argument is passed, the task produces a simple TXT file with all tasks and steps written in that.
+	* ```.exe WriteDocumentationTask ToFile```
+4. **MigrateTask**
   * Runs migrations of own ... custom...
 
 [Back to Table of Contents](#table-of-contents)
@@ -328,6 +337,11 @@ TBD.
 ## Migrations
 
 ### Migration of MonitorConfiguration
+
+TBD. 
+[Back to Table of Contents](#table-of-contents)
+
+### Migration of MaintenanceConfiguration
 
 TBD. 
 [Back to Table of Contents](#table-of-contents)
