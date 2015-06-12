@@ -721,7 +721,7 @@ namespace ConsoleApplication16
 ```
 
 **NOTE** If you Disable IntegrationDb you won't be able to use all Built-In services/tasks, but Integration Service will make sure to give you a nice Exception Message if you try to.
- - ```
+```
 Unhandled Exception: Vertica.Integration.Infrastructure.Database.Databases.DatabaseDisabledException: IntegrationDb has been disabled.
 
 Examine the DependencyChain below to see which component has a dependency of this:
