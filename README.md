@@ -7,6 +7,7 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
  - [Bootstrapping Tasks](#bootstrapping-tasks)
  - [Built-in Tasks](#built-in-tasks) 
  - [Task Execution Flow](#task-execution-flow)  
+ - [Scheduling Tasks](#scheduling-tasks)   
  - [Basics of WebApi](#basics-of-webapi)
  - [Logging and Exceptions](#logging-and-exceptions) 
  - [Command Line Reference](#command-line-reference)
@@ -16,12 +17,11 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
  - [Archives](#archives)
  - [CSV](#csv)
  - [FTP](#ftp)
- - [Monitoring](#monitoring)
- - [Maintenance](#maintenance)
  - [Setting up Portal](#setting-up-portal)
  - [Integrating Elmah](#integrating-elmah)
  - [Integrating Azure - BlobStorage](#integrating-azure---blobstorage)
  - [How to Disable IntegrationDb](#how-to-disable-integrationdb)
+ - [How to Change Logger](#how-to-change-logger) 
  - [How to Register Custom dependencies/services](#how-to-register-custom-dependenciesservices)
  - [How to Setup connection to custom database](#how-to-setup-connection-to-custom-database) 
 
@@ -276,12 +276,115 @@ for more information about this) but you can of course register your own classes
 
 ## Bootstrapping Tasks
 
-<<ADD>>
-<<REMOVE>>
-<<CLEAR>>
-<<TASKS WITH STEPS>>
-<<EXTENSION METHODS>>
+All Tasks are registered in the initial configuration/bootstrapping of Integration Service.
 
+This configuration is exposed through the *.Tasks(...)* method:
+
+```c#
+using ClassLibrary2;
+
+namespace ConsoleApplication16
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            IntegrationStartup.Run(args, builder => builder
+                .Tasks(tasks => tasks
+					.XXX
+        }
+    }
+}
+```
+**NOTE** The example above will not compile. 
+
+From the TasksConfiguration you can:
+
+1. Add specific Task(s)
+  * This is mandatory if the Task has Steps
+2. Add sipmle Tasks (tasks without Steps) from a specific assembly
+  * There's an example a bit up in this documentation where the MakeDeploymentTask is registred.
+3. Remove a specific Task
+  * Use this if you for some reason don't want a Task to be available
+4. Clear
+  * Will Clear all Tasks, use this if you want to remove all the Built-in tasks
+
+Just about any combination should supported. If you find a scenario that's not supported, let me know.
+
+### Extension Method
+
+As your project grows, you might end up having a lot of Configuration - especially if you have a lot of Tasks with Steps. You can utilize Extension Methods to begin split up this configuration.
+
+Here are some examples of that:
+
+```c#
+IntegrationStartup.Run(args, builder => builder
+	.Tasks(tasks => tasks
+		.AddFromAssemblyOfThis<MyFirstTask>()
+		.Task<MakeDeploymentTask, MakeDeploymentWorkItem>(task => task
+			.Step<CopyWebsiteArtifacts>()
+			.Step<CopySitecoreBaseline>()
+			.Step<CopyUCommerceBaseline>())
+		.MonitorTask(task => task
+			.IncludeElmah())
+		.MaintenanceTask(task => task
+			.IncludeElmah())));
+```
+
+**First example** below illustrates how to move the entire Tasks configuration to an Extension Method:
+
+```c#
+public static class TasksConfigurationExtensions
+{
+	public static ApplicationConfiguration SetupTasks(this ApplicationConfiguration builder)
+	{
+		return builder.Tasks(tasks => tasks
+			.AddFromAssemblyOfThis<MyFirstTask>()
+			.Task<MakeDeploymentTask, MakeDeploymentWorkItem>(task => task
+				.Step<CopyWebsiteArtifacts>()
+				.Step<CopySitecoreBaseline>()
+				.Step<CopyUCommerceBaseline>())
+			.MonitorTask(task => task
+				.IncludeElmah())
+			.MaintenanceTask(task => task
+				.IncludeElmah()));
+	}
+}
+```
+
+Which will simplify the overall configuration to this:
+
+```c#
+IntegrationStartup.Run(args, builder => builder
+	.SetupTasks());
+```
+
+**Second example** shows how to move just a single Task registration/configuration to an Extension Method:
+
+```c#
+public static class MakeDeploymentTaskConfigurationExtensions
+{
+	public static TasksConfiguration MakeDeploymentTask(this TasksConfiguration tasks)
+	{
+		return tasks
+			.Task<MakeDeploymentTask, MakeDeploymentWorkItem>(task => task
+				.Step<CopyWebsiteArtifacts>()
+				.Step<CopySitecoreBaseline>()
+				.Step<CopyUCommerceBaseline>());
+	}
+}
+```
+
+Which will simplify the overall configuration to this:
+
+```c#
+IntegrationStartup.Run(args, builder => builder
+	.Tasks(tasks => tasks
+		.MakeDeploymentTask()));
+```
+
+And you can of course combine these two examples, e.g. by moving the entire Tasks registration/configuration to an Extension Method (first example), and use another Extension Method for configuring the "MakeDeploymentTask".
+  
 [Back to Table of Contents](#table-of-contents)
 
 ## Built-in Tasks
@@ -290,33 +393,67 @@ for more information about this) but you can of course register your own classes
   * Has built-in steps
 	* **ExportIntegrationErrorsStep** - exports errors and warnings from the IntegrationDb itself
 	* **PingUrlsStep** - performs an http(s) request to a predefined set of URL's
+  * Requires registration to be available
+    * Use **MonitorTask(...)** extension method on the **TasksConfiguration** instance
   * Can easily be extended with additional Steps to Monitor other parts of the solution
 	* E.g. extended by the Elmah-package [Integrating Elmah](#integrating-elmah)
 	* See [How to Extend MonitorTask](#how-to-extend-monitortask)
   * Sends out an e-mail with the error/warning messages
-  * Use **MonitorConfiguration** for configuration
+  * Use **MonitorConfiguration** for configuration of target groups, recipients and more
 	* Also see [Migration of MonitorConfiguration](#migration-of-monitorconfiguration)
+  * This is typically scheduled to run every 15. minute
 2. **MaintenanceTask**
   * Performs a number of clean-up related tasks, including:
 	* **CleanUpIntegrationDbStep** - Deletes entries from Task- and ErrorLog that are older than a predefined period
 	* **CleanUpArchivesStep** - Deletes archives that are older than a predefined period
+  * Requires registration to be available
+    * Use **MaintenanceTask(...)** extension method on the **TasksConfiguration** instance	
   * Can easily be extended with additional Steps to perform maintenance of other parts of the solution
 	* E.g. extended by the Elmah-package [Integrating Elmah](#integrating-elmah)
 	* See [How to Extend MaintenanceTask](#how-to-extend-maintenancetask)
   * Use **MaintenanceWorkItem** for configuration
 	* Also see [Migration of MaintenanceWorkItem](#migration-of-maintenanceconfiguration)
+  * This is typically scheduled to run once every day
 3. **WriteDocumentationTask**
   * Simple Task that uses the **ITaskFactory** to iterate all registred Tasks. If *-ToFile* argument is passed, the task produces a simple TXT file with all tasks and steps written in that.
 	* ```.exe WriteDocumentationTask ToFile```
 4. **MigrateTask**
-  * Runs migrations of own ... custom...
-
+  * Task that internally uses FluentMigrator (https://github.com/schambers/fluentmigrator) to ensure up-to-date schema of the Integration Service.
+	* ```.exe MigrateTask```  
+  * Can easily be extended with custom Migrations, only requirement is that the VersionInfo table can be stored in a SQL server
+	* See [Migrations](#migrations) for much more information about this and examples
+	
 [Back to Table of Contents](#table-of-contents)
 
 ## Task Execution Flow
 
+All Tasks are executed from **ITaskRunner**. 
+
+```c#
+namespace Vertica.Integration.Model
+{
+	public interface ITaskRunner
+	{
+        TaskExecutionResult Execute(ITask task, params string[] arguments);
+	}
+}  
+```
+
+The flow is:
+
+1. *Execute(task, arguments)*-method is invoked
+2. A new **TaskLog** is created and persisted by the **ILogger**
+  * If any exceptions are thrown part of the flow, an ErrorLog will be created and associated with the TaskLog
+3. *task.Start(...)*-method is invoked
+4. ... to be continued
+
 <<LOGGING, CONTINUE WITH/BREAK - VISUAL EXAMPLE>>
 
+[Back to Table of Contents](#table-of-contents)
+
+## Scheduling Tasks
+
+TBD. 
 [Back to Table of Contents](#table-of-contents)
 
 ## Basics of WebApi
@@ -336,9 +473,118 @@ TBD.
 
 ## Migrations
 
+### Custom Migrations
+<<EXAMPLES OF CUSTOM MIGRATIONS THAT ARE NOT DB RELATED>>
+<<EXAMPLES OF CUSTOM MIGRATIONS AGAINST A DB>>
+<<EXAMPLES OF CUSTOM MIGRATIONS USING UCOMMERCE MIGRATION>>
+
 ### Migration of MonitorConfiguration
 
-TBD. 
+Before you can run the **MonitorTask** you need to setup **MonitorConfiguration**. 
+If you forget to do this, you'll end up getting warnings like the one below:
+
+*[WARNING] No recipients found for target 'Service'.*
+
+There are multiple ways of setting up the **MonitorConfiguration** object:
+
+ - Manually, edit in the database
+ - From the Portal ([Setting up Portal](#setting-up-portal))
+ - Or by using Migrations (recommended)
+
+The example below shows how to create a Migration that will setup **MonitorConfiguration**:
+
+```c#
+using System;
+using FluentMigrator;
+using Vertica.Integration.Domain.Monitoring;
+using Vertica.Integration.Infrastructure.Database.Migrations;
+using Vertica.Integration.Infrastructure.Logging;
+
+namespace ClassLibrary2.Migrations.IntegrationDb
+{
+    [Migration(1434102243)]
+    public class M1434102243_SetupMonitorConfiguration : IntegrationMigration
+    {
+        public override void Up()
+        {
+            var configuration = GetConfiguration<MonitorConfiguration>();
+
+            MonitorTarget service = configuration.EnsureMonitorTarget(Target.Service);
+            service.Recipients = new[] { "bhk@vertica.dk", "service@vertica.dk" };
+
+            SaveConfiguration(configuration);
+        }
+
+        public override void Down()
+        {
+            throw new NotSupportedException();
+        }
+    }
+}
+```
+
+**NOTE** The value "1434102243" represents a Unix Timestamp. This is the preferred way of defining incremental version numbers for Migrations.
+Use e.g. http://www.unixtimestamp.com/ to get the current timestamp.
+
+If you create Custom Targets, the following example shows how to setup such in a Migration:
+
+```c#
+using System;
+using FluentMigrator;
+using Vertica.Integration.Domain.Monitoring;
+using Vertica.Integration.Infrastructure.Database.Migrations;
+using Vertica.Integration.Infrastructure.Logging;
+
+namespace ClassLibrary2.Migrations.IntegrationDb
+{
+    [Migration(1434115297)]
+    public class M1434115297_SetupCustomTargetInMonitorConfiguration : IntegrationMigration
+    {
+        public override void Up()
+        {
+            var configuration = GetConfiguration<MonitorConfiguration>();
+
+            MonitorTarget business = configuration.EnsureMonitorTarget(Target.Custom("Business"));
+            business.Recipients = new[] { "bhk@vertica.dk", "business@vertica.dk" };
+
+            SaveConfiguration(configuration);
+        }
+
+        public override void Down()
+        {
+            throw new NotSupportedException();
+        }
+    }
+}
+```
+In the example above a custom target named "Business" is configured. This allows you to log errors/warnings to this group:
+
+```c#
+using Vertica.Integration.Infrastructure.Logging;
+using Vertica.Integration.Model;
+
+namespace ClassLibrary2
+{
+    public class LogToBusinessExampleTask : Task
+    {
+        public override string Description
+        {
+            get { return "This Task is to illustrate how to log to custom targets."; }
+        }
+
+        public override void StartTask(ITaskExecutionContext context)
+        {
+            context.Log.Warning(Target.Custom("Business"), "Some warning...");
+            context.Log.Error(Target.Custom("Business"), "Some error...");
+        }
+    }
+}
+```
+
+<<EXAMPLE SUBJECT PREFIX>>
+<<EXAMPLE PingUrlsConfiguration>>
+<<EXAMPLE LASTRUN>>
+
 [Back to Table of Contents](#table-of-contents)
 
 ### Migration of MaintenanceConfiguration
@@ -371,24 +617,82 @@ TBD.
 TBD. 
 [Back to Table of Contents](#table-of-contents)
 
-## Monitoring
-
-TBD. 
-[Back to Table of Contents](#table-of-contents)
-
-## Maintenance
-
-TBD. 
-[Back to Table of Contents](#table-of-contents)
-
 ## Setting up Portal
 
-TBD. 
+Portal is "just" an administration interface on top of the Integration Service. From the Portal you can see various information including Tasks, Logging. From the Portal you can also administer Configurations.
+
+Setting up the Portal is easy.
+
+1. Install via NuGet to the Visual Studio Project hosting Integration Service, typically this is your Console Application (.exe)
+  ```
+  Install-Package Vertica.Integration.Portal
+  ```
+2. Invoke the Extension Method *UsePortal()* that effectively initializes the Portal
+  ```c#
+	using Vertica.Integration.Portal;
+
+	namespace ConsoleApplication16
+	{
+		class Program
+		{
+			static void Main(string[] args)
+			{
+				IntegrationStartup.Run(args, builder => builder
+					.UsePortal());
+			}
+		}
+	}
+  ```
+3. To open up the Portal, run the Integration Service with the following arguments
+  ```.exe WebApiTask -url http://localhost:8123```
+
+  ... you can of course choose any Host Name and any Port Number other than localhost:8123 as mentioned above.
+4. Open your browser and navigate to http://localhost:8123
+  
 [Back to Table of Contents](#table-of-contents)
 
 ## Integrating Elmah
 
-TBD. 
+If you are using Elmah with database logging in your project, we have a package that integrates the Elmah log with the Integration Service.
+This allows you to aggregate errors logged by Elmah into the Monitoring e-mail provided by the built-in **MonitorTask**.
+
+**NOTE** Currently Elmah.io is not integrated.
+
+Integration Elmah is easy.
+
+1. Install via NuGet to the Visual Studio Project hosting Integration Service, typically this is your Console Application (.exe)
+  ```
+  Install-Package Vertica.Integration.Logging.Elmah
+  ```
+2. Invoke the Extension Method *IncludeElmah()* part of registering **MonitorTask**
+  ```c#
+	using Vertica.Integration.Domain.Monitoring;
+	using Vertica.Integration.Logging.Elmah;
+
+	namespace ConsoleApplication16
+	{
+		class Program
+		{
+			static void Main(string[] args)
+			{
+				IntegrationStartup.Run(args, builder => builder
+					.Tasks(tasks => tasks
+						.MonitorTask(task => task
+							.IncludeElmah())));
+			}
+		}
+	}
+  ```
+3. Open app.config and add a new ConnectionString to configuration, named "Logging.ElmahDb" (default), with a valid connection to your Elmah SQL database
+  ```xml
+  <connectionStrings>
+      <add name="Logging.ElmahDb" connectionString="Integrated Security=SSPI;Data Source=[NAME-OF-SQL-SERVER];Database=[NAME-OF-ELMAH-DATABASE]" />
+  </connectionStrings>  
+  ``` 
+4. Create a Migration to setup **ElmahConfiguration** if you need to change any default options
+5. Execute **MonitorTask** to see it working  
+	* ```.exe MonitorTask```
+
 [Back to Table of Contents](#table-of-contents)
 
 ## Integrating Azure - BlobStorage
@@ -397,6 +701,44 @@ TBD.
 [Back to Table of Contents](#table-of-contents)
 
 ## How to Disable IntegrationDb
+
+If you are using Integration Service in a way where the requirement on an underlying database seems overkill. Maybe you're using it to expose some few HTTP services or maybe you're using it as a "Run-Once" Legacy Migration platform.
+
+Disabling the IntegrationDb is easy. Use the **.Database(...)** method on part of bootstrapping Integration Service.
+
+```c#
+namespace ConsoleApplication16
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            IntegrationStartup.Run(args, builder => builder
+                .Database(database => database.DisableIntegrationDb()));
+        }
+    }
+}
+```
+
+**NOTE** If you Disable IntegrationDb you won't be able to use all Built-In services/tasks, but Integration Service will make sure to give you a nice Exception Message if you try to.
+ - ```
+Unhandled Exception: Vertica.Integration.Infrastructure.Database.Databases.DatabaseDisabledException: IntegrationDb has been disabled.
+
+Examine the DependencyChain below to see which component has a dependency of this:
+
+Component 'Late bound Vertica.Integration.Infrastructure.Database.IDbFactory`1[[Vertica.Integration.Infrastructure.Database.DefaultConnection, Vertica.Integration, Version=1.4.5638.24340, Culture=neutral, PublicKeyToken=null]]' resolved as
+dependency of
+        component 'Late bound Vertica.Integration.Infrastructure.Database.IDbFactory`1[[Vertica.Integration.Infrastructure.Database.DefaultConnection, Vertica.Integration, Version=1.4.5638.24340, Culture=neutral, PublicKeyToken=null]]' resolved as dependency of
+        component 'Late bound Vertica.Integration.Infrastructure.Database.IDbFactory' resolved as dependency of
+        component 'Vertica.Integration.Infrastructure.Logging.Loggers.DefaultLogger' resolved as dependency of
+        component 'Vertica.Integration.Model.TaskRunner' which is the root component being resolved.
+```
+
+**NOTE** You can change Logger to a different implementation, see [How to Change Logger](#how-to-change-logger)
+
+[Back to Table of Contents](#table-of-contents)
+
+## How to Change Logger
 
 TBD. 
 [Back to Table of Contents](#table-of-contents)
