@@ -726,9 +726,9 @@ Unhandled Exception: Vertica.Integration.Infrastructure.Database.Databases.Datab
 
 Examine the DependencyChain below to see which component has a dependency of this:
 
-Component 'Late bound Vertica.Integration.Infrastructure.Database.IDbFactory`1[[Vertica.Integration.Infrastructure.Database.DefaultConnection, Vertica.Integration, Version=1.4.5638.24340, Culture=neutral, PublicKeyToken=null]]' resolved as
+Component 'Late bound Vertica.Integration.Infrastructure.Database.IDbFactory'1[[Vertica.Integration.Infrastructure.Database.DefaultConnection, Vertica.Integration, Version=1.4.5638.24340, Culture=neutral, PublicKeyToken=null]]' resolved as
 dependency of
-        component 'Late bound Vertica.Integration.Infrastructure.Database.IDbFactory`1[[Vertica.Integration.Infrastructure.Database.DefaultConnection, Vertica.Integration, Version=1.4.5638.24340, Culture=neutral, PublicKeyToken=null]]' resolved as dependency of
+        component 'Late bound Vertica.Integration.Infrastructure.Database.IDbFactory'1[[Vertica.Integration.Infrastructure.Database.DefaultConnection, Vertica.Integration, Version=1.4.5638.24340, Culture=neutral, PublicKeyToken=null]]' resolved as dependency of
         component 'Late bound Vertica.Integration.Infrastructure.Database.IDbFactory' resolved as dependency of
         component 'Vertica.Integration.Infrastructure.Logging.Loggers.DefaultLogger' resolved as dependency of
         component 'Vertica.Integration.Model.TaskRunner' which is the root component being resolved.
