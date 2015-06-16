@@ -48,6 +48,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docs", ".docs", "{6A60CF89
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.UCommerce", "src\Integration.UCommerce\Integration.UCommerce.csproj", "{BDED0B7F-0987-40B5-BEF8-88A25FF3AD3A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.CommerceServer", "src\Integration.CommerceServer\Integration.CommerceServer.csproj", "{4A9DF835-EBBC-4DFB-B528-B64338FEFF50}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -106,6 +110,14 @@ Global
 		{4273E246-5F7D-4385-8451-AFA8E2680441}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4273E246-5F7D-4385-8451-AFA8E2680441}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4273E246-5F7D-4385-8451-AFA8E2680441}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDED0B7F-0987-40B5-BEF8-88A25FF3AD3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDED0B7F-0987-40B5-BEF8-88A25FF3AD3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDED0B7F-0987-40B5-BEF8-88A25FF3AD3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDED0B7F-0987-40B5-BEF8-88A25FF3AD3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A9DF835-EBBC-4DFB-B528-B64338FEFF50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A9DF835-EBBC-4DFB-B528-B64338FEFF50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A9DF835-EBBC-4DFB-B528-B64338FEFF50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A9DF835-EBBC-4DFB-B528-B64338FEFF50}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -117,5 +129,7 @@ Global
 		{8ED95E1A-11FB-41E8-B01B-347C7EB32087} = {94C4BD7C-68E5-43C7-BBEC-F1A49115C616}
 		{E192B3E2-2870-490D-9A4B-9D2DCF0E89F6} = {94C4BD7C-68E5-43C7-BBEC-F1A49115C616}
 		{4273E246-5F7D-4385-8451-AFA8E2680441} = {94C4BD7C-68E5-43C7-BBEC-F1A49115C616}
+		{BDED0B7F-0987-40B5-BEF8-88A25FF3AD3A} = {94C4BD7C-68E5-43C7-BBEC-F1A49115C616}
+		{4A9DF835-EBBC-4DFB-B528-B64338FEFF50} = {94C4BD7C-68E5-43C7-BBEC-F1A49115C616}
 	EndGlobalSection
 EndGlobal
