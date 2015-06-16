@@ -880,7 +880,10 @@ From the **IDbSession** you can also create an **IDbTransaction**-scope. Use the
 
 ## How to Extend MonitorTask
 
-TBD 
+This example shows how you can add a custom step to the existing **MonitorTask**. You can read more about **MonitorTask** [here](#built-in-tasks). 
+
+TBD.
+
 [Back to Table of Contents](#table-of-contents)
 
 ## How to Extend MaintenanceTask
