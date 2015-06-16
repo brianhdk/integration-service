@@ -85,7 +85,7 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
   </smtp>
   ```    
 
-4. Run "MigrateTask" to ensure an up-to-date-schema
+4. Run **MigrateTask** to ensure an up-to-date-schema
  - From Visual Studio, open Project Properties of your Console Application project, navigate to the "Debug"-tab, and write "MigrateTask" (without quotes) in the multi-line textbox "Command line arguments".
  - Make sure your project is "Set as StartUp Project" and then Start it: CTRL+F5 or F5
  - If the MigrateTask fails, you need to make sure that you have all necessary permissions to the database specified earlier (effectively we're changing the Db schema, and potentially creating a new database - so you need a lot of permission!).
@@ -112,7 +112,7 @@ A Task must implement two members:
   * The method has an **ITaskExecutionContext** argument which provides access to e.g. logging.
 
 **Example of implementing a Task**
-  ```c#
+```c#
 using Vertica.Integration.Model;
 
 namespace ClassLibrary2
@@ -447,11 +447,19 @@ The flow is:
 
 1. *Execute(task, arguments)*-method is invoked
 2. A new **TaskLog** is created and persisted by the **ILogger**
-  * If any exceptions are thrown part of the flow, an ErrorLog will be created and associated with the TaskLog
-3. *task.Start(...)*-method is invoked
-4. ... to be continued
+  * If an exception is thrown part of the flow, an ErrorLog will be created and associated with the TaskLog - and the flow is aborted
+3. *task.Start(...)*-method is invoked and a specific *WorkItem* instance is created (if *task* has Steps)
+4. If *task* has Steps, this will happen:
+  * In the order Steps are registred, they will sequentially be executed:
+    * Steps will first be asked if they require execution: 
+	   * *step.ContinueWith(workItem)* will be called
+	     * **Execution.StepOut** will break the execution of all steps
+		 * **Execution.StepOver** will skip this particular step but continue execution
+		 * **Execution.Execute** will continue executing the step
+    * If Step require execution (**Execution.Execute**) *step.Execute(workItem, ...)* will be called
+5. *task.End(workItem, ...)* will be called at the end of the flow
 
-<<LOGGING, CONTINUE WITH/BREAK - VISUAL EXAMPLE>>
+As stated earlier, if an exception is thrown, this will abort the flow and associate the error with the specific TaskLog. Later this error will be picked up by the **MonitorTask** and e-mailed to a configurable recipient.
 
 [Back to Table of Contents](#table-of-contents)
 
@@ -477,10 +485,326 @@ TBD.
 
 ## Migrations
 
+Migrations is a first-class citizen in the Integration Service. Integration Service uses FluentMigrator (https://github.com/schambers/fluentmigrator) internally to ensure it's own database schema.
+
+If you upgrade Integration Service, make sure to run the Task:
+```.exe MigrateTask```
+
+The Migration API is open for extensions, this means that you easily can apply your own custom migrations against any database.
+
 ### Custom Migrations
-<<EXAMPLES OF CUSTOM MIGRATIONS THAT ARE NOT DB RELATED>>
-<<EXAMPLES OF CUSTOM MIGRATIONS AGAINST A DB>>
-<<EXAMPLES OF CUSTOM MIGRATIONS USING UCOMMERCE MIGRATION>>
+
+To configure Custom Migrations to be executed by the **MigrateTask**, you need to register this part when bootstrapping Integration Service.
+
+This example shows how to apply custom migrations to the IntegrationDb itself. The Migration will create a new table named "CustomTable" and later from a new task named "UseCustomTableTask" we'll interact with this new table.
+
+```c#
+using ConsoleApplication16.Migrations.IntegrationDb;
+
+namespace ConsoleApplication16
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            IntegrationStartup.Run(args, builder => builder
+                .Migration(migration => migration
+                    .AddFromNamespaceOfThis<M1434483770_AddCustomTableToIntegrationDb>())
+                .Tasks(tasks => tasks
+                    .Task<UseCustomTableTask>()));
+        }
+    }
+}
+```
+
+The code above will ensure that all public classes in the same namespace as "M1434483770_AddCustomTableToIntegrationDb" will have the *Up()*-method invoked, if the migration has not already been executed previously. 
+
+```c#
+using System;
+using FluentMigrator;
+
+namespace ConsoleApplication16.Migrations.IntegrationDb
+{
+    [Migration(1434483770)]
+    public class M1434483770_AddCustomTableToIntegrationDb : Migration
+    {
+        public override void Up()
+        {
+            Create.Table("CustomTable")
+                .WithColumn("ID").AsInt32().PrimaryKey().Identity()
+                .WithColumn("Name").AsString(255).NotNullable();
+        }
+
+        public override void Down()
+        {
+            throw new NotSupportedException();
+        }
+    }
+}
+```
+
+The code above shows the actual implementation of the migration.
+
+**NOTE** The value "1434483770" represents a Unix Timestamp. This is the preferred way of defining incremental version numbers for Migrations.
+Use e.g. http://www.unixtimestamp.com/ to get the current timestamp.
+
+As mentioned previously, migrations are applied by running the **MigrateTask**
+
+```.exe MigrateTask```
+
+```c#
+using System.Data;
+using Vertica.Integration.Infrastructure.Database;
+using Vertica.Integration.Model;
+
+namespace ConsoleApplication16
+{
+    public class UseCustomTableTask : Task
+    {
+        private readonly IDbFactory _integrationDb;
+
+        public UseCustomTableTask(IDbFactory integrationDb)
+        {
+            _integrationDb = integrationDb;
+        }
+
+        public override void StartTask(ITaskExecutionContext context)
+        {
+            using (IDbSession session = _integrationDb.OpenSession())
+            using (IDbTransaction transaction = session.BeginTransaction())
+            {
+                int recordId = session.ExecuteScalar<int>(@"
+INSERT INTO CustomTable (Name) VALUES ('John Doe');
+SELECT SCOPE_IDENTITY();");
+
+                context.Log.Message("Inserted record: {0}", recordId);
+
+                transaction.Commit();
+            }
+        }
+
+        public override string Description
+        {
+            get { return "Illustrates how to use newly created Custom Table"; }
+        }
+    }
+}
+```
+
+Finally the code above shows how to interact with the newly created table in the IntegrationDb.
+
+It's important to mention again that you can run migrations against any SQL database in your solution - and that migrations can be used for more than "just" updating a database schema - this will be covered by examples below. The recommendation is to run the ```.exe MigrateTask``` after each deployment to stage/production environments.
+
+### Custom Database migrations
+
+This example illustrates how to create custom migrations against another SQL Server database than the IntegrationDb itself.
+
+
+```c#
+using ClassLibrary2;
+using ConsoleApplication16.Migrations.CustomDb;
+using Vertica.Integration.Infrastructure;
+using Vertica.Integration.Infrastructure.Database.Migrations;
+
+namespace ConsoleApplication16
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            ConnectionString customDb = ConnectionString.FromName("CustomDb");
+
+            IntegrationStartup.Run(args, builder => builder
+                .Database(database => database
+                    .AddConnection(new CustomDb(customDb)))
+                .Migration(migration => migration
+                    .AddFromNamespaceOfThis<M1434484967_AddCustomTableToCustomDb>(DatabaseServer.SqlServer2014, customDb))
+                .Tasks(tasks => tasks
+                    .Task<UseCustomTableTask>()));
+        }
+    }
+}
+```
+
+The code above registers all public classes in the same namespace as "M1434484967_AddCustomTableToCustomDb" to have their *Up()*-method invoked against a SQL Server referenced from the **ConnectionString** instance *customDb*.
+
+The code also creates a custom database connection. See [How to Setup connection to custom database](#how-to-setup-connection-to-custom-database) for more information about this topic.
+
+```c#
+using System;
+using FluentMigrator;
+
+namespace ConsoleApplication16.Migrations.CustomDb
+{
+    [Migration(1434484967)]
+    public class M1434484967_AddCustomTableToCustomDb : Migration
+    {
+        public override void Up()
+        {
+            Create.Table("CustomTable")
+                .WithColumn("ID").AsInt32().PrimaryKey().Identity()
+                .WithColumn("Name").AsString(255).NotNullable();
+        }
+
+        public override void Down()
+        {
+            throw new NotSupportedException();
+        }
+    }
+}
+```
+
+The code above shows the actual implementation of the migration.
+
+**NOTE** The value "1434484967" represents a Unix Timestamp. This is the preferred way of defining incremental version numbers for Migrations.
+Use e.g. http://www.unixtimestamp.com/ to get the current timestamp.
+
+As mentioned previously, migrations are applied by running the **MigrateTask**
+
+```.exe MigrateTask```
+
+```c#
+using System.Data;
+using ClassLibrary2;
+using Vertica.Integration.Infrastructure.Database;
+using Vertica.Integration.Model;
+
+namespace ConsoleApplication16
+{
+    public class UseCustomTableTask : Task
+    {
+        private readonly IDbFactory<CustomDb> _customDb;
+
+        public UseCustomTableTask(IDbFactory<CustomDb> customDb)
+        {
+            _customDb = customDb;
+        }
+
+        public override void StartTask(ITaskExecutionContext context)
+        {
+            using (IDbSession session = _customDb.OpenSession())
+            using (IDbTransaction transaction = session.BeginTransaction())
+            {
+                int recordId = session.ExecuteScalar<int>(@"
+INSERT INTO CustomTable (Name) VALUES ('John Doe');
+SELECT SCOPE_IDENTITY();");
+
+                context.Log.Message("Inserted record: {0}", recordId);
+
+                transaction.Commit();
+            }
+        }
+
+        public override string Description
+        {
+            get { return "Illustrates how to use newly created Custom Table"; }
+        }
+    }
+}
+```
+
+Finally the code above shows how to interact with the newly created table.
+
+### Non DB related Migration - Running a Task
+
+This example shows that you can custom migrations are not always about updating a database schema. This simple migration illustrates how to run a specific task. This is useful if you need to run a specific task after a deployment to stage/production environment. E.g. if you need to re-import and re-index the catalog. 
+
+```c#
+using ConsoleApplication16.Migrations.IntegrationDb;
+
+namespace ConsoleApplication16
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            IntegrationStartup.Run(args, builder => builder
+                .Migration(migration => migration
+                    .AddFromNamespaceOfThis<M1434488770_RunImportCatalogTask>())
+                .Tasks(tasks => tasks
+                    .AddFromAssemblyOfThis<ImportCatalogTask>()));
+        }
+    }
+}
+```
+
+The custom migration inherits from the abstract class **IntegrationMigration** which provides some useful methods, e.g. the *RunTask<TTask>()*-method
+
+
+```c#
+using System;
+using FluentMigrator;
+using Vertica.Integration.Infrastructure.Database.Migrations;
+
+namespace ConsoleApplication16.Migrations.IntegrationDb
+{
+    [Migration(1434488770)]
+    public class M1434488770_RunImportCatalogTask : IntegrationMigration
+    {
+        public override void Up()
+        {
+            RunTask<ImportCatalogTask>();
+        }
+
+        public override void Down()
+        {
+            throw new NotSupportedException();
+        }
+    }
+}
+```
+
+**NOTE** The value "1434484967" represents a Unix Timestamp. This is the preferred way of defining incremental version numbers for Migrations.
+Use e.g. http://www.unixtimestamp.com/ to get the current timestamp.
+
+```c#
+using Vertica.Integration.Model;
+
+namespace ConsoleApplication16
+{
+    public class IndexCatalogTask : Task
+    {
+        public override void StartTask(ITaskExecutionContext context)
+        {
+            // ... Index search catalog
+        }
+
+        public override string Description
+        {
+            get { return "Index search catalog."; }
+        }
+    }
+
+    public class ImportCatalogTask : Task
+    {
+        private readonly ITaskFactory _factory;
+        private readonly ITaskRunner _runner;
+
+        public ImportCatalogTask(ITaskFactory factory, ITaskRunner runner)
+        {
+            _factory = factory;
+            _runner = runner;
+        }
+
+        public override void StartTask(ITaskExecutionContext context)
+        {
+            // ... Import catalog
+
+            // after importing catalog, re-indexing should happen
+            _runner.Execute(_factory.Get<IndexCatalogTask>());
+        }
+
+        public override string Description
+        {
+            get { return "Import catalog and runs the IndexCatalog task."; }
+        }
+    }
+}
+```
+
+### uCommerce migration
+
+TBD
 
 ### Migration of MonitorConfiguration
 
@@ -760,12 +1084,135 @@ TBD.
 
 Integration Service uses Castle Windsor (https://github.com/castleproject/Windsor/blob/master/docs/README.md) as its IoC container. Everything you can do with Castle Windsor - you can do with Integration Service.
 
-The extension point is easy, like other parts, it takes place in the Bootstrapping code of Integration Service:
+The extension point is easy, like other parts, it takes place in the Bootstrapping code of Integration Service.
 
+The example below illustrates how to use built-in **ConventionInstaller** to auto-register classes based on conventions.
 
- 
+```c#
+using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
+using Vertica.Integration.Model;
 
-TBD. 
+namespace ConsoleApplication16
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            IntegrationStartup.Run(args, builder => builder
+                .AddCustomInstaller(new ConventionInstaller()
+                    .AddFromAssemblyOfThis<ISomeService>())
+                .Tasks(tasks => tasks
+                    .Task<UseSomeServiceTask>()));
+        }
+    }
+
+    public interface ISomeService
+    {
+        void DoSomething();
+    }
+
+    public class SomeService : ISomeService
+    {
+        public void DoSomething()
+        {
+            // does something
+        }
+    }
+
+    public class UseSomeServiceTask : Task
+    {
+        private readonly ISomeService _service;
+
+        public UseSomeServiceTask(ISomeService service)
+        {
+            _service = service;
+        }
+
+        public override void StartTask(ITaskExecutionContext context)
+        {
+            _service.DoSomething();
+        }
+
+        public override string Description
+        {
+            get { return "Illustrates how to use a custom service."; }
+        }
+    }
+}
+```
+
+If you need more control or have specific requirements to how Integration Service should resolve your custom services/classes, you can provide your own Castle Windsor Installer implementation. The example below shows how to do just that:
+
+```c#
+using Castle.Facilities.TypedFactory;
+using Castle.MicroKernel.Registration;
+using Castle.MicroKernel.SubSystems.Configuration;
+using Castle.Windsor;
+using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
+using Vertica.Integration.Model;
+
+namespace ConsoleApplication16
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            IntegrationStartup.Run(args, builder => builder
+                .AddCustomInstaller(new CustomInstaller())
+                .Tasks(tasks => tasks
+                    .Task<UseComplexFactoryTask>()));
+        }
+    }
+
+    public class CustomInstaller : IWindsorInstaller
+    {
+        public void Install(IWindsorContainer container, IConfigurationStore store)
+        {
+            container.Register(
+                Component.For<IComplexFactory>()
+                    .AsFactory());
+
+            container.Register(
+                Component.For<ComplexType>()
+                    .UsingFactoryMethod(x => new ComplexType())
+                    .LifestyleTransient());
+        }
+    }
+
+    public interface IComplexFactory
+    {
+        ComplexType Create();
+    }
+
+    public class ComplexType
+    {
+    }
+
+    public class UseComplexFactoryTask : Task
+    {
+        private readonly IComplexFactory _factory;
+
+        public UseComplexFactoryTask(IComplexFactory factory)
+        {
+            _factory = factory;
+        }
+
+        public override void StartTask(ITaskExecutionContext context)
+        {
+            ComplexType instance1 = _factory.Create();
+            ComplexType instance2 = _factory.Create();
+
+            context.Log.Message("Same instance: {0}", instance1.Equals(instance2));
+        }
+
+        public override string Description
+        {
+            get { return "Illustrates how to use a dependency coming from a custom installer."; }
+        }
+    }
+}
+```
+
 [Back to Table of Contents](#table-of-contents)
 
 ## How to Setup connection to custom database
@@ -882,7 +1329,67 @@ From the **IDbSession** you can also create an **IDbTransaction**-scope. Use the
 
 This example shows how you can add a custom step to the existing **MonitorTask**. You can read more about **MonitorTask** [here](#built-in-tasks). 
 
-TBD.
+In this complete example, a new Step "MonitorLowDiscSpaceStep" is created which will monitor low drive space:
+
+```c#
+using System;
+using System.IO;
+using System.Linq;
+using Vertica.Integration.Domain.Monitoring;
+using Vertica.Integration.Infrastructure.Logging;
+using Vertica.Integration.Model;
+using Vertica.Utilities_v4;
+
+namespace ConsoleApplication16
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            IntegrationStartup.Run(args, builder => builder
+                .Tasks(tasks => tasks
+                    .MonitorTask(task => task
+                        .Step<MonitorLowDiskSpaceStep>())));
+        }
+    }
+
+    public class MonitorLowDiskSpaceStep : Step<MonitorWorkItem>
+    {
+        public override void Execute(MonitorWorkItem workItem, ITaskExecutionContext context)
+        {
+            foreach (DriveInfo drive in DriveInfo.GetDrives().Where(x => x.DriveType == DriveType.Fixed))
+            {
+                double availablePercentage  = ((double)drive.TotalFreeSpace / drive.TotalSize) * 100;
+
+                if (availablePercentage <= 15d)
+                {
+                    workItem.Add(
+                        Time.Now,
+                        Environment.MachineName,
+                        String.Format("Disk {0} ({1}) is running low ({2:0.00} or below).",
+                            drive.VolumeLabel,
+                            drive.Name,
+                            availablePercentage),
+                        Target.Service);
+                }
+            }
+        }
+
+        public override string Description
+        {
+            get { return "Calculates available space pr. logical drive and warns if disk is running low (<= 15%)."; }
+        }
+    }
+}
+```
+
+The Task is executed by running the Integration Service with the following arguments:
+```.exe MonitorTask```
+
+Other examples of customizing the **MonitorTask** could be to:
+
+1. Monitor synchronized data for common data issues, e.g. invalid discounts, missing required data on customers and such
+2. Export errors from Sitecore, uCommerce, umbraco and other platforms exposing a log
 
 [Back to Table of Contents](#table-of-contents)
 
@@ -960,5 +1467,4 @@ Other examples of customizing the **MaintenanceTask** could be to:
 3. Archive IIS log files
 4. Archive MongoDB log files
 
- 
 [Back to Table of Contents](#table-of-contents)

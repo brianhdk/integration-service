@@ -24,7 +24,7 @@ namespace Vertica.Integration.Model
             return ExecuteInternal((dynamic)task, arguments);
 	    }
 
-	    private TaskExecutionResult ExecuteInternal<TWorkItem>(Task<TWorkItem> task, params string[] arguments)
+	    private TaskExecutionResult ExecuteInternal<TWorkItem>(ITask<TWorkItem> task, params string[] arguments)
 		{
 			if (task == null) throw new ArgumentNullException("task");
 
