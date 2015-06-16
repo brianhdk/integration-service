@@ -155,7 +155,6 @@
     <Compile Include="Infrastructure\Database\IDbFactory.cs" />
     <Compile Include="Infrastructure\Database\IDbSession.cs" />
     <Compile Include="Infrastructure\Database\DatabaseConfiguration.cs" />
-    <Compile Include="Infrastructure\Database\IExposeTransaction.cs" />
     <Compile Include="Infrastructure\Database\Migrations\DatabaseServer.cs" />
     <Compile Include="Infrastructure\Database\Migrations\IntegrationMigration.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M1_Baseline.cs" />

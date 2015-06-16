@@ -30,8 +30,10 @@ namespace Vertica.Integration.Domain.Monitoring
 
         public PingUrlsConfiguration PingUrls { get; private set; }
 
-        public MonitorTarget EnsureMonitorTarget(Target target)
+        public MonitorTarget EnsureMonitorTarget(ITarget target)
         {
+            if (target == null) throw new ArgumentNullException("target");
+
             var existingTargets = Targets ?? new MonitorTarget[0];
 
             MonitorTarget monitorTarget = existingTargets.FirstOrDefault(x => x.Equals(target));
@@ -45,7 +47,7 @@ namespace Vertica.Integration.Domain.Monitoring
             return monitorTarget;
         }
 
-        public void Assert()
+        internal void Assert()
         {
             if (Targets == null)
                 throw new InvalidOperationException("No targets defined for MonitorConfiguration.");
