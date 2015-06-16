@@ -24,6 +24,8 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
  - [How to Change Logger](#how-to-change-logger) 
  - [How to Register Custom dependencies/services](#how-to-register-custom-dependenciesservices)
  - [How to Setup connection to custom database](#how-to-setup-connection-to-custom-database) 
+ - [How to Extend MonitorTask](#how-to-extend-monitortask)
+ - [How to Extend MaintenanceTask](#how-to-extend-maintenancetask)
 
 ## How to Get Started
 
@@ -88,9 +90,11 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
  - Make sure your project is "Set as StartUp Project" and then Start it: CTRL+F5 or F5
  - If the MigrateTask fails, you need to make sure that you have all necessary permissions to the database specified earlier (effectively we're changing the Db schema, and potentially creating a new database - so you need a lot of permission!).
 5. Next step is to create a new Class Library project which will contain your actual code/implementations. This is recommended to enforce separation, but it's not required. After creating your new Class Library project, install the following NuGet package to that project:
+  
   ```
   Install-Package Vertica.Integration
   ```
+  
   Finally make sure to add a reference from your Console Application project to this new Class Library project.
 6. You're now up and running with the Integration Service. Search the documentation to find examples on how to start using it, e.g. how to Tasks, how to setup custom Migrations, expose HTTP services, setup the Management Portal and much more. Good luck! Remember - any feedback is very much appreciated.
 
@@ -270,7 +274,7 @@ An async flavour _might_ be added later, _if_ there's a demand for it.
 Tasks are _Singletons_. You should therefore never keep any state within the lifetime of this object. 
 To ensure a nice decoupled architecture the Integration Service provides Constructor Injection for any dependency you should need in your Tasks. 
 By itself the Integration Service offers a number of services (see section [Built-in Services](#built-in-services)
-for more information about this) but you can of course register your own classes to be resolved by the IoC container (read more about this here [How to Register Custom dependencies/services](#how-to-register-custom-dependencies-services)).
+for more information about this) but you can of course register your own classes to be resolved by the IoC container (read more about this here [How to Register Custom dependencies/services](#how-to-register-custom-dependenciesservices)).
 
 [Back to Table of Contents](#table-of-contents)
 
@@ -624,27 +628,32 @@ Portal is "just" an administration interface on top of the Integration Service. 
 Setting up the Portal is easy.
 
 1. Install via NuGet to the Visual Studio Project hosting Integration Service, typically this is your Console Application (.exe)
+
   ```
   Install-Package Vertica.Integration.Portal
   ```
+  
 2. Invoke the Extension Method *UsePortal()* that effectively initializes the Portal
   ```c#
-	using Vertica.Integration.Portal;
+using Vertica.Integration.Portal;
 
-	namespace ConsoleApplication16
+namespace ConsoleApplication16
+{
+	class Program
 	{
-		class Program
+		static void Main(string[] args)
 		{
-			static void Main(string[] args)
-			{
-				IntegrationStartup.Run(args, builder => builder
-					.UsePortal());
-			}
+			IntegrationStartup.Run(args, builder => builder
+				.UsePortal());
 		}
 	}
+}
   ```
-3. To open up the Portal, run the Integration Service with the following arguments
-  ```.exe WebApiTask -url http://localhost:8123```
+3. To open up the Portal, run the Integration Service with the following arguments:
+
+  ```
+  .exe WebApiTask -url http://localhost:8123
+  ```
 
   ... you can of course choose any Host Name and any Port Number other than localhost:8123 as mentioned above.
 4. Open your browser and navigate to http://localhost:8123
@@ -661,34 +670,38 @@ This allows you to aggregate errors logged by Elmah into the Monitoring e-mail p
 Integration Elmah is easy.
 
 1. Install via NuGet to the Visual Studio Project hosting Integration Service, typically this is your Console Application (.exe)
+
   ```
   Install-Package Vertica.Integration.Logging.Elmah
   ```
+  
 2. Invoke the Extension Method *IncludeElmah()* part of registering **MonitorTask**
   ```c#
-	using Vertica.Integration.Domain.Monitoring;
-	using Vertica.Integration.Logging.Elmah;
+using Vertica.Integration.Domain.Monitoring;
+using Vertica.Integration.Logging.Elmah;
 
-	namespace ConsoleApplication16
+namespace ConsoleApplication16
+{
+	class Program
 	{
-		class Program
+		static void Main(string[] args)
 		{
-			static void Main(string[] args)
-			{
-				IntegrationStartup.Run(args, builder => builder
-					.Tasks(tasks => tasks
-						.MonitorTask(task => task
-							.IncludeElmah())));
-			}
+			IntegrationStartup.Run(args, builder => builder
+				.Tasks(tasks => tasks
+					.MonitorTask(task => task
+						.IncludeElmah())));
 		}
 	}
+}
   ```
 3. Open app.config and add a new ConnectionString to configuration, named "Logging.ElmahDb" (default), with a valid connection to your Elmah SQL database
+
   ```xml
   <connectionStrings>
       <add name="Logging.ElmahDb" connectionString="Integrated Security=SSPI;Data Source=[NAME-OF-SQL-SERVER];Database=[NAME-OF-ELMAH-DATABASE]" />
   </connectionStrings>  
   ``` 
+  
 4. Create a Migration to setup **ElmahConfiguration** if you need to change any default options
 5. Execute **MonitorTask** to see it working  
 	* ```.exe MonitorTask```
@@ -720,7 +733,7 @@ namespace ConsoleApplication16
 }
 ```
 
-**NOTE** If you Disable IntegrationDb you won't be able to use all Built-In services/tasks, but Integration Service will make sure to give you a nice Exception Message if you try to.
+**NOTE** If you Disable IntegrationDb, you will not be able to use all Built-In services/tasks, but Integration Service will provide a detailed error message if you try to do so:
 ```
 Unhandled Exception: Vertica.Integration.Infrastructure.Database.Databases.DatabaseDisabledException: IntegrationDb has been disabled.
 
@@ -744,6 +757,13 @@ TBD.
 [Back to Table of Contents](#table-of-contents)
 
 ## How to Register Custom dependencies/services
+
+Integration Service uses Castle Windsor (https://github.com/castleproject/Windsor/blob/master/docs/README.md) as its IoC container. Everything you can do with Castle Windsor - you can do with Integration Service.
+
+The extension point is easy, like other parts, it takes place in the Bootstrapping code of Integration Service:
+
+
+ 
 
 TBD. 
 [Back to Table of Contents](#table-of-contents)
@@ -861,4 +881,81 @@ From the **IDbSession** you can also create an **IDbTransaction**-scope. Use the
 ## How to Extend MonitorTask
 
 TBD 
+[Back to Table of Contents](#table-of-contents)
+
+## How to Extend MaintenanceTask
+
+This example shows how you can add a custom step to the existing **MaintenanceTask**. You can read more about **MaintenanceTask** [here](#built-in-tasks). 
+
+In this complete example, a new Step "UCommerceIndexMaintenanceStep" is created which will perform index maintenance using a [custom database connection](#how-to-setup-connection-to-custom-database) to uCommerce database (http://www.ucommerce.net).
+
+```c#
+using Vertica.Integration.Domain.Core;
+using Vertica.Integration.Infrastructure;
+using Vertica.Integration.Infrastructure.Database;
+using Vertica.Integration.Model;
+
+namespace ConsoleApplication16
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            IntegrationStartup.Run(args, builder => builder
+                .Database(database => database
+                    .AddConnection(new UCommerceDb(ConnectionString.FromText("Integrated Security=SSPI;Data Source=.;Database=uCommerceDemoStore"))))
+                .Tasks(tasks => tasks
+                    .MaintenanceTask(task => task
+                        .Step<UCommerceIndexMaintenanceStep>())));
+        }
+    }
+
+    public class UCommerceDb : Connection
+    {
+        public UCommerceDb(ConnectionString connectionString)
+            : base(connectionString)
+        {
+        }
+    }
+
+    public class UCommerceIndexMaintenanceStep : Step<MaintenanceWorkItem>
+    {
+        private readonly IDbFactory<UCommerceDb> _uCommerceDb;
+
+        public UCommerceIndexMaintenanceStep(IDbFactory<UCommerceDb> uCommerceDb)
+        {
+            _uCommerceDb = uCommerceDb;
+        }
+
+        public override void Execute(MaintenanceWorkItem workItem, ITaskExecutionContext context)
+        {
+            using (IDbSession session = _uCommerceDb.OpenSession())
+            {
+                session.Execute(@"
+ALTER INDEX [uCommerce_PK_Order] ON [dbo].[uCommerce_PurchaseOrder] REORGANIZE
+ALTER INDEX [IX_Order] ON [dbo].[uCommerce_PurchaseOrder] REORGANIZE
+ALTER INDEX [IX_uCommerce_PurchaseOrder_BasketId] ON [dbo].[uCommerce_PurchaseOrder] REORGANIZE
+");
+            }
+        }
+
+        public override string Description
+        {
+            get { return "Performs index maintenance on certain uCommerce tables."; }
+        }
+    }
+}
+```
+
+The Task is executed by running the Integration Service with the following arguments:
+```.exe MaintenanceTask```
+
+Other examples of customizing the **MaintenanceTask** could be to:
+
+1. Restart IIS AppPool on one or more servers
+2. Archive Sitecore log files
+3. Archive IIS log files
+4. Archive MongoDB log files
+
+ 
 [Back to Table of Contents](#table-of-contents)
