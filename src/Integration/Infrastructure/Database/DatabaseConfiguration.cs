@@ -9,7 +9,6 @@ namespace Vertica.Integration.Infrastructure.Database
     {
         private readonly ApplicationConfiguration _configuration;
         private ConnectionString _databaseConnectionString;
-        private bool _disabled;
 
         internal DatabaseConfiguration(ApplicationConfiguration configuration)
         {
@@ -17,6 +16,8 @@ namespace Vertica.Integration.Infrastructure.Database
 
             _configuration = configuration;
         }
+
+        public bool IntegrationDbDisabled { get; private set; }
 
         public ConnectionString ConnectionString
         {
@@ -29,14 +30,14 @@ namespace Vertica.Integration.Infrastructure.Database
             }
             set
             {
-                _disabled = value == null;
+                IntegrationDbDisabled = value == null;
                 _databaseConnectionString = value;
             }
         }
 
         public DatabaseConfiguration DisableIntegrationDb()
         {
-            _disabled = true;
+            IntegrationDbDisabled = true;
             return this;
         }
 
@@ -58,7 +59,7 @@ namespace Vertica.Integration.Infrastructure.Database
 
         void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
         {
-            container.Install(new DbInstaller(_disabled ? IntegrationDb.Disabled : new IntegrationDb(ConnectionString)));
+            container.Install(new DbInstaller(IntegrationDbDisabled ? IntegrationDb.Disabled : new IntegrationDb(ConnectionString)));
         }
     }
 }

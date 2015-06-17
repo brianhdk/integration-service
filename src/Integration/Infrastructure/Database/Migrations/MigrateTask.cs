@@ -21,24 +21,29 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
         private readonly IDisposable _loggingDisabler;
         private readonly bool _databaseCreated;
 
-        public MigrateTask(IDbFactory db, ILogger logger, MigrationConfiguration configuration)
+        public MigrateTask(Lazy<IDbFactory> db, ILogger logger, MigrationConfiguration configuration)
         {
-            string connectionString = EnsureIntegrationDb(db, configuration.CheckExistsIntegrationDb, out _databaseCreated);
+            _targets = configuration.CustomTargets;
 
-            var integrationDb = new MigrationTarget(
-                configuration.IntegrationDbDatabaseServer,
-                ConnectionString.FromText(connectionString),
-                typeof (M1_Baseline).Assembly,
-                typeof (M1_Baseline).Namespace);
+            if (!configuration.IntegrationDbDisabled)
+            {
+                string connectionString = EnsureIntegrationDb(db.Value, configuration.CheckExistsIntegrationDb, out _databaseCreated);
 
-            StringBuilder output;
-            MigrationRunner runner = CreateRunner(integrationDb, out output);
+                var integrationDb = new MigrationTarget(
+                    configuration.IntegrationDbDatabaseServer,
+                    ConnectionString.FromText(connectionString),
+                    typeof(M1_Baseline).Assembly,
+                    typeof(M1_Baseline).Namespace);
 
-            // Latest migration has not been applied, so we'll have to disable any logging.
-            if (!runner.VersionLoader.VersionInfo.HasAppliedMigration(FindLatestMigration()))
-                _loggingDisabler = logger.Disable();
+                StringBuilder output;
+                MigrationRunner runner = CreateRunner(integrationDb, out output);
 
-            _targets = new[] { integrationDb }.Concat(configuration.CustomTargets).ToArray();
+                // Latest migration has not been applied, so we'll have to disable any logging.
+                if (!runner.VersionLoader.VersionInfo.HasAppliedMigration(FindLatestMigration()))
+                    _loggingDisabler = logger.Disable();
+
+                _targets = new[] { integrationDb }.Concat(_targets).ToArray();                
+            }
         }
 
         private static long FindLatestMigration()
@@ -67,7 +72,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
         public override void StartTask(ITaskExecutionContext context)
         {
-            bool integrationDbMigration = true;
+            bool enableLogger = _loggingDisabler != null;
 
             foreach (MigrationTarget destination in _targets)
             {
@@ -79,10 +84,11 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
                 if (output.Length > 0)
                     context.Log.Message(output.ToString());
 
-                if (integrationDbMigration && _loggingDisabler != null)
+                if (enableLogger)
+                {
                     _loggingDisabler.Dispose();
-
-                integrationDbMigration = false;
+                    enableLogger = false;
+                }
             }
         }
 

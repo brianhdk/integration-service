@@ -57,9 +57,11 @@
     <Compile Include="CustomDb.cs" />
     <Compile Include="CustomDbTask.cs" />
     <Compile Include="MakeDeploymentTask.cs" />
-    <Compile Include="Migrations\M1431659508_RunTask.cs" />
-    <Compile Include="Migrations\M1431459508_MergeMaintenanceConfiguration.cs" />
-    <Compile Include="Migrations\M1427839041_SetupMonitorConfiguration.cs" />
+    <Compile Include="Migrations\CustomDb\M1431659519_CustomDbVoid.cs" />
+    <Compile Include="Migrations\IntegrationDb\M1431659529_Void.cs" />
+    <Compile Include="Migrations\IntegrationDb\M1431659508_RunTask.cs" />
+    <Compile Include="Migrations\IntegrationDb\M1431459508_MergeMaintenanceConfiguration.cs" />
+    <Compile Include="Migrations\IntegrationDb\M1427839041_SetupMonitorConfiguration.cs" />
     <Compile Include="FileSystemTesterTask.cs" />
     <Compile Include="FtpTesterTask.cs" />
     <Compile Include="MissingTargetTask.cs" />

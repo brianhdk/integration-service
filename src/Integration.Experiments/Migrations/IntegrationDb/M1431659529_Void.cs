@@ -1,14 +1,13 @@
 ﻿using FluentMigrator;
 using Vertica.Integration.Infrastructure.Database.Migrations;
 
-namespace Vertica.Integration.Experiments.Migrations
+namespace Vertica.Integration.Experiments.Migrations.IntegrationDb
 {
-    [Migration(1431659508)]
-    public class M1431659508_RunTask : IntegrationMigration
+    [Migration(1431659529)]
+    public class M1431659529_Void : IntegrationMigration
     {
         public override void Up()
         {
-            RunTask<HelloTask>();
         }
 
         public override void Down()

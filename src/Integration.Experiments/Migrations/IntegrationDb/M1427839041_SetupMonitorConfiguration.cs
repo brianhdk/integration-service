@@ -5,7 +5,7 @@ using Vertica.Integration.Domain.Monitoring;
 using Vertica.Integration.Infrastructure.Database.Migrations;
 using Vertica.Integration.Infrastructure.Logging;
 
-namespace Vertica.Integration.Experiments.Migrations
+namespace Vertica.Integration.Experiments.Migrations.IntegrationDb
 {
     [Migration(1427839041)]
     public class M1427839041_SetupMonitorConfiguration : IntegrationMigration

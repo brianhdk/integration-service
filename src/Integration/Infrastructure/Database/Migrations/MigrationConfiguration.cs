@@ -65,6 +65,18 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
             return this;
         }
 
+        internal bool IntegrationDbDisabled
+        {
+            get
+            {
+                bool result = false;
+
+                _application.Database(database => result = database.IntegrationDbDisabled);
+
+                return result;
+            }
+        }
+
         internal DatabaseServer IntegrationDbDatabaseServer { get; private set; }
         internal bool CheckExistsIntegrationDb { get; private set; }
 
