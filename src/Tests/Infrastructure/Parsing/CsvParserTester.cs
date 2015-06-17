@@ -30,16 +30,16 @@ Row2-Field1;Row2-Field2",
         [Test]
         public void Parse_Header_Default_Delimiter()
         {
-            CsvRow[] rows = Parse(@"Field1,Field2
-Row1-Field1,Row1-Field2
-Row2-Field1,Row2-Field2",
+            CsvRow[] rows = Parse(@"Field1;Field2
+Row1-Field1;Row1-Field2
+Row2-Field1;Row2-Field2",
                 true);
 
             Assert.That(rows.Length, Is.EqualTo(2));
 
             Assert.That(rows[0][0], Is.EqualTo("Row1-Field1"));
             Assert.That(rows[0]["Field1"], Is.EqualTo("Row1-Field1"));
-            Assert.That(((dynamic) rows[0]).Field1, Is.EqualTo("Row1-Field1"));
+            Assert.That(((dynamic)rows[0]).Field1, Is.EqualTo("Row1-Field1"));
 
             Assert.That(rows[0][1], Is.EqualTo("Row1-Field2"));
             Assert.That(rows[0]["Field2"], Is.EqualTo("Row1-Field2"));
@@ -53,8 +53,8 @@ Row2-Field1,Row2-Field2",
             Assert.That(rows[1]["Field2"], Is.EqualTo("Row2-Field2"));
             Assert.That(((dynamic)rows[1]).Field2, Is.EqualTo("Row2-Field2"));
 
-            Assert.That(rows[0].ToString(), Is.EqualTo("Row1-Field1,Row1-Field2"));
-            Assert.That(rows[1].ToString(), Is.EqualTo("Row2-Field1,Row2-Field2"));
+            Assert.That(rows[0].ToString(), Is.EqualTo("Row1-Field1;Row1-Field2"));
+            Assert.That(rows[1].ToString(), Is.EqualTo("Row2-Field1;Row2-Field2"));
         }
 
         [Test]
@@ -75,14 +75,14 @@ Row2-Field1,Row2-Field2",
         [Test]
         public void Parse_WithHeader_Returns_Delimiter_LinesNumbers_But_No_Headers()
         {
-            CsvRow[] rows = Parse(@"Field1,Field2
-Row1-Field1,Row1-Field2
-Row2-Field1,Row2-Field2",
+            CsvRow[] rows = Parse(@"Field1;Field2
+Row1-Field1;Row1-Field2
+Row2-Field1;Row2-Field2",
                 true);
 
             Assert.That(rows[0].Meta.LineNumber, Is.EqualTo(2));
             Assert.That(rows[0].Meta.Delimiter, Is.EqualTo(CsvConfiguration.DefaultDelimiter));
-            CollectionAssert.AreEqual(new[] {"Field1", "Field2"}, rows[0].Meta.Headers);
+            CollectionAssert.AreEqual(new[] { "Field1", "Field2" }, rows[0].Meta.Headers);
             Assert.That(rows[1].Meta.LineNumber, Is.EqualTo(3));
             Assert.That(rows[1].Meta.Delimiter, Is.EqualTo(CsvConfiguration.DefaultDelimiter));
             CollectionAssert.AreEqual(new[] { "Field1", "Field2" }, rows[1].Meta.Headers);

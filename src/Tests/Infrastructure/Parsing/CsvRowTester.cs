@@ -20,8 +20,8 @@ namespace Vertica.Integration.Tests.Infrastructure.Parsing
 
             var csv = String.Join(Environment.NewLine, rows.Select(x => x.ToString()));
 
-            Assert.That(csv, Is.EqualTo(@"John Doe,30
-Jane Doe,31"));
+            Assert.That(csv, Is.EqualTo(@"John Doe;30
+Jane Doe;31"));
         }
 
         [Test]
@@ -31,7 +31,7 @@ Jane Doe,31"));
                 .BeginRows("Name", "Age")
                 .Add("John Doe", "30");
 
-            ArgumentException exception = 
+            ArgumentException exception =
                 Assert.Throws<ArgumentException>(() => builder.Add("Jane Doe", "31", "New column"));
 
             Assert.That(exception.Message, Is.StringContaining("Row #2"));
@@ -56,9 +56,9 @@ Jane Doe,31"));
 
             var csv = String.Join(Environment.NewLine, rows.Select(x => x.ToString()));
 
-            Assert.That(csv, Is.EqualTo(@"Name,Age
-John Doe,30
-Jane Doe,31"));
+            Assert.That(csv, Is.EqualTo(@"Name;Age
+John Doe;30
+Jane Doe;31"));
         }
 
         [Test]
@@ -71,9 +71,9 @@ Jane Doe,31"));
                 .Add("Jane Doe", "31")
                 .ToString();
 
-            Assert.That(csv, Is.EqualTo(@"Name,Age
-John Doe,30
-Jane Doe,31"));
+            Assert.That(csv, Is.EqualTo(@"Name;Age
+John Doe;30
+Jane Doe;31"));
         }
 
         [Test]
@@ -85,15 +85,15 @@ Jane Doe,31"));
                 .Add("Jane Doe", null)
                 .ToString();
 
-            Assert.That(csv, Is.EqualTo(@"John Doe,30
-Jane Doe,"));
+            Assert.That(csv, Is.EqualTo(@"John Doe;30
+Jane Doe;"));
         }
 
         [Test]
         public void Create_Csv_From_List()
         {
             CsvRow[] rows = CsvRow.BeginRows("Name")
-                .From(new[] {"John", "Jane"}, x => new[] {x})
+                .From(new[] { "John", "Jane" }, x => new[] { x })
                 .ToRows();
 
             var csv = String.Join(Environment.NewLine, rows.Select(x => x.ToString()));
@@ -111,8 +111,8 @@ Jane"));
                 .AddUsingMapper(x => x.Map("Age", "31").Map("Name", "Jane Doe"))
                 .ToString();
 
-            Assert.That(csv, Is.EqualTo(@"John Doe,30
-Jane Doe,31"));
+            Assert.That(csv, Is.EqualTo(@"John Doe;30
+Jane Doe;31"));
         }
 
         [Test]
@@ -133,7 +133,7 @@ Jane"));
         {
             CsvRow.ICsvRowBuilder csv = CsvRow.BeginRows("Name");
 
-            KeyNotFoundException exception = 
+            KeyNotFoundException exception =
                 Assert.Throws<KeyNotFoundException>(() => csv.AddUsingMapper(x => x.Map("Age", "30")));
 
             Assert.That(exception.Message, Is.StringContaining("Age"));
@@ -145,21 +145,21 @@ Jane"));
             CsvRow.ICsvRowBuilderAdder builder = CsvRow.BeginRows("Name", "Age")
                 .Configure(x => x
                     .ReturnHeaderAsRow()
-                    .ChangeDelimiter(";"));
+                    .ChangeDelimiter(","));
 
             builder.AddUsingMapper(x => x
                 .Map("Name", "John Doe")
                 .Map("Age", "30"));
 
-            builder.FromUsingMapper(new[] {"Jane Doe"}, (m, x) => m.Map("Name", x));
+            builder.FromUsingMapper(new[] { "Jane Doe" }, (m, x) => m.Map("Name", x));
 
             Assert.That(builder.DataRowCount, Is.EqualTo(2));
 
             string csv = builder.ToString();
 
-            Assert.That(csv, Is.EqualTo(@"Name;Age
-John Doe;30
-Jane Doe;"));
+            Assert.That(csv, Is.EqualTo(@"Name,Age
+John Doe,30
+Jane Doe,"));
         }
 
         [Test]
@@ -168,16 +168,16 @@ Jane Doe;"));
             CsvRow.ICsvRowBuilderAdder builder = CsvRow.BeginRows("\"Name\"", "Age")
                 .Configure(x => x
                     .ReturnHeaderAsRow()
-                    .ChangeDelimiter(";"));
+                    .ChangeDelimiter(","));
 
             builder.AddUsingMapper(x => x
-                .Map("\"Name\"", "John;Doe")
+                .Map("\"Name\"", "John,Doe")
                 .Map("Age", "30\""));
 
             string csv = builder.ToString();
 
-            Assert.That(csv, Is.EqualTo(@"""""""Name"""""";Age
-""John;Doe"";""30"""""""));
+            Assert.That(csv, Is.EqualTo(@"""""""Name"""""",Age
+""John,Doe"",""30"""""""));
         }
 
         [Test]
@@ -192,6 +192,38 @@ Jane Doe;"));
             Assert.That(rows[0].IsEmpty, Is.False);
             Assert.That(rows[1].IsEmpty, Is.True);
             Assert.That(rows[2].IsEmpty, Is.True);
+        }
+
+        [Test]
+        public void Create_From_IEnumerable()
+        {
+            var collection = new[]
+            {
+                new MyClass { Name = "John Doe", Age = 30 },
+                new MyClass { Name = "Jane Doe", Age = 31 }
+            };
+
+            CsvRow[] rows = CsvRow.From(collection, configure => configure
+                .ReturnHeaderAsRow());
+
+            Assert.That(rows.Length, Is.EqualTo(3));
+
+            Assert.That(rows[0]["Name"], Is.EqualTo("Name"));
+            Assert.That(rows[0]["Age"], Is.EqualTo("Age"));
+
+            Assert.That(rows[1]["Name"], Is.EqualTo("John Doe"));
+            Assert.That(rows[1]["Age"], Is.EqualTo("30"));
+
+            Assert.That(rows[2]["Name"], Is.EqualTo("Jane Doe"));
+            Assert.That(rows[2]["Age"], Is.EqualTo("31"));
+        }
+
+        private class MyClass
+        {
+            // ReSharper disable UnusedAutoPropertyAccessor.Local
+            public string Name { get; set; }
+            public int Age { get; set; }
+            // ReSharper restore UnusedAutoPropertyAccessor.Local
         }
     }
 }
