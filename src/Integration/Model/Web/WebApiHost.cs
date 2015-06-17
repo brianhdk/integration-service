@@ -40,7 +40,6 @@ namespace Vertica.Integration.Model.Web
                 var configuration = new HttpConfiguration();
 
                 configuration.Filters.Add(new ExceptionHandlingAttribute(logger));
-                configuration.MessageHandlers.Add(new CachingHandler());
                 configuration.Formatters.Remove(configuration.Formatters.XmlFormatter);
 
                 ConfigureJson(configuration);
