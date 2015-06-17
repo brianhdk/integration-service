@@ -22,8 +22,8 @@ namespace Vertica.Integration.Console
                 .Tasks(tasks => tasks
                     .AddFromAssemblyOfThis<HelloTask>()
                     .MonitorTask(task => task
-                        .IncludeElmah()
-                        .Step<XssTestingStep>())
+                        .Clear()
+                        .IncludeElmah())
                     .MaintenanceTask(task => task
                         .IncludeElmah()))
                 .Migration(migration => migration

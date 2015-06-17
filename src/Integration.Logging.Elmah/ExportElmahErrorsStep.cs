@@ -11,6 +11,8 @@ namespace Vertica.Integration.Logging.Elmah
 {
     public class ExportElmahErrorsStep : Step<MonitorWorkItem>
     {
+        private const string ConfigurationName = "24E20065-43F9-42DB-90AA-09823637C00C";
+
         private readonly IConfigurationService _configuration;
 
         public ExportElmahErrorsStep(IConfigurationService configuration)
@@ -25,12 +27,14 @@ namespace Vertica.Integration.Logging.Elmah
             if (String.IsNullOrWhiteSpace(configuration.ConnectionStringName))
                 return Execution.StepOver;
 
+            workItem.Context(ConfigurationName, configuration);
+
             return Execution.Execute;
         }
 
         public override void Execute(MonitorWorkItem workItem, ITaskExecutionContext context)
         {
-            ElmahConfiguration configuration = _configuration.GetElmahConfiguration();
+            ElmahConfiguration configuration = workItem.Context<ElmahConfiguration>(ConfigurationName);
 
             using (var connection = new SqlConnection(configuration.ToConnectionString()))
             using (SqlCommand command = connection.CreateCommand())
@@ -47,7 +51,10 @@ SELECT
     message     = [Message],
     [user]      = [User],
     statusCode  = [StatusCode], 
-    time        = CONVERT(VARCHAR(50), [TimeUtc], 126) + 'Z'
+    time        = CONVERT(VARCHAR(50), [TimeUtc], 126) + 'Z',
+	CAST([AllXml] AS XML).value('(/error/serverVariables/item[@name=''URL'']/value/@string)[1]', 'nvarchar(max)') AS url,
+	CAST([AllXml] AS XML).value('(/error/serverVariables/item[@name=''QUERY_STRING'']/value/@string)[1]', 'nvarchar(max)') AS query_string,
+	CAST([AllXml] AS XML).value('(/error/serverVariables/item[@name=''HTTP_REFERER'']/value/@string)[1]', 'nvarchar(max)') AS http_referer
 FROM [ELMAH_Error] error 
 WHERE [TimeUtc] BETWEEN @l AND @u
 ORDER BY [TimeUtc] DESC, [Sequence] DESC
@@ -66,7 +73,8 @@ FOR XML AUTO";
 
                             workItem.Add(
                                 error.Created,
-                                String.Join(",", new[] { configuration.LogName, error.Source }.Where(x => !String.IsNullOrWhiteSpace(x))),
+                                String.Join(", ", new[] { configuration.LogName, error.Source }
+                                    .Where(x => !String.IsNullOrWhiteSpace(x))),
                                 error.ToString(),
                                 Target.Service);
                         }

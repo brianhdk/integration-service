@@ -69,6 +69,11 @@ namespace Vertica.Integration.Domain.Monitoring
             public bool Enabled { get; set; }
             public uint MaximumWaitTimeSeconds { get; set; }
             public string[] Urls { get; set; }
+
+            internal bool IsReady
+            {
+                get { return Enabled && Urls != null && Urls.Length > 0; }
+            }
         }
     }
 }

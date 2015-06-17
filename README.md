@@ -1366,7 +1366,7 @@ namespace ConsoleApplication16
                     workItem.Add(
                         Time.Now,
                         Environment.MachineName,
-                        String.Format("Disk {0} ({1}) is running low ({2:0.00} or below).",
+                        String.Format("[WARNING] Disk {0} ({1}) is running low ({2:0.00} % free space available).",
                             drive.VolumeLabel,
                             drive.Name,
                             availablePercentage),
@@ -1377,7 +1377,7 @@ namespace ConsoleApplication16
 
         public override string Description
         {
-            get { return "Calculates available space pr. logical drive and warns if disk is running low (<= 15%)."; }
+            get { return "Calculates available space per logical drive and warns if disk is running low (<= 15%)."; }
         }
     }
 }

@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Vertica.Integration.Infrastructure.Logging;
+using Vertica.Integration.Model;
 using Vertica.Utilities_v4;
 using Vertica.Utilities_v4.Patterns;
 
 namespace Vertica.Integration.Domain.Monitoring
 {
-    public class MonitorWorkItem
+    public class MonitorWorkItem : ContextWorkItem
     {
         private readonly Range<DateTimeOffset> _checkRange;
 	    private readonly List<Tuple<Target, MonitorEntry>> _entries;

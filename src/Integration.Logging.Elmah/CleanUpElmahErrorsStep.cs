@@ -9,6 +9,8 @@ namespace Vertica.Integration.Logging.Elmah
 {
     public class CleanUpElmahErrorsStep : Step<MaintenanceWorkItem>
     {
+        private const string ConfigurationName = "C3B63A03-FE1B-4D75-9406-E330967A82F0";
+
         private readonly IConfigurationService _configuration;
 
         public CleanUpElmahErrorsStep(IConfigurationService configuration)
@@ -23,12 +25,14 @@ namespace Vertica.Integration.Logging.Elmah
             if (String.IsNullOrWhiteSpace(configuration.ConnectionStringName))
                 return Execution.StepOver;
 
+            workItem.Context(ConfigurationName, configuration);
+
             return Execution.Execute;
         }
 
         public override void Execute(MaintenanceWorkItem workItem, ITaskExecutionContext context)
         {
-            ElmahConfiguration configuration = _configuration.GetElmahConfiguration();
+            ElmahConfiguration configuration = workItem.Context<ElmahConfiguration>(ConfigurationName);
 
             DateTime lowerBound = DateTime.UtcNow.Date.Subtract(configuration.CleanUpEntriesOlderThan);
 
