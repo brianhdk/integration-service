@@ -17,23 +17,7 @@ namespace Vertica.Integration.Console
 		private static void Main(string[] args)
 		{
 			using (ApplicationContext context = ApplicationContext.Create(builder => builder
-                //.UseAzure(azure => azure
-                //    .ReplaceArchiveWithBlobStorage(ConnectionString.FromName("AzureBlobStorage.Archive")))))
-                //.UsePortal()
-                //.Logger(logger => logger.Use<VoidLogger>())
-                //.Database(db => db
-                //    .DisableIntegrationDb())
-                    //.AddConnection(new CustomDb(builder.DatabaseConnectionString)))
-                //.Tasks(tasks => tasks
-                //    .AddFromAssemblyOfThis<HelloTask>()
-                //    .MonitorTask(task => task
-                //        .Clear()
-                //        .IncludeElmah())
-                //    .MaintenanceTask(task => task
-                //        .IncludeElmah()))
-                .Migration(migration => migration
-                    .AddFromNamespaceOfThis<M1431659519_CustomDbVoid>(DatabaseServer.SqlServer2014, ConnectionString.FromText("Integrated Security=SSPI;Data Source=maersk-sql01.vertica.dk;Database=Documentation_CustomDb"))
-                    .AddFromNamespaceOfThis<M1427839041_SetupMonitorConfiguration>())))
+                .UsePortal()))
 			{
 			    context.Execute(args);
 			}
