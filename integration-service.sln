@@ -26,6 +26,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Portal", "src\I
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".deployment", ".deployment", "{C078BD86-3790-4F2C-9A1F-957625D89178}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		deployment\Package-Manager.ps1 = deployment\Package-Manager.ps1
 	EndProjectSection
 EndProject
@@ -51,6 +52,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.UCommerce", "src\Integration.UCommerce\Integration.UCommerce.csproj", "{BDED0B7F-0987-40B5-BEF8-88A25FF3AD3A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.CommerceServer", "src\Integration.CommerceServer\Integration.CommerceServer.csproj", "{4A9DF835-EBBC-4DFB-B528-B64338FEFF50}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E2845DBF-47F8-462E-AD53-8761806A6305}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

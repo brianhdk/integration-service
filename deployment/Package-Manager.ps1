@@ -10,7 +10,7 @@ $settings = @{
 		"integration_azure" = Resolve-Path $script_directory\..\src\Integration.Azure
     }
     "tools" = @{
-        "nuget" = Resolve-Path $script_directory\..\tools\NuGet\NuGet.exe
+        "nuget" = Resolve-Path $script_directory\..\.nuget\NuGet.exe
     }
 	"packages" = @{
 		#"destination" = "\\nuget.vertica.dk\nuget.vertica.dk\root\Packages"
