@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Vertica.Utilities_v4.Patterns;
 
 namespace Vertica.Integration.Infrastructure.Logging.Loggers
 {
@@ -8,15 +9,61 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
         private readonly object _dummy = new object();
         private readonly Stack<object> _disablers;
 
+        private readonly ChainOfResponsibilityLink<LogEntry> _handlers;
+
         protected Logger()
         {
-            _disablers = new Stack<object>();            
+            _disablers = new Stack<object>();
+
+            _handlers = ChainOfResponsibility.Empty<LogEntry>()
+                .Chain(new LogEntryLink<TaskLog>(Insert, Update))
+                .Chain(new LogEntryLink<StepLog>(Insert, Update))
+                .Chain(new LogEntryLink<MessageLog>(Insert));
         }
 
-        public abstract ErrorLog LogWarning(ITarget target, string message, params object[] args);
-        public abstract ErrorLog LogError(ITarget target, string message, params object[] args);
-        public abstract ErrorLog LogError(Exception exception, ITarget target = null);
-        public abstract void LogEntry(LogEntry entry);
+        public ErrorLog LogError(ITarget target, string message, params object[] args)
+        {
+            return LogError(new ErrorLog(Severity.Error, String.Format(message, args), target));
+        }
+
+        public ErrorLog LogError(Exception exception, ITarget target = null)
+        {
+            return LogError(new ErrorLog(exception, target));
+        }
+
+        public ErrorLog LogWarning(ITarget target, string message, params object[] args)
+        {
+            return LogError(new ErrorLog(Severity.Warning, String.Format(message, args), target));
+        }
+
+        private ErrorLog LogError(ErrorLog errorLog)
+        {
+            if (LoggingDisabled)
+                return null;
+
+            errorLog.Id = Insert(errorLog);
+
+            return errorLog;
+        }
+
+        public void LogEntry(LogEntry entry)
+        {
+            if (entry == null) throw new ArgumentNullException("entry");
+
+            if (LoggingDisabled)
+                return;
+
+            _handlers.Handle(entry);            
+        }
+
+        protected abstract string Insert(TaskLog log);
+        protected abstract string Insert(MessageLog log);
+        protected abstract string Insert(StepLog log);
+
+        protected abstract string Insert(ErrorLog log);
+
+        protected abstract void Update(TaskLog log);
+        protected abstract void Update(StepLog log);
 
         public IDisposable Disable()
         {
@@ -24,7 +71,7 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
             return new Disabler(() => _disablers.Pop());
         }
 
-        protected bool LoggingDisabled
+        private bool LoggingDisabled
         {
             get { return _disablers.Count > 0; }
         }
@@ -45,6 +92,42 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
                 {
                     _disposed();
                     _wasDisposed = true;
+                }
+            }
+        }
+
+        private class LogEntryLink<TLogEntry> : IChainOfResponsibilityLink<LogEntry>
+            where TLogEntry : LogEntry
+        {
+            private readonly Func<TLogEntry, string> _insert;
+            private readonly Action<TLogEntry> _update;
+
+            public LogEntryLink(Func<TLogEntry, string> insert, Action<TLogEntry> update = null)
+            {
+                if (insert == null) throw new ArgumentNullException("insert");
+
+                _insert = insert;
+                _update = update;
+            }
+
+            public bool CanHandle(LogEntry context)
+            {
+                return context is TLogEntry;
+            }
+
+            public void DoHandle(LogEntry context)
+            {
+                if (context.Id == null)
+                {
+                    context.Id = _insert(context as TLogEntry);
+                }
+                else
+                {
+                    if (_update == null)
+                        throw new NotSupportedException(
+                            String.Format("Update for '{0}' is not supported.", typeof(TLogEntry).Name));                        
+                    
+                    _update(context as TLogEntry);
                 }
             }
         }

@@ -8,20 +8,18 @@ namespace Vertica.Integration.Infrastructure.Logging
     {
         private readonly Stopwatch _watch;
 
-        protected LogEntry(string taskName, bool measureExecutionTime = true)
+        protected LogEntry(bool measureExecutionTime = true)
         {
             _watch = new Stopwatch();
 
             if (measureExecutionTime)
                 _watch.Start();
 
-            TaskName = taskName;
             TimeStamp = Time.UtcNow;
         }
 
-        public int Id { get; internal set; }
-        public string TaskName { get; private set; }
-        public double? ExecutionTimeSeconds { get; protected set; }
+        public string Id { get; internal set; }
+        public double? ExecutionTimeSeconds { get; private set; }
         public DateTimeOffset TimeStamp { get; private set; }
 
         public virtual void Dispose()

@@ -1,25 +1,32 @@
-﻿using System;
-
-namespace Vertica.Integration.Infrastructure.Logging.Loggers
+﻿namespace Vertica.Integration.Infrastructure.Logging.Loggers
 {
     public class VoidLogger : Logger
     {
-        public override ErrorLog LogWarning(ITarget target, string message, params object[] args)
+        protected override string Insert(TaskLog log)
         {
-            return new ErrorLog(Severity.Warning, String.Format(message, args), target);
+            return null;
         }
 
-        public override ErrorLog LogError(ITarget target, string message, params object[] args)
+        protected override string Insert(MessageLog log)
         {
-            return new ErrorLog(Severity.Error, String.Format(message, args), target);
+            return null;
         }
 
-        public override ErrorLog LogError(Exception exception, ITarget target = null)
+        protected override string Insert(StepLog log)
         {
-            return new ErrorLog(exception, target);
+            return null;
         }
 
-        public override void LogEntry(LogEntry entry)
+        protected override string Insert(ErrorLog log)
+        {
+            return null;
+        }
+
+        protected override void Update(TaskLog log)
+        {
+        }
+
+        protected override void Update(StepLog log)
         {
         }
     }

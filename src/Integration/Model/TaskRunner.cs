@@ -32,7 +32,7 @@ namespace Vertica.Integration.Model
 
 	        Action<string> outputter = message =>
 	        {
-	            message = String.Format("{0:HH:mm:ss}: {1}", Time.Now, message);
+	            message = String.Format("[{0:HH:mm:ss}] {1}", Time.Now, message);
 
 	            _outputter.WriteLine(message);
 	            output.Add(message);
@@ -82,7 +82,7 @@ namespace Vertica.Integration.Model
 							stepLog.ErrorLog = errorLog;
 
 							throw new TaskExecutionFailedException(
-                                String.Format("Step '{0}' failed.", stepLog.StepName), ex);
+                                String.Format("Step '{0}' failed.", stepLog.Name), ex);
 						}
 					}
 				}

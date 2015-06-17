@@ -14,8 +14,12 @@ namespace Vertica.Integration.Model
         private readonly List<Type> _removeTasks;
         private readonly List<TaskConfiguration> _complexTasks;
 
-        internal TasksConfiguration()
+        internal TasksConfiguration(ApplicationConfiguration application)
         {
+            if (application == null) throw new ArgumentNullException("application");
+
+            Application = application;
+
             _scan = new List<Assembly>();
             _simpleTasks = new List<Type>();
             _removeTasks = new List<Type>();
@@ -24,6 +28,8 @@ namespace Vertica.Integration.Model
             // scan own assembly
             AddFromAssemblyOfThis<TasksConfiguration>();
         }
+
+        public ApplicationConfiguration Application { get; private set; }
 
         /// <summary>
         /// Scans the assembly of the defined <typeparamref name="T"></typeparamref> for public classes inheriting <see cref="Task"/>.

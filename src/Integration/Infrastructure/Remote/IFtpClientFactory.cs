@@ -5,7 +5,7 @@ namespace Vertica.Integration.Infrastructure.Remote
 {
     public interface IFtpClientFactory
     {
-        IFtpClient Create(Uri ftpUri, Action<FtpClientConfiguration> builder = null);
-        IFtpClient Create(string ftpUri, Action<FtpClientConfiguration> builder = null);
+        IFtpClient Create(Uri ftpUri, Action<FtpClientConfiguration> ftp = null);
+        IFtpClient Create(string ftpUri, Action<FtpClientConfiguration> ftp = null);
     }
 }

@@ -179,7 +179,6 @@
     <Compile Include="Infrastructure\Extensions\NameExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\StringExtensions.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\CastleWindsorExtensions.cs" />
-    <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ConsoleWriterInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ConventionInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\TaskInstaller.cs" />
     <Compile Include="Infrastructure\IO\FileSystemService.cs" />
@@ -187,10 +186,11 @@
     <Compile Include="Infrastructure\IO\IFile.cs" />
     <Compile Include="Infrastructure\IO\IFileSystemService.cs" />
     <Compile Include="Infrastructure\Logging\ITarget.cs" />
-    <Compile Include="Infrastructure\Logging\LoggerConfiguration.cs" />
+    <Compile Include="Infrastructure\Logging\LoggingConfiguration.cs" />
     <Compile Include="Infrastructure\Logging\Loggers\Logger.cs" />
     <Compile Include="Infrastructure\Logging\Loggers\TextFileLogger.cs" />
     <Compile Include="Infrastructure\Logging\Loggers\TextFileLoggerConfiguration.cs" />
+    <Compile Include="Infrastructure\Logging\Loggers\TextFileLoggerExtensions.cs" />
     <Compile Include="Infrastructure\Logging\Loggers\VoidLogger.cs" />
     <Compile Include="Infrastructure\Parsing\CsvConfiguration.cs" />
     <Compile Include="Infrastructure\Parsing\CsvParser.cs" />

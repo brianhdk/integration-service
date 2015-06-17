@@ -6,6 +6,6 @@ namespace Vertica.Integration.Infrastructure.Parsing
 {
 	public interface ICsvReader
 	{
-        IEnumerable<string[]> Read(Stream stream, Action<CsvConfiguration> builder = null);
+        IEnumerable<string[]> Read(Stream stream, Action<CsvConfiguration> csv = null);
 	}
 }

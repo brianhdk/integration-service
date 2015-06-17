@@ -13,8 +13,12 @@ namespace Vertica.Integration.Model.Web
         private readonly List<Type> _add;
         private readonly List<Type> _remove;
 
-        internal WebApiConfiguration()
+        internal WebApiConfiguration(ApplicationConfiguration configuration)
         {
+            if (configuration == null) throw new ArgumentNullException("configuration");
+
+            Configuration = configuration;
+
             _scan = new List<Assembly>();
             _add = new List<Type>();
             _remove = new List<Type>();
@@ -24,6 +28,8 @@ namespace Vertica.Integration.Model.Web
             // we'll remove TaskController but manually add it later - if we're hosting a specific Task through WebApi.
             Remove<TaskController>();
         }
+
+        public ApplicationConfiguration Configuration { get; private set; }
 
         /// <summary>
         /// Scans the assembly of the defined <typeparamref name="T"></typeparamref> for public classes inheriting <see cref="ApiController"/>.

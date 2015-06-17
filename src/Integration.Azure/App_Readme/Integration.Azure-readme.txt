@@ -7,7 +7,7 @@ class Program
 {
     static void Main(string[] args)
     {
-		using (ApplicationContext context = ApplicationContext.Create(builder => builder
+		using (ApplicationContext context = ApplicationContext.Create(application => application
             .UseAzure(azure => azure
                 .ReplaceArchiveWithBlobStorage(ConnectionString.FromName("AzureBlobStorage.Archive")))))
 		{

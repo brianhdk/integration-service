@@ -144,7 +144,7 @@ namespace ConsoleApplication16
     {
         static void Main(string[] args)
         {
-            IntegrationStartup.Run(args, builder => builder
+            IntegrationStartup.Run(args, application => application
                 .Tasks(tasks => tasks
                     .AddFromAssemblyOfThis<MyFirstTask>()));
         }
@@ -256,7 +256,7 @@ namespace ConsoleApplication16
     {
         static void Main(string[] args)
         {
-            IntegrationStartup.Run(args, builder => builder
+            IntegrationStartup.Run(args, application => application
                 .Tasks(tasks => tasks
                     .Task<MakeDeploymentTask, MakeDeploymentWorkItem>(task => task
                         .Step<CopyWebsiteArtifacts>()
@@ -293,7 +293,7 @@ namespace ConsoleApplication16
     {
         static void Main(string[] args)
         {
-            IntegrationStartup.Run(args, builder => builder
+            IntegrationStartup.Run(args, application => application
                 .Tasks(tasks => tasks
 					.XXX
         }
@@ -322,7 +322,7 @@ As your project grows, you might end up having a lot of Configuration - especial
 Here are some examples of that:
 
 ```c#
-IntegrationStartup.Run(args, builder => builder
+IntegrationStartup.Run(args, application => application
 	.Tasks(tasks => tasks
 		.AddFromAssemblyOfThis<MyFirstTask>()
 		.Task<MakeDeploymentTask, MakeDeploymentWorkItem>(task => task
@@ -359,7 +359,7 @@ public static class TasksConfigurationExtensions
 Which will simplify the overall configuration to this:
 
 ```c#
-IntegrationStartup.Run(args, builder => builder
+IntegrationStartup.Run(args, application => application
 	.SetupTasks());
 ```
 
@@ -382,7 +382,7 @@ public static class MakeDeploymentTaskConfigurationExtensions
 Which will simplify the overall configuration to this:
 
 ```c#
-IntegrationStartup.Run(args, builder => builder
+IntegrationStartup.Run(args, application => application
 	.Tasks(tasks => tasks
 		.MakeDeploymentTask()));
 ```
@@ -507,7 +507,7 @@ namespace ConsoleApplication16
     {
         static void Main(string[] args)
         {
-            IntegrationStartup.Run(args, builder => builder
+            IntegrationStartup.Run(args, application => application
                 .Migration(migration => migration
                     .AddFromNamespaceOfThis<M1434483770_AddCustomTableToIntegrationDb>())
                 .Tasks(tasks => tasks
@@ -614,7 +614,7 @@ namespace ConsoleApplication16
         {
             ConnectionString customDb = ConnectionString.FromName("CustomDb");
 
-            IntegrationStartup.Run(args, builder => builder
+            IntegrationStartup.Run(args, application => application
                 .Database(database => database
                     .AddConnection(new CustomDb(customDb)))
                 .Migration(migration => migration
@@ -718,7 +718,7 @@ namespace ConsoleApplication16
     {
         static void Main(string[] args)
         {
-            IntegrationStartup.Run(args, builder => builder
+            IntegrationStartup.Run(args, application => application
                 .Migration(migration => migration
                     .AddFromNamespaceOfThis<M1434488770_RunImportCatalogTask>())
                 .Tasks(tasks => tasks
@@ -967,7 +967,7 @@ namespace ConsoleApplication16
 	{
 		static void Main(string[] args)
 		{
-			IntegrationStartup.Run(args, builder => builder
+			IntegrationStartup.Run(args, application => application
 				.UsePortal());
 		}
 	}
@@ -1010,7 +1010,7 @@ namespace ConsoleApplication16
 	{
 		static void Main(string[] args)
 		{
-			IntegrationStartup.Run(args, builder => builder
+			IntegrationStartup.Run(args, application => application
 				.Tasks(tasks => tasks
 					.MonitorTask(task => task
 						.IncludeElmah())));
@@ -1050,7 +1050,7 @@ namespace ConsoleApplication16
     {
         static void Main(string[] args)
         {
-            IntegrationStartup.Run(args, builder => builder
+            IntegrationStartup.Run(args, application => application
                 .Database(database => database.DisableIntegrationDb()));
         }
     }
@@ -1098,7 +1098,7 @@ namespace ConsoleApplication16
     {
         static void Main(string[] args)
         {
-            IntegrationStartup.Run(args, builder => builder
+            IntegrationStartup.Run(args, application => application
                 .AddCustomInstaller(new ConventionInstaller()
                     .AddFromAssemblyOfThis<ISomeService>())
                 .Tasks(tasks => tasks
@@ -1157,7 +1157,7 @@ namespace ConsoleApplication16
     {
         static void Main(string[] args)
         {
-            IntegrationStartup.Run(args, builder => builder
+            IntegrationStartup.Run(args, application => application
                 .AddCustomInstaller(new CustomInstaller())
                 .Tasks(tasks => tasks
                     .Task<UseComplexFactoryTask>()));
@@ -1254,7 +1254,7 @@ namespace ConsoleApplication16
     {
         static void Main(string[] args)
         {
-            IntegrationStartup.Run(args, builder => builder
+            IntegrationStartup.Run(args, application => application
                 .Database(database => database
                     .AddConnection(new CustomDb())));
         }
@@ -1346,7 +1346,7 @@ namespace ConsoleApplication16
     {
         static void Main(string[] args)
         {
-            IntegrationStartup.Run(args, builder => builder
+            IntegrationStartup.Run(args, application => application
                 .Tasks(tasks => tasks
                     .MonitorTask(task => task
                         .Step<MonitorLowDiskSpaceStep>())));
@@ -1411,7 +1411,7 @@ namespace ConsoleApplication16
     {
         static void Main(string[] args)
         {
-            IntegrationStartup.Run(args, builder => builder
+            IntegrationStartup.Run(args, application => application
                 .Database(database => database
                     .AddConnection(new UCommerceDb(ConnectionString.FromText("Integrated Security=SSPI;Data Source=.;Database=uCommerceDemoStore"))))
                 .Tasks(tasks => tasks

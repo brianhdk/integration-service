@@ -34,7 +34,7 @@ namespace Vertica.Integration.Infrastructure.Logging
             FormattedMessage = exception.GetFullStacktrace();
         }
 
-        public int Id { get; internal set; }
+        public string Id { get; internal set; }
         public string MachineName { get; private set; }
         public string IdentityName { get; private set; }
         public string CommandLine { get; private set; }

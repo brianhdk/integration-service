@@ -2,7 +2,6 @@
 using System.Data;
 using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Database.Extensions;
-using Vertica.Utilities_v4.Patterns;
 
 namespace Vertica.Integration.Infrastructure.Logging.Loggers
 {
@@ -10,214 +9,115 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
     {
         private readonly IDbFactory _db;
 
-        private readonly ChainOfResponsibilityLink<LogEntry> _chainOfResponsibility;
-
         public DefaultLogger(IDbFactory db)
         {
             _db = db;
-
-            _chainOfResponsibility = ChainOfResponsibility.Empty<LogEntry>()
-                .Chain(new TaskLogLink(_db))
-                .Chain(new StepLogLink(_db))
-                .Chain(new MessageLogLink(_db));
         }
 
-        public override ErrorLog LogError(ITarget target, string message, params object[] args)
+        protected override string Insert(TaskLog log)
         {
-            return Log(new ErrorLog(Severity.Error, String.Format(message, args), target));
+            return Persist(session => session.ExecuteScalar<int>(@"
+INSERT INTO TaskLog (Type, TaskName, TimeStamp, MachineName, IdentityName, CommandLine)
+VALUES ('T', @TaskName, @TimeStamp, @MachineName, @IdentityName, @CommandLine)
+SELECT CAST(SCOPE_IDENTITY() AS INT)",
+                new
+                {
+                    TaskName = log.Name,
+                    log.TimeStamp,
+                    log.MachineName,
+                    log.IdentityName,
+                    log.CommandLine
+                })).ToString();
         }
 
-        public override ErrorLog LogError(Exception exception, ITarget target = null)
+        protected override string Insert(MessageLog log)
         {
-            if (exception == null) throw new ArgumentNullException("exception");
-
-            return Log(new ErrorLog(exception, target));
+            return Persist(session => session.ExecuteScalar<int>(@"
+INSERT INTO TaskLog (Type, TaskName, TimeStamp, StepName, Message, TaskLog_Id, StepLog_Id)
+VALUES ('M', @TaskName, @TimeStamp, @StepName, @Message, @TaskLog_Id, @StepLog_Id)
+SELECT CAST(SCOPE_IDENTITY() AS INT)",
+                new
+                {
+                    TaskName = log.TaskLog.Name,
+                    log.TimeStamp,
+                    StepName = log.StepLog != null ? log.StepLog.Name : null,
+                    log.Message,
+                    TaskLog_Id = log.TaskLog.Id,
+                    StepLog_Id = log.StepLog != null ? log.StepLog.Id : null
+                })).ToString();
         }
 
-        public override ErrorLog LogWarning(ITarget target, string message, params object[] args)
+        protected override string Insert(StepLog log)
         {
-            return Log(new ErrorLog(Severity.Warning, String.Format(message, args), target));
+            return Persist(session => session.ExecuteScalar<int>(@"
+INSERT INTO TaskLog (Type, TaskName, StepName, TimeStamp, TaskLog_Id)
+VALUES ('S', @TaskName, @StepName, @TimeStamp, @TaskLog_Id)
+SELECT CAST(SCOPE_IDENTITY() AS INT)",
+                new
+                {
+                    TaskName = log.TaskLog.Name,
+                    StepName = log.Name,
+                    log.TimeStamp,
+                    TaskLog_Id = log.TaskLog.Id
+                })).ToString();
         }
 
-        public override void LogEntry(LogEntry logEntry)
+        protected override string Insert(ErrorLog log)
         {
-            if (logEntry == null) throw new ArgumentNullException("logEntry");
-
-            if (LoggingDisabled)
-                return;
-
-            _chainOfResponsibility.Handle(logEntry);
+            return Persist(session => session.ExecuteScalar<int>(@"
+INSERT INTO [ErrorLog] (MachineName, IdentityName, CommandLine, Severity, Message, FormattedMessage, TimeStamp, Target)
+VALUES (@MachineName, @IdentityName, @CommandLine, @Severity, @Message, @FormattedMessage, @TimeStamp, @Target)
+SELECT CAST(SCOPE_IDENTITY() AS INT)",
+                new
+                {
+                    log.MachineName,
+                    log.IdentityName,
+                    log.CommandLine,
+                    Severity = log.Severity.ToString(),
+                    log.Message,
+                    log.FormattedMessage,
+                    log.TimeStamp,
+                    Target = log.Target.ToString()
+                })).ToString();
         }
 
-        private ErrorLog Log(ErrorLog errorLog)
+        protected override void Update(TaskLog log)
         {
-            if (LoggingDisabled)
-                return null;
+            Persist(session => session.Execute(@"
+UPDATE TaskLog SET ExecutionTimeSeconds = @ExecutionTimeSeconds, ErrorLog_Id = @ErrorLog_Id WHERE Id = @Id",
+                new
+                {
+                    log.Id,
+                    ExecutionTimeSeconds = log.ExecutionTimeSeconds.GetValueOrDefault(),
+                    ErrorLog_Id = log.ErrorLog != null ? log.ErrorLog.Id : null
+                }));
+        }
+
+        protected override void Update(StepLog log)
+        {
+            Persist(session => session.Execute(@"
+UPDATE TaskLog SET ExecutionTimeSeconds = @ExecutionTimeSeconds, ErrorLog_Id = @ErrorLog_Id WHERE Id = @Id",
+                new
+                {
+                    log.Id,
+                    ExecutionTimeSeconds = log.ExecutionTimeSeconds.GetValueOrDefault(),
+                    ErrorLog_Id = log.ErrorLog != null ? log.ErrorLog.Id : null
+                }));
+        }
+
+        private int Persist(Func<IDbSession, int> persist)
+        {
+            int result;
 
             using (IDbSession session = _db.OpenSession())
             using (IDbTransaction transaction = session.BeginTransaction())
             {
-                errorLog.Id = session.Wrap(s => s.ExecuteScalar<int>(
-                    @"INSERT INTO [ErrorLog] (MachineName, IdentityName, CommandLine, Severity, Message, FormattedMessage, TimeStamp, Target)
-                      VALUES (@MachineName, @IdentityName, @CommandLine, @Severity, @Message, @FormattedMessage, @TimeStamp, @Target)
-                      SELECT CAST(SCOPE_IDENTITY() AS INT)",
-                    new
-                    {
-                        errorLog.MachineName, 
-                        errorLog.IdentityName, 
-                        errorLog.CommandLine,
-                        Severity = errorLog.Severity.ToString(), 
-                        errorLog.Message, 
-                        errorLog.FormattedMessage, 
-                        errorLog.TimeStamp,
-                        Target = errorLog.Target.ToString()
-                    }));
+                result = session.Wrap(persist);
 
                 transaction.Commit();
-
-                return errorLog;
-            }
-        }
-
-        private abstract class LogEntryLink<TLogEntry> : IChainOfResponsibilityLink<LogEntry>
-            where TLogEntry : LogEntry
-        {
-            private readonly IDbFactory _db;
-
-            protected LogEntryLink(IDbFactory db)
-            {
-                _db = db;
             }
 
-            public bool CanHandle(LogEntry context)
-            {
-                return context is TLogEntry;
-            }
-
-            public void DoHandle(LogEntry context)
-            {
-                using (IDbSession session = _db.OpenSession())
-                using (IDbTransaction transaction = session.BeginTransaction())
-                {
-                    if (context.Id == 0)
-                    {
-                        HandleInsert(session, context as TLogEntry);
-                    }
-                    else
-                    {
-                        HandleUpdate(session, context as TLogEntry);
-                    }
-
-                    transaction.Commit();
-                }
-            }
-
-            protected abstract void HandleInsert(IDbSession session, TLogEntry logEntry);
-            protected abstract void HandleUpdate(IDbSession session, TLogEntry logEntry);
-        }
-
-        private class MessageLogLink : LogEntryLink<MessageLog>
-        {
-            public MessageLogLink(IDbFactory db)
-                : base(db)
-            {
-            }
-
-            protected override void HandleInsert(IDbSession session, MessageLog logEntry)
-            {
-                logEntry.Id = session.Wrap(s => s.ExecuteScalar<int>(
-                    @"INSERT INTO TaskLog (Type, TaskName, TimeStamp, StepName, Message, TaskLog_Id, StepLog_Id)
-                      VALUES ('M', @TaskName, @TimeStamp, @StepName, @Message, @TaskLog_Id, @StepLog_Id)
-                      SELECT CAST(SCOPE_IDENTITY() AS INT)",
-                    new
-                    {
-                        logEntry.TaskName,
-                        logEntry.TimeStamp,
-                        logEntry.StepName,
-                        logEntry.Message,
-                        TaskLog_Id = logEntry.TaskLog.Id,
-                        StepLog_Id = logEntry.StepLog != null ? logEntry.StepLog.Id : default(int?)
-                    }));
-            }
-
-            protected override void HandleUpdate(IDbSession session, MessageLog logEntry)
-            {
-                throw new NotSupportedException();
-            }
-        }
-
-        private class StepLogLink : LogEntryLink<StepLog>
-        {
-            public StepLogLink(IDbFactory db)
-                : base(db)
-            {
-            }
-
-            protected override void HandleInsert(IDbSession session, StepLog logEntry)
-            {
-                logEntry.Id = session.Wrap(s => s.ExecuteScalar<int>(
-                    @"INSERT INTO TaskLog (Type, TaskName, StepName, TimeStamp, TaskLog_Id, ErrorLog_Id)
-                      VALUES ('S', @TaskName, @StepName, @TimeStamp, @TaskLog_Id, @ErrorLog_Id)
-                      SELECT CAST(SCOPE_IDENTITY() AS INT)",
-                    new
-                    {
-                        logEntry.TaskName,
-                        logEntry.StepName,
-                        logEntry.TimeStamp,
-                        TaskLog_Id = logEntry.TaskLog.Id,
-                        ErrorLog_Id = logEntry.ErrorLog != null ? logEntry.ErrorLog.Id : default(int?),
-
-                    }));
-            }
-
-            protected override void HandleUpdate(IDbSession session, StepLog logEntry)
-            {
-                session.Execute(
-                    @"UPDATE TaskLog SET ExecutionTimeSeconds = @ExecutionTimeSeconds, ErrorLog_Id = @ErrorLog_Id WHERE Id = @Id",
-                    new
-                    {
-                        logEntry.Id,
-                        ExecutionTimeSeconds = logEntry.ExecutionTimeSeconds.GetValueOrDefault(),
-                        ErrorLog_Id = logEntry.ErrorLog != null ? logEntry.ErrorLog.Id : default(int?)
-                    });
-            }
-        }
-
-        private class TaskLogLink : LogEntryLink<TaskLog>
-        {
-            public TaskLogLink(IDbFactory db)
-                : base(db)
-            {
-            }
-
-            protected override void HandleInsert(IDbSession session, TaskLog logEntry)
-            {
-                logEntry.Id = session.Wrap(s => s.ExecuteScalar<int>(
-                    @"INSERT INTO TaskLog (Type, TaskName, TimeStamp, MachineName, IdentityName, CommandLine, ErrorLog_Id)
-                      VALUES ('T', @TaskName, @TimeStamp, @MachineName, @IdentityName, @CommandLine, @ErrorLog_Id)
-                      SELECT CAST(SCOPE_IDENTITY() AS INT)",
-                    new
-                    {
-                        logEntry.TaskName,
-                        logEntry.TimeStamp,
-                        logEntry.MachineName,
-                        logEntry.IdentityName,
-                        logEntry.CommandLine,
-                        ErrorLog_Id = logEntry.ErrorLog != null ? logEntry.ErrorLog.Id : default(int?)
-                    }));
-            }
-
-            protected override void HandleUpdate(IDbSession session, TaskLog logEntry)
-            {
-                session.Execute(
-                    @"UPDATE TaskLog SET ExecutionTimeSeconds = @ExecutionTimeSeconds, ErrorLog_Id = @ErrorLog_Id WHERE Id = @Id",
-                    new
-                    {
-                        logEntry.Id,
-                        ExecutionTimeSeconds = logEntry.ExecutionTimeSeconds.GetValueOrDefault(),
-                        ErrorLog_Id = logEntry.ErrorLog != null ? logEntry.ErrorLog.Id : default(int?)
-                    });
-            }
+            return result;
         }
     }
 }

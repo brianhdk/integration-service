@@ -74,6 +74,7 @@
     <Compile Include="HelloTask.cs" />
     <Compile Include="TaskWithSteps.cs" />
     <Compile Include="TaskWorkItem.cs" />
+    <Compile Include="TextFileLoggerTesterTask.cs" />
     <Compile Include="XssTestingStep.cs" />
   </ItemGroup>
   <ItemGroup>

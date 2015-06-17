@@ -18,7 +18,6 @@ namespace Vertica.Integration.Infrastructure.Logging
 		private readonly IList<MessageLog> _messages;
 
 	    internal TaskLog(ITask task, Action<LogEntry> persist, Output output)
-			: base(task.Name())
 		{
 		    if (persist == null) throw new ArgumentNullException("persist");
 		    if (output == null) throw new ArgumentNullException("output");
@@ -29,18 +28,19 @@ namespace Vertica.Integration.Infrastructure.Logging
 			_steps = new List<StepLog>();
 			_messages = new List<MessageLog>();
 
+	        Name = task.Name();
+
             MachineName = Environment.MachineName;
             IdentityName = WindowsUtils.GetIdentityName();
             CommandLine = Environment.CommandLine.MaxLength(4000);
 
 			Persist(this);
-            _output.Message(TaskName);
+	        _output.Message(Name);
 		}
 
-		public string Message { get; protected set; }
-		public string StepName { get; protected set; }
+	    public string Name { get; private set; }
 
-        public string MachineName { get; private set; }
+		public string MachineName { get; private set; }
         public string IdentityName { get; private set; }
         public string CommandLine { get; private set; }
 
@@ -54,7 +54,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 			get { return _messages.EmptyIfNull().Any() ? new ReadOnlyCollection<MessageLog>(_messages) : new ReadOnlyCollection<MessageLog>(new List<MessageLog>()); }
 		}
 
-		public ErrorLog ErrorLog { get; protected internal set; }
+		public ErrorLog ErrorLog { get; internal set; }
 
 		public StepLog LogStep(IStep step)
 		{

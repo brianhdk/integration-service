@@ -1,10 +1,15 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.IO;
 
 namespace Vertica.Integration.Infrastructure.Logging.Loggers
 {
-    [Guid("EF983E34-2023-444D-999D-DBA23F990893")]
     public class TextFileLoggerConfiguration
     {
-        
+        public TextFileLoggerConfiguration Location(DirectoryInfo location)
+        {
+            if (location == null) throw new ArgumentNullException("location");
+
+            return this;
+        }
     }
 }

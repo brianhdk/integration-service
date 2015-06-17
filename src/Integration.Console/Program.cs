@@ -1,14 +1,4 @@
-﻿using Vertica.Integration.Domain.Core;
-using Vertica.Integration.Domain.Monitoring;
-using Vertica.Integration.Experiments;
-using Vertica.Integration.Experiments.Migrations;
-using Vertica.Integration.Experiments.Migrations.CustomDb;
-using Vertica.Integration.Experiments.Migrations.IntegrationDb;
-using Vertica.Integration.Infrastructure;
-using Vertica.Integration.Infrastructure.Database.Migrations;
-using Vertica.Integration.Infrastructure.Logging.Loggers;
-using Vertica.Integration.Logging.Elmah;
-using Vertica.Integration.Portal;
+﻿using Vertica.Integration.Experiments;
 
 namespace Vertica.Integration.Console
 {
@@ -16,24 +6,8 @@ namespace Vertica.Integration.Console
 	{
 		private static void Main(string[] args)
 		{
-			using (ApplicationContext context = ApplicationContext.Create(builder => builder
-                //.UseAzure(azure => azure
-                //    .ReplaceArchiveWithBlobStorage(ConnectionString.FromName("AzureBlobStorage.Archive")))))
-                //.UsePortal()
-                //.Logger(logger => logger.Use<VoidLogger>())
-                //.Database(db => db
-                //    .DisableIntegrationDb())
-                    //.AddConnection(new CustomDb(builder.DatabaseConnectionString)))
-                //.Tasks(tasks => tasks
-                //    .AddFromAssemblyOfThis<HelloTask>()
-                //    .MonitorTask(task => task
-                //        .Clear()
-                //        .IncludeElmah())
-                //    .MaintenanceTask(task => task
-                //        .IncludeElmah()))
-                .Migration(migration => migration
-                    .AddFromNamespaceOfThis<M1431659519_CustomDbVoid>(DatabaseServer.SqlServer2014, ConnectionString.FromText("Integrated Security=SSPI;Data Source=maersk-sql01.vertica.dk;Database=Documentation_CustomDb"))
-                    .AddFromNamespaceOfThis<M1427839041_SetupMonitorConfiguration>())))
+			using (ApplicationContext context = ApplicationContext.Create(application => application
+                .TestTextFileLogger()))
 			{
 			    context.Execute(args);
 			}

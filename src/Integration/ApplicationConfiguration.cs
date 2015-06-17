@@ -17,7 +17,7 @@ namespace Vertica.Integration
         private readonly List<IWindsorInstaller> _customInstallers;
         private readonly DatabaseConfiguration _database;
         private readonly TasksConfiguration _tasks;
-        private readonly LoggerConfiguration _logger;
+        private readonly LoggingConfiguration _logging;
         private readonly WebApiConfiguration _webApi;
         private readonly MigrationConfiguration _migration;
 
@@ -27,9 +27,9 @@ namespace Vertica.Integration
 
             _customInstallers = new List<IWindsorInstaller>();
             _database = new DatabaseConfiguration(this);
-            _tasks = new TasksConfiguration();
-            _logger = new LoggerConfiguration();
-            _webApi = new WebApiConfiguration();
+            _tasks = new TasksConfiguration(this);
+            _logging = new LoggingConfiguration(this);
+            _webApi = new WebApiConfiguration(this);
             _migration = new MigrationConfiguration(this);
         }
 
@@ -60,10 +60,10 @@ namespace Vertica.Integration
             return this;
         }
 
-        public ApplicationConfiguration Logger(Action<LoggerConfiguration> logger)
+        public ApplicationConfiguration Logging(Action<LoggingConfiguration> logger)
         {
             if (logger != null)
-                logger(_logger);
+                logger(_logging);
 
             return this;
         }
@@ -111,7 +111,7 @@ namespace Vertica.Integration
             {
                 yield return _database;
                 yield return _tasks;
-                yield return _logger;
+                yield return _logging;
                 yield return _webApi;
                 yield return _migration;
                 yield return this;

@@ -12,7 +12,6 @@ namespace Vertica.Integration.Infrastructure.Logging
 		private readonly IList<MessageLog> _messages;
 
 		internal StepLog(TaskLog taskLog, IStep step, Output output)
-			: base(taskLog.TaskName)
 		{
 			if (taskLog == null) throw new ArgumentNullException("taskLog");
 		    if (step == null) throw new ArgumentNullException("step");
@@ -22,14 +21,15 @@ namespace Vertica.Integration.Infrastructure.Logging
 			_messages = new List<MessageLog>();
 
             TaskLog = taskLog;
-		    StepName = step.Name();
+		    Name = step.Name();
 
             TaskLog.Persist(this);
-            _output.Message(StepName);
+            _output.Message(Name);
 		}
 
 		public TaskLog TaskLog { get; private set; }
-		public string StepName { get; private set; }
+		public string Name { get; private set; }
+
 		public ErrorLog ErrorLog { get; internal set; }
 
 		public ReadOnlyCollection<MessageLog> Messages

@@ -7,14 +7,14 @@ namespace Vertica.Integration.Infrastructure.Parsing
 {
 	public class CsvReader : ICsvReader
 	{
-		public IEnumerable<string[]> Read(Stream stream, Action<CsvConfiguration> builder = null)
+		public IEnumerable<string[]> Read(Stream stream, Action<CsvConfiguration> csv = null)
 		{
 		    if (stream == null) throw new ArgumentNullException("stream");
 
 		    var configuration = new CsvConfiguration();
 
-		    if (builder != null)
-		        builder(configuration);
+		    if (csv != null)
+		        csv(configuration);
 
 			using (var parser = new TextFieldParser(stream, configuration.Encoding))
 			{

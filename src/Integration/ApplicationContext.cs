@@ -17,12 +17,12 @@ namespace Vertica.Integration
         private readonly IWindsorContainer _container;
         private readonly StartupAction[] _starters;
 
-        private ApplicationContext(Action<ApplicationConfiguration> builder)
+        private ApplicationContext(Action<ApplicationConfiguration> application)
         {
             var configuration = new ApplicationConfiguration();
 
-            if (builder != null)
-                builder(configuration);
+            if (application != null)
+                application(configuration);
 
             if (configuration.IgnoreSslErrors)
 			    ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
@@ -42,14 +42,14 @@ namespace Vertica.Integration
             };
 		}
 
-	    public static ApplicationContext Create(Action<ApplicationConfiguration> builder = null)
+	    public static ApplicationContext Create(Action<ApplicationConfiguration> application = null)
 	    {
             if (EnsureSingleton.IsValueCreated)
 			    throw new InvalidOperationException("An instance of ApplicationContext has already been created.");
 
 	        EnsureSingleton.Value();
 
-	        return new ApplicationContext(builder);
+	        return new ApplicationContext(application);
 	    }
 
         public void Execute(params string[] args)

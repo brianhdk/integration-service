@@ -16,7 +16,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
             _csvReader = csvReader;
         }
 
-        public IEnumerable<CsvRow> Parse(Stream stream, bool firstLineIsHeader, Action<CsvConfiguration> builder = null)
+        public IEnumerable<CsvRow> Parse(Stream stream, bool firstLineIsHeader, Action<CsvConfiguration> csv = null)
 		{
 	        if (stream == null) throw new ArgumentNullException("stream");
 
@@ -24,8 +24,8 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
             string[][] lines = _csvReader.Read(stream, configuration =>
             {
-                if (builder != null)
-                    builder(configuration);
+                if (csv != null)
+                    csv(configuration);
 
                 delimiter = configuration.Delimiter;
 
