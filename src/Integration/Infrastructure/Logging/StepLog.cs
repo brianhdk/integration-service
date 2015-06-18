@@ -51,5 +51,10 @@ namespace Vertica.Integration.Infrastructure.Logging
 
 			TaskLog.Persist(this);
 		}
+
+        public override string ToString()
+        {
+            return Name;
+        }
 	}
 }

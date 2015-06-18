@@ -22,8 +22,6 @@ namespace Vertica.Integration.Experiments
 
         public override void StartTask(ITaskExecutionContext context)
         {
-            string s = "";
-
             using (IDbSession session = _integrationDb.OpenSession())
             using (IDbTransaction transaction = session.Connection.BeginTransaction())
             {

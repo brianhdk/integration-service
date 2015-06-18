@@ -88,5 +88,10 @@ namespace Vertica.Integration.Infrastructure.Logging
 
 			Persist(this);
 		}
+
+	    public override string ToString()
+	    {
+	        return Name;
+	    }
 	}
 }

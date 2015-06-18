@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Threading;
+using System.Text;
 
 namespace Vertica.Integration.Infrastructure.Logging.Loggers
 {
@@ -18,67 +18,132 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
 
         protected override string Insert(TaskLog log)
         {
-            Thread.Sleep(1);
+            FileInfo filePath = EnsureFilePath(log);
 
-            string fileName = String.Format("{0:yyyyMMddHHmmss-fff}-{1}.txt", log.TimeStamp.LocalDateTime, log.Name);
-
-            File.WriteAllText(fileName, String.Join(Environment.NewLine,
+            File.WriteAllText(filePath.FullName, String.Join(Environment.NewLine,
                 log.MachineName,
                 log.IdentityName,
                 log.CommandLine,
-                Environment.NewLine,
-                Line(log, log.Name)));
+                String.Empty,
+                "---- BEGIN LOG",
+                Line(log, "[{0}] Started", log.Name)));
 
-            return fileName;
-        }
-
-        protected override string Insert(MessageLog log)
-        {
-            File.AppendAllText(log.TaskLog.Id, Line(log, log.Message));
-
-            return log.TaskLog.Id;
+            return filePath.Name;
         }
 
         protected override string Insert(StepLog log)
         {
-            File.AppendAllText(log.TaskLog.Id, Line(log, log.Name));
+            FileInfo filePath = EnsureFilePath(log.TaskLog);
+
+            File.AppendAllText(filePath.FullName, Line(log, "[{0}] Started", log.Name));
+
+            return log.TaskLog.Id;
+        }
+
+        protected override string Insert(MessageLog log)
+        {
+            FileInfo filePath = EnsureFilePath(log.TaskLog);
+
+            string source = ((LogEntry)log.StepLog ?? log.TaskLog).ToString(); 
+
+            File.AppendAllText(filePath.FullName, Line(log, "[{0}] {1}", source, log.Message));
 
             return log.TaskLog.Id;
         }
 
         protected override string Insert(ErrorLog log)
         {
-            Thread.Sleep(1);
+            FileInfo filePath = EnsureFilePath(log);
 
-            string fileName = String.Format("ERROR-{0:yyyyMMddHHmmss-fff}-{1}.txt", log.TimeStamp.LocalDateTime, log.Target);
-
-            // TODO: Timestamp
-
-            File.WriteAllText(fileName, String.Join(Environment.NewLine,
+            File.WriteAllText(filePath.FullName, String.Join(Environment.NewLine,
                 log.MachineName,
                 log.IdentityName,
                 log.CommandLine,
+                log.Severity,
+                log.Target,
+                log.TimeStamp,
+                String.Empty,
+                "---- BEGIN LOG",
+                String.Empty,
                 log.Message,
+                String.Empty,
                 log.FormattedMessage));
 
-            return fileName;
+            return filePath.Name;
         }
 
         protected override void Update(TaskLog log)
         {
-            File.AppendAllText(log.Id, Line(log, "Task execution time: {0} seconds", log.ExecutionTimeSeconds));
+            FileInfo filePath = EnsureFilePath(log);
+
+            var sb = new StringBuilder();
+
+            if (log.ErrorLog != null)
+            {
+                sb.Append(Line(log.ErrorLog.TimeStamp, "[{0}]: {1} (ID: {2})",
+                    log.ErrorLog.Severity,
+                    log.ErrorLog.Message,
+                    log.ErrorLog.Id));
+            }
+
+            sb.Append(Line(log, "[{0}] Execution time: {1} seconds", log.Name, log.ExecutionTimeSeconds));
+
+            File.AppendAllText(filePath.FullName, sb.ToString());
         }
 
         protected override void Update(StepLog log)
         {
-            File.AppendAllText(log.TaskLog.Id, Line(log, "Step execution time: {0} seconds", log.ExecutionTimeSeconds));
+            FileInfo filePath = EnsureFilePath(log.TaskLog);
+
+            var sb = new StringBuilder();
+
+            if (log.ErrorLog != null)
+            {
+                sb.Append(Line(log.ErrorLog.TimeStamp, "[{0}]: {1} (ID: {2})",
+                    log.ErrorLog.Severity,
+                    log.ErrorLog.Message,
+                    log.ErrorLog.Id));
+            }
+
+            sb.Append(Line(log, "[{0}] Execution time: {1} seconds", log.Name, log.ExecutionTimeSeconds));
+
+            File.AppendAllText(filePath.FullName, sb.ToString());
+        }
+
+        private FileInfo EnsureFilePath(TaskLog log)
+        {
+            return EnsureFilePath(_configuration.GetFilePath(log));
+        }
+
+        private FileInfo EnsureFilePath(ErrorLog log)
+        {
+            return EnsureFilePath(_configuration.GetFilePath(log));
+        }
+
+        private FileInfo EnsureFilePath(FileInfo filePath)
+        {
+            if (filePath == null) throw new ArgumentNullException("filePath");
+
+            DirectoryInfo directory = filePath.Directory;
+
+            if (directory == null)
+                throw new InvalidOperationException(
+                    String.Format("No directory specified for path '{0}'.", filePath.FullName));
+
+            if (!directory.Exists)
+                directory.Create();
+
+            return filePath;
         }
 
         private string Line(LogEntry log, string text, params object[] args)
         {
-            return String.Concat(Environment.NewLine, String.Format("[{0:HH:mm:ss}] {1}",
-                log.TimeStamp,
-                String.Format(text, args)));
+            return Line(log.TimeStamp, text, args);
+        }
+
+        private string Line(DateTimeOffset timestamp, string text, params object[] args)
+        {
+            return String.Concat(Environment.NewLine, String.Format("[{0:HH:mm:ss}] {1}", timestamp.LocalDateTime, String.Format(text, args)));
         }
     }
 }
