@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Castle.Core.Internal;
+using Vertica.Integration.Infrastructure.Database.Migrations;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Infrastructure.Logging.Loggers;
 using Vertica.Integration.Model;
@@ -95,6 +96,7 @@ namespace Vertica.Integration.Experiments
             Directory.EnumerateFiles(@"D:\github\integration-service\src\Integration.Console\bin\Debug\Logs").ForEach(File.Delete);
 
             return application
+                .Database(database => database.DisableIntegrationDb())
                 .Logging(logger => logger
                     .UseTextFileLogger(/*textFile => textFile
                         .ToLocation(new DirectoryInfo(@"c:\tmp"))

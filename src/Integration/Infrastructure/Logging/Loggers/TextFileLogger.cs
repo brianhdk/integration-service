@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -9,6 +10,8 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
     /// </summary>
     public class TextFileLogger : Logger
     {
+        private static readonly CultureInfo English = CultureInfo.GetCultureInfo("en-US");
+
         private readonly TextFileLoggerConfiguration _configuration;
 
         public TextFileLogger(TextFileLoggerConfiguration configuration = null)
@@ -26,7 +29,7 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
                 log.CommandLine,
                 String.Empty,
                 "---- BEGIN LOG",
-                Line(log, "[{0}] Started", log.Name)));
+                Line(log, "[{0}]", log.Name)));
 
             return filePath.Name;
         }
@@ -35,7 +38,7 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
         {
             FileInfo filePath = EnsureFilePath(log.TaskLog);
 
-            File.AppendAllText(filePath.FullName, Line(log, "[{0}] Started", log.Name));
+            File.AppendAllText(filePath.FullName, Line(log, "[{0}]", log.Name));
 
             return log.TaskLog.Id;
         }
@@ -79,14 +82,9 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
             var sb = new StringBuilder();
 
             if (log.ErrorLog != null)
-            {
-                sb.Append(Line(log.ErrorLog.TimeStamp, "[{0}]: {1} (ID: {2})",
-                    log.ErrorLog.Severity,
-                    log.ErrorLog.Message,
-                    log.ErrorLog.Id));
-            }
+                sb.Append(ErrorLine(log.ErrorLog, log.Name));
 
-            sb.Append(Line(log, "[{0}] Execution time: {1} seconds", log.Name, log.ExecutionTimeSeconds));
+            sb.Append(EndLine(log, log.Name));
 
             File.AppendAllText(filePath.FullName, sb.ToString());
         }
@@ -98,14 +96,9 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
             var sb = new StringBuilder();
 
             if (log.ErrorLog != null)
-            {
-                sb.Append(Line(log.ErrorLog.TimeStamp, "[{0}]: {1} (ID: {2})",
-                    log.ErrorLog.Severity,
-                    log.ErrorLog.Message,
-                    log.ErrorLog.Id));
-            }
+                sb.Append(ErrorLine(log.ErrorLog, log.Name));
 
-            sb.Append(Line(log, "[{0}] Execution time: {1} seconds", log.Name, log.ExecutionTimeSeconds));
+            sb.Append(EndLine(log, log.Name));
 
             File.AppendAllText(filePath.FullName, sb.ToString());
         }
@@ -145,5 +138,20 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
         {
             return String.Concat(Environment.NewLine, String.Format("[{0:HH:mm:ss}] {1}", timestamp.LocalDateTime, String.Format(text, args)));
         }
+
+        private string EndLine(LogEntry log, string name)
+        {
+            return Line(log, "[{0}] Execution time: {1} second(s)", name, log.ExecutionTimeSeconds.GetValueOrDefault().ToString(English));
+        }
+
+        private string ErrorLine(ErrorLog error, string name)
+        {
+            return Line(error.TimeStamp, "[{0}] [{1}]: {2} (ID: {3})",
+                name,
+                error.Severity,
+                error.Message,
+                error.Id);
+        }
+
     }
 }

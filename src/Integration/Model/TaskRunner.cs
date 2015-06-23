@@ -80,8 +80,7 @@ namespace Vertica.Integration.Model
 							taskLog.ErrorLog = errorLog;
 							stepLog.ErrorLog = errorLog;
 
-							throw new TaskExecutionFailedException(
-                                String.Format("Step '{0}' failed.", stepLog.Name), ex);
+							throw new TaskExecutionFailedException(String.Format("Step '{0}' failed.", stepLog.Name), ex);
 						}
 					}
 				}

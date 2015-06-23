@@ -1,7 +1,4 @@
 ﻿using System;
-using Castle.MicroKernel.Registration;
-using Castle.MicroKernel.SubSystems.Configuration;
-using Castle.Windsor;
 
 namespace Vertica.Integration.Infrastructure.Logging.Loggers
 {
@@ -16,27 +13,10 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
             if (textFileLogger != null)
                 textFileLogger(configuration);
 
-            logging.Application.AddCustomInstaller(new ConfigurationInstaller(configuration));
+            logging.Application.RegisterDependency(configuration);
             logging.Use<TextFileLogger>();
 
             return logging;
-        }
-
-        private class ConfigurationInstaller : IWindsorInstaller
-        {
-            private readonly TextFileLoggerConfiguration _configuration;
-
-            public ConfigurationInstaller(TextFileLoggerConfiguration configuration)
-            {
-                _configuration = configuration;
-            }
-
-            public void Install(IWindsorContainer container, IConfigurationStore store)
-            {
-                container.Register(
-                    Component.For<TextFileLoggerConfiguration>()
-                        .UsingFactoryMethod(() => _configuration));
-            }
         }
     }
 }

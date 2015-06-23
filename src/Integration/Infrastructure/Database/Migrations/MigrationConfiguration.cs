@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using FluentMigrator;
+using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
@@ -87,9 +87,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
         void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
         {
-            container.Register(
-                Component.For<MigrationConfiguration>()
-                    .UsingFactoryMethod(() => this));
+            container.Install(new SingletonInstanceInstaller<MigrationConfiguration>(this));
         }
     }
 }

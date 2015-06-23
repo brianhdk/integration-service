@@ -5,6 +5,7 @@ using Castle.Windsor;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Database.Migrations;
+using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Web;
@@ -50,6 +51,13 @@ namespace Vertica.Integration
                 _customInstallers.AddRange(installers.SkipNulls());
 
             return this;
+        }
+
+        public ApplicationConfiguration RegisterDependency<T>(T singletonInstance) where T : class
+        {
+            if (singletonInstance == null) throw new ArgumentNullException("singletonInstance");
+
+            return AddCustomInstaller(new SingletonInstanceInstaller<T>(singletonInstance));
         }
 
         public ApplicationConfiguration Tasks(Action<TasksConfiguration> tasks)
