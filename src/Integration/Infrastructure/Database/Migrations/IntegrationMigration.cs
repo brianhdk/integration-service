@@ -1,26 +1,18 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Configuration;
-using Castle.Windsor;
+using Castle.MicroKernel;
 using FluentMigrator;
 using Vertica.Integration.Infrastructure.Configuration;
-using Vertica.Integration.Infrastructure.Factories;
 using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
     public abstract class IntegrationMigration : Migration
     {
-        private readonly IWindsorContainer _factory;
-
-        protected IntegrationMigration()
-        {
-            _factory = ObjectFactory.Instance;
-        }
-
         protected T Resolve<T>()
         {
-            return _factory.Resolve<T>();
+            return Kernel.Resolve<T>();
         }
 
         protected IConfigurationService ConfigurationService
@@ -84,6 +76,11 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
         {
             ITask task = Resolve<ITaskFactory>().Get<TTask>();
             Resolve<ITaskRunner>().Execute(task);
+        }
+
+        private IKernel Kernel
+        {
+            get { return ApplicationContext as IKernel; }
         }
     }
 }

@@ -51,10 +51,7 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
                     .WithServiceSelf()
                     .LifestyleTransient());
 
-            container.Register(
-                Component.For<IWebApiControllers>()
-                    .UsingFactoryMethod(x => new ControllerTypes(types.ToArray()))
-                    .LifeStyle.Singleton);
+            container.RegisterInstance<IWebApiControllers>(new ControllerTypes(types.ToArray()));
         }
 
         private class ControllerTypes : IWebApiControllers

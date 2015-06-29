@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using NSubstitute;
 using NUnit.Framework;
+using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Exceptions;
@@ -31,8 +32,8 @@ namespace Vertica.Integration.Tests.Model
 			subject.Execute(task);
 
 			logger.Received().LogEntry(Arg.Any<TaskLog>());
-			logger.Received().LogEntry(Arg.Is<StepLog>(x => x.Name == TaskRunner.GetStepName(step1)));
-			logger.Received().LogEntry(Arg.Is<StepLog>(x => x.Name == TaskRunner.GetStepName(step2)));
+			logger.Received().LogEntry(Arg.Is<StepLog>(x => x.Name == step1.Name()));
+			logger.Received().LogEntry(Arg.Is<StepLog>(x => x.Name == step2.Name()));
 
             step1.Received().Execute(workItem, Arg.Any<ITaskExecutionContext>());
             step2.Received().Execute(workItem, Arg.Any<ITaskExecutionContext>());
@@ -65,7 +66,7 @@ namespace Vertica.Integration.Tests.Model
 			Assert.That(thrownException.InnerException, Is.EqualTo(throwingException));
 
 			logger.Received().LogEntry(Arg.Any<TaskLog>());
-			logger.Received().LogEntry(Arg.Is<StepLog>(x => x.Name == TaskRunner.GetStepName(step1)));
+			logger.Received().LogEntry(Arg.Is<StepLog>(x => x.Name == step1.Name()));
 
             step1.Received().Execute(workItem, Arg.Any<ITaskExecutionContext>());
             step2.DidNotReceive().Execute(workItem, Arg.Any<ITaskExecutionContext>());

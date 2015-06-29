@@ -51,18 +51,18 @@ namespace Vertica.Integration.Model
         /// <typeparam name="TTask">Specifies the <see cref="Model.Task{TWorkItem}"/> to be added.</typeparam>
         /// <typeparam name="TWorkItem">Specifies the WorkItem that is used by this Task.</typeparam>
         /// <param name="task">Required in order to register one or more <see cref="Step{TWorkItem}"/></param> sequentially executed by this Task.
-        public TasksConfiguration Task<TTask, TWorkItem>(Action<TaskConfiguration<TWorkItem>> task)
+        public TasksConfiguration Task<TTask, TWorkItem>(Action<TaskConfiguration<TWorkItem>> task = null)
             where TTask : Task<TWorkItem>
         {
-            if (task == null) throw new ArgumentNullException("task");
-
             var configuration = new TaskConfiguration<TWorkItem>(typeof (TTask));
 
-            task(configuration);
+            if (task != null)
+                task(configuration);
 
             if (_complexTasks.Contains(configuration))
-                throw new NotSupportedException(
-                    String.Format(@"Task '{0}' has already been added.", configuration.Task.Name));
+                throw new InvalidOperationException(
+                    String.Format(@"Task '{0}' has already been added.", 
+                        configuration.Task.FullName));
 
             _complexTasks.Add(configuration);
 

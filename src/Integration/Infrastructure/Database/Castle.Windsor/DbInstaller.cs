@@ -23,7 +23,7 @@ namespace Vertica.Integration.Infrastructure.Database.Castle.Windsor
 
 		    container.Register(
 		        Component.For<IDbFactory>()
-		            .UsingFactoryMethod(x => new DbFactory(x.Resolve<IDbFactory<DefaultConnection>>())));
+		            .UsingFactoryMethod(kernel => new DbFactory(kernel.Resolve<IDbFactory<DefaultConnection>>())));
 		}
 	}
 

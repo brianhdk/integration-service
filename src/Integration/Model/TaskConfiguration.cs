@@ -15,7 +15,7 @@ namespace Vertica.Integration.Model
             Steps = new List<Type>();
         }
 
-        public Type Task { get; private set; }
+        internal Type Task { get; private set; }
         protected List<Type> Steps { get; private set; }
 
         internal abstract IWindsorInstaller GetInstaller();
@@ -41,7 +41,7 @@ namespace Vertica.Integration.Model
         }
     }
 
-    public class TaskConfiguration<TWorkItem> : TaskConfiguration
+    public sealed class TaskConfiguration<TWorkItem> : TaskConfiguration
     {
         internal TaskConfiguration(Type task)
             : base(task)

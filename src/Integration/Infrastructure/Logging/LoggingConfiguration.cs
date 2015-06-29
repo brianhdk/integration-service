@@ -2,6 +2,7 @@
 using System.IO;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
+using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Infrastructure.Logging.Loggers;
 
 namespace Vertica.Integration.Infrastructure.Logging
@@ -29,6 +30,16 @@ namespace Vertica.Integration.Infrastructure.Logging
             return this;
         }
 
+        public LoggingConfiguration NullLogger()
+        {
+            return Use<NullLogger>();
+        }
+
+        public LoggingConfiguration EventLogger()
+        {
+            return Use<EventLogger>();
+        }
+
         public LoggingConfiguration Console(TextWriter writer)
         {
             if (writer == null) throw new ArgumentNullException("writer");
@@ -40,18 +51,9 @@ namespace Vertica.Integration.Infrastructure.Logging
 
         void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
         {
-            container.Register(
-                Component.For<ILogger>()
-                    .ImplementedBy(_logger));
+            container.Register(Component.For<ILogger>().ImplementedBy(_logger));
 
-            // TODO: Find a way for the Console to know whether it should be Console.Out or TextWriter.Null
-            //  - windows task scheduler should be null (perhaps?)
-            //  - windows service should be null => RunTaskFromWindowsService
-            //  - webapi should be null => StartWebApiHost
-
-            container.Register(
-                Component.For<TextWriter>()
-                    .UsingFactoryMethod(() => _console ?? System.Console.Out));
+            container.RegisterInstance(_console ?? System.Console.Out);
         }
     }
 }

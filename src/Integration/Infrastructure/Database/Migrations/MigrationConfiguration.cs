@@ -87,7 +87,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
         void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
         {
-            container.Install(new SingletonInstanceInstaller<MigrationConfiguration>(this));
+            container.RegisterInstance(this);
         }
     }
 }

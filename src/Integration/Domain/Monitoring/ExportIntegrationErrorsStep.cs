@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Vertica.Integration.Infrastructure.Database;
+using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Exceptions;
@@ -85,10 +86,10 @@ ORDER BY ErrorLog.Id DESC",
                         {
                             error.TaskDescription = task.Description;
 
-                            var step =
+                            IStep step =
                                 task.Steps.EmptyIfNull()
                                     .SingleOrDefault(x =>
-                                        String.Equals(TaskRunner.GetStepName(x), error.StepName,
+                                        String.Equals(x.Name(), error.StepName,
                                             StringComparison.OrdinalIgnoreCase));
 
                             if (step != null)

@@ -100,12 +100,5 @@ namespace Vertica.Integration.Model
 
             return new TaskExecutionResult(output.ToArray());
 		}
-
-		internal static string GetStepName(IStep step)
-		{
-			if (step == null) throw new ArgumentNullException("step");
-
-			return step.GetType().Name;
-		}
 	}
 }

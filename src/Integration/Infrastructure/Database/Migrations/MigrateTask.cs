@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using Castle.MicroKernel;
 using FluentMigrator;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Announcers;
@@ -17,12 +18,14 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
     public class MigrateTask : Task
     {
+        private readonly IKernel _kernel;
         private readonly MigrationTarget[] _targets;
         private readonly IDisposable _loggingDisabler;
         private readonly bool _databaseCreated;
 
-        public MigrateTask(Lazy<IDbFactory> db, ILogger logger, MigrationConfiguration configuration)
+        public MigrateTask(Lazy<IDbFactory> db, ILogger logger, IKernel kernel, MigrationConfiguration configuration)
         {
+            _kernel = kernel;
             _targets = configuration.CustomTargets;
 
             if (!configuration.IntegrationDbDisabled)
@@ -155,7 +158,7 @@ ELSE
             }
         }
 
-        private static MigrationRunner CreateRunner(MigrationTarget target, out StringBuilder output)
+        private MigrationRunner CreateRunner(MigrationTarget target, out StringBuilder output)
         {
             var sb = output = new StringBuilder();
 
@@ -168,12 +171,12 @@ ELSE
             });
 
             IMigrationProcessorFactory factory = CreateFactory(target.DatabaseServer);
-
             IMigrationProcessor processor = factory.Create(target.ConnectionString, announcer, new MigrationOptions());
 
             var context = new RunnerContext(announcer)
             {
-                Namespace = target.NamespaceContainingMigrations
+                Namespace = target.NamespaceContainingMigrations,
+                ApplicationContext = _kernel
             };
 
             return new MigrationRunner(target.Assembly, context, processor);

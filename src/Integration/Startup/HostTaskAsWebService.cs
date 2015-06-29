@@ -4,9 +4,9 @@ using Vertica.Integration.Model.Web;
 
 namespace Vertica.Integration.Startup
 {
-    internal class RunTaskFromWebServiceInConsole : StartupAction
+    internal class HostTaskAsWebService : StartupAction
     {
-        public RunTaskFromWebServiceInConsole(IWindsorContainer container)
+        public HostTaskAsWebService(IWindsorContainer container)
             : base(container)
         {
         }

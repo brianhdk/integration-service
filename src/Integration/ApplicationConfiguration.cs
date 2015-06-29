@@ -57,7 +57,7 @@ namespace Vertica.Integration
         {
             if (singletonInstance == null) throw new ArgumentNullException("singletonInstance");
 
-            return AddCustomInstaller(new SingletonInstanceInstaller<T>(singletonInstance));
+            return AddCustomInstaller(new InstanceInstaller<T>(singletonInstance));
         }
 
         public ApplicationConfiguration Tasks(Action<TasksConfiguration> tasks)

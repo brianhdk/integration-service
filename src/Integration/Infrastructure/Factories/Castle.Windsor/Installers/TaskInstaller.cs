@@ -8,7 +8,9 @@ using Castle.MicroKernel.Context;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
+using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Model;
+using Vertica.Integration.Model.Exceptions;
 
 namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 {
@@ -34,16 +36,31 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
                         .BasedOn<Task>()
                         .Unless(_ignoreTasks.Contains)
                         .Unless(_addTasks.Contains)
-                        .Configure(x => { x.Named(x.Implementation.Name); })
+                        .Configure(x =>
+                        {
+                            string name = x.Implementation.TaskName();
+
+                            if (container.Kernel.HasComponent(name))
+                                throw new TaskWithSameNameAlreadyRegistredException(x.Implementation);
+
+                            x.Named(name);
+                        })
                         .WithServiceDefaultInterfaces());
             }
 
             foreach (Type addType in _addTasks.Except(_ignoreTasks).Distinct())
             {
-                container.Register(
-                    Component.For<ITask>()
-                        .ImplementedBy(addType)
-                        .Named(addType.Name));
+                try
+                {
+                    container.Register(
+                        Component.For<ITask>()
+                            .ImplementedBy(addType)
+                            .Named(addType.TaskName()));
+                }
+                catch (ComponentRegistrationException ex)
+                {
+                    throw new TaskWithSameNameAlreadyRegistredException(addType, ex);
+                }
             }
         }
     }
@@ -64,16 +81,23 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            container.Register(
-                Component.For(typeof(ITask))
-                    .ImplementedBy(_task)
-                    .Named(_task.Name));
+            try
+            {
+                container.Register(
+                    Component.For(typeof(ITask))
+                        .ImplementedBy(_task)
+                        .Named(_task.TaskName()));
+            }
+            catch (ComponentRegistrationException ex)
+            {
+                throw new TaskWithSameNameAlreadyRegistredException(_task, ex);
+            }
 
             var names = new List<string>();
 
             foreach (Type step in _steps)
             {
-                string name = String.Format("{0}.{1}.{2}", _task.Name, step.Name, Guid.NewGuid().ToString("N"));
+                string name = String.Format("{0}.{1}.{2}", _task.TaskName(), step.StepName(), Guid.NewGuid().ToString("N"));
 
                 container.Register(
                     Component.For<IStep<TWorkItem>>()

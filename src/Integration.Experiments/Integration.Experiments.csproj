@@ -56,10 +56,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArchiveTesterTask.cs" />
+    <Compile Include="ConfigurationExtensions.cs" />
     <Compile Include="CustomDb.cs" />
     <Compile Include="CustomDbTask.cs" />
     <Compile Include="MakeDeploymentTask.cs" />
     <Compile Include="Migrations\CustomDb\M1431659519_CustomDbVoid.cs" />
+    <Compile Include="Migrations\IntegrationDb\M1431659629_Void.cs" />
     <Compile Include="Migrations\IntegrationDb\M1431659529_Void.cs" />
     <Compile Include="Migrations\IntegrationDb\M1431659508_RunTask.cs" />
     <Compile Include="Migrations\IntegrationDb\M1431459508_MergeMaintenanceConfiguration.cs" />

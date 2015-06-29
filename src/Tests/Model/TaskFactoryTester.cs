@@ -119,7 +119,7 @@ namespace Vertica.Integration.Tests.Model
         private static IDisposable CreateSubject(out ITaskFactory subject, Action<TasksConfiguration> tasks)
         {
             var configuration = new ApplicationConfiguration()
-                .Logging(x => x.Use<VoidLogger>())
+                .Logging(x => x.NullLogger())
                 .Database(x => x.DisableIntegrationDb());
 
             configuration.Tasks(tasks);

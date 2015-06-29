@@ -7,9 +7,10 @@ namespace Vertica.Integration.Console
 		private static void Main(string[] args)
 		{
 			using (ApplicationContext context = ApplicationContext.Create(application => application
-                .TestTextFileLogger()))
+                .Fast()
+                .Void()))
 			{
-			    context.Execute(args);
+                context.Execute(args);
 			}
 		}
 	}

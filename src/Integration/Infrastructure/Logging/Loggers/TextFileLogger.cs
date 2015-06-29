@@ -29,7 +29,7 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
                 log.CommandLine,
                 String.Empty,
                 "---- BEGIN LOG",
-                Line(log, "[{0}]", log.Name)));
+                Line(log)));
 
             return filePath.Name;
         }
@@ -38,7 +38,7 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
         {
             FileInfo filePath = EnsureFilePath(log.TaskLog);
 
-            File.AppendAllText(filePath.FullName, Line(log, "[{0}]", log.Name));
+            File.AppendAllText(filePath.FullName, Line(log));
 
             return log.TaskLog.Id;
         }
@@ -47,9 +47,7 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
         {
             FileInfo filePath = EnsureFilePath(log.TaskLog);
 
-            string source = ((LogEntry)log.StepLog ?? log.TaskLog).ToString(); 
-
-            File.AppendAllText(filePath.FullName, Line(log, "[{0}] {1}", source, log.Message));
+            File.AppendAllText(filePath.FullName, Line(log, "{0}", log.Message));
 
             return log.TaskLog.Id;
         }
@@ -129,9 +127,12 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
             return filePath;
         }
 
-        private string Line(LogEntry log, string text, params object[] args)
+        private string Line(LogEntry log, string text = null, params object[] args)
         {
-            return Line(log.TimeStamp, text, args);
+            if (!String.IsNullOrWhiteSpace(text))
+                text = String.Concat(" ", String.Format(text, args));
+
+            return Line(log.TimeStamp, String.Format("[{0}]{1}", log, text));
         }
 
         private string Line(DateTimeOffset timestamp, string text, params object[] args)
@@ -152,6 +153,5 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
                 error.Message,
                 error.Id);
         }
-
     }
 }

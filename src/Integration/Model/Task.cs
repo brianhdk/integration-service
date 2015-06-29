@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Vertica.Integration.Infrastructure.Extensions;
 
 namespace Vertica.Integration.Model
 {
@@ -21,6 +22,11 @@ namespace Vertica.Integration.Model
 		}
 
         public abstract void StartTask(ITaskExecutionContext context);
+
+	    public static string Name<TTask>() where TTask : ITask
+	    {
+	        return typeof (TTask).TaskName();
+	    }
 	}
 
 	public abstract class Task<TWorkItem> : ITask<TWorkItem>

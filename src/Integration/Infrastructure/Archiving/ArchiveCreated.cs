@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Infrastructure.Archiving
 {
@@ -26,7 +27,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
                     String.Join(Environment.NewLine, new[]
                     {
                         "From the web-based interface (Portal)",
-                        String.Format("Run the following command: {0} {1}", typeof (DumpArchiveTask).Name, Id),
+                        String.Format("Run the following command: {0} {1}", Task.Name<DumpArchiveTask>(), Id),
                     }.Concat(_additionalDownloadOptions).Select(x => String.Format(" - {0}", x))));
         }
 
