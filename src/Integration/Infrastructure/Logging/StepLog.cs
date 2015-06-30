@@ -6,7 +6,7 @@ using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Infrastructure.Logging
 {
-	public class StepLog : LogEntry
+	public class StepLog : LogEntry, IReferenceErrorLog
 	{
         private readonly Output _output;
 		private readonly IList<MessageLog> _messages;

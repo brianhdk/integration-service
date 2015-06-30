@@ -82,7 +82,7 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
             if (log.ErrorLog != null)
                 sb.Append(ErrorLine(log.ErrorLog, log.Name));
 
-            sb.Append(EndLine(log, log.Name));
+            sb.Append(EndLine(log));
 
             File.AppendAllText(filePath.FullName, sb.ToString());
         }
@@ -96,7 +96,7 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
             if (log.ErrorLog != null)
                 sb.Append(ErrorLine(log.ErrorLog, log.Name));
 
-            sb.Append(EndLine(log, log.Name));
+            sb.Append(EndLine(log));
 
             File.AppendAllText(filePath.FullName, sb.ToString());
         }
@@ -140,9 +140,9 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
             return String.Concat(Environment.NewLine, String.Format("[{0:HH:mm:ss}] {1}", timestamp.LocalDateTime, String.Format(text, args)));
         }
 
-        private string EndLine(LogEntry log, string name)
+        private string EndLine(LogEntry log)
         {
-            return Line(log, "[{0}] Execution time: {1} second(s)", name, log.ExecutionTimeSeconds.GetValueOrDefault().ToString(English));
+            return Line(log, "Execution time: {0} second(s)", log.ExecutionTimeSeconds.GetValueOrDefault().ToString(English));
         }
 
         private string ErrorLine(ErrorLog error, string name)

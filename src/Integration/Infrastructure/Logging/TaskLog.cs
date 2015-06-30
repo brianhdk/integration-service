@@ -9,7 +9,7 @@ using Vertica.Utilities_v4.Extensions.EnumerableExt;
 
 namespace Vertica.Integration.Infrastructure.Logging
 {
-	public class TaskLog : LogEntry
+    public class TaskLog : LogEntry, IReferenceErrorLog
 	{
 		private readonly Action<LogEntry> _persist;
         private readonly Output _output;

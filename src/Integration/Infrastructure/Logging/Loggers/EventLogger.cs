@@ -9,11 +9,12 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
 {
     public class EventLogger : Logger
     {
+        private const string SourceName = "Integration Service";
         private static readonly CultureInfo English = CultureInfo.GetCultureInfo("en-US");
 
         protected override string Insert(TaskLog log)
         {
-            return null;
+            return GenerateEventId().ToString();
         }
 
         protected override string Insert(MessageLog log)
@@ -45,7 +46,7 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
                 log.FormattedMessage);
 
             EventLog.WriteEntry(
-                "Integration Service", 
+                SourceName, 
                 message, 
                 log.Severity == Severity.Error ? EventLogEntryType.Error : EventLogEntryType.Warning, 
                 id);
@@ -72,16 +73,21 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
 
             foreach (LogEntry entry in entries)
             {
-                sb.AppendLine(String.Format("[{0}]", entry));
+                var messageLog = entry as MessageLog;
 
-                // if TaskLog || StepLog && .Error
+                sb.Append(Line(entry, messageLog != null ? messageLog.Message : ExecutionTime(entry)));
+
+                ErrorLog error = CheckGetError(entry);
+
+                if (error != null)
+                    sb.Append(ErrorLine(error, entry.ToString()));
             }
 
             EventLog.WriteEntry(
-                "Integration Service",
+                SourceName,
                 sb.ToString(),
                 EventLogEntryType.Information,
-                GenerateEventId());
+                Int32.Parse(log.Id));
         }
 
         protected override void Update(StepLog log)
@@ -89,7 +95,7 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
         }
 
         // http://stackoverflow.com/questions/951702/unique-eventid-generation
-        public static int GenerateEventId()
+        private static int GenerateEventId()
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(Environment.StackTrace);
@@ -103,6 +109,40 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
             }
 
             return sb.ToString().GetHashCode() & 0xFFFF;
+        }
+
+        private ErrorLog CheckGetError(LogEntry log)
+        {
+            var reference = log as IReferenceErrorLog;
+
+            return reference != null ? reference.ErrorLog : null;
+        }
+
+        private string Line(LogEntry log, string text = null, params object[] args)
+        {
+            if (!String.IsNullOrWhiteSpace(text))
+                text = String.Concat(" ", String.Format(text, args));
+
+            return Line(log.TimeStamp, String.Format("[{0}]{1}", log, text));
+        }
+
+        private string Line(DateTimeOffset timestamp, string text, params object[] args)
+        {
+            return String.Concat(Environment.NewLine, String.Format("[{0:HH:mm:ss}] {1}", timestamp.LocalDateTime, String.Format(text, args)));
+        }
+
+        private string ExecutionTime(LogEntry log)
+        {
+            return String.Format("(Execution time: {0} second(s))", log.ExecutionTimeSeconds.GetValueOrDefault().ToString(English));
+        }
+
+        private string ErrorLine(ErrorLog error, string name)
+        {
+            return Line(error.TimeStamp, "[{0}] [{1}]: {2} (ID: {3})",
+                name,
+                error.Severity,
+                error.Message,
+                error.Id);
         }
     }
 }

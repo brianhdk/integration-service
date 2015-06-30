@@ -187,6 +187,7 @@
     <Compile Include="Infrastructure\IO\IDirectory.cs" />
     <Compile Include="Infrastructure\IO\IFile.cs" />
     <Compile Include="Infrastructure\IO\IFileSystemService.cs" />
+    <Compile Include="Infrastructure\Logging\IReferenceErrorLog.cs" />
     <Compile Include="Infrastructure\Logging\ITarget.cs" />
     <Compile Include="Infrastructure\Logging\Loggers\EventLogger.cs" />
     <Compile Include="Infrastructure\Logging\LoggingConfiguration.cs" />

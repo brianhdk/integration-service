@@ -8,6 +8,8 @@ namespace Vertica.Integration.Console
 		{
 			using (ApplicationContext context = ApplicationContext.Create(application => application
                 .Fast()
+                //.TestEventLogger()
+                .TestTextFileLogger()
                 .Void()))
 			{
                 context.Execute(args);
