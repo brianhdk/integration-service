@@ -11,8 +11,11 @@ namespace Vertica.Integration.Model.Web
         {
             HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
 
-            response.Headers.CacheControl = CacheControlHeaderValue.Parse("no-cache, no-store");
-            response.Headers.Pragma.ParseAdd("no-cache");
+            if (response.Headers.CacheControl == null)
+            {
+                response.Headers.CacheControl = CacheControlHeaderValue.Parse("no-cache, no-store");
+                response.Headers.Pragma.ParseAdd("no-cache");
+            }
 
             return response;
         }

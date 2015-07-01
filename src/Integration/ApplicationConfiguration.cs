@@ -35,6 +35,7 @@ namespace Vertica.Integration
         }
 
         public bool IgnoreSslErrors { get; set; }
+
         public ConnectionString DatabaseConnectionString { get { return _database.ConnectionString; } }
 
         public ApplicationConfiguration AddCustomInstaller(IWindsorInstaller installer)

@@ -1,8 +1,10 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Web;
 using System.Web.Http;
 
@@ -10,6 +12,13 @@ namespace Vertica.Integration.Portal.Controllers
 {
     public class AssetsController : ApiController
     {
+        private static readonly Lazy<EntityTagHeaderValue> ETag = new Lazy<EntityTagHeaderValue>(() =>
+        {
+            AssemblyName name = typeof (AssetsController).Assembly.GetName();
+
+            return EntityTagHeaderValue.Parse(String.Concat("\"", name.Version.ToString(), "\""));
+        });
+
         [Route("assets/{*path}")]
         public HttpResponseMessage Get(string path)
         {
@@ -26,14 +35,36 @@ namespace Vertica.Integration.Portal.Controllers
             if (!file.Exists)
                 return request.CreateErrorResponse(HttpStatusCode.NotFound, "Resource not found.");
 
-            HttpResponseMessage response = request.CreateResponse(HttpStatusCode.OK);
+            HttpResponseMessage response;
+
+            if (request.Headers.IfNoneMatch.Any(x => x.Tag == ETag.Value.Tag))
+            {
+                response = new HttpResponseMessage(HttpStatusCode.NotModified);
+                SetCacheControl(response);
+                return response;
+            }
+
+            response = request.CreateResponse(HttpStatusCode.OK);
 
             response.Content = new StreamContent(file.OpenRead());
 
             string contentType = MimeMapping.GetMimeMapping(file.Name);
             response.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
 
+            response.Headers.ETag = ETag.Value;
+            SetCacheControl(response);
+
             return response;
+        }
+
+        private static void SetCacheControl(HttpResponseMessage response)
+        {
+            response.Headers.CacheControl = new CacheControlHeaderValue
+            {
+                MaxAge = TimeSpan.FromSeconds(60),
+                MustRevalidate = true,
+                Private = true
+            };
         }
     }
 }

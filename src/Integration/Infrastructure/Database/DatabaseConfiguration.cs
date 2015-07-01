@@ -7,15 +7,16 @@ namespace Vertica.Integration.Infrastructure.Database
 {
     public class DatabaseConfiguration : IInitializable<IWindsorContainer>
     {
-        private readonly ApplicationConfiguration _configuration;
         private ConnectionString _databaseConnectionString;
 
-        internal DatabaseConfiguration(ApplicationConfiguration configuration)
+        internal DatabaseConfiguration(ApplicationConfiguration application)
         {
-            if (configuration == null) throw new ArgumentNullException("configuration");
+            if (application == null) throw new ArgumentNullException("application");
 
-            _configuration = configuration;
+            Application = application;
         }
+
+        public ApplicationConfiguration Application { get; private set; }
 
         public bool IntegrationDbDisabled { get; private set; }
 
@@ -44,7 +45,7 @@ namespace Vertica.Integration.Infrastructure.Database
         public DatabaseConfiguration AddConnection<TConnection>(TConnection connection)
             where TConnection : Connection
         {
-            _configuration.AddCustomInstaller(new DbInstaller<TConnection>(connection));
+            Application.AddCustomInstaller(new DbInstaller<TConnection>(connection));
 
             return this;
         }

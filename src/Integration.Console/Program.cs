@@ -1,4 +1,5 @@
 ﻿using Vertica.Integration.Experiments;
+using Vertica.Integration.Portal;
 
 namespace Vertica.Integration.Console
 {
@@ -7,9 +8,10 @@ namespace Vertica.Integration.Console
 		private static void Main(string[] args)
 		{
 			using (ApplicationContext context = ApplicationContext.Create(application => application
-                .Fast()
+                //.Fast()
                 //.TestEventLogger()
-                .TestTextFileLogger()
+                //.TestTextFileLogger()
+                .UsePortal()
                 .Void()))
 			{
                 context.Execute(args);

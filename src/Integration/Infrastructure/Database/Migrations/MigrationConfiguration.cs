@@ -8,19 +8,21 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
     public class MigrationConfiguration : IInitializable<IWindsorContainer>
     {
-        private readonly ApplicationConfiguration _application;
         private readonly List<MigrationTarget> _customTargets;
 
         internal MigrationConfiguration(ApplicationConfiguration application)
         {
             if (application == null) throw new ArgumentNullException("application");
 
-            _application = application;
+            Application = application;
+
             _customTargets = new List<MigrationTarget>();
 
             ChangeIntegrationDbDatabaseServer(DatabaseServer.SqlServer2014);
             CheckExistsIntegrationDb = true;
         }
+
+        public ApplicationConfiguration Application { get; private set; }
 
         public MigrationConfiguration ChangeIntegrationDbDatabaseServer(DatabaseServer db)
         {
@@ -36,7 +38,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
         public MigrationConfiguration AddFromNamespaceOfThis<T>()
             where T : Migration
         {
-            return AddFromNamespaceOfThis<T>(IntegrationDbDatabaseServer, _application.DatabaseConnectionString);
+            return AddFromNamespaceOfThis<T>(IntegrationDbDatabaseServer, Application.DatabaseConnectionString);
         }
 
         /// <summary>
@@ -71,7 +73,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
             {
                 bool result = false;
 
-                _application.Database(database => result = database.IntegrationDbDisabled);
+                Application.Database(database => result = database.IntegrationDbDisabled);
 
                 return result;
             }
