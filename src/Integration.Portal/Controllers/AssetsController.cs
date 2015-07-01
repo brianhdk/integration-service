@@ -61,7 +61,7 @@ namespace Vertica.Integration.Portal.Controllers
         {
             response.Headers.CacheControl = new CacheControlHeaderValue
             {
-                MaxAge = TimeSpan.FromSeconds(60),
+                MaxAge = TimeSpan.FromHours(24),
                 MustRevalidate = true,
                 Private = true
             };
