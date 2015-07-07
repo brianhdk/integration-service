@@ -9,6 +9,11 @@ namespace Vertica.Integration.Infrastructure.Email
 		public abstract bool IsHtml { get; }
 	    public abstract string GetBody();
 
+	    public virtual MailPriority? MailPriority
+	    {
+	        get { return null; }
+	    }
+
 	    public virtual IEnumerable<Attachment> Attachments
 	    {
 	        get { yield break; }

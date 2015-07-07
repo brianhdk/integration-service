@@ -10,4 +10,10 @@
 	    });
     }
 
+	$scope.deleteConfiguration = function () {
+	    $http.delete('/configuration?id=' + $routeParams.id).success(function (xhr) {
+            // TODO: Should redirect
+	        //$scope.model = xhr;
+	    });
+	}
 });

@@ -72,7 +72,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\Monitoring\MessageContainsTextIgnoreFilterTester.cs" />
+    <Compile Include="Domain\Monitoring\MessageContainsTextTester.cs" />
     <Compile Include="Domain\Monitoring\MonitorWorkItemTester.cs" />
     <Compile Include="Domain\Monitoring\PingUrlsStepIntegrationTester.cs" />
     <Compile Include="Infrastructure\Archiving\ArchiveServiceTester.cs" />
@@ -88,6 +88,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Integration.Logging.Elmah\Integration.Logging.Elmah.csproj">
+      <Project>{6D28C1CE-7EAE-44A2-8624-A879F7AF7021}</Project>
+      <Name>Integration.Logging.Elmah</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Integration.Portal\Integration.Portal.csproj">
       <Project>{be14da0e-31c6-4417-8ec6-ed1658b51fa9}</Project>
       <Name>Integration.Portal</Name>

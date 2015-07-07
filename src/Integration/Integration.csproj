@@ -116,7 +116,7 @@
     <Compile Include="Domain\Core\MaintenanceWorkItem.cs" />
     <Compile Include="Domain\Core\WriteDocumentationTask.cs" />
     <Compile Include="Domain\Monitoring\ExportIntegrationErrorsStep.cs" />
-    <Compile Include="Domain\Monitoring\MessageContainsTextIgnoreFilter.cs" />
+    <Compile Include="Domain\Monitoring\MessageContainsText.cs" />
     <Compile Include="Domain\Monitoring\MonitorConfiguration.cs" />
     <Compile Include="Domain\Monitoring\MonitorEmailTemplate.cs" />
     <Compile Include="Domain\Monitoring\MonitorEntry.cs" />
@@ -126,6 +126,7 @@
     <Compile Include="Domain\Monitoring\MonitorTaskExtensions.cs" />
     <Compile Include="Domain\Monitoring\MonitorWorkItem.cs" />
     <Compile Include="Domain\Monitoring\PingUrlsStep.cs" />
+    <Compile Include="Domain\Monitoring\RedirectForMonitorTargets.cs" />
     <Compile Include="Domain\Monitoring\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

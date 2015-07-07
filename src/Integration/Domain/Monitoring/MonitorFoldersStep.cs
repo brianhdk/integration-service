@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Vertica.Integration.Infrastructure.Extensions;
-using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
 using Vertica.Utilities_v4;
 
@@ -53,7 +52,7 @@ namespace Vertica.Integration.Domain.Monitoring
                     if (files.Length > limit)
                         message.AppendLine("...");
 
-                    workItem.Add(Time.UtcNow, this.Name(), message.ToString(), folder.Target ?? Target.Service);
+                    workItem.Add(Time.UtcNow, this.Name(), message.ToString(), folder.Target);
                 }
             }
         }

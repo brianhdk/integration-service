@@ -17,6 +17,9 @@ namespace Vertica.Integration.Infrastructure.Email
 				message.Body = template.GetBody();
 				message.IsBodyHtml = template.IsHtml;
 
+			    if (template.MailPriority.HasValue)
+			        message.Priority = template.MailPriority.Value;
+
 				foreach (string recipient in recipients)
 				{
 					if (!String.IsNullOrWhiteSpace(recipient))

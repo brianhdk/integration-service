@@ -1,6 +1,4 @@
-﻿using Vertica.Integration.Azure;
-using Vertica.Integration.Experiments;
-using Vertica.Integration.Infrastructure;
+﻿using Vertica.Integration.Experiments;
 using Vertica.Integration.Portal;
 
 namespace Vertica.Integration.Console

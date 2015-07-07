@@ -4,7 +4,6 @@ using System.Linq;
 using System.Xml;
 using Vertica.Integration.Domain.Monitoring;
 using Vertica.Integration.Infrastructure.Configuration;
-using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Logging.Elmah
@@ -12,6 +11,7 @@ namespace Vertica.Integration.Logging.Elmah
     public class ExportElmahErrorsStep : Step<MonitorWorkItem>
     {
         private const string ConfigurationName = "24E20065-43F9-42DB-90AA-09823637C00C";
+        internal const string MessageGroupingPattern = @"Details:\ /elmah\.axd/detail\?id=.+$";
 
         private readonly IConfigurationService _configuration;
 
@@ -36,13 +36,15 @@ namespace Vertica.Integration.Logging.Elmah
         {
             ElmahConfiguration configuration = workItem.Context<ElmahConfiguration>(ConfigurationName);
 
+            workItem.AddMessageGroupingPattern(MessageGroupingPattern);
+
             using (var connection = new SqlConnection(configuration.ToConnectionString()))
             using (SqlCommand command = connection.CreateCommand())
             {
                 connection.Open();
 
                 command.CommandText = @"
-SELECT 
+SELECT TOP 1000
 	errorId     = [ErrorId], 
 	application = [Application],
     host        = [Host], 
@@ -67,17 +69,37 @@ FOR XML AUTO";
                 {
                     try
                     {
+                        int count = 0;
+
                         while (reader.IsStartElement("error"))
                         {
+                            count++;
                             var error = new ElmahError(reader);
 
                             workItem.Add(
                                 error.Created,
-                                String.Join(", ", new[] { configuration.LogName, error.Source }
+                                String.Join(", ", new[] {configuration.LogName, error.Source}
                                     .Where(x => !String.IsNullOrWhiteSpace(x))),
-                                error.ToString(),
-                                Target.Service);
+                                error.ToString());
                         }
+
+                        if (count > 0)
+                        {
+                            context.Log.Message("{0} entries within time-period {1}.", count, workItem.CheckRange);
+                        }
+                    }
+                    catch (SqlException ex)
+                    {
+                        throw new InvalidOperationException(String.Format(@"{0}
+
+---
+You need to locate the row causing this error. The easiest way is to query those rows that were part of the initial selection. 
+Open the XML result in SQL Server Management Studio, and find the one(s) with a red squiggles. They need to be removed.
+Find out where errors like that are being generated and make sure to encode these messages, so that it won't happen again.
+
+CommandText was: 
+
+{1}", ex.Message, command.CommandText), ex);                        
                     }
                     catch (XmlException ex)
                     {
@@ -94,7 +116,6 @@ CommandText was:
 
 {1}", ex.Message, command.CommandText), ex);
                     }
-
                 }
             }
         }

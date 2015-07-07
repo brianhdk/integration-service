@@ -13,6 +13,8 @@ namespace Vertica.Integration.Domain.Monitoring
 {
     public class ExportIntegrationErrorsStep : Step<MonitorWorkItem>
     {
+        internal const string MessageGroupingPattern = @"ErrorID: .+$";
+
         private readonly IDbFactory _db;
         private readonly ITaskFactory _taskFactory;
 
@@ -29,6 +31,8 @@ namespace Vertica.Integration.Domain.Monitoring
 
         public override void Execute(MonitorWorkItem workItem, ITaskExecutionContext context)
         {
+            workItem.AddMessageGroupingPattern(MessageGroupingPattern);
+
             using (var session = _db.OpenSession())
             {
                 ErrorEntry[] errors = session.Query<ErrorEntry>(@"
@@ -60,11 +64,11 @@ ORDER BY ErrorLog.Id DESC",
 
                 if (errors.Length > 0)
                 {
-                    context.Log.Message("{0} errors/warnings within time-period {1}.", errors.Length, workItem.CheckRange);
+                    context.Log.Message("{0} entries within time-period {1}.", errors.Length, workItem.CheckRange);
 
                     var tasksByName = new Dictionary<string, ITask>(StringComparer.OrdinalIgnoreCase);
 
-                    foreach (var error in errors)
+                    foreach (ErrorEntry error in errors)
                     {
                         var taskName = error.SafeTaskName();
 
@@ -96,11 +100,7 @@ ORDER BY ErrorLog.Id DESC",
                                 error.StepDescription = step.Description;
                         }
 
-                        workItem.Add(
-                            error.DateTime, 
-                            "Integration Service", 
-                            error.CombineMessage(), 
-                            error.Target);
+                        workItem.Add(error.DateTime, "Integration Service", error.CombineMessage(), error.Target);
                     }
                 }
             }
@@ -159,7 +159,7 @@ ORDER BY ErrorLog.Id DESC",
 
                 sb.AppendLine();
                 sb.AppendLine();
-                sb.AppendFormat("ErrorID {0}:", ErrorId);
+                sb.AppendFormat("ErrorID: {0}", ErrorId);
 
                 return sb.ToString();
             }

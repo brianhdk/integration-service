@@ -53,6 +53,14 @@ namespace Vertica.Integration.Domain.Monitoring
             return monitorTarget;
         }
 
+        public void RemoveTarget(ITarget target)
+        {
+            if (Targets == null)
+                return;
+
+            Targets = Targets.Where(x => !x.Equals(target)).ToArray();
+        }
+
         internal void Assert()
         {
             if (Targets == null)

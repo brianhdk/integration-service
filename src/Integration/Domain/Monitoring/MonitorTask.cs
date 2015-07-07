@@ -32,7 +32,8 @@ namespace Vertica.Integration.Domain.Monitoring
 		    configuration.Assert();
 
 			return new MonitorWorkItem(configuration)
-                .WithIgnoreFilter(new MessageContainsTextIgnoreFilter(configuration.IgnoreErrorsWithMessagesContaining));
+                .AddIgnoreFilter(new MessageContainsText(configuration.IgnoreErrorsWithMessagesContaining))
+                .AddTargetRedirect(new RedirectForMonitorTargets(configuration.Targets));
 		}
 
         public override void End(MonitorWorkItem workItem, ITaskExecutionContext context)
@@ -60,8 +61,6 @@ namespace Vertica.Integration.Domain.Monitoring
                     return;
                 }
 
-                // TODO: Group entries before sending
-
                 log.Message("Sending {0} entries to {1}.", entries.Length, target);
 
 	            var subject = new StringBuilder();
@@ -71,7 +70,7 @@ namespace Vertica.Integration.Domain.Monitoring
 
 	            subject.AppendFormat("Monitoring ({0})", workItem.CheckRange);
 
-                _emailService.Send(new MonitorEmailTemplate(subject.ToString(), entries), target.Recipients);
+                _emailService.Send(new MonitorEmailTemplate(subject.ToString(), entries, target), target.Recipients);
 	        }
 	    }
 	}

@@ -106,17 +106,13 @@ namespace Vertica.Integration.Domain.Monitoring
             return pingExceptions;
         }
 
-        private static void AddException(PingException exception, MonitorWorkItem workItem)
+        private void AddException(PingException exception, MonitorWorkItem workItem)
         {
             string message = String.Format(@"{0}
 
 {1}", exception.Message, exception.InnerException.AggregateMessages());
 
-            workItem.Add(
-                Time.UtcNow,
-                "MonitorTask-PingUrlsStep",
-                message,
-                Target.Service);
+            workItem.Add(Time.UtcNow, this.Name(), message);
         }
 
         private async Response HttpGet(Uri absoluteUri, uint maximumWaitTimeSeconds)

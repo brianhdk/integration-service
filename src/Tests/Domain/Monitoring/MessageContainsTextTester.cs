@@ -5,7 +5,7 @@ using Vertica.Utilities_v4;
 namespace Vertica.Integration.Tests.Domain.Monitoring
 {
 	[TestFixture]
-	public class MessageContainsTextIgnoreFilterTester
+	public class MessageContainsTextTester
 	{
 		[Test]
 		public void IsSatisfiedBy_MessageContainingText_True()
@@ -19,7 +19,7 @@ Details: /elmah.axd/detail?id=D1732EFF-3AA3-4A0E-A174-E51A2848522B";
 
 			var entry = new MonitorEntry(Time.Now, "Source", message);
 
-			var subject = new MessageContainsTextIgnoreFilter("Sitecore.Exceptions.AccessDeniedException\r\nApplication access denied", "Unable to connect");
+			var subject = new MessageContainsText("Sitecore.Exceptions.AccessDeniedException\r\nApplication access denied", "Unable to connect");
 
 			bool actual = subject.IsSatisfiedBy(entry);
 
@@ -38,7 +38,7 @@ Details: /elmah.axd/detail?id=4E6E10FF-3A3B-4C90-ADB4-FCAC3CEFBA33";
 
 			var entry = new MonitorEntry(Time.Now, "Source", message);
 
-			var subject = new MessageContainsTextIgnoreFilter();
+			var subject = new MessageContainsText();
 
 			bool actual = subject.IsSatisfiedBy(entry);
 

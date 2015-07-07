@@ -96,6 +96,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Integration.Logging.Elmah\Integration.Logging.Elmah.csproj">
+      <Project>{6D28C1CE-7EAE-44A2-8624-A879F7AF7021}</Project>
+      <Name>Integration.Logging.Elmah</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Integration.PaymentService\Integration.PaymentService.csproj">
       <Project>{08493D80-1A5F-4D3B-8BD3-E6EA7695D3B3}</Project>
       <Name>Integration.PaymentService</Name>

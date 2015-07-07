@@ -1,4 +1,5 @@
 ﻿@using System
+@using System.Globalization
 @using System.Web
 @using Vertica.Integration.Domain.Monitoring
 @{ 
@@ -20,7 +21,7 @@
     @foreach (MonitorEntry entry in Model)
     {
         <tr>
-            <td valign="top">@entry.DateTime</td>
+            <td valign="top">@entry.DateTime.ToString(CultureInfo.GetCultureInfo("en-US"))</td>
             <td valign="top">@HttpUtility.HtmlEncode(entry.Source)</td>
             <td valign="top">@HttpUtility.HtmlEncode(entry.Message ?? String.Empty).Replace(Environment.NewLine, "<br />")</td>
         </tr>

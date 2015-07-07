@@ -42,5 +42,18 @@ namespace Vertica.Integration.Portal.Controllers
 
             return Request.CreateResponse(HttpStatusCode.OK, configuration);
         }
+
+        public HttpResponseMessage Delete(string id)
+        {
+            Configuration configuration = _configurationService.Get(id);
+
+            if (configuration == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            Put(configuration);
+            _configurationService.Delete(id);
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
     }
 }

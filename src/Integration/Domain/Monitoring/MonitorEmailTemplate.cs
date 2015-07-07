@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net.Mail;
 using System.Web;
 using Vertica.Integration.Infrastructure.Email;
 using Vertica.Integration.Infrastructure.Templating;
@@ -10,13 +11,16 @@ namespace Vertica.Integration.Domain.Monitoring
 	{
         private readonly string _subject;
         private readonly MonitorEntry[] _entries;
+        private readonly MonitorTarget _target;
 
-		public MonitorEmailTemplate(string subject, MonitorEntry[] entries)
+        public MonitorEmailTemplate(string subject, MonitorEntry[] entries, MonitorTarget target)
 		{
 		    if (entries == null) throw new ArgumentNullException("entries");
+		    if (target == null) throw new ArgumentNullException("target");
 
 		    _subject = subject;
 		    _entries = entries;
+            _target = target;
 		}
 
 	    public override string Subject
@@ -42,5 +46,10 @@ namespace Vertica.Integration.Domain.Monitoring
                     typeof(HttpServerUtility).Assembly);
             }
 	    }
+
+        public override MailPriority? MailPriority
+        {
+            get { return _target.MailPriority; }
+        }
 	}
 }

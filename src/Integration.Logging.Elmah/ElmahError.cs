@@ -31,9 +31,6 @@ namespace Vertica.Integration.Logging.Elmah
                 throw new InvalidOperationException("The error XML is not in the expected format.");
 
             _id = reader.GetAttribute("errorId");
-            //_url = reader.GetAttribute("url");
-            //_queryString = reader.GetAttribute("query_string");
-            //_http_referer = reader.GetAttribute("http_referer");
             _error = ErrorXml.Decode(reader);
 
             _error.ServerVariables["URL"] = reader.GetAttribute("url");

@@ -4,23 +4,18 @@ namespace Vertica.Integration.Infrastructure.Logging
 {
     public class Target : ITarget, IEquatable<Target>
     {
-        private readonly string _name;
-
         protected Target(string name)
         {
             if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
 
-            _name = name;
+            Name = name;
         }
 
-        public string Name
-        {
-            get { return _name; }
-        }
+        public string Name { get; private set; }
 
         public override string ToString()
         {
-            return _name;
+            return Name;
         }
 
         public static implicit operator string(Target target)
@@ -43,20 +38,20 @@ namespace Vertica.Integration.Infrastructure.Logging
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return String.Equals(_name, other._name, StringComparison.OrdinalIgnoreCase);
+            return String.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
+            if (!(obj is Target)) return false;
             return Equals((Target) obj);
         }
 
         public override int GetHashCode()
         {
-            return _name.GetHashCode();
+            return Name.GetHashCode();
         }
 
         public static readonly Target Service = new Target("Service");
