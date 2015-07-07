@@ -5,59 +5,71 @@ namespace Vertica.Integration.Infrastructure.Archiving
 {
     public static class ArchiveExtensions
     {
-        public static ArchiveCreated ArchiveFile(this IArchiveService service, FileInfo file, string archiveName = null)
+        public static ArchiveCreated ArchiveFile(this IArchiveService service, FileInfo file, Action<ArchiveOptions> options = null)
         {
             if (service == null) throw new ArgumentNullException("service");
             if (file == null) throw new ArgumentNullException("file");
 
             ArchiveCreated created = null;
 
-            using (BeginArchive archive = service.Create(archiveName ?? file.Name, x => created = x))
+            using (BeginArchive archive = service.Create(file.Name, x => created = x))
             {
+                if (options != null)
+                    options(archive.Options);
+
                 archive.IncludeFile(file);
             }
 
             return created;
         }
 
-        public static ArchiveCreated ArchiveFolder(this IArchiveService service, DirectoryInfo folder, string archiveName = null)
+        public static ArchiveCreated ArchiveFolder(this IArchiveService service, DirectoryInfo folder, Action<ArchiveOptions> options = null)
         {
             if (service == null) throw new ArgumentNullException("service");
             if (folder == null) throw new ArgumentNullException("folder");
 
             ArchiveCreated created = null;
 
-            using (BeginArchive archive = service.Create(archiveName ?? folder.Name, x => created = x))
+            using (BeginArchive archive = service.Create(folder.Name, x => created = x))
             {
+                if (options != null)
+                    options(archive.Options);
+
                 archive.IncludeFolder(folder);
             }
 
             return created;
         }
 
-        public static ArchiveCreated ArchiveText(this IArchiveService service, string name, string content, string archiveName = null)
+        public static ArchiveCreated ArchiveText(this IArchiveService service, string name, string content, Action<ArchiveOptions> options = null)
         {
             if (service == null) throw new ArgumentNullException("service");
 
             ArchiveCreated created = null;
 
-            using (BeginArchive archive = service.Create(archiveName ?? name, x => created = x))
+            using (BeginArchive archive = service.Create(name, x => created = x))
             {
+                if (options != null)
+                    options(archive.Options);
+
                 archive.IncludeContent(name, content);
             }
 
             return created;
         }
 
-        public static ArchiveCreated ArchiveObjectAsJson(this IArchiveService service, object obj, string name, string archiveName = null)
+        public static ArchiveCreated ArchiveObjectAsJson(this IArchiveService service, object obj, string name, Action<ArchiveOptions> options = null)
         {
             if (service == null) throw new ArgumentNullException("service");
             if (obj == null) throw new ArgumentNullException("obj");
 
             ArchiveCreated created = null;
 
-            using (BeginArchive archive = service.Create(archiveName ?? name, x => created = x))
+            using (BeginArchive archive = service.Create(name, x => created = x))
             {
+                if (options != null)
+                    options(archive.Options);
+
                 archive.IncludeObjectAsJson(obj, name);
             }
 

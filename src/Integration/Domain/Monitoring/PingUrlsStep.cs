@@ -24,7 +24,7 @@ namespace Vertica.Integration.Domain.Monitoring
 
         public override Execution ContinueWith(MonitorWorkItem workItem)
         {
-            if (!workItem.Configuration.PingUrls.IsReady)
+            if (!workItem.Configuration.PingUrls.ShouldExecute)
                 return Execution.StepOver;
 
             return Execution.Execute;

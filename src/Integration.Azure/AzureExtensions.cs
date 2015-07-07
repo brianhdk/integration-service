@@ -2,7 +2,7 @@
 
 namespace Vertica.Integration.Azure
 {
-    public static class PortalExtensions
+    public static class AzureExtensions
     {
         public static ApplicationConfiguration UseAzure(this ApplicationConfiguration builder, Action<AzureConfiguration> azure = null)
         {

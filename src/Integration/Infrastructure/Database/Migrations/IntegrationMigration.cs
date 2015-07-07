@@ -5,6 +5,7 @@ using Castle.MicroKernel;
 using FluentMigrator;
 using Vertica.Integration.Infrastructure.Configuration;
 using Vertica.Integration.Model;
+using Vertica.Utilities_v4;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
@@ -70,6 +71,11 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
                 // Delete the old configuration
                 ConfigurationService.Delete(oldConfiguration.Id);
             }
+        }
+
+        protected ConfigurationUpdater<T> UpdateConfiguration<T>() where T : class, new()
+        {
+            return new ConfigurationUpdater<T>(GetConfiguration<T>(), SaveConfiguration);
         }
 
         protected void RunTask<TTask>() where TTask : ITask

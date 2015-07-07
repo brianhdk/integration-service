@@ -1,4 +1,6 @@
-﻿using Vertica.Integration.Experiments;
+﻿using Vertica.Integration.Azure;
+using Vertica.Integration.Experiments;
+using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Portal;
 
 namespace Vertica.Integration.Console
@@ -8,10 +10,13 @@ namespace Vertica.Integration.Console
 		private static void Main(string[] args)
 		{
 			using (ApplicationContext context = ApplicationContext.Create(application => application
-                //.Fast()
+                .UsePortal()
+                //.RegisterTasks()
+                .RegisterMigrations()
                 //.TestEventLogger()
                 //.TestTextFileLogger()
-                .UsePortal()
+                //.TestPaymentService()
+                .TestMonitorTask()
                 .Void()))
 			{
                 context.Execute(args);

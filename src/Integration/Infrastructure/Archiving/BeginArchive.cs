@@ -11,20 +11,22 @@ namespace Vertica.Integration.Infrastructure.Archiving
 {
     public class BeginArchive : IDisposable
     {
-        private readonly Action<MemoryStream> _complete;
-
+        private readonly Action<MemoryStream, ArchiveOptions> _complete;
         private readonly MemoryStream _stream;
         private readonly ZipArchive _archive;
 
-        public BeginArchive(Action<MemoryStream> complete)
+        public BeginArchive(string name, Action<MemoryStream, ArchiveOptions> complete)
         {
             if (complete == null) throw new ArgumentNullException("complete");
 
             _complete = complete;
 
+            Options = new ArchiveOptions(name);
             _stream = new MemoryStream();
             _archive = new ZipArchive(_stream, ZipArchiveMode.Create, leaveOpen: true);
         }
+
+        public ArchiveOptions Options { get; private set; }
 
         public void IncludeFile(FileInfo file)
         {
@@ -101,7 +103,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
             _archive.Dispose();
 
             _stream.Seek(0, SeekOrigin.Begin);
-            _complete(_stream);
+            _complete(_stream, Options);
 
             _stream.Dispose();
         }

@@ -12,11 +12,12 @@ namespace Vertica.Integration.Domain.Core
         {
             CleanUpTaskLogEntriesOlderThan = TimeSpan.FromDays(60);
             CleanUpErrorLogEntriesOlderThan = TimeSpan.FromDays(60);
-            CleanUpArchivesOlderThan = TimeSpan.FromDays(60);
         }
 
         public TimeSpan CleanUpTaskLogEntriesOlderThan { get; set; }
         public TimeSpan CleanUpErrorLogEntriesOlderThan { get; set; }
+
+        [Obsolete("Each individual archive now controls their own expiration.")]
         public TimeSpan CleanUpArchivesOlderThan { get; set; }
     }
 }

@@ -8,6 +8,7 @@ $settings = @{
         "integration_portal" = Resolve-Path $script_directory\..\src\Integration.Portal
 		"integration_logging_elmah" = Resolve-Path $script_directory\..\src\Integration.Logging.Elmah
 		"integration_azure" = Resolve-Path $script_directory\..\src\Integration.Azure
+		"integration_paymentservice" = Resolve-Path $script_directory\..\src\Integration.PaymentService
     }
     "tools" = @{
         "nuget" = Resolve-Path $script_directory\..\.nuget\NuGet.exe

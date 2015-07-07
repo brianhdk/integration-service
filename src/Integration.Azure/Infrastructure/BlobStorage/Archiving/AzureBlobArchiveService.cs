@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Vertica.Integration.Infrastructure.Archiving;
+using Vertica.Utilities_v4;
 
 namespace Vertica.Integration.Azure.Infrastructure.BlobStorage.Archiving
 {
@@ -23,10 +25,7 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage.Archiving
 
         public BeginArchive Create(string name, Action<ArchiveCreated> onCreated)
         {
-            if (onCreated == null) throw new ArgumentNullException("onCreated");
-            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
-
-            return new BeginArchive(stream =>
+            return new BeginArchive(name, (stream, options) =>
             {
                 CloudBlobClient client = _factory.Create();
 
@@ -36,11 +35,18 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage.Archiving
                 string id = Guid.NewGuid().ToString("D");
 
                 CloudBlockBlob blockBlob = LoadBlob(container, id);
-                blockBlob.Metadata["Name"] = name;
+                blockBlob.Metadata["Name"] = options.Name;
+
+                if (options.Expires.HasValue)
+                    blockBlob.Metadata["Expires"] = options.Expires.Value.ToString("yyyy/MM/dd HH:mm:ss (zzz)", CultureInfo.InvariantCulture);
+
+                if (!String.IsNullOrWhiteSpace(options.GroupName))
+                    blockBlob.Metadata["GroupName"] = options.GroupName ?? String.Empty;
 
                 blockBlob.UploadFromStream(stream);
 
-                onCreated(new ArchiveCreated(id, String.Format("Download from {0}", blockBlob.Uri)));
+                if (onCreated != null)
+                    onCreated(new ArchiveCreated(id, String.Format("Download from {0}", blockBlob.Uri)));
             });
         }
 
@@ -67,7 +73,9 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage.Archiving
                         Id = Path.GetFileNameWithoutExtension(item.Name),
                         Name = name,
                         ByteSize = item.Properties.Length,
-                        Created = item.Properties.LastModified.GetValueOrDefault()
+                        Created = item.Properties.LastModified.GetValueOrDefault(),
+                        GroupName = item.Metadata.ContainsKey("GroupName") ? item.Metadata["GroupName"] : null,
+                        Expires = ParseDateTimeOffset(item, "Expires")
                     });                    
                 }
             }
@@ -123,9 +131,50 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage.Archiving
             return deleted;
         }
 
+        public int DeleteExpired()
+        {
+            int deleted = 0;
+
+            CloudBlobClient client = _factory.Create();
+
+            CloudBlobContainer container = client.GetContainerReference(_containerName);
+
+            if (container.Exists())
+            {
+                foreach (CloudBlockBlob item in container
+                    .ListBlobs(blobListingDetails: BlobListingDetails.Metadata)
+                    .OfType<CloudBlockBlob>())
+                {
+                    DateTimeOffset? expires = ParseDateTimeOffset(item, "Expires");
+
+                    if (expires.HasValue && expires <= Time.UtcNow)
+                    {
+                        item.Delete();
+
+                        deleted++;
+                    }
+                }
+            }
+
+            return deleted;
+        }
+
         private static CloudBlockBlob LoadBlob(CloudBlobContainer container, string id)
         {
             return container.GetBlockBlobReference(String.Format("{0}.zip", id));
+        }
+
+        private static DateTimeOffset? ParseDateTimeOffset(CloudBlockBlob item, string name)
+        {
+            string raw;
+            item.Metadata.TryGetValue(name, out raw);
+
+            DateTimeOffset value;
+            if (DateTimeOffset.TryParseExact(raw, "yyyy/MM/dd HH:mm:ss (zzz)", CultureInfo.InvariantCulture,
+                DateTimeStyles.None, out value))
+                return value;
+
+            return null;
         }
     }
 }

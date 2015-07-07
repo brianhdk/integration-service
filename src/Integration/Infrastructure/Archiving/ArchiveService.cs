@@ -16,12 +16,9 @@ namespace Vertica.Integration.Infrastructure.Archiving
             _db = db;
         }
 
-        public BeginArchive Create(string name, Action<ArchiveCreated> onCreated)
+        public BeginArchive Create(string name, Action<ArchiveCreated> onCreated = null)
         {
-            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
-            if (onCreated == null) throw new ArgumentNullException("onCreated");
-
-            return new BeginArchive(stream =>
+            return new BeginArchive(name, (stream, options) =>
             {
                 int archiveId;
 
@@ -31,20 +28,23 @@ namespace Vertica.Integration.Infrastructure.Archiving
                     byte[] binaryData = stream.ToArray();
 
                     archiveId = session.ExecuteScalar<int>(
-                        "INSERT INTO Archive (Name, BinaryData, ByteSize, Created) VALUES (@name, @binaryData, @byteSize, @created);" +
+                        "INSERT INTO Archive (Name, BinaryData, ByteSize, Created, Expires, GroupName) VALUES (@name, @binaryData, @byteSize, @created, @expires, @groupName);" +
                         "SELECT CAST(SCOPE_IDENTITY() AS INT);",
-                        new
+                        new 
                         {
-                            name = name.MaxLength(255),
+                            name = options.Name.MaxLength(255),
                             binaryData,
                             byteSize = binaryData.Length,
-                            created = Time.UtcNow
+                            created = Time.UtcNow,
+                            expires = options.Expires,
+                            groupName = options.GroupName
                         });
 
                     transaction.Commit();
                 }
 
-                onCreated(new ArchiveCreated(archiveId.ToString()));
+                if (onCreated != null)
+                    onCreated(new ArchiveCreated(archiveId.ToString()));
             });
         }
 
@@ -52,7 +52,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
         {
             using (IDbSession session = _db.OpenSession())
             {
-                return session.Query<Archive>("SELECT Id, Name, ByteSize, Created FROM Archive")
+                return session.Query<Archive>("SELECT Id, Name, ByteSize, Created, GroupName, Expires FROM Archive")
                     .ToArray();
             }
         }
@@ -77,6 +77,19 @@ namespace Vertica.Integration.Infrastructure.Archiving
             using (IDbTransaction transaction = session.BeginTransaction())
             {
                 int count = session.Execute("DELETE FROM Archive WHERE Created <= @olderThan", new { olderThan });
+
+                transaction.Commit();
+
+                return count;
+            }
+        }
+
+        public int DeleteExpired()
+        {
+            using (IDbSession session = _db.OpenSession())
+            using (IDbTransaction transaction = session.BeginTransaction())
+            {
+                int count = session.Execute("DELETE FROM Archive WHERE Expires <= @now", new { now = Time.UtcNow });
 
                 transaction.Commit();
 

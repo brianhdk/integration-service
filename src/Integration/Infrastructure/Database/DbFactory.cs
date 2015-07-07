@@ -1,6 +1,7 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using Vertica.Integration.Infrastructure.Database.Databases;
 
 namespace Vertica.Integration.Infrastructure.Database
 {
@@ -44,7 +45,14 @@ namespace Vertica.Integration.Infrastructure.Database
 
         public IDbSession OpenSession()
         {
-            return _decoree.OpenSession();
+            try
+            {
+                return _decoree.OpenSession();
+            }
+            catch (SqlException ex)
+            {
+                throw new IntegrationDbException(ex);
+            }
         }
     }
 }

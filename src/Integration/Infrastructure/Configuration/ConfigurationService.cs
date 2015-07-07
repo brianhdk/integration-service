@@ -124,8 +124,12 @@ namespace Vertica.Integration.Infrastructure.Configuration
 
                 if (configuration != null)
                 {
-                    _archive.Archive(String.Format("[Backup] {0}", configuration.Name), archive =>
+                    _archive.Archive(configuration.Name, archive =>
                     {
+                        archive.Options
+                            .GroupedBy("Backup")
+                            .ExpiresAfterMonths(1);
+
                         archive.IncludeContent("data", configuration.JsonData, ".json");
                         archive.IncludeContent("meta", String.Join(Environment.NewLine,
                             configuration.Id,

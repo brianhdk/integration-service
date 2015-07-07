@@ -9,17 +9,18 @@ namespace Vertica.Integration.Domain.Monitoring
         {
             if (configuration == null) throw new ArgumentNullException("configuration");
 
-            TaskConfiguration<MonitorWorkItem> taskConfiguration = null;
+            TaskConfiguration<MonitorWorkItem> localConfiguration = null;
 
             configuration = configuration
-                .Task<MonitorTask, MonitorWorkItem>(x => taskConfiguration = x);
+                .Task<MonitorTask, MonitorWorkItem>(x => localConfiguration = x);
 
-            taskConfiguration
+            localConfiguration
                 .Step<ExportIntegrationErrorsStep>()
+                .Step<MonitorFoldersStep>()
                 .Step<PingUrlsStep>();
 
             if (task != null)
-                task(taskConfiguration);
+                task(localConfiguration);
 
             return configuration;
         }        

@@ -12,12 +12,12 @@ namespace Vertica.Integration.Model.Exceptions
         }
 
         public TaskWithSameNameAlreadyRegistredException(Type task)
-            : base(Message(task))
+            : base(BuildMessage(task))
         {
         }
 
         public TaskWithSameNameAlreadyRegistredException(Type task, Exception innerException)
-            : base(Message(task), innerException)
+            : base(BuildMessage(task), innerException)
         {
         }
 
@@ -26,7 +26,7 @@ namespace Vertica.Integration.Model.Exceptions
         {
         }
 
-        private static string Message(Type task)
+        private static string BuildMessage(Type task)
         {
             return String.Format(@"Unable to register Task '{0}'. A task with the same name '{1}' is already registred. 
 Consider running the ""WriteDocumentationTask"" to get a text-output of available tasks.", task.FullName, task.TaskName());

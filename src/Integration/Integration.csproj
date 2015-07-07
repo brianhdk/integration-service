@@ -120,6 +120,7 @@
     <Compile Include="Domain\Monitoring\MonitorConfiguration.cs" />
     <Compile Include="Domain\Monitoring\MonitorEmailTemplate.cs" />
     <Compile Include="Domain\Monitoring\MonitorEntry.cs" />
+    <Compile Include="Domain\Monitoring\MonitorFoldersStep.cs" />
     <Compile Include="Domain\Monitoring\MonitorTarget.cs" />
     <Compile Include="Domain\Monitoring\MonitorTask.cs" />
     <Compile Include="Domain\Monitoring\MonitorTaskExtensions.cs" />
@@ -132,6 +133,7 @@
     </Compile>
     <Compile Include="IInitializable.cs" />
     <Compile Include="Infrastructure\ActionRepeater.cs" />
+    <Compile Include="Infrastructure\Archiving\ArchiveOptions.cs" />
     <Compile Include="Infrastructure\Archiving\BeginArchive.cs" />
     <Compile Include="Infrastructure\Archiving\ArchiveService.cs" />
     <Compile Include="Infrastructure\Archiving\ArchiveExtensions.cs" />
@@ -160,6 +162,7 @@
     <Compile Include="Infrastructure\Database\Migrations\DatabaseServer.cs" />
     <Compile Include="Infrastructure\Database\Migrations\IntegrationMigration.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M1_Baseline.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\M6_ExtendArchiveWithExpirationAndGroup.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M5_TaskLogNullableExecutionTimeSeconds.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M4_ExtendTaskLogWithExecutionContext.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M3_Configuration.cs" />
@@ -168,6 +171,7 @@
     <Compile Include="Infrastructure\Database\Migrations\MigrationConfiguration.cs" />
     <Compile Include="Infrastructure\Database\Migrations\MigrationTarget.cs" />
     <Compile Include="Infrastructure\Database\Migrations\MigrationExtensions.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\ConfigurationUpdater.cs" />
     <Compile Include="Infrastructure\Database\Migrations\VersionTable.cs" />
     <Compile Include="Infrastructure\Delay.cs" />
     <Compile Include="Infrastructure\Email\EmailService.cs" />
