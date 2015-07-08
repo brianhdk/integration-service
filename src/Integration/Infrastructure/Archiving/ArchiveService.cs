@@ -2,6 +2,7 @@
 using System.Data;
 using System.Linq;
 using Vertica.Integration.Infrastructure.Database;
+using Vertica.Integration.Infrastructure.Database.Extensions;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Utilities_v4;
 
@@ -27,7 +28,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
                 {
                     byte[] binaryData = stream.ToArray();
 
-                    archiveId = session.ExecuteScalar<int>(
+                    archiveId = session.Wrap(s => s.ExecuteScalar<int>(
                         "INSERT INTO Archive (Name, BinaryData, ByteSize, Created, Expires, GroupName) VALUES (@name, @binaryData, @byteSize, @created, @expires, @groupName);" +
                         "SELECT CAST(SCOPE_IDENTITY() AS INT);",
                         new 
@@ -38,7 +39,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
                             created = Time.UtcNow,
                             expires = options.Expires,
                             groupName = options.GroupName
-                        });
+                        }));
 
                     transaction.Commit();
                 }
@@ -52,7 +53,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
         {
             using (IDbSession session = _db.OpenSession())
             {
-                return session.Query<Archive>("SELECT Id, Name, ByteSize, Created, GroupName, Expires FROM Archive")
+                return session.Wrap(s => s.Query<Archive>("SELECT Id, Name, ByteSize, Created, GroupName, Expires FROM Archive"))
                     .ToArray();
             }
         }
@@ -66,7 +67,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
             using (IDbSession session = _db.OpenSession())
             {
                 return
-                    session.Query<byte[]>("SELECT BinaryData FROM Archive WHERE Id = @Id", new { Id = value })
+                    session.Wrap(s => s.Query<byte[]>("SELECT BinaryData FROM Archive WHERE Id = @Id", new { Id = value }))
                         .SingleOrDefault();
             }
         }
@@ -76,7 +77,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
             using (IDbSession session = _db.OpenSession())
             using (IDbTransaction transaction = session.BeginTransaction())
             {
-                int count = session.Execute("DELETE FROM Archive WHERE Created <= @olderThan", new { olderThan });
+                int count = session.Wrap(s => s.Execute("DELETE FROM Archive WHERE Created <= @olderThan", new { olderThan }));
 
                 transaction.Commit();
 
@@ -89,7 +90,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
             using (IDbSession session = _db.OpenSession())
             using (IDbTransaction transaction = session.BeginTransaction())
             {
-                int count = session.Execute("DELETE FROM Archive WHERE Expires <= @now", new { now = Time.UtcNow });
+                int count = session.Wrap(s => s.Execute("DELETE FROM Archive WHERE Expires <= @now", new { now = Time.UtcNow }));
 
                 transaction.Commit();
 
