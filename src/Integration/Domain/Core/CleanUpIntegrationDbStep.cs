@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Data;
+using Vertica.Integration.Infrastructure.Archiving;
 using Vertica.Integration.Infrastructure.Configuration;
 using Vertica.Integration.Infrastructure.Database;
+using Vertica.Integration.Infrastructure.Database.Extensions;
 using Vertica.Integration.Model;
 using Vertica.Utilities_v4;
 using Vertica.Utilities_v4.Extensions.TimeExt;
@@ -12,43 +14,62 @@ namespace Vertica.Integration.Domain.Core
 	{
 	    private readonly IDbFactory _db;
 	    private readonly IConfigurationService _configuration;
+	    private readonly IArchiveService _archiver;
 
-		public CleanUpIntegrationDbStep(IDbFactory db, IConfigurationService configuration)
+		public CleanUpIntegrationDbStep(IDbFactory db, IConfigurationService configuration, IArchiveService archiver)
 		{
 		    _db = db;
 		    _configuration = configuration;
+		    _archiver = archiver;
 		}
 
         public override void Execute(MaintenanceWorkItem workItem, ITaskExecutionContext context)
         {
-			DateTimeOffset tasksLowerBound = Time.UtcNow.BeginningOfDay().Subtract(workItem.Configuration.CleanUpTaskLogEntriesOlderThan),
-				errorsLowerBound = Time.UtcNow.BeginningOfDay().Subtract(workItem.Configuration.CleanUpErrorLogEntriesOlderThan);
+			DateTimeOffset tasksLowerBound = Time.UtcNow.Subtract(workItem.Configuration.CleanUpTaskLogEntriesOlderThan),
+				errorsLowerBound = Time.UtcNow.Subtract(workItem.Configuration.CleanUpErrorLogEntriesOlderThan);
 
 			using (IDbSession session = _db.OpenSession())
 			using (IDbTransaction transaction = session.BeginTransaction())
 			{
-				int taskCount = DeleteTaskEntries(session, tasksLowerBound);
-				int errorCount = DeleteErrorEntries(session, errorsLowerBound);
+			    Tuple<int, string> taskLog = DeleteEntries(session, "TaskLog", tasksLowerBound);
+			    Tuple<int, string> errorLog = DeleteEntries(session, "ErrorLog", errorsLowerBound);
 
 				transaction.Commit();
 
-				if (taskCount > 0)
-					context.Log.Message("Deleted {0} task entries older than '{1}'.", taskCount, tasksLowerBound);
+			    if (taskLog.Item1 > 0 || errorLog.Item1 > 0)
+			    {
+			        ArchiveCreated archive = _archiver.Archive("IntegrationDb-Maintenance", a =>
+			        {
+			            a.Options.GroupedBy("Backup").ExpiresAfterMonths(12);
 
-				if (errorCount > 0)
-                    context.Log.Message("Deleted {0} error entries older than '{1}'.", errorCount, errorsLowerBound);
+			            a.IncludeContent(String.Format("TaskLog_{0:yyyyMMdd}.csv", tasksLowerBound), taskLog.Item2);
+			            a.IncludeContent(String.Format("ErrorLog_{0:yyyyMMdd}.csv", errorsLowerBound), errorLog.Item2);
+			        });
+
+			        context.Log.Message(@"Deleted {0} task entries older than '{1}'. 
+Deleted {2} error entries older than '{3}'
+Archive: {4}",
+			            taskLog.Item1,
+			            tasksLowerBound,
+			            errorLog.Item1,
+			            errorsLowerBound,
+			            archive);
+			    }
 			}
 		}
 
-		private int DeleteTaskEntries(IDbSession session, DateTimeOffset lowerBound)
-		{
-		    return session.ExecuteScalar<int>("DELETE FROM [TaskLog] WHERE [TimeStamp] <= @lowerbound", new { lowerBound });
-		}
+	    private Tuple<int, string> DeleteEntries(IDbSession session, string tableName, DateTimeOffset lowerBound)
+	    {
+	        return session.Wrap(s =>
+	        {
+	            string query = String.Format(" FROM [{0}] WHERE [TimeStamp] <= @lowerbound", tableName);
 
-		private int DeleteErrorEntries(IDbSession session, DateTimeOffset lowerBound)
-		{
-            return session.ExecuteScalar<int>("DELETE FROM [ErrorLog] WHERE [TimeStamp] <= @lowerBound", new { lowerBound });
-		}
+	            string csv = s.QueryToCsv(String.Concat("SELECT *", query), new { lowerBound });
+                int count = s.Execute(String.Concat("DELETE", query), new { lowerBound });
+
+	            return Tuple.Create(count, csv);
+	        });
+	    }
 
         public override string Description
 		{

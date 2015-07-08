@@ -9,12 +9,12 @@ namespace Vertica.Integration.Console
 		{
 			using (ApplicationContext context = ApplicationContext.Create(application => application
                 .UsePortal()
-                //.RegisterTasks()
+                .RegisterTasks()
                 .RegisterMigrations()
                 //.TestEventLogger()
                 //.TestTextFileLogger()
                 //.TestPaymentService()
-                .TestMonitorTask()
+                //.TestMonitorTask()
                 .Void()))
 			{
                 context.Execute(args);

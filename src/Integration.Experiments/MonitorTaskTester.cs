@@ -5,7 +5,6 @@ using Vertica.Integration.Infrastructure.Configuration;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Logging.Elmah;
 using Vertica.Integration.Model;
-using Vertica.Integration.Model.Web;
 
 namespace Vertica.Integration.Experiments
 {

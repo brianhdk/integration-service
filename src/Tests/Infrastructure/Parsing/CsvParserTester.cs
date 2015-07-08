@@ -12,10 +12,10 @@ namespace Vertica.Integration.Tests.Infrastructure.Parsing
         [Test]
         public void Parse_NoHeader_Different_Delimiter()
         {
-            CsvRow[] rows = Parse(@"Row1-Field1;Row1-Field2
-Row2-Field1;Row2-Field2",
+            CsvRow[] rows = Parse(@"Row1-Field1,Row1-Field2
+Row2-Field1,Row2-Field2",
                 false,
-                csv => csv.ChangeDelimiter(";"));
+                csv => csv.ChangeDelimiter(","));
 
             Assert.That(rows.Length, Is.EqualTo(2));
             Assert.That(rows[0][0], Is.EqualTo("Row1-Field1"));
@@ -23,8 +23,8 @@ Row2-Field1;Row2-Field2",
             Assert.That(rows[1][0], Is.EqualTo("Row2-Field1"));
             Assert.That(rows[1][1], Is.EqualTo("Row2-Field2"));
 
-            Assert.That(rows[0].ToString(), Is.EqualTo("Row1-Field1;Row1-Field2"));
-            Assert.That(rows[1].ToString(), Is.EqualTo("Row2-Field1;Row2-Field2"));
+            Assert.That(rows[0].ToString(), Is.EqualTo("Row1-Field1,Row1-Field2"));
+            Assert.That(rows[1].ToString(), Is.EqualTo("Row2-Field1,Row2-Field2"));
         }
 
         [Test]

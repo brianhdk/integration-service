@@ -107,7 +107,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
                 .Replace("„", doubleQuote)
                 .ToString();
 
-            if (data.IndexOf(Meta.Delimiter, StringComparison.OrdinalIgnoreCase) >= 0 || data.Contains('"'))
+            if (data.IndexOf(Meta.Delimiter, StringComparison.OrdinalIgnoreCase) >= 0 || data.Contains('"') || data.Contains(Environment.NewLine))
             {
                 data = String.Format("\"{0}\"", data);
             }
@@ -224,7 +224,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
         public class CsvRowBuilder : ICsvRowBuilder, ICsvRowBuilderFinisher, ICsvRowBuilderConfiguration
         {
-            private readonly IDictionary<string, int> _headers;
+            private IDictionary<string, int> _headers;
             private readonly List<CsvRow> _rows;
             private string _delimiter;
             private bool _headerInserted;
@@ -232,22 +232,29 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
             internal CsvRowBuilder(string[] headers)
             {
-                _delimiter = CsvConfiguration.DefaultDelimiter;
-
-                if (headers != null)
-                {
-                    _headers = headers
-                        .Select((x, i) => new {Header = x, Index = i})
-                        .ToDictionary(x => x.Header, x => x.Index, StringComparer.OrdinalIgnoreCase);
-                }
-
+                Headers(headers);
                 _rows = new List<CsvRow>();
+                _delimiter = CsvConfiguration.DefaultDelimiter;
             }
 
             public ICsvRowBuilderAdder Configure(Action<ICsvRowBuilderConfiguration> configure)
             {
                 if (configure != null)
                     configure(this);
+
+                return this;
+            }
+
+            public ICsvRowBuilderFinisher Headers(params string[] headers)
+            {
+                if (_headers != null) throw new InvalidOperationException(@"Headers have already been set.");
+
+                if (headers != null && headers.Length > 0)
+                {
+                    _headers = headers
+                        .Select((x, i) => new { Header = x, Index = i })
+                        .ToDictionary(x => x.Header, x => x.Index, StringComparer.OrdinalIgnoreCase);
+                }
 
                 return this;
             }
@@ -266,8 +273,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
             public ICsvRowBuilderFinisher AddUsingMapper(Action<ICsvRowMapper> mapper)
             {
                 if (mapper == null) throw new ArgumentNullException("mapper");
-                if (_headers == null)
-                    throw new InvalidOperationException(@"No headers were passed so this method is not allowed.");
+                if (_headers == null) throw new InvalidOperationException(@"No headers were passed so this method is not allowed.");
 
                 var internalMapper = new CsvRowMapper(_headers);
 
@@ -292,8 +298,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
             {
                 if (elements == null) throw new ArgumentNullException("elements");
                 if (mapper == null) throw new ArgumentNullException("mapper");
-                if (_headers == null)
-                    throw new InvalidOperationException(@"No headers were passed so this method is not allowed.");
+                if (_headers == null) throw new InvalidOperationException(@"No headers were passed so this method is not allowed.");
 
                 elements.ForEach(x =>
                 {
@@ -341,7 +346,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
             public CsvRow[] ToRows()
             {
-                if (_returnHeaderAsRow && !_headerInserted)
+                if (_headers != null && _returnHeaderAsRow && !_headerInserted)
                 {
                     _rows.Insert(0, new CsvRow(_headers.Keys.ToArray(), _delimiter, _headers, 1));
                     _headerInserted = true;
@@ -366,6 +371,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
         public interface ICsvRowBuilderAdder
         {
             int DataRowCount { get; }
+            ICsvRowBuilderFinisher Headers(params string[] headers);
             ICsvRowBuilderFinisher Add(params string[] data);
             ICsvRowBuilderFinisher AddUsingMapper(Action<ICsvRowMapper> mapper);
             ICsvRowBuilderFinisher From<T>(IEnumerable<T> elements, Func<T, string[]> createData);

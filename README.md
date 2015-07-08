@@ -20,10 +20,12 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
  - [Setting up Portal](#setting-up-portal)
  - [Integrating Elmah](#integrating-elmah)
  - [Integrating Azure - BlobStorage](#integrating-azure---blobstorage)
+ - [Integrating Payment Service](#integrating-payment-service)
  - [How to Disable IntegrationDb](#how-to-disable-integrationdb)
  - [How to Change Logger](#how-to-change-logger) 
  - [How to Register Custom dependencies/services](#how-to-register-custom-dependenciesservices)
  - [How to Setup connection to custom database](#how-to-setup-connection-to-custom-database) 
+ - [How to Setup MonitorFoldersStep](#how-to-setup-monitorfoldersstep)
  - [How to Extend MonitorTask](#how-to-extend-monitortask)
  - [How to Extend MaintenanceTask](#how-to-extend-maintenancetask)
 
@@ -397,6 +399,7 @@ And you can of course combine these two examples, e.g. by moving the entire Task
   * Has built-in steps
 	* **ExportIntegrationErrorsStep** - exports errors and warnings from the IntegrationDb itself
 	* **PingUrlsStep** - performs an http(s) request to a predefined set of URL's
+	* **MonitorFoldersStep** - monitors a set of configured folders (MonitorConfiguration).
   * Requires registration to be available
     * Use **MonitorTask(...)** extension method on the **TasksConfiguration** instance
   * Can easily be extended with additional Steps to Monitor other parts of the solution
@@ -937,7 +940,8 @@ TBD.
 
 ## CSV
 
-TBD. 
+TBD (general usage, QueryToCsv). 
+
 [Back to Table of Contents](#table-of-contents)
 
 ## FTP
@@ -1033,6 +1037,11 @@ namespace ConsoleApplication16
 [Back to Table of Contents](#table-of-contents)
 
 ## Integrating Azure - BlobStorage
+
+TBD. 
+[Back to Table of Contents](#table-of-contents)
+
+## Integrating Payment Service
 
 TBD. 
 [Back to Table of Contents](#table-of-contents)
@@ -1324,6 +1333,10 @@ From the **IDbSession** you can also create an **IDbTransaction**-scope. Use the
 
 [Back to Table of Contents](#table-of-contents)
 
+## How to setup MonitorFoldersStep
+
+TBD. 
+[Back to Table of Contents](#table-of-contents)
 
 ## How to Extend MonitorTask
 

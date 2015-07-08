@@ -59,7 +59,7 @@ namespace Vertica.Integration.Domain.Monitoring
 
         public override string Description
         {
-            get { return "Monitors configured folders."; }
+            get { return "Monitors a set of configured folders (MonitorConfiguration)."; }
         }
     }
 }
