@@ -31,7 +31,7 @@ namespace Vertica.Integration.Domain.Monitoring
 
         public override void Execute(MonitorWorkItem workItem, ITaskExecutionContext context)
         {
-            workItem.AddMessageGroupingPattern(MessageGroupingPattern);
+            workItem.AddMessageGroupingPatterns(MessageGroupingPattern);
 
             using (var session = _db.OpenSession())
             {

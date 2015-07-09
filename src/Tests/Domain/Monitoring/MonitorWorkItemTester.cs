@@ -52,7 +52,7 @@ namespace Vertica.Integration.Tests.Domain.Monitoring
         public void MessageGrouping_SameSource_VerifyGrouping()
         {
             var subject = new MonitorWorkItem(new MonitorConfiguration())
-                .AddMessageGroupingPattern(ExportIntegrationErrorsStep.MessageGroupingPattern);
+                .AddMessageGroupingPatterns(ExportIntegrationErrorsStep.MessageGroupingPattern);
 
             using (TimeReseter.SetUtc(new DateTimeOffset(2015, 06, 13, 12, 00, 00, TimeSpan.Zero)))
             {
@@ -78,7 +78,7 @@ ErrorID: 1 (6/13/2015 10:00:00 AM +00:00)"));
         public void MessageGrouping_DifferentSource_NoGrouping()
         {
             var subject = new MonitorWorkItem(new MonitorConfiguration())
-                .AddMessageGroupingPattern(ExportIntegrationErrorsStep.MessageGroupingPattern);
+                .AddMessageGroupingPatterns(ExportIntegrationErrorsStep.MessageGroupingPattern);
 
             var a = new MonitorEntry(Time.UtcNow, "SourceA", "Message. ErrorID: 1");
             var b = new MonitorEntry(Time.UtcNow, "SourceB", "Message. ErrorID: 2");

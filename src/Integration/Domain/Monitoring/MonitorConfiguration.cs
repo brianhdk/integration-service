@@ -30,6 +30,7 @@ namespace Vertica.Integration.Domain.Monitoring
         public DateTimeOffset LastRun { get; set; }
 
         public string[] IgnoreErrorsWithMessagesContaining { get; set; }
+        public string[] MessageGroupingPatterns { get; set; }
         public MonitorTarget[] Targets { get; set; }
         public string SubjectPrefix { get; set; }
 
@@ -102,7 +103,7 @@ namespace Vertica.Integration.Domain.Monitoring
             public Folder[] GetEnabledFolders()
             {
                 EnsureFolders();
-                return Folders.Where(x => Enabled && x.Enabled && x.Criteria != null).ToArray();
+                return Folders.Where(x => Enabled && x.Enabled && !String.IsNullOrWhiteSpace(x.Path) && x.Criteria != null).ToArray();
             }
 
             public class Folder

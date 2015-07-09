@@ -27,6 +27,7 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
  - [How to Setup connection to custom database](#how-to-setup-connection-to-custom-database) 
  - [How to Setup MonitorFoldersStep](#how-to-setup-monitorfoldersstep)
  - [How to Extend MonitorTask](#how-to-extend-monitortask)
+ - [How to Setup ArchiveFoldersStep](#how-to-setup-archivefoldersstep)
  - [How to Extend MaintenanceTask](#how-to-extend-maintenancetask)
 
 ## How to Get Started
@@ -1404,6 +1405,14 @@ Other examples of customizing the **MonitorTask** could be to:
 1. Monitor synchronized data for common data issues, e.g. invalid discounts, missing required data on customers and such
 2. Export errors from Sitecore, uCommerce, umbraco and other platforms exposing a log
 
+[Back to Table of Contents](#table-of-contents)
+
+## How to setup ArchiveFoldersStep
+
+IIS log file archiving.
+Sitecore log file archiving.
+
+TBD. 
 [Back to Table of Contents](#table-of-contents)
 
 ## How to Extend MaintenanceTask

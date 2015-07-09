@@ -76,6 +76,10 @@
       <Project>{a418ff22-74e1-42eb-a0bf-97da7993647b}</Project>
       <Name>Integration.Experiments</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Integration.IIS\Integration.IIS.csproj">
+      <Project>{4273E246-5F7D-4385-8451-AFA8E2680441}</Project>
+      <Name>Integration.IIS</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Integration.Logging.Elmah\Integration.Logging.Elmah.csproj">
       <Project>{6d28c1ce-7eae-44a2-8624-a879f7af7021}</Project>
       <Name>Integration.Logging.Elmah</Name>

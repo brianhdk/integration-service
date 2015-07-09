@@ -109,6 +109,7 @@
     <Compile Include="ApplicationConfiguration.cs" />
     <Compile Include="ApplicationContext.cs" />
     <Compile Include="CastleWindsor.cs" />
+    <Compile Include="Domain\Core\ArchiveFoldersStep.cs" />
     <Compile Include="Domain\Core\CleanUpIntegrationDbStep.cs" />
     <Compile Include="Domain\Core\MaintenanceConfiguration.cs" />
     <Compile Include="Domain\Core\MaintenanceTask.cs" />

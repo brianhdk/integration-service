@@ -36,7 +36,7 @@ namespace Vertica.Integration.Logging.Elmah
         {
             ElmahConfiguration configuration = workItem.Context<ElmahConfiguration>(ConfigurationName);
 
-            workItem.AddMessageGroupingPattern(MessageGroupingPattern);
+            workItem.AddMessageGroupingPatterns(MessageGroupingPattern);
 
             using (var connection = new SqlConnection(configuration.ToConnectionString()))
             using (SqlCommand command = connection.CreateCommand())

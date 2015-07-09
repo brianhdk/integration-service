@@ -35,6 +35,7 @@ namespace Vertica.Integration.Domain.Monitoring
 	        _ignore = new List<ISpecification<MonitorEntry>>();
 	        _redirects = ChainOfResponsibility.Empty<MonitorEntry, Target[]>();
 	        _messageGrouping = new List<Regex>();
+
 	        Configuration = configuration;
         }
 
@@ -63,11 +64,10 @@ namespace Vertica.Integration.Domain.Monitoring
             return this;
         }
 
-        public MonitorWorkItem AddMessageGroupingPattern(string pattern)
+        public MonitorWorkItem AddMessageGroupingPatterns(params string[] regexPatterns)
         {
-            if (String.IsNullOrWhiteSpace(pattern)) throw new ArgumentException(@"Value cannot be null or empty.", "pattern");
-
-            _messageGrouping.Add(new Regex(pattern, RegexOptions.IgnoreCase));
+            foreach (string pattern in regexPatterns ?? new string[0])
+                _messageGrouping.Add(new Regex(pattern, RegexOptions.IgnoreCase));
 
             return this;
         }

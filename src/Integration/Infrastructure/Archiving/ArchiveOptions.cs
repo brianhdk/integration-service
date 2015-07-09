@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 using Vertica.Utilities_v4;
 
 namespace Vertica.Integration.Infrastructure.Archiving
@@ -10,8 +11,13 @@ namespace Vertica.Integration.Infrastructure.Archiving
             Named(name);
         }
 
+        [JsonProperty]
         public string Name { get; private set; }
+
+        [JsonProperty]
         public string GroupName { get; private set; }
+
+        [JsonProperty]
         public DateTimeOffset? Expires { get; private set; }
 
         public ArchiveOptions Named(string name)

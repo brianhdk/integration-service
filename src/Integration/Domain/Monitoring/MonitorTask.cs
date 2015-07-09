@@ -33,7 +33,8 @@ namespace Vertica.Integration.Domain.Monitoring
 
 			return new MonitorWorkItem(configuration)
                 .AddIgnoreFilter(new MessageContainsText(configuration.IgnoreErrorsWithMessagesContaining))
-                .AddTargetRedirect(new RedirectForMonitorTargets(configuration.Targets));
+                .AddTargetRedirect(new RedirectForMonitorTargets(configuration.Targets))
+                .AddMessageGroupingPatterns(configuration.MessageGroupingPatterns);
 		}
 
         public override void End(MonitorWorkItem workItem, ITaskExecutionContext context)

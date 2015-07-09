@@ -48,6 +48,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\FluentMigrator.1.5.1.0\lib\40\FluentMigrator.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\packages\IIS.Microsoft.Web.Adminstration.8.5.9600.16384\lib\Microsoft.Web.Administration.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -72,6 +76,7 @@
     <Compile Include="CustomDbTask.cs" />
     <Compile Include="Migrations\IntegrationDb\M1436190505_SetupMonitorConfiguration_MonitorFoldersStep_Ultimate.cs" />
     <Compile Include="Monitoring\MonitorDataStep.cs" />
+    <Compile Include="MaintenanceTaskTester.cs" />
     <Compile Include="MonitorTaskTester.cs" />
     <Compile Include="PaymentServiceTester.cs" />
     <Compile Include="MakeDeploymentTask.cs" />
@@ -92,6 +97,7 @@
     <Compile Include="TaskWithSteps.cs" />
     <Compile Include="TaskWorkItem.cs" />
     <Compile Include="EventLoggerTesterTask.cs" />
+    <Compile Include="TestIISTask.cs" />
     <Compile Include="TextFileLoggerTesterTask.cs" />
     <Compile Include="XssTestingStep.cs" />
   </ItemGroup>
@@ -100,6 +106,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Integration.IIS\Integration.IIS.csproj">
+      <Project>{4273E246-5F7D-4385-8451-AFA8E2680441}</Project>
+      <Name>Integration.IIS</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Integration.Logging.Elmah\Integration.Logging.Elmah.csproj">
       <Project>{6D28C1CE-7EAE-44A2-8624-A879F7AF7021}</Project>
       <Name>Integration.Logging.Elmah</Name>

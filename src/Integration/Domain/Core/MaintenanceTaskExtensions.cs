@@ -17,7 +17,8 @@ namespace Vertica.Integration.Domain.Core
 
             taskConfiguration
                 .Step<CleanUpIntegrationDbStep>()
-                .Step<CleanUpArchivesStep>();
+                .Step<CleanUpArchivesStep>()
+                .Step<ArchiveFoldersStep>();
 
             if (task != null)
                 task(taskConfiguration);

@@ -16,6 +16,8 @@ namespace Vertica.Integration.Portal
             if (portal != null)
                 portal(configuration);
 
+            throw new InvalidOperationException("Implement versioning!");
+
             if (!Directory.Exists(PortalConfiguration.BaseFolder))
             {
                 var zipFile = new FileInfo(

@@ -38,16 +38,13 @@ namespace Vertica.Integration.Model
 	            output.Add(message);
 	        };
 
-	        Action<ITarget, string> logWarning = (target, message) => _logger.LogWarning(target, message);
-	        Action<ITarget, string> logError = (target, message) => _logger.LogError(target, message);
-
             using (var taskLog = new TaskLog(task, _logger.LogEntry, new Output(outputter)))
             {
 				TWorkItem workItem;
 
 				try
 				{
-                    workItem = task.Start(new TaskExecutionContext(new Log(taskLog.LogMessage, logWarning, logError), arguments));
+                    workItem = task.Start(new TaskExecutionContext(new Log(taskLog.LogMessage, _logger), arguments));
 				}
 				catch (Exception ex)
 				{
@@ -71,7 +68,7 @@ namespace Vertica.Integration.Model
 					{
 						try
 						{
-                            step.Execute(workItem, new TaskExecutionContext(new Log(stepLog.LogMessage, logWarning, logError), arguments));
+                            step.Execute(workItem, new TaskExecutionContext(new Log(stepLog.LogMessage, _logger), arguments));
 						}
 						catch (Exception ex)
 						{
@@ -87,7 +84,7 @@ namespace Vertica.Integration.Model
 
 				try
 				{
-                    task.End(workItem, new TaskExecutionContext(new Log(taskLog.LogMessage, logWarning, logError), arguments));
+                    task.End(workItem, new TaskExecutionContext(new Log(taskLog.LogMessage, _logger), arguments));
 				}
 				catch (Exception ex)
 				{
