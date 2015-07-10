@@ -1,0 +1,18 @@
+﻿Hi, and thanks for trying out the Integration Service platform.
+To get started, modify your Program.cs as shown below to begin working with this.
+
+Also make sure to visit the Project Home on https://github.com/vertica-as/integration-service for further documentation.
+
+class Program
+{
+    static void Main(string[] args)
+    {
+		using (ApplicationContext context = ApplicationContext.Create(application => application
+            .MongoDB(mongoDB => mongoDB
+				// http://docs.mongodb.org/manual/reference/connection-string/#connections-connection-options
+				.Connection(ConnectionString.FromText(""mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]""")))))
+		{
+			context.Execute(args);
+		}
+    }
+}

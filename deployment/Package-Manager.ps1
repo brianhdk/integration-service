@@ -9,6 +9,7 @@ $settings = @{
 		"integration_logging_elmah" = Resolve-Path $script_directory\..\src\Integration.Logging.Elmah
 		"integration_azure" = Resolve-Path $script_directory\..\src\Integration.Azure
 		"integration_paymentservice" = Resolve-Path $script_directory\..\src\Integration.PaymentService
+		"integration_mongodb" = Resolve-Path $script_directory\..\src\Integration.MongoDB
     }
     "tools" = @{
         "nuget" = Resolve-Path $script_directory\..\.nuget\NuGet.exe

@@ -4,19 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A5F61735-DB21-4402-8D58-BDF4E6AB4991}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{3BCCDB4F-104A-418A-8DEE-15A655960AEA}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Vertica.Integration.Console</RootNamespace>
-    <AssemblyName>Vertica.Integration.Console</AssemblyName>
+    <RootNamespace>Vertica.Integration.MongoDB</RootNamespace>
+    <AssemblyName>Vertica.Integration.MongoDB</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -26,7 +24,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -35,21 +32,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Castle.Core">
       <HintPath>..\..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.Windsor, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Castle.Windsor">
       <HintPath>..\..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="FluentMigrator, Version=1.5.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\FluentMigrator.1.5.1.0\lib\40\FluentMigrator.dll</HintPath>
+    <Reference Include="MongoDB.Bson">
+      <HintPath>..\..\packages\MongoDB.Bson.2.0.1\lib\net45\MongoDB.Bson.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Host.HttpListener, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Microsoft.Owin.Host.HttpListener.3.0.1\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+    <Reference Include="MongoDB.Driver">
+      <HintPath>..\..\packages\MongoDB.Driver.2.0.1\lib\net45\MongoDB.Driver.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MongoDB.Driver.Core">
+      <HintPath>..\..\packages\MongoDB.Driver.Core.2.0.1\lib\net45\MongoDB.Driver.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -60,40 +57,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Commands\ILogRotatorCommand.cs" />
+    <Compile Include="Commands\LogRotatorCommand.cs" />
+    <Compile Include="IAdditionalConfiguration.cs" />
+    <Compile Include="IMongoDBConfiguration.cs" />
+    <Compile Include="Infrastructure\DefaultConnection.cs" />
+    <Compile Include="LogRotatorStep.cs" />
+    <Compile Include="MongoDBConfiguration.cs" />
+    <Compile Include="MongoDBExtensions.cs" />
+    <Compile Include="Infrastructure\MongoDBClientFactory.cs" />
+    <Compile Include="Infrastructure\Connection.cs" />
+    <Compile Include="Infrastructure\IMongoDBClientFactory.cs" />
+    <Compile Include="Infrastructure\Castle.Windsor\MongoDBInstaller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Integration.Azure\Integration.Azure.csproj">
-      <Project>{fc35a1e3-52dd-4b8d-af2c-b01ce8ae2ee8}</Project>
-      <Name>Integration.Azure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Integration.Experiments\Integration.Experiments.csproj">
-      <Project>{a418ff22-74e1-42eb-a0bf-97da7993647b}</Project>
-      <Name>Integration.Experiments</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Integration.IIS\Integration.IIS.csproj">
-      <Project>{4273E246-5F7D-4385-8451-AFA8E2680441}</Project>
-      <Name>Integration.IIS</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Integration.Logging.Elmah\Integration.Logging.Elmah.csproj">
-      <Project>{6d28c1ce-7eae-44a2-8624-a879f7af7021}</Project>
-      <Name>Integration.Logging.Elmah</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Integration.MongoDB\Integration.MongoDB.csproj">
-      <Project>{3BCCDB4F-104A-418A-8DEE-15A655960AEA}</Project>
-      <Name>Integration.MongoDB</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Integration.Portal\Integration.Portal.csproj">
-      <Project>{be14da0e-31c6-4417-8ec6-ed1658b51fa9}</Project>
-      <Name>Integration.Portal</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Integration\Integration.csproj">
-      <Project>{460f774f-2c89-47f4-84bd-b97653060e68}</Project>
+      <Project>{460F774F-2C89-47F4-84BD-B97653060E68}</Project>
       <Name>Integration</Name>
     </ProjectReference>
   </ItemGroup>
