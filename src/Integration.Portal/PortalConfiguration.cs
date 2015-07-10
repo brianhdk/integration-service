@@ -1,28 +1,48 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 
 namespace Vertica.Integration.Portal
 {
     public class PortalConfiguration
     {
-        internal const string FolderName = "Portal.Html5";
+        private const string Name = "Portal.Html5";
+
+        private static readonly string BinFolder = GetBinFolder();
         
-        internal static readonly string BaseFolder = FindBaseFolder();
+        internal static readonly string Version = GetVersion();
+        internal static readonly string Folder = FindFolder();
+        internal static readonly string ZipFile = GetZipFile();
 
-        private static string FindBaseFolder()
+        private static string GetBinFolder()
         {
-            string binFolder = new FileInfo(typeof(PortalConfiguration).Assembly.Location).DirectoryName ?? String.Empty;
+            return new FileInfo(typeof(PortalConfiguration).Assembly.Location).DirectoryName ?? String.Empty;
+        }
 
-            binFolder = Path.Combine(binFolder, FolderName);
+        private static string GetVersion()
+        {
+            AssemblyName name = typeof(PortalConfiguration).Assembly.GetName();
+
+            return name.Version.ToString();
+        }
+
+        private static string FindFolder()
+        {
+            string folder = Path.Combine(BinFolder, String.Format("{0}-{1}", Name, Version));
 
 #if DEBUG
-            string developmentFolder = Path.Combine(binFolder, @"..\..\..\..\Integration.Portal");
+            string developmentFolder = Path.Combine(folder, @"..\..\..\..\Integration.Portal");
 
             if (Directory.Exists(developmentFolder))
-                binFolder = developmentFolder;
+                folder = developmentFolder;
 #endif 
 
-            return binFolder;
+            return folder;
+        }
+
+        private static string GetZipFile()
+        {
+            return Path.Combine(BinFolder, String.Format("{0}.zip", Name));
         }
     }
 }

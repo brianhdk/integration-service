@@ -9,7 +9,7 @@ namespace Vertica.Integration.Console
 		private static void Main(string[] args)
 		{
 			using (ApplicationContext context = ApplicationContext.Create(application => application
-                //.UsePortal()
+                .UsePortal()
                 //.UseIIS()
                 //.RegisterTasks()
                 //.RegisterMigrations()
@@ -17,7 +17,7 @@ namespace Vertica.Integration.Console
                 //.TestTextFileLogger()
                 //.TestPaymentService()
                 //.TestMonitorTask()
-                .TestMaintenanceTask()
+                //.TestMaintenanceTask()
                 .Void()))
 			{
                 context.Execute(args);

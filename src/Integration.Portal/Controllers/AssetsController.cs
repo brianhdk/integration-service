@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Reflection;
 using System.Web;
 using System.Web.Http;
 
@@ -12,12 +11,8 @@ namespace Vertica.Integration.Portal.Controllers
 {
     public class AssetsController : ApiController
     {
-        private static readonly Lazy<EntityTagHeaderValue> ETag = new Lazy<EntityTagHeaderValue>(() =>
-        {
-            AssemblyName name = typeof (AssetsController).Assembly.GetName();
-
-            return EntityTagHeaderValue.Parse(String.Concat("\"", name.Version.ToString(), "\""));
-        });
+        private static readonly Lazy<EntityTagHeaderValue> ETag = new Lazy<EntityTagHeaderValue>(() => 
+            EntityTagHeaderValue.Parse(String.Concat("\"", PortalConfiguration.Version, "\"")));
 
         [Route("assets/{*path}")]
         public HttpResponseMessage Get(string path)
@@ -30,7 +25,7 @@ namespace Vertica.Integration.Portal.Controllers
             if (request == null) throw new ArgumentNullException("request");
             if (String.IsNullOrWhiteSpace(relativePathToFile)) throw new ArgumentException(@"Value cannot be null or empty.", "relativePathToFile");
 
-            var file = new FileInfo(Path.Combine(PortalConfiguration.BaseFolder, relativePathToFile));
+            var file = new FileInfo(Path.Combine(PortalConfiguration.Folder, relativePathToFile));
 
             if (!file.Exists)
                 return request.CreateErrorResponse(HttpStatusCode.NotFound, "Resource not found.");
