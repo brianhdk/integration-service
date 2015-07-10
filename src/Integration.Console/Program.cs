@@ -1,6 +1,6 @@
 ﻿using Vertica.Integration.Experiments;
-using Vertica.Integration.IIS;
-using Vertica.Integration.Portal;
+using Vertica.Integration.Infrastructure;
+using Vertica.Integration.MongoDB;
 
 namespace Vertica.Integration.Console
 {
@@ -9,7 +9,7 @@ namespace Vertica.Integration.Console
 		private static void Main(string[] args)
 		{
 			using (ApplicationContext context = ApplicationContext.Create(application => application
-                .UsePortal()
+                //.UsePortal()
                 //.UseIIS()
                 //.RegisterTasks()
                 //.RegisterMigrations()
@@ -18,6 +18,7 @@ namespace Vertica.Integration.Console
                 //.TestPaymentService()
                 //.TestMonitorTask()
                 //.TestMaintenanceTask()
+                .TestMongoDbTask()
                 .Void()))
 			{
                 context.Execute(args);

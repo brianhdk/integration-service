@@ -81,7 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Infrastructure\BlobStorage\AzureBlobClientFactory.cs" />
-    <Compile Include="Infrastructure\BlobStorage\IO\ArchiveConnection.cs" />
+    <Compile Include="Infrastructure\BlobStorage\IO\FileSystemConnection.cs" />
     <Compile Include="Infrastructure\BlobStorage\IO\AzureFileSystemService.cs" />
     <Compile Include="Infrastructure\Castle.Windsor\AzureFileSystemInstaller.cs" />
     <Compile Include="Infrastructure\Castle.Windsor\AzureArchiveInstaller.cs" />

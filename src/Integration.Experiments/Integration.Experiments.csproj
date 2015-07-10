@@ -52,6 +52,18 @@
       <Private>True</Private>
       <HintPath>..\..\packages\IIS.Microsoft.Web.Adminstration.8.5.9600.16384\lib\Microsoft.Web.Administration.dll</HintPath>
     </Reference>
+    <Reference Include="MongoDB.Bson, Version=2.0.1.27, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\MongoDB.Bson.2.0.1\lib\net45\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver">
+      <HintPath>..\..\packages\MongoDB.Driver.2.0.1\lib\net45\MongoDB.Driver.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MongoDB.Driver.Core, Version=2.0.1.27, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\MongoDB.Driver.Core.2.0.1\lib\net45\MongoDB.Driver.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -75,6 +87,7 @@
     <Compile Include="CustomDb.cs" />
     <Compile Include="CustomDbTask.cs" />
     <Compile Include="Migrations\IntegrationDb\M1436190505_SetupMonitorConfiguration_MonitorFoldersStep_Ultimate.cs" />
+    <Compile Include="MongoDbTask.cs" />
     <Compile Include="Monitoring\MonitorDataStep.cs" />
     <Compile Include="MaintenanceTaskTester.cs" />
     <Compile Include="MonitorTaskTester.cs" />
@@ -113,6 +126,10 @@
     <ProjectReference Include="..\Integration.Logging.Elmah\Integration.Logging.Elmah.csproj">
       <Project>{6D28C1CE-7EAE-44A2-8624-A879F7AF7021}</Project>
       <Name>Integration.Logging.Elmah</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration.MongoDB\Integration.MongoDB.csproj">
+      <Project>{3BCCDB4F-104A-418A-8DEE-15A655960AEA}</Project>
+      <Name>Integration.MongoDB</Name>
     </ProjectReference>
     <ProjectReference Include="..\Integration.PaymentService\Integration.PaymentService.csproj">
       <Project>{08493D80-1A5F-4D3B-8BD3-E6EA7695D3B3}</Project>
