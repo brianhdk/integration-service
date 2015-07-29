@@ -108,9 +108,10 @@
   <ItemGroup>
     <Compile Include="ApplicationConfiguration.cs" />
     <Compile Include="ApplicationContext.cs" />
-    <Compile Include="AppSettingsProvider.cs" />
+    <Compile Include="AppConfigRuntimeSettings.cs" />
+    <Compile Include="ApplicationEnvironment.cs" />
     <Compile Include="CastleWindsor.cs" />
-    <Compile Include="ConfigurationBasedSettingsProvider.cs" />
+    <Compile Include="ConfigurationBasedRuntimeSettings.cs" />
     <Compile Include="Domain\Core\ArchiveFoldersStep.cs" />
     <Compile Include="Domain\Core\CleanUpIntegrationDbStep.cs" />
     <Compile Include="Domain\Core\MaintenanceConfiguration.cs" />
@@ -223,7 +224,7 @@
     <Compile Include="Infrastructure\Remote\HttpClientFactory.cs" />
     <Compile Include="Infrastructure\Remote\IFtpClientFactory.cs" />
     <Compile Include="Infrastructure\Remote\IHttpClientFactory.cs" />
-    <Compile Include="ISettingsProvider.cs" />
+    <Compile Include="IRuntimeSettings.cs" />
     <Compile Include="Model\Arguments.cs" />
     <Compile Include="Model\ContextWorkItem.cs" />
     <Compile Include="Model\Exceptions\MultipleHostsFoundException.cs" />

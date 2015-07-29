@@ -7,13 +7,13 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 {
 	public class WindowsServiceHandler : IWindowsServiceHandler
     {
-	    private readonly ISettingsProvider _settings;
+	    private readonly IRuntimeSettings _runtimeSettings;
 	    
-	    public WindowsServiceHandler(ISettingsProvider settings)
+	    public WindowsServiceHandler(IRuntimeSettings runtimeSettings)
 	    {
-		    if (settings == null) throw new ArgumentNullException("settings");
+		    if (runtimeSettings == null) throw new ArgumentNullException("runtimeSettings");
 
-		    _settings = settings;
+		    _runtimeSettings = runtimeSettings;
 	    }
 
         public bool Handle(HostArguments args, WindowsService service)
@@ -30,7 +30,7 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 
             if (actionIs("install"))
             {
-                using (var installer = new WindowsServiceInstaller(_settings, service))
+                using (var installer = new WindowsServiceInstaller(_runtimeSettings, service))
                 {
 	                string account;
 	                args.CommandArgs.TryGetValue("account", out account);
@@ -58,14 +58,14 @@ namespace Vertica.Integration.Model.Hosting.Handlers
             }
             else if (actionIs("uninstall"))
             {
-	            using (var installer = new WindowsServiceInstaller(_settings, service))
+	            using (var installer = new WindowsServiceInstaller(_runtimeSettings, service))
                 {
                     installer.Uninstall();
                 }
             }
 			else
 			{
-				using (var runner = new WindowsServiceRunner(_settings, service))
+				using (var runner = new WindowsServiceRunner(_runtimeSettings, service))
 				{
 					ServiceBase.Run(runner);
 				}

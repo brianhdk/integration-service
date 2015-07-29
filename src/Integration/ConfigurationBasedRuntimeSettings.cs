@@ -4,16 +4,16 @@ using Vertica.Integration.Infrastructure.Configuration;
 
 namespace Vertica.Integration
 {
-	public class ConfigurationBasedSettingsProvider : ISettingsProvider
+	public class ConfigurationBasedRuntimeSettings : IRuntimeSettings
 	{
 		private readonly IConfigurationService _configuration;
 
-		public ConfigurationBasedSettingsProvider(IConfigurationService configuration)
+		public ConfigurationBasedRuntimeSettings(IConfigurationService configuration)
 		{
 			_configuration = configuration;
 		}
 
-		public string Environment
+		public ApplicationEnvironment Environment
 		{
 			get { return this["Environment"]; }
 		}

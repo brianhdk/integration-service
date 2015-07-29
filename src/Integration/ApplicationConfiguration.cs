@@ -27,7 +27,7 @@ namespace Vertica.Integration
         private readonly MigrationConfiguration _migration;
         private readonly HostsConfiguration _hosts;
 
-		private Type _settingsProvider;
+		private Type _runtimeSettings;
 
 		internal ApplicationConfiguration()
         {
@@ -43,7 +43,7 @@ namespace Vertica.Integration
             _migration = new MigrationConfiguration(this);
             _hosts = new HostsConfiguration(this);
 
-			_settingsProvider = typeof (AppSettingsProvider);
+			_runtimeSettings = typeof (AppConfigRuntimeSettings);
         }
 
         public bool IgnoreSslErrors { get; set; }
@@ -118,10 +118,10 @@ namespace Vertica.Integration
             return this;
         }
 
-		public ApplicationConfiguration Settings<TProvider>()
-			where TProvider : ISettingsProvider
+		public ApplicationConfiguration RuntimeSettings<T>()
+			where T : IRuntimeSettings
 		{
-			_settingsProvider = typeof (TProvider);
+			_runtimeSettings = typeof (T);
 
 			return this;
 		}
@@ -144,8 +144,8 @@ namespace Vertica.Integration
         void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
         {
 	        container.Register(Component
-				.For<ISettingsProvider>()
-				.ImplementedBy(_settingsProvider));
+				.For<IRuntimeSettings>()
+				.ImplementedBy(_runtimeSettings));
 
             container.Install(_customInstallers.ToArray());
         }

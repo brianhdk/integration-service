@@ -13,18 +13,18 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 {
     internal class WindowsServiceInstaller : IDisposable
     {
-	    private readonly ISettingsProvider _settings;
+	    private readonly IRuntimeSettings _runtimeSettings;
 	    private readonly WindowsService _service;
 	    private readonly ServiceInstaller _installer;
 
         private Credentials _credentials;
 
-        public WindowsServiceInstaller(ISettingsProvider settings, WindowsService service)
+        public WindowsServiceInstaller(IRuntimeSettings runtimeSettings, WindowsService service)
         {
-	        if (settings == null) throw new ArgumentNullException("settings");
+	        if (runtimeSettings == null) throw new ArgumentNullException("runtimeSettings");
 	        if (service == null) throw new ArgumentNullException("service");
 
-	        _settings = settings;
+	        _runtimeSettings = runtimeSettings;
 	        _service = service;
 
 	        _installer = new ServiceInstaller();
@@ -69,8 +69,8 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 		        }
 
 		        _installer.Context = GetInstallContext();
-		        _installer.ServiceName = GetServiceName(_settings, _service);
-		        _installer.DisplayName = Prefix(_settings, _service.Name);
+		        _installer.ServiceName = GetServiceName(_runtimeSettings, _service);
+		        _installer.DisplayName = Prefix(_runtimeSettings, _service.Name);
 		        _installer.Description = _service.Description;
 		        _installer.StartType = ServiceStartMode.Manual;
 		        _installer.Parent = processInstaller;
@@ -94,7 +94,7 @@ namespace Vertica.Integration.Model.Hosting.Handlers
             using (var processInstaller = new ServiceProcessInstaller())
             {
                 _installer.Context = GetInstallContext();
-                _installer.ServiceName = GetServiceName(_settings, _service);
+                _installer.ServiceName = GetServiceName(_runtimeSettings, _service);
                 _installer.Parent = processInstaller;
 
                 // ReSharper disable AssignNullToNotNullAttribute
@@ -108,21 +108,21 @@ namespace Vertica.Integration.Model.Hosting.Handlers
             _installer.Dispose();
         }
 
-	    public static string GetServiceName(ISettingsProvider settings, WindowsService service)
+	    public static string GetServiceName(IRuntimeSettings runtimeSettings, WindowsService service)
 	    {
-		    if (settings == null) throw new ArgumentNullException("settings");
+		    if (runtimeSettings == null) throw new ArgumentNullException("runtimeSettings");
 		    if (service == null) throw new ArgumentNullException("service");
 
-		    return Regex.Replace(Prefix(settings, service.Name), @"\W", String.Empty);
+		    return Regex.Replace(Prefix(runtimeSettings, service.Name), @"\W", String.Empty);
 	    }
 
-	    private static string Prefix(ISettingsProvider settings, string value)
+	    private static string Prefix(IRuntimeSettings runtimeSettings, string value)
         {
-	        string environment = settings.Environment;
+	        ApplicationEnvironment environment = runtimeSettings.Environment;
 
 	        return String.Format("Integration Service{0}: {1}", 
-				!String.IsNullOrWhiteSpace(environment)
-					? String.Format(" [{0}]", environment.Trim())
+				environment != null
+					? String.Format(" [{0}]", environment)
 					: String.Empty, 
 				value);
         }

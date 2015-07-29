@@ -1,5 +1,6 @@
 ﻿using System;
 using Castle.Windsor;
+using Rebus.CastleWindsor;
 using Rebus.Config;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 
@@ -26,10 +27,29 @@ namespace Vertica.Integration.Rebus
 	    void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
 		{
 			Container = container;
-			container.RegisterInstance(this);
+			Container.RegisterInstance(this);
 		}
 
-	    internal Func<RebusConfigurer, RebusConfigurer> BusConfiguration { get; set; }
-	    internal IWindsorContainer Container { get; set; }
+	    private Func<RebusConfigurer, RebusConfigurer> BusConfiguration { get; set; }
+	    private IWindsorContainer Container { get; set; }
+
+	    internal Func<IDisposable> BusFactory
+	    {
+			get
+			{
+				if (Container == null)
+					throw new InvalidOperationException("Container has not been initialized.");
+
+				if (BusConfiguration == null)
+					throw new InvalidOperationException("Bus has not been initialized.");
+
+				return () =>
+				{
+					RebusConfigurer rebus = Configure.With(new CastleWindsorContainerAdapter(Container));
+
+					return BusConfiguration(rebus).Start();
+				};
+			}
+	    }
     }
 }

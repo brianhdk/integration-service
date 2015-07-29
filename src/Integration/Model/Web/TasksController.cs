@@ -1,9 +1,7 @@
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.Remoting.Messaging;
 using System.Web.Http;
-using Vertica.Integration.Infrastructure.Extensions;
 
 namespace Vertica.Integration.Model.Web
 {
@@ -17,8 +15,6 @@ namespace Vertica.Integration.Model.Web
 	        _factory = factory;
 	        _runner = runner;
         }
-
-		// TODO: Add possibility to create a positive/negative list of Tasks that should/should not be exposed.
 
 		public HttpResponseMessage Get()
 		{

@@ -59,7 +59,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 
         public static Target Custom(string name)
         {
-            Target custom = new Target(name);
+            var custom = new Target(name);
 
             if (custom.Equals(Service))
                 return Service;

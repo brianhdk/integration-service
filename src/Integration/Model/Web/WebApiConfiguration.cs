@@ -66,6 +66,18 @@ namespace Vertica.Integration.Model.Web
             return this;
         }
 
+		/// <summary>
+		/// Clears all registred ApiControllers.
+		/// </summary>
+	    public WebApiConfiguration Clear()
+	    {
+		    _remove.Clear();
+		    _add.Clear();
+			_scan.Clear();
+
+		    return this;
+	    }
+
         void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
         {
             container.Install(new WebApiInstaller(_scan.ToArray(), _add.ToArray(), _remove.ToArray()));

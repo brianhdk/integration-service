@@ -1,10 +1,6 @@
 ﻿using Vertica.Integration.Experiments;
-using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Model;
-using Vertica.Integration.Model.Hosting;
-using Vertica.Integration.MongoDB;
-using Vertica.Integration.Portal;
-using Vertica.Integration.Rebus;
+using Vertica.Integration.Model.Web;
 
 namespace Vertica.Integration.Console
 {
@@ -28,7 +24,9 @@ namespace Vertica.Integration.Console
                 //.TestMaintenanceTask()
                 //.TestMongoDbTask()
 				//.Hosts(hosts => hosts.Remove<WebApiHost>())
-				.TestRebus()
+				//.RegisterMigrations()
+				//.TestRebus()
+				.WebApi(webApi => webApi.Clear().Remove<TasksController>())
                 .Void()))
 			{
                 context.Execute(args);

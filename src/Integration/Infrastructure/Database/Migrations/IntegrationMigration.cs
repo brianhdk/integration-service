@@ -5,7 +5,6 @@ using Castle.MicroKernel;
 using FluentMigrator;
 using Vertica.Integration.Infrastructure.Configuration;
 using Vertica.Integration.Model;
-using Vertica.Utilities_v4;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
@@ -20,6 +19,11 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
         {
             get { return Resolve<IConfigurationService>(); }
         }
+
+	    protected IRuntimeSettings RuntimeSettings
+	    {
+			get { return Resolve<IRuntimeSettings>(); }
+	    }
 
         protected NameValueCollection AppSettings
         {

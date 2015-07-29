@@ -2,9 +2,9 @@
 
 namespace Vertica.Integration
 {
-	public class AppSettingsProvider : ISettingsProvider
+	public class AppConfigRuntimeSettings : IRuntimeSettings
 	{
-		public string Environment
+		public ApplicationEnvironment Environment
 		{
 			get { return this["Environment"]; }
 		}

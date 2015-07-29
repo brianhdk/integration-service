@@ -10,15 +10,17 @@ using Vertica.Integration.Model;
 namespace Vertica.Integration.Domain.Monitoring
 {
     public class MonitorTask : Task<MonitorWorkItem>
-	{
-		private readonly IConfigurationService _configuration;
-		private readonly IEmailService _emailService;
+    {
+	    private readonly IConfigurationService _configuration;
+	    private readonly IEmailService _emailService;
+	    private readonly IRuntimeSettings _runtimeSettings;
 
-        public MonitorTask(IEnumerable<IStep<MonitorWorkItem>> steps, IConfigurationService configuration, IEmailService emailService)
+	    public MonitorTask(IEnumerable<IStep<MonitorWorkItem>> steps, IConfigurationService configuration, IEmailService emailService, IRuntimeSettings runtimeSettings)
 			: base(steps)
 		{
 			_configuration = configuration;
 			_emailService = emailService;
+		    _runtimeSettings = runtimeSettings;
 		}
 
 		public override string Description
@@ -47,7 +49,7 @@ namespace Vertica.Integration.Domain.Monitoring
 		        SendTo(target, workItem, context.Log, workItem.Configuration.SubjectPrefix);
 
             workItem.Configuration.LastRun = workItem.CheckRange.UpperBound;
-		    _configuration.Save(workItem.Configuration, "MonitorTask");
+		    _configuration.Save(workItem.Configuration, Name);
 		}
 
         private void SendTo(MonitorTarget target, MonitorWorkItem workItem, ILog log, string subjectPrefix)
@@ -65,6 +67,11 @@ namespace Vertica.Integration.Domain.Monitoring
                 log.Message("Sending {0} entries to {1}.", entries.Length, target);
 
 	            var subject = new StringBuilder();
+
+		        ApplicationEnvironment environment = _runtimeSettings.Environment;
+
+		        if (environment != null)
+			        subject.AppendFormat("[{0}] ", environment);
 
 	            if (!String.IsNullOrWhiteSpace(subjectPrefix))
 	                subject.AppendFormat("{0}: ", subjectPrefix);

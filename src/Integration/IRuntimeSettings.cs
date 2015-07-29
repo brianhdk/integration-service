@@ -3,12 +3,12 @@
 	/// <summary>
 	/// Provides read-only runtime settings such as name of Environment.
 	/// </summary>
-	public interface ISettingsProvider
+	public interface IRuntimeSettings
 	{
 		/// <summary>
 		/// Name of the Runtime Environment, e.g. Development, Staging, Production and such.
 		/// </summary>
-		string Environment { get; }
+		ApplicationEnvironment Environment { get; }
 
 		/// <summary>
 		/// Reads any custom setting based on it's name.

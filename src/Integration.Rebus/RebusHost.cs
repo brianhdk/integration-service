@@ -1,21 +1,13 @@
 using System;
 using System.IO;
-using Rebus.Bus;
-using Rebus.CastleWindsor;
-using Rebus.Config;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Model.Hosting;
 using Vertica.Integration.Model.Hosting.Handlers;
 
 namespace Vertica.Integration.Rebus
 {
-    public class RebusHost : IHost
+	internal class RebusHost : IHost
     {
-        // Rebus                        => Run in Console
-        // Rebus -service               => Run as Service
-        // Rebus -service:install       => Install as Service
-        // Rebus -service:uninstall     => Uninstall Service
-
 	    private readonly RebusConfiguration _configuration;
 	    private readonly IWindowsServiceHandler _windowsService;
 	    private readonly TextWriter _outputter;
@@ -38,24 +30,19 @@ namespace Vertica.Integration.Rebus
         {
             if (args == null) throw new ArgumentNullException("args");
 
-	        Func<IBus> startBus = () =>
-	        {
-		        RebusConfigurer rebus = Configure.With(new CastleWindsorContainerAdapter(_configuration.Container));
+	        var windowsService = new WindowsService(this.Name(), Description).OnStart(_configuration.BusFactory);
 
-		        return _configuration.BusConfiguration(rebus).Start();
-	        };
-
-	        WindowsService windowsService = new WindowsService(this.Name(), Description).OnStart(startBus);
 	        if (!_windowsService.Handle(args, windowsService))
-
-	        using (startBus())
 	        {
-				do
+				using (_configuration.BusFactory())
 				{
-					_outputter.WriteLine(@"Press ESCAPE to stop Rebus...");
-					_outputter.WriteLine();
+					do
+					{
+						_outputter.WriteLine(@"Press ESCAPE to stop Rebus...");
+						_outputter.WriteLine();
 
-				} while (WaitingForEscape());
+					} while (WaitingForEscape());
+				}		        
 	        }
         }
 
