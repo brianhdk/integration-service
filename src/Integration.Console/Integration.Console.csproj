@@ -92,6 +92,10 @@
       <Project>{be14da0e-31c6-4417-8ec6-ed1658b51fa9}</Project>
       <Name>Integration.Portal</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Integration.Rebus\Integration.Rebus.csproj">
+      <Project>{9078656D-7C5E-469C-BFC6-1B9AB2CE9AE1}</Project>
+      <Name>Integration.Rebus</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Integration\Integration.csproj">
       <Project>{460f774f-2c89-47f4-84bd-b97653060e68}</Project>
       <Name>Integration</Name>

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using Vertica.Integration.Infrastructure.Extensions;
 
 namespace Vertica.Integration.Model
@@ -23,7 +24,7 @@ namespace Vertica.Integration.Model
 
         public abstract void StartTask(ITaskExecutionContext context);
 
-	    public static string Name<TTask>() where TTask : ITask
+	    public static string NameOf<TTask>() where TTask : ITask
 	    {
 	        return typeof (TTask).TaskName();
 	    }
@@ -38,17 +39,22 @@ namespace Vertica.Integration.Model
 			_steps = steps ?? Enumerable.Empty<IStep<TWorkItem>>();
 		}
 
-        IEnumerable<IStep> ITask.Steps
+		[JsonProperty(Order = 1)]
+		public string Name { get { return this.Name(); } }
+
+		[JsonProperty(Order = 2)]
+		public abstract string Description { get; }
+
+		[JsonProperty(Order = 3)]
+		public IEnumerable<IStep<TWorkItem>> Steps
+		{
+			get { return _steps; }
+		}
+
+		IEnumerable<IStep> ITask.Steps
         {
             get { return Steps; }
         }
-
-        public IEnumerable<IStep<TWorkItem>> Steps
-        {
-            get { return _steps; }
-        }
-
-		public abstract string Description { get; }
 
 		public abstract TWorkItem Start(ITaskExecutionContext context);
 

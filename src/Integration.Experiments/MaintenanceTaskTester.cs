@@ -73,7 +73,7 @@ namespace Vertica.Integration.Experiments
                 return handlers.Everything();
             });
 
-            _configuration.Save(configuration, this.Name());
+            _configuration.Save(configuration, Name);
 
             _runner.Execute(_factory.Get<MaintenanceTask>());
         }

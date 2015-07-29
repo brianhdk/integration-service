@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
 
@@ -21,10 +22,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
         public override void StartTask(ITaskExecutionContext context)
         {
-            if (context.Arguments.Length == 0)
-                throw new InvalidOperationException(@"Arguments usage: [ArchiveID]-1..N");
-
-            foreach (var id in context.Arguments)
+            foreach (string id in context.Arguments.Select(x => x.Key))
             {
                 byte[] archive = _archive.Get(id);
 

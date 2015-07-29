@@ -108,7 +108,9 @@
   <ItemGroup>
     <Compile Include="ApplicationConfiguration.cs" />
     <Compile Include="ApplicationContext.cs" />
+    <Compile Include="AppSettingsProvider.cs" />
     <Compile Include="CastleWindsor.cs" />
+    <Compile Include="ConfigurationBasedSettingsProvider.cs" />
     <Compile Include="Domain\Core\ArchiveFoldersStep.cs" />
     <Compile Include="Domain\Core\CleanUpIntegrationDbStep.cs" />
     <Compile Include="Domain\Core\MaintenanceConfiguration.cs" />
@@ -133,6 +135,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="IApplicationContext.cs" />
     <Compile Include="IInitializable.cs" />
     <Compile Include="Infrastructure\ActionRepeater.cs" />
     <Compile Include="Infrastructure\Archiving\ArchiveOptions.cs" />
@@ -183,11 +186,14 @@
     <Compile Include="Infrastructure\Extensions\ActionRepeaterExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\ExceptionExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\NameExtensions.cs" />
+    <Compile Include="Infrastructure\Extensions\QueueExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\StringExtensions.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\CastleWindsorExtensions.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ContainerExtensions.cs" />
+    <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\HostsInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\InstanceInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ConventionInstaller.cs" />
+    <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\HostFactoryInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\TaskInstaller.cs" />
     <Compile Include="Infrastructure\IO\FileSystemService.cs" />
     <Compile Include="Infrastructure\IO\IDirectory.cs" />
@@ -217,14 +223,30 @@
     <Compile Include="Infrastructure\Remote\HttpClientFactory.cs" />
     <Compile Include="Infrastructure\Remote\IFtpClientFactory.cs" />
     <Compile Include="Infrastructure\Remote\IHttpClientFactory.cs" />
+    <Compile Include="ISettingsProvider.cs" />
+    <Compile Include="Model\Arguments.cs" />
     <Compile Include="Model\ContextWorkItem.cs" />
+    <Compile Include="Model\Exceptions\MultipleHostsFoundException.cs" />
+    <Compile Include="Model\Exceptions\NoHostFoundException.cs" />
     <Compile Include="Model\Exceptions\TaskWithSameNameAlreadyRegistredException.cs" />
+    <Compile Include="Model\Hosting\Handlers\IWindowsServiceHandler.cs" />
+    <Compile Include="Model\Hosting\Handlers\WindowsService.cs" />
+    <Compile Include="Model\Hosting\Handlers\WindowsServiceHandler.cs" />
+    <Compile Include="Model\Hosting\HostArguments.cs" />
+    <Compile Include="Model\Hosting\ArgumentsParser.cs" />
+    <Compile Include="Model\Hosting\IArgumentsParser.cs" />
+    <Compile Include="Model\Hosting\IHost.cs" />
+    <Compile Include="Model\Hosting\IHostFactory.cs" />
+    <Compile Include="Model\Hosting\TaskHost.cs" />
+    <Compile Include="Model\Hosting\WebApiHost.cs" />
     <Compile Include="Model\ILog.cs" />
     <Compile Include="Model\ITaskExecutionContext.cs" />
     <Compile Include="Model\TaskExecutionContext.cs" />
+    <Compile Include="Model\Hosting\HostsConfiguration.cs" />
     <Compile Include="Model\TasksConfiguration.cs" />
     <Compile Include="Model\TaskConfiguration.cs" />
     <Compile Include="Model\Web\CachingHandler.cs" />
+    <Compile Include="Model\Web\IHttpServerFactory.cs" />
     <Compile Include="Model\Web\IWebApiControllers.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\TaskFactoryInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\WebApiInstaller.cs" />
@@ -238,13 +260,12 @@
     <Compile Include="Infrastructure\Logging\Target.cs" />
     <Compile Include="Infrastructure\Logging\TaskLog.cs" />
     <Compile Include="Infrastructure\Templating\InMemoryRazorEngine.cs" />
-    <Compile Include="Infrastructure\Windows\WindowsServiceInstaller.cs" />
-    <Compile Include="Infrastructure\Windows\WindowsServiceRunner.cs">
+    <Compile Include="Model\Hosting\Handlers\WindowsServiceInstaller.cs" />
+    <Compile Include="Model\Hosting\Handlers\WindowsServiceRunner.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Infrastructure\Windows\WindowsUtils.cs" />
     <Compile Include="Model\EmptyWorkItem.cs" />
-    <Compile Include="Model\Exceptions\StartupActionNotFoundException.cs" />
     <Compile Include="Model\Exceptions\TaskExecutionFailedException.cs" />
     <Compile Include="Model\Exceptions\TaskNotFoundException.cs" />
     <Compile Include="Model\Execution.cs" />
@@ -254,26 +275,15 @@
     <Compile Include="Model\ITaskRunner.cs" />
     <Compile Include="Model\Log.cs" />
     <Compile Include="Model\Output.cs" />
-    <Compile Include="Model\Web\TaskWebApiHost.cs" />
     <Compile Include="Startup\Argument.cs" />
-    <Compile Include="Startup\ArgumentValidator.cs" />
-    <Compile Include="Startup\RunTask.cs" />
-    <Compile Include="Startup\HostTaskAsWebService.cs" />
-    <Compile Include="Startup\RunTaskFromWindowsService.cs" />
-    <Compile Include="Startup\ExecutionContext.cs" />
-    <Compile Include="Startup\InstallWindowsServiceTaskHost.cs" />
-    <Compile Include="Startup\StartupAction.cs" />
-    <Compile Include="Startup\StartWebApiHost.cs" />
-    <Compile Include="Startup\UninstallWindowsServiceTaskHost.cs" />
     <Compile Include="Model\Step.cs" />
     <Compile Include="Model\Task.cs" />
     <Compile Include="Model\TaskExecutionResult.cs" />
     <Compile Include="Model\TaskRunner.cs" />
     <Compile Include="Model\Web\ExceptionHandlingAttribute.cs" />
     <Compile Include="Model\Web\HomeController.cs" />
-    <Compile Include="Model\Web\TaskController.cs" />
-    <Compile Include="Model\Web\WebApiHost.cs" />
-    <Compile Include="Model\Web\WebApiTask.cs" />
+    <Compile Include="Model\Web\TasksController.cs" />
+    <Compile Include="Model\Web\HttpServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\Web\WebApiConfiguration.cs" />
   </ItemGroup>
@@ -299,6 +309,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

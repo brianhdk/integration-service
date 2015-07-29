@@ -78,7 +78,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
             return new ConfigurationUpdater<T>(GetConfiguration<T>(), SaveConfiguration);
         }
 
-        protected void RunTask<TTask>() where TTask : ITask
+        protected void RunTask<TTask>() where TTask : class, ITask
         {
             ITask task = Resolve<ITaskFactory>().Get<TTask>();
             Resolve<ITaskRunner>().Execute(task);

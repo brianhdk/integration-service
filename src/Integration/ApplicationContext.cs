@@ -4,18 +4,18 @@ using System.Net;
 using Castle.Windsor;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Infrastructure.Logging.Loggers;
-using Vertica.Integration.Model;
 using Vertica.Integration.Model.Exceptions;
-using Vertica.Integration.Startup;
+using Vertica.Integration.Model.Hosting;
 
 namespace Vertica.Integration
 {
-    public sealed class ApplicationContext : IDisposable
+    public sealed class ApplicationContext : IApplicationContext
     {
         private static readonly Lazy<Action> EnsureSingleton = new Lazy<Action>(() => () => { });
 
         private readonly IWindsorContainer _container;
-        private readonly StartupAction[] _starters;
+        private readonly IArgumentsParser _parser;
+        private readonly IHost[] _hosts;
 
         private ApplicationContext(Action<ApplicationConfiguration> application)
         {
@@ -28,22 +28,13 @@ namespace Vertica.Integration
 			    ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
 
             _container = CastleWindsor.Initialize(configuration);
+            _parser = _container.Resolve<IArgumentsParser>();
+            _hosts = _container.Resolve<IHostFactory>().GetAll();
 
             AppDomain.CurrentDomain.UnhandledException += LogException;
-
-            // TODO: Rethink this, consider making it open for extensibility
-            _starters = new StartupAction[]
-            {
-                new StartWebApiHost(_container),                    // StartWebApiTask -url http://localhost:8123
-                new RunTask(_container),                            // WriteDocumentationTask
-                new HostTaskAsWebService(_container),               // WriteDocumentationTask -url http://localhost:8123
-                new RunTaskFromWindowsService(_container),          // WriteDocumentationTask -service [url|seconds]
-                new InstallWindowsServiceTaskHost(_container),      // WriteDocumentationTask -install [url|seconds]
-                new UninstallWindowsServiceTaskHost(_container)     // WriteDocumentationTask -uninstall
-            };
 		}
 
-	    public static ApplicationContext Create(Action<ApplicationConfiguration> application = null)
+	    public static IApplicationContext Create(Action<ApplicationConfiguration> application = null)
 	    {
             if (EnsureSingleton.IsValueCreated)
 			    throw new InvalidOperationException("An instance of ApplicationContext has already been created. It might have been disposed, but you should make sure to reuse the same instance for the entire lifecycle of this application.");
@@ -56,23 +47,23 @@ namespace Vertica.Integration
         public void Execute(params string[] args)
         {
             if (args == null) throw new ArgumentNullException("args");
-            if (args.Length == 0) throw new ArgumentOutOfRangeException("args", @"No task name passed as argument.");
 
-            // TODO: Overvej async.
+            Execute(_parser.Parse(args));
+        }
 
-            ITask task = _container.Resolve<ITaskFactory>().GetByName(args.First());
+        public void Execute(HostArguments args)
+        {
+            if (args == null) throw new ArgumentNullException("args");
 
-            var context = new ExecutionContext(task, args.Skip(1).ToArray());
+            IHost[] hosts = _hosts.Where(x => x.CanHandle(args)).ToArray();
 
-            StartupAction starter = _starters.FirstOrDefault(x => x.IsSatisfiedBy(context));
+	        if (hosts.Length == 0)
+		        throw new NoHostFoundException(args);
 
-            if (starter == null)
-                throw new StartupActionNotFoundException(context);
+	        if (hosts.Length > 1)
+		        throw new MultipleHostsFoundException(args, hosts);
 
-            // TODO: Giv mulighed for at skifte ud - Console
-            //  - måske med mulighed for at loggeren kan skiftes tilbage igen
-
-            starter.Execute(context);
+            hosts[0].Handle(args);
         }
 
         public void Dispose()

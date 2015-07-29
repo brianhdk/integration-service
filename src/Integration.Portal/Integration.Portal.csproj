@@ -71,7 +71,6 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LatestTasksController.cs" />
     <Compile Include="Controllers\RunningTasksController.cs" />
-    <Compile Include="Controllers\ExecuteTaskController.cs" />
     <Compile Include="Controllers\TaskDetailsController.cs" />
     <Compile Include="Controllers\TaskExecutionDetailsController.cs" />
     <Compile Include="Models\ErrorLogDetailedModel.cs" />

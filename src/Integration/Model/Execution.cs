@@ -3,17 +3,17 @@ namespace Vertica.Integration.Model
 	public enum Execution
 	{
 		/// <summary>
-		/// Will not execute the step and abort the task execution.
+		/// Will not execute this Step and will abort the entire Task Execution.
 		/// </summary>
 		StepOut,
 
 		/// <summary>
-		/// Will not execute the step, but proceeed to next step.
+		/// Will not execute this Step but continue to the next Step in the chain.
 		/// </summary>
 		StepOver,
 
 		/// <summary>
-		/// Will execute the step.
+		/// Will execute this Step.
 		/// </summary>
 		Execute,
 	}

@@ -17,6 +17,7 @@ namespace Vertica.Integration.Infrastructure.Logging
             if (application == null) throw new ArgumentNullException("application");
 
             Application = application;
+            Application.RegisterInitialization(this);
 
             _logger = typeof (DefaultLogger);
         }
@@ -53,7 +54,7 @@ namespace Vertica.Integration.Infrastructure.Logging
         {
             container.Register(Component.For<ILogger>().ImplementedBy(_logger));
 
-            container.RegisterInstance(_console ?? System.Console.Out);
+            container.RegisterInstance(_console ?? (Environment.UserInteractive ? System.Console.Out : TextWriter.Null));
         }
     }
 }

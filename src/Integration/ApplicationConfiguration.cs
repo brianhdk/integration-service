@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Vertica.Integration.Infrastructure;
@@ -8,23 +9,31 @@ using Vertica.Integration.Infrastructure.Database.Migrations;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
+using Vertica.Integration.Model.Hosting;
 using Vertica.Integration.Model.Web;
 using Vertica.Utilities_v4.Extensions.EnumerableExt;
 
 namespace Vertica.Integration
 {
-    public class ApplicationConfiguration : IInitializable<IWindsorContainer>
+	public class ApplicationConfiguration : IInitializable<IWindsorContainer>
     {
+        private readonly List<IInitializable<IWindsorContainer>> _initializations;
         private readonly List<IWindsorInstaller> _customInstallers;
+
         private readonly DatabaseConfiguration _database;
         private readonly TasksConfiguration _tasks;
         private readonly LoggingConfiguration _logging;
         private readonly WebApiConfiguration _webApi;
         private readonly MigrationConfiguration _migration;
+        private readonly HostsConfiguration _hosts;
 
-        internal ApplicationConfiguration()
+		private Type _settingsProvider;
+
+		internal ApplicationConfiguration()
         {
             IgnoreSslErrors = true;
+
+            _initializations = new List<IInitializable<IWindsorContainer>>();
 
             _customInstallers = new List<IWindsorInstaller>();
             _database = new DatabaseConfiguration(this);
@@ -32,6 +41,9 @@ namespace Vertica.Integration
             _logging = new LoggingConfiguration(this);
             _webApi = new WebApiConfiguration(this);
             _migration = new MigrationConfiguration(this);
+            _hosts = new HostsConfiguration(this);
+
+			_settingsProvider = typeof (AppSettingsProvider);
         }
 
         public bool IgnoreSslErrors { get; set; }
@@ -40,10 +52,7 @@ namespace Vertica.Integration
 
         public ApplicationConfiguration AddCustomInstaller(IWindsorInstaller installer)
         {
-            if (installer != null)
-                AddCustomInstallers(installer);
-
-            return this;
+            return AddCustomInstallers(installer);
         }
 
         public ApplicationConfiguration AddCustomInstallers(params IWindsorInstaller[] installers)
@@ -101,6 +110,22 @@ namespace Vertica.Integration
             return this;
         }
 
+        public ApplicationConfiguration Hosts(Action<HostsConfiguration> hosts)
+        {
+            if (hosts != null)
+                hosts(_hosts);
+
+            return this;
+        }
+
+		public ApplicationConfiguration Settings<TProvider>()
+			where TProvider : ISettingsProvider
+		{
+			_settingsProvider = typeof (TProvider);
+
+			return this;
+		}
+
         public ApplicationConfiguration Change(Action<ApplicationConfiguration> change)
         {
             if (change != null)
@@ -109,21 +134,28 @@ namespace Vertica.Integration
             return this;
         }
 
+        public void RegisterInitialization(IInitializable<IWindsorContainer> initializable)
+        {
+            if (initializable == null) throw new ArgumentNullException("initializable");
+
+            _initializations.Add(initializable);
+        }
+
         void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
         {
+	        container.Register(Component
+				.For<ISettingsProvider>()
+				.ImplementedBy(_settingsProvider));
+
             container.Install(_customInstallers.ToArray());
         }
 
-        internal IEnumerable<IInitializable<IWindsorContainer>> ContainerInitializations
+        internal IEnumerable<IInitializable<IWindsorContainer>> Initializations
         {
             get
             {
-                yield return _database;
-                yield return _tasks;
-                yield return _logging;
-                yield return _webApi;
-                yield return _migration;
-                yield return this;
+                RegisterInitialization(this);
+                return _initializations.Distinct();
             }
         }
     }

@@ -31,7 +31,7 @@ namespace Vertica.Integration.Portal.Controllers
 
         public HttpResponseMessage Get(string name)
         {
-            ITask task = _taskFactory.GetByName(name);
+            ITask task = _taskFactory.Get(name);
 
             return Request.CreateResponse(HttpStatusCode.OK, new
             {

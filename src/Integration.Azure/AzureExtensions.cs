@@ -4,18 +4,16 @@ namespace Vertica.Integration.Azure
 {
     public static class AzureExtensions
     {
-        public static ApplicationConfiguration UseAzure(this ApplicationConfiguration builder, Action<AzureConfiguration> azure = null)
+        public static ApplicationConfiguration UseAzure(this ApplicationConfiguration application, Action<AzureConfiguration> azure = null)
         {
-            if (builder == null) throw new ArgumentNullException("builder");
+            if (application == null) throw new ArgumentNullException("application");
 
-            var configuration = new AzureConfiguration();
+            var configuration = new AzureConfiguration(application);
 
             if (azure != null)
                 azure(configuration);
 
-            builder.AddCustomInstallers(configuration.CustomInstallers);
-
-            return builder;
+            return application;
         }
     }
 }
