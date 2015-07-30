@@ -11,10 +11,10 @@ namespace Vertica.Integration.MongoDB.Commands
         {
             if (client == null) throw new ArgumentNullException("client");
 
-            ExecuteInternal(client.GetDatabase("admin")).Wait();
+            Execute(client.GetDatabase("admin")).Wait();
         }
 
-        private async Task ExecuteInternal(IMongoDatabase database)
+        private async Task Execute(IMongoDatabase database)
         {
             var command = new BsonDocumentCommand<dynamic>(new BsonDocument
             {
