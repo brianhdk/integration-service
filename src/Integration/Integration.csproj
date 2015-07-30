@@ -229,6 +229,7 @@
     <Compile Include="Infrastructure\Templating\AttributeParsing\HashCodeCombiner.cs" />
     <Compile Include="Infrastructure\Templating\AttributeParsing\PositionTagged.cs" />
     <Compile Include="Infrastructure\Templating\HtmlHelper.cs" />
+    <Compile Include="Infrastructure\Templating\RawString.cs" />
     <Compile Include="IRuntimeSettings.cs" />
     <Compile Include="Model\Arguments.cs" />
     <Compile Include="Model\ContextWorkItem.cs" />

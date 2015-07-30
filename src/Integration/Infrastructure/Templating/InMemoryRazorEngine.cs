@@ -117,8 +117,7 @@ namespace Vertica.Integration.Infrastructure.Templating
                 OutputBuilder.Append(value);
             }
 
-			public virtual void WriteAttribute(string name, PositionTagged<string> prefix,
-										 PositionTagged<string> suffix, params AttributeValue[] values)
+			public virtual void WriteAttribute(string name, PositionTagged<string> prefix, PositionTagged<string> suffix, params AttributeValue[] values)
 			{
 				bool first = true;
 				bool wroteSomething = false;
@@ -177,7 +176,7 @@ namespace Vertica.Integration.Infrastructure.Templating
 				}
 			}
 
-			private void WritePositionTaggedLiteral(string value, int position)
+			private void WritePositionTaggedLiteral(string value)
 			{
 				if (value == null)
 					return;
@@ -187,7 +186,7 @@ namespace Vertica.Integration.Infrastructure.Templating
 
 			private void WritePositionTaggedLiteral(PositionTagged<string> value)
 			{
-				WritePositionTaggedLiteral(value.Value, value.Position);
+				WritePositionTaggedLiteral(value.Value);
 			}
         }
     }
