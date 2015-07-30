@@ -60,6 +60,7 @@
     <Compile Include="RebusConfiguration.cs" />
     <Compile Include="RebusExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RebusHandlersConfiguration.cs" />
     <Compile Include="RebusHost.cs" />
   </ItemGroup>
   <ItemGroup>

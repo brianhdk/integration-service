@@ -4,18 +4,22 @@ namespace Vertica.Integration.Rebus
 {
     public static class RebusExtensions
     {
-        public static ApplicationConfiguration UseRebus(this ApplicationConfiguration builder, Action<RebusConfiguration> rebus)
+        public static ApplicationConfiguration UseRebus(this ApplicationConfiguration application, Action<RebusConfiguration> rebus)
         {
-            if (builder == null) throw new ArgumentNullException("builder");
+            if (application == null) throw new ArgumentNullException("application");
 	        if (rebus == null) throw new ArgumentNullException("rebus");
 
-	        var configuration = new RebusConfiguration(builder);
+	        return application.Extensibility(extensibility =>
+	        {
+				RebusConfiguration configuration = extensibility.Cache(() =>
+		        {
+			        application.Hosts(x => x.Host<RebusHost>());
 
-	        rebus(configuration);
+			        return new RebusConfiguration(application);
+		        });
 
-	        builder.Hosts(x => x.Host<RebusHost>());
-
-            return builder;
+				rebus(configuration);
+	        });
         }
     }
 }

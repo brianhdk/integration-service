@@ -17,8 +17,7 @@ namespace Vertica.Integration.MongoDB
         {
             if (application == null) throw new ArgumentNullException("application");
 
-            Application = application;
-            Application.RegisterInitialization(this);
+			Application = application.Extensibility(extensibility => extensibility.Register(this));
 
             _installers = new List<IWindsorInstaller>
             {

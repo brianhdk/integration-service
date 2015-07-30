@@ -17,8 +17,7 @@ namespace Vertica.Integration.Model.Web
         {
             if (application == null) throw new ArgumentNullException("application");
 
-            Application = application;
-            Application.RegisterInitialization(this);
+			Application = application.Extensibility(extensibility => extensibility.Register(this));
 
             _scan = new List<Assembly>();
             _add = new List<Type>();

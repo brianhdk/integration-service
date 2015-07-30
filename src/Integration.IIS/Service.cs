@@ -10,6 +10,7 @@ namespace Vertica.Integration.IIS
         {
             if (builder == null) throw new ArgumentNullException("builder");
 
+			// undone - should introduce an IISConfiguration object and use same strategy as other extensions.
             builder.AddCustomInstallers(new ConventionInstaller().AddFromAssemblyOfThis<IServerManagerFactory>());
 
             return builder;

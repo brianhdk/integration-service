@@ -26,7 +26,6 @@ namespace Vertica.Integration.Console
 				//.Hosts(hosts => hosts.Remove<WebApiHost>())
 				//.RegisterMigrations()
 				//.TestRebus()
-				.WebApi(webApi => webApi.Clear().Remove<TasksController>())
                 .Void()))
 			{
                 context.Execute(args);

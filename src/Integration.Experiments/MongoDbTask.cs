@@ -20,7 +20,7 @@ namespace Vertica.Integration.Experiments
                     .MaintenanceTask(task => task
                         .Clear()
                         .IncludeLogRotator()))
-                .MongoDB(mongoDB => mongoDB
+                .UseMongoDB(mongoDB => mongoDB
                     .Connection(ConnectionString.FromText("mongodb://maersk-web01.vertica.dk/admin"))
                     .AddConnection(new AnalyticsDb()));
         }

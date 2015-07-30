@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Rebus.Bus;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Model.Hosting;
 using Vertica.Integration.Model.Hosting.Handlers;
@@ -8,15 +9,15 @@ namespace Vertica.Integration.Rebus
 {
 	internal class RebusHost : IHost
     {
-	    private readonly RebusConfiguration _configuration;
+	    private readonly Func<IBus> _bus;
 	    private readonly IWindowsServiceHandler _windowsService;
 	    private readonly TextWriter _outputter;
 
-	    public RebusHost(RebusConfiguration configuration, IWindowsServiceHandler windowsService, TextWriter outputter)
+	    public RebusHost(Func<IBus> bus, IWindowsServiceHandler windowsService, TextWriter outputter)
 	    {
 		    _windowsService = windowsService;
 		    _outputter = outputter;
-		    _configuration = configuration;
+		    _bus = bus;
 	    }
 
 	    public bool CanHandle(HostArguments args)
@@ -30,11 +31,11 @@ namespace Vertica.Integration.Rebus
         {
             if (args == null) throw new ArgumentNullException("args");
 
-	        var windowsService = new WindowsService(this.Name(), Description).OnStart(_configuration.BusFactory);
+	        var windowsService = new WindowsService(this.Name(), Description).OnStart(_bus);
 
 	        if (!_windowsService.Handle(args, windowsService))
 	        {
-				using (_configuration.BusFactory())
+				using (_bus())
 				{
 					do
 					{
@@ -42,7 +43,7 @@ namespace Vertica.Integration.Rebus
 						_outputter.WriteLine();
 
 					} while (WaitingForEscape());
-				}		        
+				}
 	        }
         }
 

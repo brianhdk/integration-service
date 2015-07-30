@@ -136,6 +136,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ExtensibilityConfiguration.cs" />
     <Compile Include="IApplicationContext.cs" />
     <Compile Include="IInitializable.cs" />
     <Compile Include="Infrastructure\ActionRepeater.cs" />

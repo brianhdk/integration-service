@@ -12,22 +12,25 @@ namespace Vertica.Integration
     public sealed class ApplicationContext : IApplicationContext
     {
         private static readonly Lazy<Action> EnsureSingleton = new Lazy<Action>(() => () => { });
+		private static readonly Lazy<Action> Disposed = new Lazy<Action>(() => () => { });
 
-        private readonly IWindsorContainer _container;
-        private readonly IArgumentsParser _parser;
-        private readonly IHost[] _hosts;
+	    private readonly ApplicationConfiguration _configuration;
 
-        private ApplicationContext(Action<ApplicationConfiguration> application)
+	    private readonly IWindsorContainer _container;
+	    private readonly IArgumentsParser _parser;
+	    private readonly IHost[] _hosts;
+
+	    private ApplicationContext(Action<ApplicationConfiguration> application)
         {
-            var configuration = new ApplicationConfiguration();
+            _configuration = new ApplicationConfiguration();
 
             if (application != null)
-                application(configuration);
+                application(_configuration);
 
-            if (configuration.IgnoreSslErrors)
+            if (_configuration.IgnoreSslErrors)
 			    ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
 
-            _container = CastleWindsor.Initialize(configuration);
+            _container = CastleWindsor.Initialize(_configuration);
             _parser = _container.Resolve<IArgumentsParser>();
             _hosts = _container.Resolve<IHostFactory>().GetAll();
 
@@ -68,9 +71,15 @@ namespace Vertica.Integration
 
         public void Dispose()
 		{
-			_container.Dispose();
+			if (Disposed.IsValueCreated)
+				throw new InvalidOperationException("ApplicationContext has already been disposed.");
 
-            AppDomain.CurrentDomain.UnhandledException -= LogException;
+			Disposed.Value();
+
+			AppDomain.CurrentDomain.UnhandledException -= LogException;
+
+			_container.Dispose();
+			_configuration.Dispose();
 		}
 
         private void LogException(object sender, UnhandledExceptionEventArgs e)
