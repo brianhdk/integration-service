@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Vertica.Integration.Infrastructure.Extensions;
-using Vertica.Integration.Infrastructure.Logging.Loggers;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Exceptions;
 
