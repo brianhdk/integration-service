@@ -225,6 +225,10 @@
     <Compile Include="Infrastructure\Remote\HttpClientFactory.cs" />
     <Compile Include="Infrastructure\Remote\IFtpClientFactory.cs" />
     <Compile Include="Infrastructure\Remote\IHttpClientFactory.cs" />
+    <Compile Include="Infrastructure\Templating\AttributeParsing\AttributeValue.cs" />
+    <Compile Include="Infrastructure\Templating\AttributeParsing\HashCodeCombiner.cs" />
+    <Compile Include="Infrastructure\Templating\AttributeParsing\PositionTagged.cs" />
+    <Compile Include="Infrastructure\Templating\HtmlHelper.cs" />
     <Compile Include="IRuntimeSettings.cs" />
     <Compile Include="Model\Arguments.cs" />
     <Compile Include="Model\ContextWorkItem.cs" />

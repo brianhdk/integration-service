@@ -1,12 +1,15 @@
 ﻿using System;
 using System.CodeDom.Compiler;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Web.Razor;
 using Microsoft.CSharp;
+using Vertica.Integration.Infrastructure.Templating.AttributeParsing;
 using Vertica.Utilities_v4.Extensions.EnumerableExt;
 
 namespace Vertica.Integration.Infrastructure.Templating
@@ -42,7 +45,8 @@ namespace Vertica.Integration.Infrastructure.Templating
 
                 var parameters = new CompilerParameters { GenerateInMemory = true };
 
-                parameters.ReferencedAssemblies.Add(typeof(InMemoryRazorEngine).Assembly.Location);
+				parameters.ReferencedAssemblies.Add(typeof(InMemoryRazorEngine).Assembly.Location);
+				parameters.ReferencedAssemblies.Add(typeof(IHtmlString).Assembly.Location);
                 
                 parameters.ReferencedAssemblies.AddRange(
                     referenceAssemblies.EmptyIfNull().Select(x => x.Location).ToArray());
@@ -90,6 +94,7 @@ namespace Vertica.Integration.Infrastructure.Templating
             protected RazorTemplateBase()
             {
                 OutputBuilder = new StringBuilder();
+				Html = new HtmlHelper();
             }
 
             public TModel Model { get; set; }
@@ -97,6 +102,8 @@ namespace Vertica.Integration.Infrastructure.Templating
             public dynamic ViewBag { get; set; }
 
             public StringBuilder OutputBuilder { get; private set; }
+
+			public HtmlHelper Html { get; private set; }
 
             public abstract void Execute();
 
@@ -109,6 +116,79 @@ namespace Vertica.Integration.Infrastructure.Templating
             {
                 OutputBuilder.Append(value);
             }
+
+			public virtual void WriteAttribute(string name, PositionTagged<string> prefix,
+										 PositionTagged<string> suffix, params AttributeValue[] values)
+			{
+				bool first = true;
+				bool wroteSomething = false;
+				if (values.Length == 0)
+				{
+					// Explicitly empty attribute, so write the prefix and suffix
+					WritePositionTaggedLiteral(prefix);
+					WritePositionTaggedLiteral(suffix);
+				}
+				else
+				{
+					foreach (AttributeValue attrVal in values)
+					{
+						PositionTagged<object> val = attrVal.Value;
+						
+						bool? boolVal = null;
+						if (val.Value is bool)
+						{
+							boolVal = (bool)val.Value;
+						}
+
+						if (val.Value == null || (boolVal != null && !boolVal.Value)) 
+							continue;
+
+						var valStr = val.Value as string ?? val.Value.ToString();
+							
+						if (boolVal != null)
+						{
+							Debug.Assert(boolVal.Value);
+							valStr = name;
+						}
+						if (first)
+						{
+							WritePositionTaggedLiteral(prefix);
+							first = false;
+						}
+						else
+						{
+							WritePositionTaggedLiteral(attrVal.Prefix);
+						}
+
+						if (attrVal.Literal)
+						{
+							WriteLiteral(valStr);
+						}
+						else
+						{
+							Write(valStr);
+						}
+
+						wroteSomething = true;
+					}
+
+					if (wroteSomething)
+						WritePositionTaggedLiteral(suffix);
+				}
+			}
+
+			private void WritePositionTaggedLiteral(string value, int position)
+			{
+				if (value == null)
+					return;
+
+				WriteLiteral(value);
+			}
+
+			private void WritePositionTaggedLiteral(PositionTagged<string> value)
+			{
+				WritePositionTaggedLiteral(value.Value, value.Position);
+			}
         }
     }
 }
