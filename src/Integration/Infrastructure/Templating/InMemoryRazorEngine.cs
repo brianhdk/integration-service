@@ -1,5 +1,6 @@
 ﻿using System;
 using System.CodeDom.Compiler;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -7,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Razor;
 using Microsoft.CSharp;
+using Vertica.Integration.Infrastructure.Templating.AttributeParsing;
 using Vertica.Utilities_v4.Extensions.EnumerableExt;
 
 namespace Vertica.Integration.Infrastructure.Templating
@@ -109,6 +111,89 @@ namespace Vertica.Integration.Infrastructure.Templating
             {
                 OutputBuilder.Append(value);
             }
+
+			public virtual void WriteAttribute(string name, PositionTagged<string> prefix,
+										 PositionTagged<string> suffix, params AttributeValue[] values)
+			{
+				bool first = true;
+				bool wroteSomething = false;
+				if (values.Length == 0)
+				{
+					// Explicitly empty attribute, so write the prefix and suffix
+					WritePositionTaggedLiteral(prefix);
+					WritePositionTaggedLiteral(suffix);
+				}
+				else
+				{
+					for (int i = 0; i < values.Length; i++)
+					{
+						AttributeValue attrVal = values[i];
+						PositionTagged<object> val = attrVal.Value;
+						PositionTagged<string> next = i == values.Length - 1 ?
+							suffix : // End of the list, grab the suffix
+							values[i + 1].Prefix; // Still in the list, grab the next prefix
+
+						bool? boolVal = null;
+						if (val.Value is bool)
+						{
+							boolVal = (bool)val.Value;
+						}
+
+						if (val.Value != null && (boolVal == null || boolVal.Value))
+						{
+							string valStr = val.Value as string;
+							if (valStr == null)
+							{
+								valStr = val.Value.ToString();
+							}
+							if (boolVal != null)
+							{
+								Debug.Assert(boolVal.Value);
+								valStr = name;
+							}
+
+							if (first)
+							{
+								WritePositionTaggedLiteral(prefix);
+								first = false;
+							}
+							else
+							{
+								WritePositionTaggedLiteral(attrVal.Prefix);
+							}
+
+							// Calculate length of the source span by the position of the next value (or suffix)
+							int sourceLength = next.Position - attrVal.Value.Position;
+
+							if (attrVal.Literal)
+							{
+								WriteLiteral(valStr);
+							}
+							else
+							{
+								Write(valStr); // Write value
+							}
+							wroteSomething = true;
+						}
+					}
+					if (wroteSomething)
+						WritePositionTaggedLiteral(suffix);
+				}
+			}
+
+			private void WritePositionTaggedLiteral(string value, int position)
+			{
+				if (value == null)
+					return;
+
+				WriteLiteral(value);
+			}
+
+			private void WritePositionTaggedLiteral(PositionTagged<string> value)
+			{
+				WritePositionTaggedLiteral(value.Value, value.Position);
+			}
+
         }
     }
 }
