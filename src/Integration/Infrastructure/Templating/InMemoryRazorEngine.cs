@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Web.Razor;
 using Microsoft.CSharp;
 using Vertica.Integration.Infrastructure.Templating.AttributeParsing;
@@ -44,7 +45,8 @@ namespace Vertica.Integration.Infrastructure.Templating
 
                 var parameters = new CompilerParameters { GenerateInMemory = true };
 
-                parameters.ReferencedAssemblies.Add(typeof(InMemoryRazorEngine).Assembly.Location);
+				parameters.ReferencedAssemblies.Add(typeof(InMemoryRazorEngine).Assembly.Location);
+				parameters.ReferencedAssemblies.Add(typeof(IHtmlString).Assembly.Location);
                 
                 parameters.ReferencedAssemblies.AddRange(
                     referenceAssemblies.EmptyIfNull().Select(x => x.Location).ToArray());
@@ -92,6 +94,7 @@ namespace Vertica.Integration.Infrastructure.Templating
             protected RazorTemplateBase()
             {
                 OutputBuilder = new StringBuilder();
+				Html = new HtmlHelper();
             }
 
             public TModel Model { get; set; }
@@ -99,6 +102,8 @@ namespace Vertica.Integration.Infrastructure.Templating
             public dynamic ViewBag { get; set; }
 
             public StringBuilder OutputBuilder { get; private set; }
+
+			public HtmlHelper Html { get; private set; }
 
             public abstract void Execute();
 
@@ -125,57 +130,48 @@ namespace Vertica.Integration.Infrastructure.Templating
 				}
 				else
 				{
-					for (int i = 0; i < values.Length; i++)
+					foreach (AttributeValue attrVal in values)
 					{
-						AttributeValue attrVal = values[i];
 						PositionTagged<object> val = attrVal.Value;
-						PositionTagged<string> next = i == values.Length - 1 ?
-							suffix : // End of the list, grab the suffix
-							values[i + 1].Prefix; // Still in the list, grab the next prefix
-
+						
 						bool? boolVal = null;
 						if (val.Value is bool)
 						{
 							boolVal = (bool)val.Value;
 						}
 
-						if (val.Value != null && (boolVal == null || boolVal.Value))
+						if (val.Value == null || (boolVal != null && !boolVal.Value)) 
+							continue;
+
+						var valStr = val.Value as string ?? val.Value.ToString();
+							
+						if (boolVal != null)
 						{
-							string valStr = val.Value as string;
-							if (valStr == null)
-							{
-								valStr = val.Value.ToString();
-							}
-							if (boolVal != null)
-							{
-								Debug.Assert(boolVal.Value);
-								valStr = name;
-							}
-
-							if (first)
-							{
-								WritePositionTaggedLiteral(prefix);
-								first = false;
-							}
-							else
-							{
-								WritePositionTaggedLiteral(attrVal.Prefix);
-							}
-
-							// Calculate length of the source span by the position of the next value (or suffix)
-							int sourceLength = next.Position - attrVal.Value.Position;
-
-							if (attrVal.Literal)
-							{
-								WriteLiteral(valStr);
-							}
-							else
-							{
-								Write(valStr); // Write value
-							}
-							wroteSomething = true;
+							Debug.Assert(boolVal.Value);
+							valStr = name;
 						}
+						if (first)
+						{
+							WritePositionTaggedLiteral(prefix);
+							first = false;
+						}
+						else
+						{
+							WritePositionTaggedLiteral(attrVal.Prefix);
+						}
+
+						if (attrVal.Literal)
+						{
+							WriteLiteral(valStr);
+						}
+						else
+						{
+							Write(valStr);
+						}
+
+						wroteSomething = true;
 					}
+
 					if (wroteSomething)
 						WritePositionTaggedLiteral(suffix);
 				}
@@ -193,7 +189,6 @@ namespace Vertica.Integration.Infrastructure.Templating
 			{
 				WritePositionTaggedLiteral(value.Value, value.Position);
 			}
-
         }
     }
 }
