@@ -3,6 +3,6 @@
     public interface ITaskExecutionContext
     {
         ILog Log { get; }
-        string[] Arguments { get; }
+        Arguments Arguments { get; }
     }
 }

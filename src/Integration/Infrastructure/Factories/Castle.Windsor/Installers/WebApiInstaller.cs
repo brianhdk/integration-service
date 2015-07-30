@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web.Http;
+using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
@@ -25,6 +26,10 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
+			container.Register(
+				Component.For<IHttpServerFactory>()
+					.UsingFactoryMethod(kernel => new HttpServerFactory(kernel)));
+
             var types = new List<Type>();
 
             foreach (Assembly assembly in _scanAssemblies.Distinct())
@@ -54,7 +59,22 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
             container.RegisterInstance<IWebApiControllers>(new ControllerTypes(types.ToArray()));
         }
 
-        private class ControllerTypes : IWebApiControllers
+	    private class HttpServerFactory : IHttpServerFactory
+	    {
+		    private readonly IKernel _kernel;
+
+		    public HttpServerFactory(IKernel kernel)
+		    {
+			    _kernel = kernel;
+		    }
+
+		    public IDisposable Create(string url)
+		    {
+			    return new Model.Web.HttpServer(url, _kernel);
+		    }
+	    }
+
+	    private class ControllerTypes : IWebApiControllers
         {
             private readonly Type[] _types;
 

@@ -19,6 +19,7 @@ namespace Vertica.Integration.Model
             if (application == null) throw new ArgumentNullException("application");
 
             Application = application;
+            Application.RegisterInitialization(this);
 
             _scan = new List<Assembly>();
             _simpleTasks = new List<Type>();

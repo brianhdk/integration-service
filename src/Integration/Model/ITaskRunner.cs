@@ -2,6 +2,6 @@ namespace Vertica.Integration.Model
 {
 	public interface ITaskRunner
 	{
-        TaskExecutionResult Execute(ITask task, params string[] arguments);
+        TaskExecutionResult Execute(ITask task, Arguments arguments = null);
 	}
 }

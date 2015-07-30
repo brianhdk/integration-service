@@ -18,33 +18,33 @@ namespace Vertica.Integration.Model
 			_outputter = outputter;
 		}
 
-	    public TaskExecutionResult Execute(ITask task, params string[] arguments)
-	    {
-            // latebound because we don't know the exact generic type at compile time
-            return ExecuteInternal((dynamic)task, arguments);
-	    }
+		public TaskExecutionResult Execute(ITask task, Arguments arguments = null)
+		{
+			// latebound because we don't know the exact generic type at compile time
+			return ExecuteInternal((dynamic) task, arguments);
+		}
 
-	    private TaskExecutionResult ExecuteInternal<TWorkItem>(ITask<TWorkItem> task, params string[] arguments)
+		private TaskExecutionResult ExecuteInternal<TWorkItem>(ITask<TWorkItem> task, Arguments arguments)
 		{
 			if (task == null) throw new ArgumentNullException("task");
 
-	        var output = new List<string>();
+			var output = new List<string>();
 
-	        Action<string> outputter = message =>
-	        {
-	            message = String.Format("[{0:HH:mm:ss}] {1}", Time.Now, message);
+			Action<string> outputter = message =>
+			{
+				message = String.Format("[{0:HH:mm:ss}] {1}", Time.Now, message);
 
-	            _outputter.WriteLine(message);
-	            output.Add(message);
-	        };
+				_outputter.WriteLine(message);
+				output.Add(message);
+			};
 
-            using (var taskLog = new TaskLog(task, _logger.LogEntry, new Output(outputter)))
-            {
+			using (var taskLog = new TaskLog(task, _logger.LogEntry, new Output(outputter)))
+			{
 				TWorkItem workItem;
 
 				try
 				{
-                    workItem = task.Start(new TaskExecutionContext(new Log(taskLog.LogMessage, _logger), arguments));
+					workItem = task.Start(new TaskExecutionContext(new Log(taskLog.LogMessage, _logger), arguments));
 				}
 				catch (Exception ex)
 				{
@@ -64,11 +64,11 @@ namespace Vertica.Integration.Model
 					if (continueWith == Execution.StepOver)
 						continue;
 
-					using (StepLog stepLog = taskLog.LogStep(step))
+					using (var stepLog = taskLog.LogStep(step))
 					{
 						try
 						{
-                            step.Execute(workItem, new TaskExecutionContext(new Log(stepLog.LogMessage, _logger), arguments));
+							step.Execute(workItem, new TaskExecutionContext(new Log(stepLog.LogMessage, _logger), arguments));
 						}
 						catch (Exception ex)
 						{
@@ -81,10 +81,10 @@ namespace Vertica.Integration.Model
 						}
 					}
 				}
-
+				
 				try
 				{
-                    task.End(workItem, new TaskExecutionContext(new Log(taskLog.LogMessage, _logger), arguments));
+					task.End(workItem, new TaskExecutionContext(new Log(taskLog.LogMessage, _logger), arguments));
 				}
 				catch (Exception ex)
 				{
@@ -95,7 +95,7 @@ namespace Vertica.Integration.Model
 				}
 			}
 
-            return new TaskExecutionResult(output.ToArray());
+			return new TaskExecutionResult(output.ToArray());
 		}
 	}
 }

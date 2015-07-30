@@ -78,7 +78,7 @@ ORDER BY ErrorLog.Id DESC",
                         {
                             try
                             {
-                                task = _taskFactory.GetByName(taskName);
+                                task = _taskFactory.Get(taskName);
                                 tasksByName.Add(taskName, task);
                             }
                             catch (TaskNotFoundException)

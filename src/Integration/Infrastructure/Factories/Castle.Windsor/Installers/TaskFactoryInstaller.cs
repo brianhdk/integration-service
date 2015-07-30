@@ -28,22 +28,44 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
                 _kernel = kernel;
             }
 
-            public ITask Get<TTask>() where TTask : ITask
+            public bool Exists(string name)
             {
-                return GetByName(Task.Name<TTask>());
+                if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
+
+                IHandler handler = _kernel.GetHandler(name);
+
+                if (handler != null)
+                    return typeof(ITask).IsAssignableFrom(handler.ComponentModel.Implementation);
+
+                return false;
             }
 
-            public ITask GetByName(string name)
+            public ITask Get<TTask>() where TTask : class, ITask
+            {
+                return Get(Task.NameOf<TTask>());
+            }
+
+            public ITask Get(string name)
             {
                 if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", name);
 
-                if (!_kernel.HasComponent(name))
+                if (!Exists(name))
                     throw new TaskNotFoundException(name);
 
                 return _kernel.Resolve<ITask>(name);
             }
 
-            public ITask[] GetAll()
+	        public bool TryGet(string name, out ITask task)
+	        {
+		        task = null;
+
+		        if (Exists(name))
+			        task = Get(name);
+
+		        return task != null;
+	        }
+
+	        public ITask[] GetAll()
             {
                 return _kernel.ResolveAll<ITask>().OrderBy(x => x.Name()).ToArray();
             }

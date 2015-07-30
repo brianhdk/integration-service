@@ -6,17 +6,15 @@ namespace Vertica.Integration.MongoDB
 {
     public static class MongoDBExtensions
     {
-        public static ApplicationConfiguration MongoDB(this ApplicationConfiguration builder, Action<IMongoDBConfiguration> mongoDB)
+        public static ApplicationConfiguration MongoDB(this ApplicationConfiguration application, Action<IMongoDBConfiguration> mongoDB)
         {
-            if (builder == null) throw new ArgumentNullException("builder");
+            if (application == null) throw new ArgumentNullException("application");
             if (mongoDB == null) throw new ArgumentNullException("mongoDB");
 
-            var configuration = new MongoDBConfiguration();
+            var configuration = new MongoDBConfiguration(application);
             mongoDB(configuration);
 
-            builder.AddCustomInstallers(configuration.CustomInstallers);
-
-            return builder;
+            return application;
         }
 
         public static TaskConfiguration<MaintenanceWorkItem> IncludeLogRotator(this TaskConfiguration<MaintenanceWorkItem> task)

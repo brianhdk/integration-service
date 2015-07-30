@@ -5,6 +5,7 @@ using Castle.MicroKernel.Resolvers;
 using Castle.Windsor;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Model;
+using Vertica.Integration.Model.Hosting;
 
 namespace Vertica.Integration
 {
@@ -18,12 +19,13 @@ namespace Vertica.Integration
             container.Kernel.AddFacility<TypedFactoryFacility>();
             container.Register(Component.For<ILazyComponentLoader>().ImplementedBy<LazyOfTComponentLoader>());
 
-            foreach (IInitializable<IWindsorContainer> subject in configuration.ContainerInitializations)
+            foreach (IInitializable<IWindsorContainer> subject in configuration.Initializations)
                 subject.Initialize(container);
 
             container.Install(
                 new ConventionInstaller()
                     .AddFromAssemblyOfThis<ConventionInstaller>()
+					.Ignore<IHost>()
                     .Ignore<ITask>()
                     .Ignore<IStep>());
 

@@ -12,25 +12,35 @@ namespace Vertica.Integration.Tests.Model
     public class TaskFactoryTester
     {
         [Test]
-        public void GetByName_Verify_SingletonBehaviour()
+        public void Exists_And_Is_ITask()
         {
             ITaskFactory subject;
             using (CreateSubject(out subject, tasks => AddFromTestAssembly(tasks)))
             {
-                ITask task1 = subject.GetByName("TestTask");
-                ITask task2 = subject.GetByName("TestTask");
+                Assert.IsTrue(subject.Exists("TestTask"));
+            }            
+        }
+
+        [Test]
+        public void Get_ByName__Verify_SingletonBehaviour()
+        {
+            ITaskFactory subject;
+            using (CreateSubject(out subject, tasks => AddFromTestAssembly(tasks)))
+            {
+                ITask task1 = subject.Get("TestTask");
+                ITask task2 = subject.Get("TestTask");
 
                 Assert.That(task1, Is.EqualTo(task2));
             }
         }
 
         [Test]
-        public void GetByName_Verify_NameIsNotCaseSensitive()
+        public void Get_ByName__Verify_NameIsNotCaseSensitive()
         {
             ITaskFactory subject;
             using (CreateSubject(out subject, tasks => AddFromTestAssembly(tasks)))
             {
-                ITask task1 = subject.GetByName("testtask");
+                ITask task1 = subject.Get("testtask");
 
                 Assert.That(task1, Is.Not.Null);
                 Assert.That(task1, Is.TypeOf<TestTask>());

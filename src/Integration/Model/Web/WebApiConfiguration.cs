@@ -18,6 +18,7 @@ namespace Vertica.Integration.Model.Web
             if (application == null) throw new ArgumentNullException("application");
 
             Application = application;
+            Application.RegisterInitialization(this);
 
             _scan = new List<Assembly>();
             _add = new List<Type>();
@@ -25,8 +26,6 @@ namespace Vertica.Integration.Model.Web
 
             // scan own assembly
             AddFromAssemblyOfThis<WebApiConfiguration>();
-            // we'll remove TaskController but manually add it later - if we're hosting a specific Task through WebApi.
-            Remove<TaskController>();
         }
 
         public ApplicationConfiguration Application { get; private set; }
@@ -66,6 +65,18 @@ namespace Vertica.Integration.Model.Web
 
             return this;
         }
+
+		/// <summary>
+		/// Clears all registred ApiControllers.
+		/// </summary>
+	    public WebApiConfiguration Clear()
+	    {
+		    _remove.Clear();
+		    _add.Clear();
+			_scan.Clear();
+
+		    return this;
+	    }
 
         void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
         {
