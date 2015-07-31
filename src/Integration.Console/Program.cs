@@ -1,7 +1,5 @@
 ﻿using Vertica.Integration.Experiments;
 using Vertica.Integration.Model;
-using Vertica.Integration.Portal;
-using Vertica.Integration.WebApi;
 
 namespace Vertica.Integration.Console
 {
@@ -10,9 +8,9 @@ namespace Vertica.Integration.Console
 		private static void Main(string[] args)
 		{
 			using (IApplicationContext context = ApplicationContext.Create(application => application
-				.UseWebApi(webApi => webApi.WithPortal())
+				//.UseWebApi(webApi => webApi.WithPortal())
                 //.UseIIS()
-				//.Fast()
+				.Fast()
 				//.Tasks(tasks => tasks
 				//	//.Task<Task1.SameNameTask>()
 				//	.Task<Task2.SameNameTask>())
@@ -26,7 +24,8 @@ namespace Vertica.Integration.Console
                 //.TestMongoDbTask()
 				//.Hosts(hosts => hosts.Remove<WebApiHost>())
 				//.RegisterMigrations()
-				//.TestRebus()
+				.TestRebus()
+				.TestRavenDB()
                 .Void()))
 			{
                 context.Execute(args);

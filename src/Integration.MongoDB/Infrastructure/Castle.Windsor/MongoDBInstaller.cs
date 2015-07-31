@@ -21,7 +21,8 @@ namespace Vertica.Integration.MongoDB.Infrastructure.Castle.Windsor
 
             container.Register(
                 Component.For<IMongoDBClientFactory>()
-                    .UsingFactoryMethod(kernel => new MongoDBClientFactory(kernel.Resolve<IMongoDBClientFactory<DefaultConnection>>())));
+                    .UsingFactoryMethod(kernel => 
+						new MongoDBClientFactory(kernel.Resolve<IMongoDBClientFactory<DefaultConnection>>())));
         }
     }
 

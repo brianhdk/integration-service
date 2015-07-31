@@ -11,9 +11,8 @@ namespace Vertica.Integration.Experiments
         {
             if (configuration == null) throw new ArgumentNullException("configuration");
 
-            return configuration
-                .Database(database => database.DisableIntegrationDb())
-                .Logging(logging => logging.NullLogger());
+	        return configuration
+		        .Database(database => database.DisableIntegrationDb());
         }
 
         public static ApplicationConfiguration RegisterMigrations(this ApplicationConfiguration configuration)

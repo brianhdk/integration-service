@@ -8,9 +8,8 @@ class Program
     static void Main(string[] args)
     {
 		using (ApplicationContext context = ApplicationContext.Create(application => application
-            .MongoDB(mongoDB => mongoDB
-				// http://docs.mongodb.org/manual/reference/connection-string/#connections-connection-options
-				.DefaultConnection(ConnectionString.FromText("mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]")))))
+            .UseRavenDB(ravenDB => ravenDB
+				.DefaultConnection(ConnectionString.FromText("")))))
 		{
 			context.Execute(args);
 		}

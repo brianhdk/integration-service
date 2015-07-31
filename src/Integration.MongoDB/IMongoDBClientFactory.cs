@@ -1,6 +1,7 @@
 ﻿using MongoDB.Driver;
+using Vertica.Integration.MongoDB.Infrastructure;
 
-namespace Vertica.Integration.MongoDB.Infrastructure
+namespace Vertica.Integration.MongoDB
 {
     public interface IMongoDBClientFactory : IMongoDBClientFactory<DefaultConnection>
     {

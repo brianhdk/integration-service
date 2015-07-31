@@ -35,15 +35,13 @@ namespace Vertica.Integration.Rebus
 
 	        if (!_windowsService.Handle(args, windowsService))
 	        {
-				using (_bus())
-				{
-					do
-					{
-						_outputter.WriteLine(@"Press ESCAPE to stop Rebus...");
-						_outputter.WriteLine();
+		        _bus();
 
-					} while (WaitingForEscape());
-				}
+		        do
+		        {
+			        _outputter.WriteLine(@"Press ESCAPE to stop Rebus...");
+			        _outputter.WriteLine();
+		        } while (WaitingForEscape());
 	        }
         }
 

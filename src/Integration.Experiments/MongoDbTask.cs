@@ -6,7 +6,6 @@ using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Model;
 using Vertica.Integration.MongoDB;
 using Vertica.Integration.MongoDB.Infrastructure;
-using Vertica.Utilities_v4.Extensions.AnonymousExt;
 
 namespace Vertica.Integration.Experiments
 {
@@ -21,7 +20,7 @@ namespace Vertica.Integration.Experiments
                         .Clear()
                         .IncludeLogRotator()))
                 .UseMongoDB(mongoDB => mongoDB
-                    .Connection(ConnectionString.FromText("mongodb://maersk-web01.vertica.dk/admin"))
+                    .DefaultConnection(ConnectionString.FromText("mongodb://maersk-web01.vertica.dk/admin"))
                     .AddConnection(new AnalyticsDb()));
         }
     }

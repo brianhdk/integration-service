@@ -7,7 +7,7 @@ using Rebus.Config;
 
 namespace Vertica.Integration.Rebus
 {
-    public class RebusConfiguration : IInitializable<IWindsorContainer>, IDisposable
+    public class RebusConfiguration : IInitializable<IWindsorContainer>
     {
 	    internal RebusConfiguration(ApplicationConfiguration application)
 	    {
@@ -53,19 +53,10 @@ namespace Vertica.Integration.Rebus
 					    if (BusConfiguration != null)
 						    rebus = BusConfiguration(rebus);
 
-					    return Rebus = rebus.Start();
+					    return rebus.Start();
 				    }));
 		}
 
 	    private Func<RebusConfigurer, RebusConfigurer> BusConfiguration { get; set; }
-		private IBus Rebus { get; set; }
-
-	    public void Dispose()
-	    {
-		    if (Rebus != null)
-				Rebus.Dispose();
-
-
-	    }
     }
 }

@@ -2,9 +2,8 @@
 using Vertica.Integration.Domain.Core;
 using Vertica.Integration.Model;
 using Vertica.Integration.MongoDB.Commands;
-using Vertica.Integration.MongoDB.Infrastructure;
 
-namespace Vertica.Integration.MongoDB
+namespace Vertica.Integration.MongoDB.Maintenance
 {
     public class LogRotatorStep : Step<MaintenanceWorkItem>
     {

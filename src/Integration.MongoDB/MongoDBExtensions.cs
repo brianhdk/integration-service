@@ -1,12 +1,13 @@
 ﻿using System;
 using Vertica.Integration.Domain.Core;
 using Vertica.Integration.Model;
+using Vertica.Integration.MongoDB.Maintenance;
 
 namespace Vertica.Integration.MongoDB
 {
     public static class MongoDBExtensions
     {
-        public static ApplicationConfiguration UseMongoDB(this ApplicationConfiguration application, Action<IMongoDBConfiguration> mongoDB)
+        public static ApplicationConfiguration UseMongoDB(this ApplicationConfiguration application, Action<MongoDBConfiguration> mongoDB)
         {
             if (application == null) throw new ArgumentNullException("application");
             if (mongoDB == null) throw new ArgumentNullException("mongoDB");
