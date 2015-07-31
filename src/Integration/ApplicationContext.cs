@@ -110,7 +110,7 @@ namespace Vertica.Integration
                 if (logger is EventLogger)
                     throw;
 
-                new EventLogger().LogError(exception);
+                new EventLogger(_container.Resolve<IRuntimeSettings>()).LogError(exception);
             }
         }
     }

@@ -33,7 +33,7 @@ namespace Vertica.Integration.Tests.Infrastructure.Archiving
             IDbTransaction transaction = Substitute.For<IDbTransaction>();
             session.BeginTransaction().Returns(transaction);
 
-            return new ArchiveService(dbFactory);
+            return new ArchiveService(() => dbFactory);
         }
     }
 }
