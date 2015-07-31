@@ -5,6 +5,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
     public class ConfigurationUpdater<T> : IDisposable where T : class, new()
     {
         private readonly Action<T> _save;
+
         public T Configuration { get; private set; }
 
         internal ConfigurationUpdater(T configuration, Action<T> save)

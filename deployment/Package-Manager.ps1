@@ -10,13 +10,14 @@ $settings = @{
 		"integration_azure" = Resolve-Path $script_directory\..\src\Integration.Azure
 		"integration_paymentservice" = Resolve-Path $script_directory\..\src\Integration.PaymentService
 		"integration_mongodb" = Resolve-Path $script_directory\..\src\Integration.MongoDB
+		"integration_rebus" = Resolve-Path $script_directory\..\src\Integration.Rebus
     }
     "tools" = @{
         "nuget" = Resolve-Path $script_directory\..\.nuget\NuGet.exe
     }
 	"packages" = @{
-		"destination" = "\\nuget.vertica.dk\nuget.vertica.dk\root\Packages"
-		#"destination" = "D:\Dropbox\Development\NuGet.Packages"
+		#"destination" = "\\nuget.vertica.dk\nuget.vertica.dk\root\Packages"
+		"destination" = "D:\Dropbox\Development\NuGet.Packages"
 	}
 }
 
