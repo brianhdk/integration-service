@@ -9,10 +9,19 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
 {
     public class EventLogger : Logger
     {
-        private const string SourceName = "Integration Service";
         private static readonly CultureInfo English = CultureInfo.GetCultureInfo("en-US");
 
-        protected override string Insert(TaskLog log)
+	    private readonly string _sourceName;
+
+	    public EventLogger(IRuntimeSettings runtimeSettings)
+	    {
+		    ApplicationEnvironment environment = runtimeSettings.Environment;
+
+		    _sourceName = String.Concat("Integration Service",
+			    environment != null ? String.Format(" [{0}]", environment) : String.Empty);
+	    }
+
+	    protected override string Insert(TaskLog log)
         {
             return GenerateEventId().ToString();
         }
@@ -46,7 +55,7 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
                 log.FormattedMessage);
 
             EventLog.WriteEntry(
-                SourceName, 
+                _sourceName, 
                 message, 
                 log.Severity == Severity.Error ? EventLogEntryType.Error : EventLogEntryType.Warning, 
                 id);
@@ -84,7 +93,7 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
             }
 
             EventLog.WriteEntry(
-                SourceName,
+                _sourceName,
                 sb.ToString(),
                 EventLogEntryType.Information,
                 Int32.Parse(log.Id));
