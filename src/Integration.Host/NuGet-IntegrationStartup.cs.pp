@@ -7,7 +7,7 @@ namespace $rootnamespace$
 	{
 		public static void Run(string[] args, Action<ApplicationConfiguration> application = null)
 		{
-			using (ApplicationContext context = ApplicationContext.Create(cfg => cfg.Change(application)))
+			using (IApplicationContext context = ApplicationContext.Create(cfg => cfg.Change(application)))
 			{
 				context.Execute(args);
 			}

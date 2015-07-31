@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 
-namespace Vertica.Integration.Model.Web
+namespace Vertica.Integration.WebApi.Controllers
 {
     public class HomeController : ApiController
     {

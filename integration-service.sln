@@ -64,6 +64,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Rebus", "src\In
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.MongoDB", "src\Integration.MongoDB\Integration.MongoDB.csproj", "{3BCCDB4F-104A-418A-8DEE-15A655960AEA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.WebApi", "src\Integration.WebApi\Integration.WebApi.csproj", "{A6CB3949-9637-4952-AB0F-0DE199E29B36}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -138,6 +140,10 @@ Global
 		{3BCCDB4F-104A-418A-8DEE-15A655960AEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BCCDB4F-104A-418A-8DEE-15A655960AEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3BCCDB4F-104A-418A-8DEE-15A655960AEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6CB3949-9637-4952-AB0F-0DE199E29B36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6CB3949-9637-4952-AB0F-0DE199E29B36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6CB3949-9637-4952-AB0F-0DE199E29B36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6CB3949-9637-4952-AB0F-0DE199E29B36}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

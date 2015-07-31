@@ -16,12 +16,12 @@ namespace Vertica.Integration.Infrastructure.Configuration
 {
     public class ConfigurationService : IConfigurationService
     {
-        private readonly IDbFactory _db;
+        private readonly Func<IDbFactory> _db;
         private readonly IArchiveService _archive;
         private readonly ILogger _logger;
         private readonly JsonSerializerSettings _serializerSettings;
 
-        public ConfigurationService(IDbFactory db, IArchiveService archive, ILogger logger)
+        public ConfigurationService(Func<IDbFactory> db, IArchiveService archive, ILogger logger)
         {
             _archive = archive;
             _logger = logger;
@@ -69,7 +69,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
 
         public Configuration[] GetAll()
         {
-            using (IDbSession session = _db.OpenSession())
+            using (IDbSession session = OpenSession())
             {
                 return
                     session
@@ -82,7 +82,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
         {
             if (String.IsNullOrWhiteSpace(id)) throw new ArgumentException(@"Value cannot be null or empty.", "id");
 
-            using (IDbSession session = _db.OpenSession())
+            using (IDbSession session = OpenSession())
             {
                 return
                     session
@@ -106,7 +106,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
         {
             if (String.IsNullOrWhiteSpace(id)) throw new ArgumentException(@"Value cannot be null or empty.");
 
-            using (IDbSession session = _db.OpenSession())
+            using (IDbSession session = OpenSession())
             using (IDbTransaction transaction = session.BeginTransaction())
             {
                 session.Execute("DELETE FROM Configuration WHERE (Id = @id)", new {id});
@@ -141,7 +141,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
                 }
             }
 
-            using (IDbSession session = _db.OpenSession())
+            using (IDbSession session = OpenSession())
             using (IDbTransaction transaction = session.BeginTransaction())
             {
                 string description = GetDescription(configurationType).MaxLength(255);
@@ -222,5 +222,10 @@ IMPORTANT: Remember to use the ""D"" format for Guids, e.g. 1EB3F675-C634-412F-A
 
             return null;
         }
+
+		private IDbSession OpenSession()
+		{
+			return _db().OpenSession();
+		}
     }
 }

@@ -3,7 +3,7 @@ using System.Net.Http.Headers;
 using System.Threading;
 using Response=System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage>;
 
-namespace Vertica.Integration.Model.Web
+namespace Vertica.Integration.WebApi.Infrastructure
 {
     internal class CachingHandler : DelegatingHandler
     {

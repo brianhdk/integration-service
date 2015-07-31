@@ -10,9 +10,9 @@ namespace Vertica.Integration.Infrastructure.Archiving
 {
     public class ArchiveService : IArchiveService
     {
-        private readonly IDbFactory _db;
+        private readonly Func<IDbFactory> _db;
 
-        public ArchiveService(IDbFactory db)
+        public ArchiveService(Func<IDbFactory> db)
         {
             _db = db;
         }
@@ -23,7 +23,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
             {
                 int archiveId;
 
-                using (IDbSession session = _db.OpenSession())
+				using (IDbSession session = OpenSession())
                 using (IDbTransaction transaction = session.BeginTransaction())
                 {
                     byte[] binaryData = stream.ToArray();
@@ -51,7 +51,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
         public Archive[] GetAll()
         {
-            using (IDbSession session = _db.OpenSession())
+			using (IDbSession session = OpenSession())
             {
                 return session.Wrap(s => s.Query<Archive>("SELECT Id, Name, ByteSize, Created, GroupName, Expires FROM Archive"))
                     .ToArray();
@@ -64,7 +64,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
             if (!Int32.TryParse(id, out value))
                 return null;
 
-            using (IDbSession session = _db.OpenSession())
+			using (IDbSession session = OpenSession())
             {
                 return
                     session.Wrap(s => s.Query<byte[]>("SELECT BinaryData FROM Archive WHERE Id = @Id", new { Id = value }))
@@ -74,7 +74,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
         public int Delete(DateTimeOffset olderThan)
         {
-            using (IDbSession session = _db.OpenSession())
+			using (IDbSession session = OpenSession())
             using (IDbTransaction transaction = session.BeginTransaction())
             {
                 int count = session.Wrap(s => s.Execute("DELETE FROM Archive WHERE Created <= @olderThan", new { olderThan }));
@@ -87,7 +87,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
         public int DeleteExpired()
         {
-            using (IDbSession session = _db.OpenSession())
+			using (IDbSession session = OpenSession())
             using (IDbTransaction transaction = session.BeginTransaction())
             {
                 int count = session.Wrap(s => s.Execute("DELETE FROM Archive WHERE Expires <= @now", new { now = Time.UtcNow }));
@@ -97,5 +97,10 @@ namespace Vertica.Integration.Infrastructure.Archiving
                 return count;
             }
         }
+
+		private IDbSession OpenSession()
+		{
+			return _db().OpenSession();
+		}
     }
 }

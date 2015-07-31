@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Web.Http;
 using Castle.Windsor;
-using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
+using Vertica.Integration.WebApi.Infrastructure.Castle.Windsor;
 
-namespace Vertica.Integration.Model.Web
+namespace Vertica.Integration.WebApi
 {
     public class WebApiConfiguration : IInitializable<IWindsorContainer>
     {
@@ -17,7 +17,9 @@ namespace Vertica.Integration.Model.Web
         {
             if (application == null) throw new ArgumentNullException("application");
 
-			Application = application.Extensibility(extensibility => extensibility.Register(this));
+			Application = application
+				.Extensibility(extensibility => extensibility.Register(this))
+				.Hosts(hosts => hosts.Host<WebApiHost>());
 
             _scan = new List<Assembly>();
             _add = new List<Type>();

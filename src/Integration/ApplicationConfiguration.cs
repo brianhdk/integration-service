@@ -10,7 +10,6 @@ using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Hosting;
-using Vertica.Integration.Model.Web;
 using Vertica.Utilities_v4.Extensions.EnumerableExt;
 
 namespace Vertica.Integration
@@ -24,7 +23,6 @@ namespace Vertica.Integration
         private readonly DatabaseConfiguration _database;
         private readonly TasksConfiguration _tasks;
         private readonly LoggingConfiguration _logging;
-        private readonly WebApiConfiguration _webApi;
         private readonly MigrationConfiguration _migration;
         private readonly HostsConfiguration _hosts;
 
@@ -41,7 +39,6 @@ namespace Vertica.Integration
             _database = new DatabaseConfiguration(this);
             _tasks = new TasksConfiguration(this);
             _logging = new LoggingConfiguration(this);
-            _webApi = new WebApiConfiguration(this);
             _migration = new MigrationConfiguration(this);
             _hosts = new HostsConfiguration(this);
 
@@ -92,14 +89,6 @@ namespace Vertica.Integration
         {
             if (database != null)
                 database(_database);
-
-            return this;
-        }
-
-        public ApplicationConfiguration WebApi(Action<WebApiConfiguration> webApi)
-        {
-            if (webApi != null)
-                webApi(_webApi);
 
             return this;
         }

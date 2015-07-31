@@ -2,8 +2,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Vertica.Integration.Model;
 
-namespace Vertica.Integration.Model.Web
+namespace Vertica.Integration.WebApi.Controllers
 {
     public class TasksController : ApiController
     {

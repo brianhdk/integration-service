@@ -1,6 +1,7 @@
 ﻿using Vertica.Integration.Experiments;
 using Vertica.Integration.Model;
-using Vertica.Integration.Model.Web;
+using Vertica.Integration.Portal;
+using Vertica.Integration.WebApi;
 
 namespace Vertica.Integration.Console
 {
@@ -9,7 +10,7 @@ namespace Vertica.Integration.Console
 		private static void Main(string[] args)
 		{
 			using (IApplicationContext context = ApplicationContext.Create(application => application
-				//.UsePortal()
+				.UseWebApi(webApi => webApi.WithPortal())
                 //.UseIIS()
 				//.Fast()
 				//.Tasks(tasks => tasks

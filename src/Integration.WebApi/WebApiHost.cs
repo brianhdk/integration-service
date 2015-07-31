@@ -7,10 +7,11 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using Vertica.Integration.Infrastructure.Extensions;
+using Vertica.Integration.Model.Hosting;
 using Vertica.Integration.Model.Hosting.Handlers;
-using Vertica.Integration.Model.Web;
+using Vertica.Integration.WebApi.Infrastructure;
 
-namespace Vertica.Integration.Model.Hosting
+namespace Vertica.Integration.WebApi
 {
     public class WebApiHost : IHost
     {

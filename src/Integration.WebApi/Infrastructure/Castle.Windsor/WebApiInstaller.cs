@@ -7,9 +7,10 @@ using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
-using Vertica.Integration.Model.Web;
+using Vertica.Integration.Infrastructure.Factories.Castle.Windsor;
+using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 
-namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
+namespace Vertica.Integration.WebApi.Infrastructure.Castle.Windsor
 {
     internal class WebApiInstaller : IWindsorInstaller
 	{
@@ -70,7 +71,7 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 
 		    public IDisposable Create(string url)
 		    {
-			    return new Model.Web.HttpServer(url, _kernel);
+			    return new HttpServer(url, _kernel);
 		    }
 	    }
 

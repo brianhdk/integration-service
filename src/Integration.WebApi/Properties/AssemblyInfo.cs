@@ -1,14 +1,13 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Vertica.Integration.Azure.Messaging")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Vertica.Integration.WebApi")]
+[assembly: AssemblyDescription("Extends Integration Service with the ability to simple host WebApi controllers.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Vertica A/S")]
+[assembly: AssemblyCompany("Vertia A/S")]
 [assembly: AssemblyProduct("")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
@@ -20,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("a935fe82-d5d8-4ad8-916d-411a91addd2a")]
+[assembly: Guid("017529d4-d7ca-47d7-927a-67f9d53b0afc")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,5 +31,4 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.5.*")]

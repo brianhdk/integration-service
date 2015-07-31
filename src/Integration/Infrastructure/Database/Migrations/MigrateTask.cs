@@ -23,14 +23,14 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
         private readonly IDisposable _loggingDisabler;
         private readonly bool _databaseCreated;
 
-        public MigrateTask(Lazy<IDbFactory> db, ILogger logger, IKernel kernel, MigrationConfiguration configuration)
+        public MigrateTask(Func<IDbFactory> db, ILogger logger, IKernel kernel, MigrationConfiguration configuration)
         {
             _kernel = kernel;
             _targets = configuration.CustomTargets;
 
             if (!configuration.IntegrationDbDisabled)
             {
-                string connectionString = EnsureIntegrationDb(db.Value, configuration.CheckExistsIntegrationDb, out _databaseCreated);
+                string connectionString = EnsureIntegrationDb(db(), configuration.CheckExistsIntegrationDb, out _databaseCreated);
 
                 var integrationDb = new MigrationTarget(
                     configuration.IntegrationDbDatabaseServer,

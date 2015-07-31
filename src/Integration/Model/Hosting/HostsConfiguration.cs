@@ -20,7 +20,6 @@ namespace Vertica.Integration.Model.Hosting
             _remove = new List<Type>();
 
             Host<TaskHost>();
-            Host<WebApiHost>();
         }
 
         public ApplicationConfiguration Application { get; private set; }

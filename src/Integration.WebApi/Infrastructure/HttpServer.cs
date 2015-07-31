@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net.Http;
 using System.Reflection;
 using System.Web.Http;
@@ -12,8 +11,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Owin;
 using Vertica.Integration.Infrastructure.Logging;
+using Vertica.Integration.WebApi.Infrastructure.Castle.Windsor;
 
-namespace Vertica.Integration.Model.Web
+namespace Vertica.Integration.WebApi.Infrastructure
 {
 	internal class HttpServer : IDisposable
     {

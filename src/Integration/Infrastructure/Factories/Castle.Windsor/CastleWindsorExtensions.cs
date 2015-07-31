@@ -3,7 +3,7 @@ using Castle.MicroKernel.Registration;
 
 namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor
 {
-    internal static class CastleWindsorExtensions
+	public static class CastleWindsorExtensions
     {
         public static BasedOnDescriptor Expose(this BasedOnDescriptor descriptor, Action<Type> expose)
         {

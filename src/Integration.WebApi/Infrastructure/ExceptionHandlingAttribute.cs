@@ -2,7 +2,7 @@ using System;
 using System.Web.Http.Filters;
 using Vertica.Integration.Infrastructure.Logging;
 
-namespace Vertica.Integration.Model.Web
+namespace Vertica.Integration.WebApi.Infrastructure
 {
     internal class ExceptionHandlingAttribute : ExceptionFilterAttribute
     {

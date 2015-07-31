@@ -1,6 +1,6 @@
 using System;
 
-namespace Vertica.Integration.Model.Web
+namespace Vertica.Integration.WebApi.Infrastructure
 {
 	public interface IHttpServerFactory
 	{
