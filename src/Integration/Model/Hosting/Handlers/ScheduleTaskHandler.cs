@@ -28,7 +28,7 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 
 			if (actionIs("install"))
 			{
-				Install(args, scheduleTask, installer);
+				Install(installer, scheduleTask, args);
 			}
 			else if (actionIs("uninstall"))
 			{
@@ -38,7 +38,7 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 			return true;
 		}
 
-		private static void Install(HostArguments args, ScheduleTask scheduleTask, ScheduleTaskInstaller installer)
+		private static void Install(ScheduleTaskInstaller installer, ScheduleTask scheduleTask, HostArguments args)
 		{
 			string username;
 			args.CommandArgs.TryGetValue("username", out username);
