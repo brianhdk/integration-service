@@ -474,7 +474,10 @@ TBD.
 
 ## Basics of WebApi
 
-TBD. 
+```
+Install-Package Vertica.Integration.WebApi
+```
+
 [Back to Table of Contents](#table-of-contents)
 
 ## Logging and Exceptions
