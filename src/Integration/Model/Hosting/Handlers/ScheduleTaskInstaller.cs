@@ -58,7 +58,6 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 			ITaskFolder rootFolder = _taskService.GetFolder(@"\");
 			IEnumerator subfolders = rootFolder.GetFolders(0).GetEnumerator();
 			bool folderExists = false;
-
 			ITaskFolder folder = null;
 
 			while (subfolders.MoveNext() && !folderExists)
@@ -85,7 +84,6 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 				IExecAction taskAction = (IExecAction)taskDefinition.Actions.Create(_TASK_ACTION_TYPE.TASK_ACTION_EXEC);
 				taskAction.Path = action.ExePath;
 				taskAction.Arguments = action.Arguments ?? String.Empty;
-				taskAction.WorkingDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 			}
 		}
 
@@ -96,6 +94,7 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 			taskDefinition.RegistrationInfo.Description = scheduleTask.Description;
 			taskDefinition.Principal.LogonType = _TASK_LOGON_TYPE.TASK_LOGON_GROUP;
 			taskDefinition.Settings.Hidden = false;
+			
 			return taskDefinition;
 		}
 	}
