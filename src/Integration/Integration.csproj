@@ -208,8 +208,13 @@
     <Compile Include="Model\Exceptions\MultipleHostsFoundException.cs" />
     <Compile Include="Model\Exceptions\NoHostFoundException.cs" />
     <Compile Include="Model\Exceptions\TaskWithSameNameAlreadyRegistredException.cs" />
+    <Compile Include="Model\Hosting\Handlers\Credentials.cs" />
     <Compile Include="Model\Hosting\Handlers\InstallWindowsService.cs" />
+    <Compile Include="Model\Hosting\Handlers\IScheduleTaskHandler.cs" />
     <Compile Include="Model\Hosting\Handlers\IWindowsServiceHandler.cs" />
+    <Compile Include="Model\Hosting\Handlers\ScheduleTask.cs" />
+    <Compile Include="Model\Hosting\Handlers\ScheduleTaskHandler.cs" />
+    <Compile Include="Model\Hosting\Handlers\ScheduleTaskInstaller.cs" />
     <Compile Include="Model\Hosting\Handlers\WindowsService.cs" />
     <Compile Include="Model\Hosting\Handlers\WindowsServiceHandler.cs" />
     <Compile Include="Model\Hosting\HostArguments.cs" />
@@ -280,7 +285,17 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <COMReference Include="TaskScheduler">
+      <Guid>{E34CB9F1-C7F7-424C-BE29-027DCC09363A}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
