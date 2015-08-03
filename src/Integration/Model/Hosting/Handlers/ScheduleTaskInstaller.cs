@@ -21,7 +21,6 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 				throw new ArgumentNullException("scheduleTask");
 
 			ITaskDefinition taskDefinition = CreateTaskDefinition(_taskService, scheduleTask);
-			AddTriggers(taskDefinition);
 			AddActions(taskDefinition, scheduleTask.Actions);
 			InstallOrUpdate(taskDefinition, scheduleTask);
 		}
@@ -88,14 +87,6 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 				taskAction.Arguments = action.Arguments ?? String.Empty;
 				taskAction.WorkingDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 			}
-		}
-
-		private static void AddTriggers(ITaskDefinition taskDefinition)
-		{
-			//	IDailyTrigger taskTrigger = (IDailyTrigger)taskDefinition.Triggers.Create(_TASK_TRIGGER_TYPE2.TASK_TRIGGER_DAILY);
-			//	taskTrigger.StartBoundary = DateTime.Now.AddMinutes(10).ToString("yyyy-MM-ddThh:mm:ss" + TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).ToString().Substring(0, 6));
-			//	taskTrigger.DaysInterval = 2;
-			//return taskTrigger;
 		}
 
 		private static ITaskDefinition CreateTaskDefinition(ITaskService taskService, ScheduleTask scheduleTask)

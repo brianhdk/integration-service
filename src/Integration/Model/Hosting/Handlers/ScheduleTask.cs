@@ -11,7 +11,6 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 		public string Name { get; private set; }
 		public string Description { get; private set; }
 		public List<Action> Actions { get; private set; }
-		public List<Trigger> Triggers { get; private set; }
 
 		public ScheduleTask(string name, string description, string folderName, Credentials credentials = null)
 		{
@@ -41,12 +40,6 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 		}
 	}
 	
-	public class Trigger
-	{
-		
-	}
-	
-
 	public class Action
 	{
 		public string ExePath { get; private set; }
