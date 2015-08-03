@@ -8,12 +8,13 @@ namespace Vertica.Integration.Azure
         {
             if (application == null) throw new ArgumentNullException("application");
 
-            var configuration = new AzureConfiguration(application);
+			return application.Extensibility(extensibility =>
+			{
+				AzureConfiguration configuration = extensibility.Cache(() => new AzureConfiguration(application));
 
-            if (azure != null)
-                azure(configuration);
-
-            return application;
+				if (azure != null)
+					azure(configuration);
+			});
         }
     }
 }

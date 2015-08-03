@@ -14,14 +14,12 @@ namespace Vertica.Integration.Model.Hosting
         {
             if (application == null) throw new ArgumentNullException("application");
 
-            Application = application;
-            Application.RegisterInitialization(this);
+			Application = application.Extensibility(extensibility => extensibility.Register(this));
 
             _add = new List<Type>();
             _remove = new List<Type>();
 
             Host<TaskHost>();
-            Host<WebApiHost>();
         }
 
         public ApplicationConfiguration Application { get; private set; }

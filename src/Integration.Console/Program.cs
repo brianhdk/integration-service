@@ -9,14 +9,14 @@ namespace Vertica.Integration.Console
 		private static void Main(string[] args)
 		{
 			using (IApplicationContext context = ApplicationContext.Create(application => application
-				//.UsePortal()
+				//.UseWebApi(webApi => webApi.WithPortal())
                 //.UseIIS()
-				//.Fast()
+				.Fast()
 				//.Tasks(tasks => tasks
 				//	//.Task<Task1.SameNameTask>()
 				//	.Task<Task2.SameNameTask>())
                 .RegisterTasks()
-                //.RegisterMigrations()
+                .RegisterMigrations()
                 //.TestEventLogger()
 				//.TestTextFileLogger()
                 //.TestPaymentService()
@@ -25,8 +25,8 @@ namespace Vertica.Integration.Console
                 //.TestMongoDbTask()
 				//.Hosts(hosts => hosts.Remove<WebApiHost>())
 				//.RegisterMigrations()
-				//.TestRebus()
-				.WebApi(webApi => webApi.Clear().Remove<TasksController>())
+				.TestRebus()
+				.TestRavenDB()
                 .Void()))
 			{
                 context.Execute(args);

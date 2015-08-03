@@ -59,19 +59,19 @@
   <ItemGroup>
     <Compile Include="Commands\ILogRotatorCommand.cs" />
     <Compile Include="Commands\LogRotatorCommand.cs" />
-    <Compile Include="IAdditionalConfiguration.cs" />
-    <Compile Include="IMongoDBConfiguration.cs" />
     <Compile Include="Infrastructure\DefaultConnection.cs" />
-    <Compile Include="LogRotatorStep.cs" />
+    <Compile Include="Maintenance\LogRotatorStep.cs" />
     <Compile Include="MongoDBConfiguration.cs" />
     <Compile Include="MongoDBExtensions.cs" />
-    <Compile Include="Infrastructure\MongoDBClientFactory.cs" />
+    <Compile Include="MongoDBClientFactory.cs" />
     <Compile Include="Infrastructure\Connection.cs" />
-    <Compile Include="Infrastructure\IMongoDBClientFactory.cs" />
+    <Compile Include="IMongoDBClientFactory.cs" />
     <Compile Include="Infrastructure\Castle.Windsor\MongoDBInstaller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Integration.MongoDB.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -79,6 +79,9 @@
       <Project>{460F774F-2C89-47F4-84BD-B97653060E68}</Project>
       <Name>Integration</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Readme\Integration.MongoDB-readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

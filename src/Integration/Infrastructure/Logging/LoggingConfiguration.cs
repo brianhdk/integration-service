@@ -2,6 +2,7 @@
 using System.IO;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
+using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Infrastructure.Logging.Loggers;
 
@@ -16,10 +17,7 @@ namespace Vertica.Integration.Infrastructure.Logging
         {
             if (application == null) throw new ArgumentNullException("application");
 
-            Application = application;
-            Application.RegisterInitialization(this);
-
-            _logger = typeof (DefaultLogger);
+			Application = application.Extensibility(extensibility => extensibility.Register(this));
         }
 
         public ApplicationConfiguration Application { get; private set; }
@@ -52,7 +50,18 @@ namespace Vertica.Integration.Infrastructure.Logging
 
         void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
         {
-            container.Register(Component.For<ILogger>().ImplementedBy(_logger));
+	        if (_logger == null)
+	        {
+		        bool dbDisabled = true;
+		        Application.Database(cfg => dbDisabled = cfg.IntegrationDbDisabled);
+
+		        if (dbDisabled)
+			        EventLogger();
+		        else
+			        Use<DefaultLogger>();
+	        }
+
+	        container.Register(Component.For<ILogger>().ImplementedBy(_logger));
 
             container.RegisterInstance(_console ?? (Environment.UserInteractive ? System.Console.Out : TextWriter.Null));
         }

@@ -3,7 +3,7 @@ using System.Net.Http.Headers;
 
 namespace Vertica.Integration.Portal.Controllers
 {
-    public class HomeController : Model.Web.HomeController
+	public class HomeController : WebApi.Controllers.HomeController
     {
         public override HttpResponseMessage Get()
         {

@@ -135,6 +135,10 @@
     <Content Include="App_Readme\Integration.Portal-readme.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Integration.WebApi\Integration.WebApi.csproj">
+      <Project>{a6cb3949-9637-4952-ab0f-0de199e29b36}</Project>
+      <Name>Integration.WebApi</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Integration\Integration.csproj">
       <Project>{460f774f-2c89-47f4-84bd-b97653060e68}</Project>
       <Name>Integration</Name>

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Rebus.Bus;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Model.Hosting;
 using Vertica.Integration.Model.Hosting.Handlers;
@@ -8,15 +9,15 @@ namespace Vertica.Integration.Rebus
 {
 	internal class RebusHost : IHost
     {
-	    private readonly RebusConfiguration _configuration;
+	    private readonly Func<IBus> _bus;
 	    private readonly IWindowsServiceHandler _windowsService;
 	    private readonly TextWriter _outputter;
 
-	    public RebusHost(RebusConfiguration configuration, IWindowsServiceHandler windowsService, TextWriter outputter)
+	    public RebusHost(Func<IBus> bus, IWindowsServiceHandler windowsService, TextWriter outputter)
 	    {
 		    _windowsService = windowsService;
 		    _outputter = outputter;
-		    _configuration = configuration;
+		    _bus = bus;
 	    }
 
 	    public bool CanHandle(HostArguments args)
@@ -30,23 +31,28 @@ namespace Vertica.Integration.Rebus
         {
             if (args == null) throw new ArgumentNullException("args");
 
-	        var windowsService = new WindowsService(this.Name(), Description).OnStart(_configuration.BusFactory);
+			_bus();
+
+	        var windowsService = new WindowsService(this.Name(), Description).OnStart(() => new VoidDisposer());
 
 	        if (!_windowsService.Handle(args, windowsService))
 	        {
-				using (_configuration.BusFactory())
-				{
-					do
-					{
-						_outputter.WriteLine(@"Press ESCAPE to stop Rebus...");
-						_outputter.WriteLine();
-
-					} while (WaitingForEscape());
-				}		        
+		        do
+		        {
+			        _outputter.WriteLine(@"Press ESCAPE to stop Rebus...");
+			        _outputter.WriteLine();
+		        } while (WaitingForEscape());
 	        }
         }
 
-        public string Description
+		private class VoidDisposer : IDisposable
+		{
+			public void Dispose()
+			{
+			}
+		}
+
+		public string Description
         {
             get { return "Hosts Rebus"; }
         }

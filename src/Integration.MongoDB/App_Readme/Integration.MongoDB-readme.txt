@@ -10,7 +10,7 @@ class Program
 		using (ApplicationContext context = ApplicationContext.Create(application => application
             .MongoDB(mongoDB => mongoDB
 				// http://docs.mongodb.org/manual/reference/connection-string/#connections-connection-options
-				.Connection(ConnectionString.FromText(""mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]""")))))
+				.DefaultConnection(ConnectionString.FromText("mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]")))))
 		{
 			context.Execute(args);
 		}

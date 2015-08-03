@@ -9,12 +9,6 @@ namespace Vertica.Integration.Infrastructure.Templating.AttributeParsing
     [DebuggerDisplay("({Position})\"{Value}\"")]
     public class PositionTagged<T>
     {
-        private PositionTagged()
-        {
-            Position = 0;
-            Value = default(T);
-        }
-
         public PositionTagged(T value, int offset)
         {
             Position = offset;

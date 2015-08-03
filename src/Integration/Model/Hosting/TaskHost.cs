@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Model.Hosting.Handlers;
 using Action = System.Action;
@@ -37,18 +36,9 @@ namespace Vertica.Integration.Model.Hosting
 
 			var windowsService = new WindowsService(task.Name(), task.Description).OnStart(() =>
 			{
-				string repeat;
-				args.CommandArgs.TryGetValue("repeat", out repeat);
-
-				// TODO: Implement CRON functionality.
-
-				uint seconds;
-				if (!UInt32.TryParse(repeat, out seconds))
-					seconds = 1;
-
 				Action run = () => _runner.Execute(task, args.Args);
 
-				return run.Repeat(Delay.Custom(seconds), TextWriter.Null);
+				return run.Repeat(args.ParseRepeat(), TextWriter.Null);
 			});
 
 			if (!InstallOrRunAsWindowsService(args, windowsService) && !InstallAsScheduleTask(args, windowsService))

@@ -1,8 +1,9 @@
 ﻿using System;
+using Castle.MicroKernel.Registration;
 using Castle.Windsor;
+using Rebus.Bus;
 using Rebus.CastleWindsor;
 using Rebus.Config;
-using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 
 namespace Vertica.Integration.Rebus
 {
@@ -12,8 +13,12 @@ namespace Vertica.Integration.Rebus
 	    {
 		    if (application == null) throw new ArgumentNullException("application");
 
-		    application.RegisterInitialization(this);
+		    application.Extensibility(extensibility => extensibility.Register(this));
+
+		    HandlersConfiguration = new RebusHandlersConfiguration(application);
 	    }
+
+		private RebusHandlersConfiguration HandlersConfiguration { get; set; }
 
 	    public RebusConfiguration Bus(Func<RebusConfigurer, RebusConfigurer> bus)
 	    {
@@ -24,32 +29,34 @@ namespace Vertica.Integration.Rebus
 		    return this;
 	    }
 
+	    public RebusConfiguration Handlers(Action<RebusHandlersConfiguration> handlers)
+	    {
+		    if (handlers == null) throw new ArgumentNullException("handlers");
+
+		    handlers(HandlersConfiguration);
+
+		    return this;
+	    }
+
 	    void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
 		{
-			Container = container;
-			Container.RegisterInstance(this);
+			container.Register(
+			    Component.For<IBus>()
+				    .UsingFactoryMethod(() =>
+				    {
+					    RebusConfigurer rebus =
+						    Configure.With(new CastleWindsorContainerAdapter(container))
+							    .Logging(logging => logging.ColoredConsole());
+
+						// TODO: Look at this, whether to support logging to our own logging infrastructure (which we don't have)
+
+					    if (BusConfiguration != null)
+						    rebus = BusConfiguration(rebus);
+
+					    return rebus.Start();
+				    }));
 		}
 
 	    private Func<RebusConfigurer, RebusConfigurer> BusConfiguration { get; set; }
-	    private IWindsorContainer Container { get; set; }
-
-	    internal Func<IDisposable> BusFactory
-	    {
-			get
-			{
-				if (Container == null)
-					throw new InvalidOperationException("Container has not been initialized.");
-
-				if (BusConfiguration == null)
-					throw new InvalidOperationException("Bus has not been initialized.");
-
-				return () =>
-				{
-					RebusConfigurer rebus = Configure.With(new CastleWindsorContainerAdapter(Container));
-
-					return BusConfiguration(rebus).Start();
-				};
-			}
-	    }
     }
 }

@@ -7,13 +7,13 @@ namespace Vertica.Integration.Infrastructure
 {
     internal class ActionRepeater : IDisposable
     {
-        private readonly Delay _delay;
+        private readonly TimeSpan _delay;
         private readonly TextWriter _outputter;
 
         private Task _task;
         private bool _repeating = true;
 
-        private ActionRepeater(Delay delay, TextWriter outputter)
+        private ActionRepeater(TimeSpan delay, TextWriter outputter)
         {
             _delay = delay;
             _outputter = outputter ?? TextWriter.Null;
@@ -34,7 +34,7 @@ namespace Vertica.Integration.Infrastructure
                     action();
                     iterations++;
 
-                    Thread.Sleep(_delay * 1000);
+                    Thread.Sleep(_delay);
                 }
 
             }, TaskCreationOptions.LongRunning);
@@ -55,7 +55,7 @@ namespace Vertica.Integration.Infrastructure
             _task = null;
         }
 
-        public static ActionRepeater Start(Action task, Delay delay, TextWriter outputter)
+        public static ActionRepeater Start(Action task, TimeSpan delay, TextWriter outputter)
         {
             var repeater = new ActionRepeater(delay, outputter);
 

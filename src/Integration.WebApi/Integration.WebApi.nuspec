@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<package>
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://github.com/vertica-as/integration-service</projectUrl>
+    <iconUrl>http://icons.iconarchive.com/icons/icons8/ios7/32/Data-Workflow-icon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>Vertica Integration Service WebApi Owin</tags>
+		<dependencies>
+			<dependency id="Microsoft.Owin" version="3.0.1" />
+			<dependency id="Microsoft.Owin.Host.HttpListener" version="3.0.1" />
+			<dependency id="Microsoft.Owin.Hosting" version="3.0.1" />
+			<dependency id="Newtonsoft.Json" version="7.0.1" />
+		</dependencies>
+	</metadata>
+	<files>
+		<file src="App_Readme/Integration.WebApi-readme.txt" target="readme.txt" />
+	</files>
+</package>

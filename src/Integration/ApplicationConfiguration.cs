@@ -10,20 +10,19 @@ using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Hosting;
-using Vertica.Integration.Model.Web;
 using Vertica.Utilities_v4.Extensions.EnumerableExt;
 
 namespace Vertica.Integration
 {
-	public class ApplicationConfiguration : IInitializable<IWindsorContainer>
+	public class ApplicationConfiguration : IInitializable<IWindsorContainer>, IDisposable
     {
-        private readonly List<IInitializable<IWindsorContainer>> _initializations;
+		private readonly ExtensibilityConfiguration _extensibility;
+
         private readonly List<IWindsorInstaller> _customInstallers;
 
         private readonly DatabaseConfiguration _database;
         private readonly TasksConfiguration _tasks;
         private readonly LoggingConfiguration _logging;
-        private readonly WebApiConfiguration _webApi;
         private readonly MigrationConfiguration _migration;
         private readonly HostsConfiguration _hosts;
 
@@ -31,15 +30,15 @@ namespace Vertica.Integration
 
 		internal ApplicationConfiguration()
         {
+			_extensibility = new ExtensibilityConfiguration();
+
             IgnoreSslErrors = true;
 
-            _initializations = new List<IInitializable<IWindsorContainer>>();
-
             _customInstallers = new List<IWindsorInstaller>();
+
             _database = new DatabaseConfiguration(this);
             _tasks = new TasksConfiguration(this);
             _logging = new LoggingConfiguration(this);
-            _webApi = new WebApiConfiguration(this);
             _migration = new MigrationConfiguration(this);
             _hosts = new HostsConfiguration(this);
 
@@ -94,14 +93,6 @@ namespace Vertica.Integration
             return this;
         }
 
-        public ApplicationConfiguration WebApi(Action<WebApiConfiguration> webApi)
-        {
-            if (webApi != null)
-                webApi(_webApi);
-
-            return this;
-        }
-
         public ApplicationConfiguration Migration(Action<MigrationConfiguration> migration)
         {
             if (migration != null)
@@ -117,6 +108,14 @@ namespace Vertica.Integration
 
             return this;
         }
+
+		public ApplicationConfiguration Extensibility(Action<ExtensibilityConfiguration> extensibility)
+		{
+			if (extensibility != null)
+				extensibility(_extensibility);
+
+			return this;
+		}
 
 		public ApplicationConfiguration RuntimeSettings<T>()
 			where T : IRuntimeSettings
@@ -134,14 +133,7 @@ namespace Vertica.Integration
             return this;
         }
 
-        public void RegisterInitialization(IInitializable<IWindsorContainer> initializable)
-        {
-            if (initializable == null) throw new ArgumentNullException("initializable");
-
-            _initializations.Add(initializable);
-        }
-
-        void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
+		void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
         {
 	        container.Register(Component
 				.For<IRuntimeSettings>()
@@ -150,13 +142,29 @@ namespace Vertica.Integration
             container.Install(_customInstallers.ToArray());
         }
 
-        internal IEnumerable<IInitializable<IWindsorContainer>> Initializations
+        internal IEnumerable<IInitializable<IWindsorContainer>> ContainerInitializations
         {
-            get
-            {
-                RegisterInitialization(this);
-                return _initializations.Distinct();
-            }
+            get { return _extensibility.ContainerInitializations.Concat(new[] {this}); }
         }
+
+		public void Dispose()
+		{
+			var exceptions = new List<Exception>();
+
+			_extensibility.Disposers.ForEach(d => 
+			{
+				try
+				{
+					d.Dispose();
+				}
+				catch (Exception ex)
+				{
+					exceptions.Add(ex);
+				}
+			});
+
+			if (exceptions.Count > 0)
+				throw new AggregateException(exceptions);
+		}
     }
 }

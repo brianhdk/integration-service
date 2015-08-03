@@ -1,41 +1,45 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
-using Vertica.Integration.Model.Web;
+using Vertica.Integration.WebApi;
+using Vertica.Integration.WebApi.Controllers;
 
 namespace Vertica.Integration.Portal
 {
     public static class PortalExtensions
     {
-        public static ApplicationConfiguration UsePortal(this ApplicationConfiguration builder, Action<PortalConfiguration> portal = null)
+		public static WebApiConfiguration WithPortal(this WebApiConfiguration webApi)
         {
-            if (builder == null) throw new ArgumentNullException("builder");
+	        if (webApi == null) throw new ArgumentNullException("webApi");
 
-            var configuration = new PortalConfiguration();
-
-            if (portal != null)
-                portal(configuration);
-
-            if (!Directory.Exists(PortalConfiguration.Folder))
+	        webApi.Application.Extensibility(extensibility =>
             {
-                var zipFile = new FileInfo(PortalConfiguration.ZipFile);
+	            extensibility.Cache(() =>
+	            {
+					if (!Directory.Exists(PortalConfiguration.Folder))
+					{
+						var zipFile = new FileInfo(PortalConfiguration.ZipFile);
 
-                if (!zipFile.Exists)
-                {
-                    throw new InvalidOperationException(String.Format(
+						if (!zipFile.Exists)
+						{
+							throw new InvalidOperationException(String.Format(
 @"Expected the following zip-file '{0}' to be present in the following folder '{1}'. 
 This zip is automatically added when installing the Vertica.Integration.Portal NuGet package. 
 Try re-installing the package and/or make sure that the zip-file is included part of your deployment of this platform and placed in the root-folder.", zipFile.Name, zipFile.DirectoryName));
-                }
+						}
 
-                ZipFile.ExtractToDirectory(zipFile.FullName, PortalConfiguration.Folder);
-            }
+						ZipFile.ExtractToDirectory(zipFile.FullName, PortalConfiguration.Folder);
+					}
 
-            builder.WebApi(x => x
-                .Remove<HomeController>()
-                .AddFromAssemblyOfThis<PortalConfiguration>());
+					webApi
+						.Remove<HomeController>()
+						.AddFromAssemblyOfThis<PortalConfiguration>();
 
-            return builder;
+		            return new PortalConfiguration();
+	            });
+            });
+
+			return webApi;
         }
     }
 }

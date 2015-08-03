@@ -9,48 +9,50 @@ using Vertica.Integration.MongoDB.Infrastructure.Castle.Windsor;
 
 namespace Vertica.Integration.MongoDB
 {
-    public class MongoDBConfiguration : IMongoDBConfiguration, IAdditionalConfiguration, IInitializable<IWindsorContainer>
+    public class MongoDBConfiguration : IInitializable<IWindsorContainer>
     {
-        private readonly List<IWindsorInstaller> _installers;
+		private IWindsorInstaller _defaultConnection;
+        private readonly List<IWindsorInstaller> _connections;
 
         internal MongoDBConfiguration(ApplicationConfiguration application)
         {
             if (application == null) throw new ArgumentNullException("application");
 
-            Application = application;
-            Application.RegisterInitialization(this);
+			Application = application.Extensibility(extensibility => extensibility.Register(this));
 
-            _installers = new List<IWindsorInstaller>
-            {
-                new ConventionInstaller().AddFromAssemblyOfThis<MongoDBConfiguration>()
-            };
+			_connections = new List<IWindsorInstaller>();
         }
 
         public ApplicationConfiguration Application { get; private set; }
 
-        public IAdditionalConfiguration Connection(ConnectionString connectionString)
+		public MongoDBConfiguration DefaultConnection(ConnectionString connectionString)
         {
             if (connectionString == null) throw new ArgumentNullException("connectionString");
 
-            _installers.Add(new MongoDBInstaller(new DefaultConnection(connectionString)));
+			_defaultConnection = new MongoDBInstaller(new DefaultConnection(connectionString));
 
             return this;
         }
 
-        public IAdditionalConfiguration AddConnection<TConnection>(TConnection connection)
+		public MongoDBConfiguration AddConnection<TConnection>(TConnection connection)
             where TConnection : Connection
         {
             if (connection == null) throw new ArgumentNullException("connection");
 
-            _installers.Add(new MongoDBInstaller<TConnection>(connection));
+			_connections.Add(new MongoDBInstaller<TConnection>(connection));
 
             return this;
         }
 
         void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
         {
-            foreach (IWindsorInstaller installer in _installers)
-                container.Install(installer);
+	        container.Install(new ConventionInstaller().AddFromAssemblyOfThis<MongoDBConfiguration>());
+
+	        if (_defaultConnection != null)
+		        container.Install();
+
+	        foreach (IWindsorInstaller installer in _connections)
+		        container.Install(installer);
         }
     }
 }

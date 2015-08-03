@@ -22,15 +22,19 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
         private readonly MigrationTarget[] _targets;
         private readonly IDisposable _loggingDisabler;
         private readonly bool _databaseCreated;
+	    private readonly ITaskFactory _taskFactory;
+	    private readonly ITaskRunner _taskRunner;
 
-        public MigrateTask(Lazy<IDbFactory> db, ILogger logger, IKernel kernel, MigrationConfiguration configuration)
+        public MigrateTask(Func<IDbFactory> db, ILogger logger, IKernel kernel, MigrationConfiguration configuration, ITaskFactory taskFactory, ITaskRunner taskRunner)
         {
             _kernel = kernel;
-            _targets = configuration.CustomTargets;
+	        _taskFactory = taskFactory;
+	        _taskRunner = taskRunner;
+	        _targets = configuration.CustomTargets;
 
             if (!configuration.IntegrationDbDisabled)
             {
-                string connectionString = EnsureIntegrationDb(db.Value, configuration.CheckExistsIntegrationDb, out _databaseCreated);
+                string connectionString = EnsureIntegrationDb(db(), configuration.CheckExistsIntegrationDb, out _databaseCreated);
 
                 var integrationDb = new MigrationTarget(
                     configuration.IntegrationDbDatabaseServer,
@@ -70,7 +74,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
         public override string Description
         {
-            get { return "Runs migrations."; }
+            get { return "Runs migrations against all configured targets. Will also execute any custom task if provided by Arguments."; }
         }
 
         public override void StartTask(ITaskExecutionContext context)
@@ -103,6 +107,22 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
                     Target.Service,
                     "Created new database (using Simple Recovery) and applied migrations to this. Make sure to configure this new database (auto growth, backup etc).");
             }
+
+	        foreach (string taskName in context.Arguments.Select(x => x.Key))
+	        {
+		        ITask task;
+		        if (_taskFactory.TryGet(taskName, out task))
+		        {
+			        if (task is MigrateTask)
+				        continue;
+
+			        _taskRunner.Execute(task);
+		        }
+				else
+		        {
+			        context.Log.Warning(Target.Service, "Task with name '{0}' not found.", taskName);
+		        }
+	        }
         }
 
         private static string EnsureIntegrationDb(IDbFactory db, bool checkExistsIntegrationDb, out bool databaseCreated)
