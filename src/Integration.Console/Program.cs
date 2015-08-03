@@ -14,8 +14,8 @@ namespace Vertica.Integration.Console
 				//.Tasks(tasks => tasks
 				//	//.Task<Task1.SameNameTask>()
 				//	.Task<Task2.SameNameTask>())
-                .RegisterTasks()
-                .RegisterMigrations()
+				//.RegisterTasks()
+				//.RegisterMigrations()
                 //.TestEventLogger()
 				//.TestTextFileLogger()
                 //.TestPaymentService()
@@ -24,8 +24,8 @@ namespace Vertica.Integration.Console
                 //.TestMongoDbTask()
 				//.Hosts(hosts => hosts.Remove<WebApiHost>())
 				//.RegisterMigrations()
-				.TestRebus()
-				.TestRavenDB()
+				//.TestRebus()
+				//.TestRavenDB()
                 .Void()))
 			{
                 context.Execute(args);
