@@ -15,7 +15,7 @@ namespace Vertica.Integration.Console
 				//	//.Task<Task1.SameNameTask>()
 				//	.Task<Task2.SameNameTask>())
                 //.RegisterTasks()
-                //.RegisterMigrations()
+                .RegisterMigrations()
                 //.TestEventLogger()
 				//.TestTextFileLogger()
                 //.TestPaymentService()

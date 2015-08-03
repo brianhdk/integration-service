@@ -153,7 +153,6 @@
     <Compile Include="Infrastructure\Database\Migrations\MigrationExtensions.cs" />
     <Compile Include="Infrastructure\Database\Migrations\ConfigurationUpdater.cs" />
     <Compile Include="Infrastructure\Database\Migrations\VersionTable.cs" />
-    <Compile Include="Infrastructure\Delay.cs" />
     <Compile Include="Infrastructure\Email\EmailService.cs" />
     <Compile Include="Infrastructure\Email\EmailTemplate.cs" />
     <Compile Include="Infrastructure\Email\IEmailService.cs" />
@@ -209,6 +208,7 @@
     <Compile Include="Model\Exceptions\MultipleHostsFoundException.cs" />
     <Compile Include="Model\Exceptions\NoHostFoundException.cs" />
     <Compile Include="Model\Exceptions\TaskWithSameNameAlreadyRegistredException.cs" />
+    <Compile Include="Model\Hosting\Handlers\InstallWindowsService.cs" />
     <Compile Include="Model\Hosting\Handlers\IWindowsServiceHandler.cs" />
     <Compile Include="Model\Hosting\Handlers\WindowsService.cs" />
     <Compile Include="Model\Hosting\Handlers\WindowsServiceHandler.cs" />
@@ -218,6 +218,7 @@
     <Compile Include="Model\Hosting\IHost.cs" />
     <Compile Include="Model\Hosting\IHostFactory.cs" />
     <Compile Include="Model\Hosting\TaskHost.cs" />
+    <Compile Include="Model\Hosting\Handlers\TaskHostAsWindowsServiceExtensions.cs" />
     <Compile Include="Model\ILog.cs" />
     <Compile Include="Model\ITaskExecutionContext.cs" />
     <Compile Include="Model\TaskExecutionContext.cs" />

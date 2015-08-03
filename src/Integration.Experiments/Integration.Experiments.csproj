@@ -95,6 +95,7 @@
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -113,6 +114,7 @@
     <Compile Include="ConfigurationExtensions.cs" />
     <Compile Include="CustomDb.cs" />
     <Compile Include="CustomDbTask.cs" />
+    <Compile Include="Migrations\IntegrationDb\M1438274532_InstallTaskAsWindowsService.cs" />
     <Compile Include="Migrations\IntegrationDb\M1438174532_Void.cs" />
     <Compile Include="Migrations\IntegrationDb\M1436190505_SetupMonitorConfiguration_MonitorFoldersStep_Ultimate.cs" />
     <Compile Include="MongoDbTask.cs" />
@@ -172,6 +174,10 @@
     <ProjectReference Include="..\Integration.Rebus\Integration.Rebus.csproj">
       <Project>{9078656D-7C5E-469C-BFC6-1B9AB2CE9AE1}</Project>
       <Name>Integration.Rebus</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration.WebApi\Integration.WebApi.csproj">
+      <Project>{A6CB3949-9637-4952-AB0F-0DE199E29B36}</Project>
+      <Name>Integration.WebApi</Name>
     </ProjectReference>
     <ProjectReference Include="..\Integration\Integration.csproj">
       <Project>{460f774f-2c89-47f4-84bd-b97653060e68}</Project>

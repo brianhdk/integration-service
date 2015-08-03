@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Castle.Windsor;
 
 namespace Vertica.Integration
@@ -55,25 +54,12 @@ namespace Vertica.Integration
 
 		internal IEnumerable<IInitializable<IWindsorContainer>> ContainerInitializations
 		{
-			get { return _containerInitializations.Distinct(new ByTypeComparer<IInitializable<IWindsorContainer>>()); }
+			get { return _containerInitializations; }
 		}
 
 		internal IEnumerable<IDisposable> Disposers
 		{
-			get { return _disposers.Distinct(new ByTypeComparer<IDisposable>()); }
-		}
-
-		private class ByTypeComparer<T> : IEqualityComparer<T>
-		{
-			public bool Equals(T x, T y)
-			{
-				return x.GetType() == y.GetType();
-			}
-
-			public int GetHashCode(T obj)
-			{
-				return obj.GetType().GetHashCode();
-			}
+			get { return _disposers; }
 		}
 	}
 }

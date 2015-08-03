@@ -15,6 +15,8 @@ namespace Vertica.Integration.WebApi
 {
     public class WebApiHost : IHost
     {
+	    internal static readonly string Command = typeof (WebApiHost).HostName();
+
 	    private const string Url = "url";
 
 	    private readonly IWindowsServiceHandler _windowsService;
@@ -32,28 +34,21 @@ namespace Vertica.Integration.WebApi
         {
             if (args == null) throw new ArgumentNullException("args");
 
-            return String.Equals(args.Command, this.Name(), StringComparison.OrdinalIgnoreCase);
+			return String.Equals(args.Command, Command, StringComparison.OrdinalIgnoreCase);
         }
 
         public void Handle(HostArguments args)
         {
             if (args == null) throw new ArgumentNullException("args");
 
-			string url;
-			if (!args.Args.TryGetValue(Url, out url))
-				args.CommandArgs.TryGetValue(Url, out url);
-
-	        if (String.IsNullOrWhiteSpace(url))
-		        url = GenerateUrl();
-
-	        AssertUrl(url);
+	        string url = ParseUrl(args);
 
 			args = new HostArguments(args.Command, args.CommandArgs.ToArray(), new[]
 			{
-				new KeyValuePair<string, string>(Url, url) 
+				WithUrl(url) 
 			});
 
-			var windowsService = new WindowsService(this.Name(), String.Format("[URL: {0}] {1}", url, Description)).OnStart(() => _factory.Create(url));
+			var windowsService = new WindowsService(this.Name(), this.WindowsServiceDescription(url)).OnStart(() => _factory.Create(url));
 
 	        if (!_windowsService.Handle(args, windowsService))
 	        {
@@ -76,22 +71,42 @@ namespace Vertica.Integration.WebApi
 
 	    public string Description
         {
-			get { return @"WebApiHost is used to host and expose all WebApi ApiControllers registred part of the initial configuration. To start this Host, use the following command: ""WebApiHost -url:http://localhost:8080"" (you can choose any valid URL)."; }
+			get { return HostDescription; }
         }
 
-		private static string GenerateUrl()
-		{
-			var listener = new TcpListener(IPAddress.Loopback, 0);
-			listener.Start();
+	    internal static string HostDescription
+	    {
+		    get
+		    {
+			    return @"WebApiHost is used to host and expose all WebApi ApiControllers registred part of the initial configuration. To start this Host, use the following command: ""WebApiHost url:http://localhost:8080"" (you can choose any valid URL).";
+		    }
+	    }
 
-			string url = String.Format("http://{0}", listener.LocalEndpoint);
+	    internal static string EnsureUrl(string url)
+	    {
+			if (String.IsNullOrWhiteSpace(url))
+				url = GenerateUrl();
 
-			listener.Stop();
+		    return url;
+	    }
 
-			return url;
+	    internal static KeyValuePair<string, string> WithUrl(string url)
+	    {
+		    AssertUrl(url);
+			return new KeyValuePair<string, string>(Url, url);
 		}
 
-		private void AssertUrl(string url)
+	    private static string ParseUrl(HostArguments args)
+		{
+			if (args == null) throw new ArgumentNullException("args");
+
+			string url;
+			args.Args.TryGetValue(Url, out url);
+
+			return EnsureUrl(url);
+		}
+
+	    private static void AssertUrl(string url)
 		{
 			Uri dummy;
 			if (Uri.TryCreate(url, UriKind.Absolute, out dummy))
@@ -103,7 +118,19 @@ namespace Vertica.Integration.WebApi
 			throw new InvalidOperationException(String.Format("'{0}' is not a valid absolute url.", url));
 		}
 
-        private static bool WaitingForEscape()
+	    private static string GenerateUrl()
+		{
+			var listener = new TcpListener(IPAddress.Loopback, 0);
+			listener.Start();
+
+			string url = String.Format("http://{0}", listener.LocalEndpoint);
+
+			listener.Stop();
+
+			return url;
+		}
+
+	    private static bool WaitingForEscape()
         {
 			// We can't do anything but to return true.
 	        if (!Environment.UserInteractive)

@@ -31,12 +31,12 @@ namespace Vertica.Integration.Rebus
         {
             if (args == null) throw new ArgumentNullException("args");
 
-	        var windowsService = new WindowsService(this.Name(), Description).OnStart(_bus);
+			_bus();
+
+	        var windowsService = new WindowsService(this.Name(), Description).OnStart(() => new VoidDisposer());
 
 	        if (!_windowsService.Handle(args, windowsService))
 	        {
-		        _bus();
-
 		        do
 		        {
 			        _outputter.WriteLine(@"Press ESCAPE to stop Rebus...");
@@ -45,7 +45,14 @@ namespace Vertica.Integration.Rebus
 	        }
         }
 
-        public string Description
+		private class VoidDisposer : IDisposable
+		{
+			public void Dispose()
+			{
+			}
+		}
+
+		public string Description
         {
             get { return "Hosts Rebus"; }
         }
