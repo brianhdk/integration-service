@@ -1,6 +1,5 @@
 ﻿using Vertica.Integration.Experiments;
 using Vertica.Integration.Model;
-using Vertica.Integration.Model.Web;
 
 namespace Vertica.Integration.Console
 {

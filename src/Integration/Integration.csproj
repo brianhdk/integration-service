@@ -209,6 +209,7 @@
     <Compile Include="Model\Exceptions\NoHostFoundException.cs" />
     <Compile Include="Model\Exceptions\TaskWithSameNameAlreadyRegistredException.cs" />
     <Compile Include="Model\Hosting\Handlers\Credentials.cs" />
+    <Compile Include="Model\Hosting\Handlers\InstallWindowsService.cs" />
     <Compile Include="Model\Hosting\Handlers\IScheduleTaskHandler.cs" />
     <Compile Include="Model\Hosting\Handlers\IWindowsServiceHandler.cs" />
     <Compile Include="Model\Hosting\Handlers\ScheduleTask.cs" />
