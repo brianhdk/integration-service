@@ -1,14 +1,15 @@
 using System;
 using System.Reflection;
+using Vertica.Integration.Infrastructure.Extensions;
 
 namespace Vertica.Integration.Model.Hosting.Handlers
 {
 	public class ScheduleTaskHandler : IScheduleTaskHandler
 	{
-		public bool Handle(HostArguments args, WindowsService service)
+		public bool Handle(HostArguments args, ITask task)
 		{
 			if (args == null) throw new ArgumentNullException("args");
-			if (service == null) throw new ArgumentNullException("service");
+			if (task == null) throw new ArgumentNullException("task");
 
 			string action;
 			string taskFolderName;
@@ -19,7 +20,7 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 			if (!args.CommandArgs.TryGetValue("folder", out taskFolderName))
 				taskFolderName = "Integration Service";
 
-			var scheduleTask = new ScheduleTask(service.Name, service.Description, taskFolderName);
+			var scheduleTask = new ScheduleTask(task.Name(), task.Description, taskFolderName);
 
 			Func<string, bool> actionIs = arg =>
 				String.Equals(arg, action, StringComparison.OrdinalIgnoreCase);

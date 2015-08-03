@@ -41,7 +41,7 @@ namespace Vertica.Integration.Model.Hosting
 				return run.Repeat(args.ParseRepeat(), TextWriter.Null);
 			});
 
-			if (!InstallOrRunAsWindowsService(args, windowsService) && !InstallAsScheduleTask(args, windowsService))
+			if (!InstallOrRunAsWindowsService(args, windowsService) && !InstallAsScheduleTask(args, task))
 				_runner.Execute(task, args.Args);
 		}
 
@@ -50,7 +50,7 @@ namespace Vertica.Integration.Model.Hosting
 			return _windowsService.Handle(args, windowsService);
 		}
 
-		private bool InstallAsScheduleTask(HostArguments args, WindowsService windowsService)
+		private bool InstallAsScheduleTask(HostArguments args, ITask windowsService)
 		{
 			return _scheduleTask.Handle(args, windowsService);
 		}
