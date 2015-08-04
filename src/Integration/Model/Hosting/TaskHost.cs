@@ -52,7 +52,7 @@ namespace Vertica.Integration.Model.Hosting
 
 		private bool InstallAsScheduleTask(HostArguments args, ITask windowsService)
 		{
-			return _scheduleTask.Handle(args, windowsService);
+			return _scheduleTask.Handle(windowsService, args);
 		}
 
 		public string Description

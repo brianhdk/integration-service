@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Vertica.Integration.Infrastructure.Extensions;
 
@@ -6,7 +7,9 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 {
 	public class ScheduleTaskHandler : IScheduleTaskHandler
 	{
-		public bool Handle(HostArguments args, ITask task)
+		private const string ScheduleTaskCommand = "scheduleTask";
+
+		public bool Handle(ITask task, HostArguments args)
 		{
 			if (args == null) throw new ArgumentNullException("args");
 			if (task == null) throw new ArgumentNullException("task");
@@ -14,13 +17,11 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 			string action;
 			string taskFolderName;
 
-			if (!args.CommandArgs.TryGetValue("scheduleTask", out action))
+			if (!args.CommandArgs.TryGetValue(ScheduleTaskCommand, out action))
 				return false;
 
-			if (!args.CommandArgs.TryGetValue("folder", out taskFolderName))
-				taskFolderName = "Integration Service";
-
-			var scheduleTask = new ScheduleTask(task.Name(), task.Description, taskFolderName);
+			args.CommandArgs.TryGetValue("folder", out taskFolderName);
+			var scheduleTask = new ScheduleTask(task, taskFolderName);
 
 			Func<string, bool> actionIs = arg =>
 				String.Equals(arg, action, StringComparison.OrdinalIgnoreCase);

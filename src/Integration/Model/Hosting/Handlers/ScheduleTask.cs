@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.ServiceProcess;
+using Vertica.Integration.Infrastructure.Extensions;
 
 namespace Vertica.Integration.Model.Hosting.Handlers
 {
@@ -12,14 +15,15 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 		public string Description { get; private set; }
 		public List<Action> Actions { get; private set; }
 
-		public ScheduleTask(string name, string description, string folderName, Credentials credentials = null)
-		{
-			if (name == null) throw new ArgumentNullException("name");
-			if (folderName == null) throw new ArgumentNullException("folderName");
+		private const string DefaultFolder = "Integration Service";
 
-			Name = name;
-			Description = description;
-			FolderName = folderName;
+		public ScheduleTask(ITask task, string folderName = null, Credentials credentials = null)
+		{
+			if (task == null) throw new ArgumentNullException("task");
+
+			Name = task.Name();
+			Description = task.Description;
+			FolderName = folderName ?? DefaultFolder;
 			Credentials = credentials;
 			Actions = new List<Action>();
 		}
@@ -39,18 +43,26 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 			return this;
 		}
 	}
-	
+
 	public class Action
 	{
+		public Action(string exePath, string arguments)
+		{
+			Arguments = arguments;
+			ExePath = exePath;
+		}
+
 		public string ExePath { get; private set; }
 		public string Arguments { get; private set; }
+	}
 
-		public Action(string exePath, string arguments = null)
+	public class ExecuteTaskAction : Action
+	{
+		public ExecuteTaskAction(ITask task, Arguments arguments)
+			: base(
+			exePath: Assembly.GetEntryAssembly().Location, 
+			arguments: String.Format("{0} {1}", task.Name(), arguments))
 		{
-			if (exePath == null) throw new ArgumentNullException("exePath");
-
-			ExePath = exePath;
-			Arguments = arguments;
 		}
 	}
 }
