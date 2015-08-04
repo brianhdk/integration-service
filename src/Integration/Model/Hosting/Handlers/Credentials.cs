@@ -8,7 +8,7 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 		{
 		}
 
-		public Credentials(string username, string password, ServiceAccount account)
+		public Credentials(string username, string password, ServiceAccount account = ServiceAccount.User)
 		{
 			Username = username;
 			Password = password;
