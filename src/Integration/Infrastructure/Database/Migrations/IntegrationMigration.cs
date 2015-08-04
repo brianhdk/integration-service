@@ -145,15 +145,19 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 				new WindowsService(command, "dummy"));
 		}
 
-		protected void InstallAsScheduleTask<TTask>(Credentials credentials, Arguments arguments = null, string scheduleTaskFolder = null) 
+		protected ScheduleTaskConfiguration InstallAsScheduleTask<TTask>(Credentials credentials, Arguments arguments = null, string scheduleTaskFolder = null)
 			where TTask : class, ITask
 		{
-			var installer = new ScheduleTaskInstaller();
 			ITask task = GetTask<TTask>();
-			var scheduleTask = new ScheduleTask(task, scheduleTaskFolder, credentials);
-			scheduleTask.Actions.Add(new ExecuteTaskAction(task, arguments ?? Arguments.Empty));
+			var conf = new ScheduleTaskConfiguration(task, credentials);
+			conf.AddTaskAction<TTask>(arguments);
 
-			installer.InstallOrUpdate(scheduleTask);
+			return conf;
+		}
+
+		protected ScheduleTaskConfiguration InstallScheduleTask(Credentials credentials, string name, string description = null, string scheduleTaskFolder = null)
+		{
+			return new ScheduleTaskConfiguration(name, description, credentials, scheduleTaskFolder);
 		}
 
 		protected void UninstallScheduleTask<TTask>(string scheduleTaskFolder = null) where TTask : class, ITask

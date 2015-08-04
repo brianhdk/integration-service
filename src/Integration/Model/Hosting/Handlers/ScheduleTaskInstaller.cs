@@ -22,16 +22,32 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 
 			ITaskDefinition taskDefinition = CreateTaskDefinition(_taskService, scheduleTask);
 			AddActions(taskDefinition, scheduleTask.Actions);
+			AddTriggers(taskDefinition, scheduleTask.Triggers);
 			InstallOrUpdate(taskDefinition, scheduleTask);
+		}
+
+		private void AddTriggers(ITaskDefinition taskDefinition, IEnumerable<Trigger> triggers)
+		{
+			taskDefinition.Triggers.Clear();
+
+			foreach (Trigger trigger in triggers)
+			{
+				trigger.AddToTask(taskDefinition);
+			}
 		}
 
 		public void Uninstall(ScheduleTask scheduleTask)
 		{
+			if (scheduleTask == null) throw new ArgumentNullException("scheduleTask");
+
 			Uninstall(scheduleTask.Name, scheduleTask.FolderName);
 		}
 
 		public void Uninstall(string scheduleTaskName, string folderName)
 		{
+			if (scheduleTaskName == null) throw new ArgumentNullException("scheduleTaskName");
+			if (folderName == null) throw new ArgumentNullException("folderName");
+
 			ITaskFolder folder = _taskService.GetFolder(folderName);
 			folder.DeleteTask(scheduleTaskName, 0);
 		}
@@ -74,10 +90,7 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 
 		private static void AddActions(ITaskDefinition taskDefinition, IEnumerable<Action> actions)
 		{
-			foreach (var action in taskDefinition.Actions)
-			{
-				taskDefinition.Actions.Remove(action);
-			}
+			taskDefinition.Actions.Clear();
 
 			foreach (var action in actions)
 			{
