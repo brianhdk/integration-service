@@ -2,6 +2,6 @@
 {
 	public interface IScheduleTaskHandler
 	{
-		bool Handle(HostArguments args, WindowsService service);
+		bool Handle(ITask task, HostArguments args);
 	}
 }
