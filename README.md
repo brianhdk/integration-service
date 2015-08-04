@@ -959,8 +959,9 @@ TBD.
 Integration Service has a built-in factory that makes it easy to perform HTTP-requests. 
 
 1. Create a constructor dependency on *IHttpClientFactory*. 
-2. Use the *Create()* method to construct an instance of *HttpClient*
-3. Optionally install the "Microsoft.AspNet.WebApi.Client" NuGet package for a richer API.
+2. Use the *Create()* method to have an instance of *HttpClient* created.
+3. Optionally install the "Microsoft.AspNet.WebApi.Client" NuGet package for a richer API:
+  
   ```
   Install-Package Microsoft.AspNet.WebApi.Client
   ```
@@ -992,7 +993,7 @@ namespace ConsoleApplication16
 				var request = new Request();
 
 				HttpResponseMessage httpResponse = 
-					httpClient.PostAsJsonAsync("http://localhost:8123/Product", request)
+					httpClient.PostAsJsonAsync("http://localhost:8123/Service", request)
 						.Result;
 
 				Response response = 
