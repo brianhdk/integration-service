@@ -7,12 +7,12 @@ using Vertica.Integration.Model.Hosting.Handlers;
 
 namespace Vertica.Integration.Experiments.Migrations.IntegrationDb
 {
-	[Migration(143827474)]
-	public class M143827474_InstallTaskAsScheduleTask : IntegrationMigration
+	[Migration(143827475)]
+	public class M143827475_InstallTaskAsScheduleTask : IntegrationMigration
 	{
 		public override void Up()
 		{
-			InstallAsScheduleTask<DumpArchiveTask>(new Credentials("lbj@vertica.dk", "xx"))
+			InstallAsScheduleTask<DumpArchiveTask>(new Credentials("lbj@vertica.dk", "xxx"))
 				.AddTaskAction<MaintenanceTask>()
 				.AddTrigger(new OneTimeTrigger(startDate: DateTimeOffset.UtcNow.AddDays(2)))
 				.AddTrigger(new DailyTrigger(startDate: DateTimeOffset.UtcNow.AddDays(2), recureDays: 20))
