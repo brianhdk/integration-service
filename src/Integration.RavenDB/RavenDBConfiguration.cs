@@ -2,18 +2,17 @@
 using System.Collections.Generic;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
-using Vertica.Integration.Infrastructure;
 using Vertica.Integration.RavenDB.Infrastructure;
 using Vertica.Integration.RavenDB.Infrastructure.Castle.Windsor;
 
 namespace Vertica.Integration.RavenDB
 {
-    public class RavenDBConfiguration : IInitializable<IWindsorContainer>
+    public class RavenDbConfiguration : IInitializable<IWindsorContainer>
     {
 		private IWindsorInstaller _defaultConnection;
         private readonly List<IWindsorInstaller> _connections;
 
-		internal RavenDBConfiguration(ApplicationConfiguration application)
+		internal RavenDbConfiguration(ApplicationConfiguration application)
         {
             if (application == null) throw new ArgumentNullException("application");
 
@@ -24,21 +23,21 @@ namespace Vertica.Integration.RavenDB
 
         public ApplicationConfiguration Application { get; private set; }
 
-		public RavenDBConfiguration DefaultConnection(ConnectionString connectionString)
+		public RavenDbConfiguration DefaultConnection(Connection connection)
         {
-            if (connectionString == null) throw new ArgumentNullException("connectionString");
+			if (connection == null) throw new ArgumentNullException("connection");
 
-			_defaultConnection = new RavenDBInstaller(new DefaultConnection(connectionString));
+			_defaultConnection = new RavenDbInstaller(new DefaultConnection(connection));
 
             return this;
         }
 
-		public RavenDBConfiguration AddConnection<TConnection>(TConnection connection)
+		public RavenDbConfiguration AddConnection<TConnection>(TConnection connection)
             where TConnection : Connection
         {
             if (connection == null) throw new ArgumentNullException("connection");
 
-			_connections.Add(new RavenDBInstaller<TConnection>(connection));
+			_connections.Add(new RavenDbInstaller<TConnection>(connection));
 
             return this;
         }

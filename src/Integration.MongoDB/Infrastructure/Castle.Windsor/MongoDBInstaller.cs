@@ -5,33 +5,33 @@ using Castle.Windsor;
 
 namespace Vertica.Integration.MongoDB.Infrastructure.Castle.Windsor
 {
-    internal class MongoDBInstaller : MongoDBInstaller<DefaultConnection>
+    internal class MongoDbInstaller : MongoDbInstaller<DefaultConnection>
     {
-        public MongoDBInstaller(DefaultConnection connection)
+        public MongoDbInstaller(DefaultConnection connection)
             : base(connection)
         {
         }
 
         public override void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            if (container.Kernel.HasComponent(typeof(IMongoDBClientFactory)))
+            if (container.Kernel.HasComponent(typeof(IMongoDbClientFactory)))
                 throw new InvalidOperationException("Only one DefaultConnection can be installed. Use the generic installer for additional instances.");
 
             base.Install(container, store);
 
             container.Register(
-                Component.For<IMongoDBClientFactory>()
+                Component.For<IMongoDbClientFactory>()
                     .UsingFactoryMethod(kernel => 
-						new MongoDBClientFactory(kernel.Resolve<IMongoDBClientFactory<DefaultConnection>>())));
+						new MongoDbClientFactory(kernel.Resolve<IMongoDbClientFactory<DefaultConnection>>())));
         }
     }
 
-    internal class MongoDBInstaller<TConnection> : IWindsorInstaller
+    internal class MongoDbInstaller<TConnection> : IWindsorInstaller
         where TConnection : Connection
     {
         private readonly TConnection _connection;
 
-        public MongoDBInstaller(TConnection connection)
+        public MongoDbInstaller(TConnection connection)
         {
             if (connection == null) throw new ArgumentNullException("connection");
 
@@ -41,7 +41,7 @@ namespace Vertica.Integration.MongoDB.Infrastructure.Castle.Windsor
         public virtual void Install(IWindsorContainer container, IConfigurationStore store)
         {
             container.Register(
-                Component.For<IMongoDBClientFactory<TConnection>>()
+                Component.For<IMongoDbClientFactory<TConnection>>()
                     .UsingFactoryMethod(() => new MongoDBClientFactory<TConnection>(_connection)));
         }
     }

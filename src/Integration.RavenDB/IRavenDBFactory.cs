@@ -3,11 +3,11 @@ using Vertica.Integration.RavenDB.Infrastructure;
 
 namespace Vertica.Integration.RavenDB
 {
-	public interface IRavenDBFactory : IRavenDBFactory<DefaultConnection>
+	public interface IRavenDbFactory : IRavenDbFactory<DefaultConnection>
 	{
 	}
 
-	public interface IRavenDBFactory<TConnection>
+	public interface IRavenDbFactory<TConnection>
 		where TConnection : Connection
 	{
 		IDocumentStore DocumentStore { get; }

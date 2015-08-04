@@ -4,16 +4,22 @@ using Vertica.Integration.RavenDB.Infrastructure;
 
 namespace Vertica.Integration.RavenDB
 {
-	internal class RavenDBFactory<TConnection> : IRavenDBFactory<TConnection>, IDisposable
+	internal class RavenDbFactory<TConnection> : IRavenDbFactory<TConnection>, IDisposable
 		where TConnection : Connection
 	{
 		private readonly Lazy<IDocumentStore> _documentStore;
 
-		public RavenDBFactory(Connection connection)
+		public RavenDbFactory(Connection connection)
 		{
 			if (connection == null) throw new ArgumentNullException("connection");
 			
-			_documentStore = new Lazy<IDocumentStore>(connection.Create);
+			_documentStore = new Lazy<IDocumentStore>(() =>
+			{
+				IDocumentStore documentStore = connection.Create();
+				connection.Initialize(documentStore);
+
+				return documentStore;
+			});
 		}
 
 		public IDocumentStore DocumentStore
@@ -23,18 +29,16 @@ namespace Vertica.Integration.RavenDB
 
 		public void Dispose()
 		{
-			Console.WriteLine("Disposing {0}", typeof (TConnection).Name);
-
 			if (_documentStore.IsValueCreated)
 				_documentStore.Value.Dispose();
 		}
 	}
 
-	internal class RavenDBFactory : IRavenDBFactory
+	internal class RavenDbFactory : IRavenDbFactory
 	{
-		private readonly IRavenDBFactory<DefaultConnection> _decoree;
+		private readonly IRavenDbFactory<DefaultConnection> _decoree;
 
-		public RavenDBFactory(IRavenDBFactory<DefaultConnection> decoree)
+		public RavenDbFactory(IRavenDbFactory<DefaultConnection> decoree)
 		{
 			if (decoree == null) throw new ArgumentNullException("decoree");
 

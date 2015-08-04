@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace Vertica.Integration.Infrastructure.Database
 {
@@ -11,6 +13,11 @@ namespace Vertica.Integration.Infrastructure.Database
 	        ConnectionString = connectionString;
 		}
 
-	    internal ConnectionString ConnectionString { get; private set; }
+		protected ConnectionString ConnectionString { get; private set; }
+
+		public virtual IDbConnection GetConnection()
+		{
+			return new SqlConnection(ConnectionString);
+		}
 	}
 }

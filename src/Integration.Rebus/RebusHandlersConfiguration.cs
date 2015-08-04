@@ -23,7 +23,7 @@ namespace Vertica.Integration.Rebus
             _handlers = new List<Type>();
 		}
 
-		public RebusHandlersConfiguration AddFromAssemblyOfThis<T>() where T : IHandleMessages
+		public RebusHandlersConfiguration AddFromAssemblyOfThis<T>()
 		{
 			_scan.Add(typeof(T).Assembly);
 

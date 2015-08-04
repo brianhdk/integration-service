@@ -3,11 +3,11 @@ using Vertica.Integration.MongoDB.Infrastructure;
 
 namespace Vertica.Integration.MongoDB
 {
-    public interface IMongoDBClientFactory : IMongoDBClientFactory<DefaultConnection>
+    public interface IMongoDbClientFactory : IMongoDbClientFactory<DefaultConnection>
     {
     }
 
-    public interface IMongoDBClientFactory<TConnection>
+    public interface IMongoDbClientFactory<TConnection>
         where TConnection : Connection
     {
         IMongoClient Client { get; }

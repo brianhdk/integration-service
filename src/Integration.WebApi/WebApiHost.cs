@@ -54,7 +54,7 @@ namespace Vertica.Integration.WebApi
 	        {
 				using (_factory.Create(url))
 				{
-					if (Environment.UserInteractive)
+					if (Environment.UserInteractive && !args.CommandArgs.Contains("noBrowser"))
 						Process.Start(url);
 
 					do

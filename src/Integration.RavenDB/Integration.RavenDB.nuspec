@@ -14,9 +14,9 @@
     <description>$description$</description>
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2015</copyright>
-    <tags>Vertica Integration Service IntegrationService MongoDB</tags>
+    <tags>Vertica Integration Service IntegrationService RavenDB</tags>
   </metadata>
   <files>
-    <file src="App_Readme/Integration.MongoDB-readme.txt" target="readme.txt" />
+    <file src="App_Readme/Integration.RavenDB-readme.txt" target="readme.txt" />
   </files>
 </package>

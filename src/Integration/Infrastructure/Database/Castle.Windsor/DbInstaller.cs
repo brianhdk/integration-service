@@ -65,7 +65,7 @@ namespace Vertica.Integration.Infrastructure.Database.Castle.Windsor
 		    {
                 container.Register(
                     Component.For<IDbFactory<TConnection>>()
-                        .UsingFactoryMethod(() => new DbFactory<TConnection>(_connection.ConnectionString)));
+                        .UsingFactoryMethod(() => new DbFactory<TConnection>(_connection)));
 		    }
 		}
 	}

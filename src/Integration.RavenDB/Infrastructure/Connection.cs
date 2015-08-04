@@ -14,17 +14,14 @@ namespace Vertica.Integration.RavenDB.Infrastructure
 			ConnectionString = connectionString;
 		}
 
-		protected ConnectionString ConnectionString { get; private set; }
+		protected internal ConnectionString ConnectionString { get; private set; }
 
-		protected internal virtual IDocumentStore Create()
+		protected internal virtual void Initialize(IDocumentStore documentStore)
 		{
-			IDocumentStore documentStore = CreateDocumentStore();
 			documentStore.Initialize();
-
-			return documentStore;
 		}
 
-		protected virtual IDocumentStore CreateDocumentStore()
+		protected internal virtual IDocumentStore Create()
 		{
 			var documentStore = new DocumentStore();
 			documentStore.ParseConnectionString(ConnectionString);

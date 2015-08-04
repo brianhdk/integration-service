@@ -17,6 +17,7 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
  - [Archives](#archives)
  - [CSV](#csv)
  - [FTP](#ftp)
+ - [HTTP](#http)
  - [Setting up Portal](#setting-up-portal)
  - [Integrating Elmah](#integrating-elmah)
  - [Integrating Azure - BlobStorage](#integrating-azure---blobstorage)
@@ -951,6 +952,75 @@ TBD (general usage, QueryToCsv).
 ## FTP
 
 TBD. 
+[Back to Table of Contents](#table-of-contents)
+
+## HTTP
+
+Integration Service has a built-in factory that makes it easy to perform HTTP-requests. 
+
+1. Create a constructor dependency on *IHttpClientFactory*. 
+2. Use the *Create()* method to construct an instance of *HttpClient*
+3. Optionally install the "Microsoft.AspNet.WebApi.Client" NuGet package for a richer API.
+  ```
+  Install-Package Microsoft.AspNet.WebApi.Client
+  ```
+
+### Example
+
+This example shows a simple *Task* that performs an HTTP POST to a given URL utilizing the *Microsoft.AspNet.WebApi.Client* library.
+
+```c#
+using System.Net.Http;
+using Vertica.Integration.Infrastructure.Remote;
+using Vertica.Integration.Model;
+
+namespace ConsoleApplication16
+{
+	public class HttpClientDemoTask : Task
+	{
+		private readonly IHttpClientFactory _httpClientFactory;
+
+		public HttpClientDemoTask(IHttpClientFactory httpClientFactory)
+		{
+			_httpClientFactory = httpClientFactory;
+		}
+
+		public override void StartTask(ITaskExecutionContext context)
+		{
+			using (HttpClient httpClient = _httpClientFactory.Create())
+			{
+				var request = new Request();
+
+				HttpResponseMessage httpResponse = 
+					httpClient.PostAsJsonAsync("http://localhost:8123/Product", request)
+						.Result;
+
+				Response response = 
+					httpResponse.Content.ReadAsAsync<Response>()
+						.Result;
+
+				context.Log.Message("Got response: {0}", response);
+			}
+		}
+
+		public override string Description
+		{
+			get { return "Example of Task using the HttpClient."; }
+		}
+	}
+
+	public class Request
+	{
+		// Any serializable properties goes here...
+	}
+
+	public class Response
+	{
+		// Any serializable properties goes here...
+	}
+}
+```
+
 [Back to Table of Contents](#table-of-contents)
 
 ## Setting up Portal

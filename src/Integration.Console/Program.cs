@@ -21,11 +21,11 @@ namespace Vertica.Integration.Console
                 //.TestPaymentService()
                 //.TestMonitorTask()
                 //.TestMaintenanceTask()
-                //.TestMongoDbTask()
+                .TestMongoDbTask()
 				//.Hosts(hosts => hosts.Remove<WebApiHost>())
 				//.RegisterMigrations()
 				//.TestRebus()
-				//.TestRavenDB()
+				//.TestRavenDb()
                 .Void()))
 			{
                 context.Execute(args);

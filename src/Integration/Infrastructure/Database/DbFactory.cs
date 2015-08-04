@@ -7,18 +7,18 @@ namespace Vertica.Integration.Infrastructure.Database
 {
     internal class DbFactory<TConnection> : IDbFactory<TConnection> where TConnection : Connection
     {
-        private readonly ConnectionString _connectionString;
+	    private readonly Connection _connection;
 
-        public DbFactory(ConnectionString connectionString)
-        {
-            if (connectionString == null) throw new ArgumentNullException("connectionString");
+	    public DbFactory(Connection connection)
+	    {
+		    if (connection == null) throw new ArgumentNullException("connection");
 
-            _connectionString = connectionString;
-        }
+		    _connection = connection;
+	    }
 
-        public IDbConnection GetConnection()
-        {
-            return new SqlConnection(_connectionString);
+	    public IDbConnection GetConnection()
+	    {
+		    return _connection.GetConnection();
         }
 
         public IDbSession OpenSession()

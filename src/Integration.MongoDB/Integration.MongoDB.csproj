@@ -61,12 +61,12 @@
     <Compile Include="Commands\LogRotatorCommand.cs" />
     <Compile Include="Infrastructure\DefaultConnection.cs" />
     <Compile Include="Maintenance\LogRotatorStep.cs" />
-    <Compile Include="MongoDBConfiguration.cs" />
-    <Compile Include="MongoDBExtensions.cs" />
-    <Compile Include="MongoDBClientFactory.cs" />
+    <Compile Include="MongoDbConfiguration.cs" />
+    <Compile Include="MongoDbExtensions.cs" />
+    <Compile Include="MongoDbClientFactory.cs" />
     <Compile Include="Infrastructure\Connection.cs" />
-    <Compile Include="IMongoDBClientFactory.cs" />
-    <Compile Include="Infrastructure\Castle.Windsor\MongoDBInstaller.cs" />
+    <Compile Include="IMongoDbClientFactory.cs" />
+    <Compile Include="Infrastructure\Castle.Windsor\MongoDbInstaller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

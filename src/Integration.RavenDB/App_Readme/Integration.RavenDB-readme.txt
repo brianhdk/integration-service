@@ -8,8 +8,9 @@ class Program
     static void Main(string[] args)
     {
 		using (ApplicationContext context = ApplicationContext.Create(application => application
-            .UseRavenDB(ravenDB => ravenDB
-				.DefaultConnection(ConnectionString.FromText("")))))
+            .UseRavenDb(ravenDb => ravenDb
+				.DefaultConnection(new SomeConnection(...))
+				.AddConnection(new SomeOtherConnection(...)))))
 		{
 			context.Execute(args);
 		}

@@ -63,17 +63,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\RavenDbExtensions.cs" />
-    <Compile Include="RavenDBFactory.cs" />
-    <Compile Include="IRavenDBFactory.cs" />
-    <Compile Include="Infrastructure\Castle.Windsor\RavenDBInstaller.cs" />
+    <Compile Include="RavenDbFactory.cs" />
+    <Compile Include="IRavenDbFactory.cs" />
+    <Compile Include="Infrastructure\Castle.Windsor\RavenDbInstaller.cs" />
     <Compile Include="Infrastructure\Connection.cs" />
     <Compile Include="Infrastructure\DefaultConnection.cs" />
-    <Compile Include="RavenDBConfiguration.cs" />
-    <Compile Include="RavenDBExtensions.cs" />
+    <Compile Include="RavenDbConfiguration.cs" />
+    <Compile Include="RavenDbExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Integration.MongoDB.nuspec" />
+    <None Include="Integration.RavenDB.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

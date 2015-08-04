@@ -2,18 +2,18 @@
 
 namespace Vertica.Integration.RavenDB
 {
-    public static class RavenDBExtensions
+    public static class RavenDbExtensions
     {
-        public static ApplicationConfiguration UseRavenDB(this ApplicationConfiguration application, Action<RavenDBConfiguration> ravenDB)
+        public static ApplicationConfiguration UseRavenDb(this ApplicationConfiguration application, Action<RavenDbConfiguration> ravenDb)
         {
             if (application == null) throw new ArgumentNullException("application");
-            if (ravenDB == null) throw new ArgumentNullException("ravenDB");
+            if (ravenDb == null) throw new ArgumentNullException("ravenDb");
 
 			return application.Extensibility(extensibility =>
 			{
-				RavenDBConfiguration configuration = extensibility.Cache(() => new RavenDBConfiguration(application));
+				RavenDbConfiguration configuration = extensibility.Cache(() => new RavenDbConfiguration(application));
 
-				ravenDB(configuration);
+				ravenDb(configuration);
 			});
         }
     }

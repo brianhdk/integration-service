@@ -5,33 +5,33 @@ using Castle.Windsor;
 
 namespace Vertica.Integration.RavenDB.Infrastructure.Castle.Windsor
 {
-	internal class RavenDBInstaller : RavenDBInstaller<DefaultConnection>
+	internal class RavenDbInstaller : RavenDbInstaller<DefaultConnection>
 	{
-		public RavenDBInstaller(DefaultConnection connection)
+		public RavenDbInstaller(DefaultConnection connection)
 			: base(connection)
 		{
 		}
 
 		public override void Install(IWindsorContainer container, IConfigurationStore store)
 		{
-			if (container.Kernel.HasComponent(typeof(IRavenDBFactory)))
+			if (container.Kernel.HasComponent(typeof(IRavenDbFactory)))
 				throw new InvalidOperationException("Only one DefaultConnection can be installed. Use the generic installer for additional instances.");
 
 			base.Install(container, store);
 
 			container.Register(
-				Component.For<IRavenDBFactory>()
+				Component.For<IRavenDbFactory>()
 					.UsingFactoryMethod(kernel => 
-						new RavenDBFactory(kernel.Resolve<IRavenDBFactory<DefaultConnection>>())));
+						new RavenDbFactory(kernel.Resolve<IRavenDbFactory<DefaultConnection>>())));
 		}
 	}
 
-	internal class RavenDBInstaller<TConnection> : IWindsorInstaller
+	internal class RavenDbInstaller<TConnection> : IWindsorInstaller
 		where TConnection : Connection
 	{
 		private readonly TConnection _connection;
 
-		public RavenDBInstaller(TConnection connection)
+		public RavenDbInstaller(TConnection connection)
 		{
 			if (connection == null) throw new ArgumentNullException("connection");
 
@@ -41,8 +41,8 @@ namespace Vertica.Integration.RavenDB.Infrastructure.Castle.Windsor
 		public virtual void Install(IWindsorContainer container, IConfigurationStore store)
 		{
 			container.Register(
-				Component.For<IRavenDBFactory<TConnection>>()
-					.UsingFactoryMethod(() => new RavenDBFactory<TConnection>(_connection)));
+				Component.For<IRavenDbFactory<TConnection>>()
+					.UsingFactoryMethod(() => new RavenDbFactory<TConnection>(_connection)));
 		}
 	}
 }

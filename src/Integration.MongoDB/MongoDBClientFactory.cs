@@ -4,7 +4,7 @@ using Vertica.Integration.MongoDB.Infrastructure;
 
 namespace Vertica.Integration.MongoDB
 {
-    internal class MongoDBClientFactory<TConnection> : IMongoDBClientFactory<TConnection>
+    internal class MongoDBClientFactory<TConnection> : IMongoDbClientFactory<TConnection>
         where TConnection : Connection
     {
         private readonly Lazy<IMongoClient> _client;
@@ -42,11 +42,11 @@ namespace Vertica.Integration.MongoDB
         }
     }
 
-    internal class MongoDBClientFactory : IMongoDBClientFactory
+    internal class MongoDbClientFactory : IMongoDbClientFactory
     {
-        private readonly IMongoDBClientFactory<DefaultConnection> _decoree;
+        private readonly IMongoDbClientFactory<DefaultConnection> _decoree;
 
-        public MongoDBClientFactory(IMongoDBClientFactory<DefaultConnection> decoree)
+        public MongoDbClientFactory(IMongoDbClientFactory<DefaultConnection> decoree)
         {
             if (decoree == null) throw new ArgumentNullException("decoree");
 

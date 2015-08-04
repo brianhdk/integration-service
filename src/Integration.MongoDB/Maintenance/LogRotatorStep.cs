@@ -7,14 +7,14 @@ namespace Vertica.Integration.MongoDB.Maintenance
 {
     public class LogRotatorStep : Step<MaintenanceWorkItem>
     {
-        private readonly IMongoDBClientFactory _db;
+        private readonly IMongoDbClientFactory _db;
         private readonly ILogRotatorCommand _command;
 
         [Obsolete("Don't use.")]
         public LogRotatorStep()
         {
             throw new InvalidOperationException(@"Missing required configuration of MongoDB. 
-Make sure to use the ""UseMongoDB()"" Extension Method and make sure to specify the Connection.
+Make sure to use the ""UseMongoDb()"" Extension Method and make sure to specify the Connection.
 
 application
     .MongoDB(mongoDB => mongoDB
@@ -22,7 +22,7 @@ application
         .Connection(ConnectionString.FromText(""mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]""");
         }
 
-        public LogRotatorStep(IMongoDBClientFactory db, ILogRotatorCommand command)
+        public LogRotatorStep(IMongoDbClientFactory db, ILogRotatorCommand command)
         {
             _db = db;
             _command = command;

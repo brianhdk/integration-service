@@ -6,16 +6,16 @@ using Vertica.Integration.RavenDB.Infrastructure;
 
 namespace Vertica.Integration.Experiments
 {
-	public static class RavenDBTester
+	public static class RavenDbTester
 	{
-		public static ApplicationConfiguration TestRavenDB(this ApplicationConfiguration application)
+		public static ApplicationConfiguration TestRavenDb(this ApplicationConfiguration application)
 		{
 			if (application == null) throw new ArgumentNullException("application");
 
 			application
-				.UseRavenDB(ravenDB => ravenDB
-					.DefaultConnection(ConnectionString.FromText("..."))
-					.AddConnection(new AnotherDb(ConnectionString.FromText("..."))))
+				.UseRavenDb(ravenDB => ravenDB
+					.DefaultConnection(new DefaultRavenDb(ConnectionString.FromText("...")))
+					.AddConnection(new AnotherRavenDb(ConnectionString.FromText("..."))))
 				.Tasks(tasks => tasks.Task<RavenDBTesterTask>());
 
 			return application;
@@ -23,9 +23,9 @@ namespace Vertica.Integration.Experiments
 
 		public class RavenDBTesterTask : Task
 		{
-			private readonly IRavenDBFactory _ravenDB;
+			private readonly IRavenDbFactory _ravenDB;
 
-			public RavenDBTesterTask(IRavenDBFactory ravenDB)
+			public RavenDBTesterTask(IRavenDbFactory ravenDB)
 			{
 				_ravenDB = ravenDB;
 			}
@@ -47,9 +47,18 @@ namespace Vertica.Integration.Experiments
 		}
 	}
 
-	public class AnotherDb : Connection
+	public class DefaultRavenDb : Connection
 	{
-		public AnotherDb(ConnectionString connectionString) : base(connectionString)
+		public DefaultRavenDb(ConnectionString connectionString)
+			: base(connectionString)
+		{
+		}
+	}
+
+	public class AnotherRavenDb : Connection
+	{
+		public AnotherRavenDb(ConnectionString connectionString) 
+			: base(connectionString)
 		{
 		}
 	}

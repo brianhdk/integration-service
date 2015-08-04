@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using Vertica.Integration.Domain.Core;
 using Vertica.Integration.Infrastructure;
@@ -9,7 +9,7 @@ using Vertica.Integration.MongoDB.Infrastructure;
 
 namespace Vertica.Integration.Experiments
 {
-    public static class MongoDBExtensions
+    public static class MongoDbExtensions
     {
         public static ApplicationConfiguration TestMongoDbTask(this ApplicationConfiguration application)
         {
@@ -19,55 +19,70 @@ namespace Vertica.Integration.Experiments
                     .MaintenanceTask(task => task
                         .Clear()
                         .IncludeLogRotator()))
-                .UseMongoDB(mongoDB => mongoDB
-                    .DefaultConnection(ConnectionString.FromText("mongodb://maersk-web01.vertica.dk/admin"))
-                    .AddConnection(new AnalyticsDb()));
+                .UseMongoDb(mongoDB => mongoDB
+					.DefaultConnection(new DefaultMongoDb(ConnectionString.FromText("mongodb://bhk:XXXXXXX@ds036178.mongolab.com:36178/brianhdk")))
+					.AddConnection(new AnotherMongoDb(ConnectionString.FromText("mongodb://contestant:XXXXXXX@ds036178.mongolab.com:36178/brianhdk"))));
         }
     }
 
-    public class MongoDbTask : Task
+	public class DefaultMongoDb : Connection
+	{
+		public DefaultMongoDb(ConnectionString connectionString)
+			: base(connectionString)
+		{
+		}
+	}
+
+	public class MongoDbTask : Task
     {
         private readonly ITaskRunner _runner;
         private readonly ITaskFactory _factory;
-        private readonly IMongoDBClientFactory _mongoDB;
-        private readonly IMongoDBClientFactory<AnalyticsDb> _analyticsDB;
+        private readonly IMongoDbClientFactory _defaultDb;
+        private readonly IMongoDbClientFactory<AnotherMongoDb> _anotherDb;
 
-        public MongoDbTask(ITaskRunner runner, ITaskFactory factory, IMongoDBClientFactory<AnalyticsDb> analyticsDB, IMongoDBClientFactory mongoDB)
+        public MongoDbTask(ITaskRunner runner, ITaskFactory factory, IMongoDbClientFactory<AnotherMongoDb> anotherDb, IMongoDbClientFactory defaultDb)
         {
             _runner = runner;
             _factory = factory;
-            _analyticsDB = analyticsDB;
-            _mongoDB = mongoDB;
+            _anotherDb = anotherDb;
+            _defaultDb = defaultDb;
         }
 
         public override void StartTask(ITaskExecutionContext context)
         {
-            if (_mongoDB.Database != null)
-                context.Log.Message(String.Join(", ", Collections(_mongoDB.Database).Result));
-            context.Log.Message(String.Join(", ", Collections(_analyticsDB.Database).Result));
-            _runner.Execute(_factory.Get<MaintenanceTask>());
+	        IMongoCollection<TestDto> dtos = _anotherDb.Database.GetCollection<TestDto>("testDtos");
+
+			//foreach (var dto in dtos.Find(x => true).ToListAsync().Result)
+			//{
+			//	context.Log.Message(dto.Text);
+			//}
+			dtos.InsertOneAsync(new TestDto {Text = "Some text"}).Wait();
+
+			//context.Log.Message("Inserted.");
+
+	        //if (_mongoDB.Database != null)
+	        //	context.Log.Message(String.Join(", ", Collections(_mongoDB.Database).Result));
+	        //context.Log.Message(String.Join(", ", Collections(_analyticsDB.Database).Result));
+	        //_runner.Execute(_factory.Get<MaintenanceTask>());
         }
-
-        private async System.Threading.Tasks.Task<string[]> Collections(IMongoDatabase database)
-        {
-            var collections = await database.ListCollectionsAsync();
-
-            var list = await collections.ToListAsync();
-
-            return list.Select(x => x["name"].AsString).ToArray();
-        }
-
+		
         public override string Description
         {
             get { return "Test"; }
         }
     }
 
-    public class AnalyticsDb : Connection
+	public class TestDto
+	{
+		public ObjectId Id { get; set; }
+		public string Text { get; set; }
+	}
+
+    public class AnotherMongoDb : Connection
     {
-        public AnalyticsDb()
-            : base(ConnectionString.FromText("mongodb://maersk-web01.vertica.dk/analytics"))
-        {
-        }
+	    public AnotherMongoDb(ConnectionString connectionString)
+			: base(connectionString)
+	    {
+	    }
     }
 }

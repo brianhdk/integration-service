@@ -12,7 +12,7 @@ namespace YourNameSpace
 		static void Main(string[] args)
 		{
 			IntegrationStartup.Run(args, application => application
-				.UsePortal());
+				.UseWebApi());
 		}
 	}
 }

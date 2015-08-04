@@ -5,18 +5,18 @@ using Vertica.Integration.MongoDB.Maintenance;
 
 namespace Vertica.Integration.MongoDB
 {
-    public static class MongoDBExtensions
+    public static class MongoDbExtensions
     {
-        public static ApplicationConfiguration UseMongoDB(this ApplicationConfiguration application, Action<MongoDBConfiguration> mongoDB)
+        public static ApplicationConfiguration UseMongoDb(this ApplicationConfiguration application, Action<MongoDbConfiguration> mongoDb)
         {
             if (application == null) throw new ArgumentNullException("application");
-            if (mongoDB == null) throw new ArgumentNullException("mongoDB");
+            if (mongoDb == null) throw new ArgumentNullException("mongoDb");
 
 			return application.Extensibility(extensibility =>
 			{
-				MongoDBConfiguration configuration = extensibility.Cache(() => new MongoDBConfiguration(application));
+				MongoDbConfiguration configuration = extensibility.Cache(() => new MongoDbConfiguration(application));
 
-				mongoDB(configuration);
+				mongoDb(configuration);
 			});
         }
 
