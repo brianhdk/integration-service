@@ -10,7 +10,7 @@ namespace Vertica.Integration.Console
 			using (IApplicationContext context = ApplicationContext.Create(application => application
 				//.UseWebApi(webApi => webApi.WithPortal())
                 //.UseIIS()
-				.Fast()
+				//.Fast()
 				//.Tasks(tasks => tasks
 				//	//.Task<Task1.SameNameTask>()
 				//	.Task<Task2.SameNameTask>())
@@ -21,7 +21,7 @@ namespace Vertica.Integration.Console
                 //.TestPaymentService()
                 //.TestMonitorTask()
                 //.TestMaintenanceTask()
-                .TestMongoDbTask()
+				//.TestMongoDbTask()
 				//.Hosts(hosts => hosts.Remove<WebApiHost>())
 				//.RegisterMigrations()
 				//.TestRebus()
