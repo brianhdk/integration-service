@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.ServiceProcess;
 using Vertica.Integration.Infrastructure.Extensions;
 
@@ -9,23 +7,31 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 {
 	public class ScheduleTask
 	{
-		public string FolderName { get; private set; }
+		public string FolderName { get; set; }
 		public Credentials Credentials { get; private set; }
 		public string Name { get; private set; }
 		public string Description { get; private set; }
 		public List<Action> Actions { get; private set; }
+		public List<Trigger> Triggers { get; private set; }
 
 		private const string DefaultFolder = "Integration Service";
 
 		public ScheduleTask(ITask task, string folderName = null, Credentials credentials = null)
+			: this(task.Name(), task.Description, folderName, credentials)
 		{
-			if (task == null) throw new ArgumentNullException("task");
 
-			Name = task.Name();
-			Description = task.Description;
+		}
+
+		public ScheduleTask(string name, string description, string folderName = null, Credentials credentials = null)
+		{
+			if (name == null) throw new ArgumentNullException("name");
+
+			Name = name;
+			Description = description;
 			FolderName = folderName ?? DefaultFolder;
 			Credentials = credentials;
 			Actions = new List<Action>();
+			Triggers = new List<Trigger>();
 		}
 
 		public ScheduleTask WithCredentials(string username, string password)
@@ -41,28 +47,6 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 			};
 
 			return this;
-		}
-	}
-
-	public class Action
-	{
-		public Action(string exePath, string arguments)
-		{
-			Arguments = arguments;
-			ExePath = exePath;
-		}
-
-		public string ExePath { get; private set; }
-		public string Arguments { get; private set; }
-	}
-
-	public class ExecuteTaskAction : Action
-	{
-		public ExecuteTaskAction(ITask task, Arguments arguments)
-			: base(
-			exePath: Assembly.GetEntryAssembly().Location, 
-			arguments: String.Format("{0} {1}", task.Name(), arguments))
-		{
 		}
 	}
 }
