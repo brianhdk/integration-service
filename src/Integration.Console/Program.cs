@@ -1,4 +1,5 @@
 ﻿using Vertica.Integration.Experiments;
+using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Console
@@ -8,14 +9,15 @@ namespace Vertica.Integration.Console
 		private static void Main(string[] args)
 		{
 			using (IApplicationContext context = ApplicationContext.Create(application => application
+				//.Database(database => database.Change(db => db.ConnectionString = ConnectionString.FromName("IntegrationDb.Alternate")))
 				//.UseWebApi(webApi => webApi.WithPortal())
                 //.UseIIS()
-				.Fast()
+				//.Fast()
 				//.Tasks(tasks => tasks
 				//	//.Task<Task1.SameNameTask>()
 				//	.Task<Task2.SameNameTask>())
-				.RegisterTasks()
-				.RegisterMigrations()
+				//.RegisterTasks()
+				//.RegisterMigrations()
                 //.TestEventLogger()
 				//.TestTextFileLogger()
                 //.TestPaymentService()

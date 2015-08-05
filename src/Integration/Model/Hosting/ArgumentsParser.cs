@@ -10,9 +10,8 @@ namespace Vertica.Integration.Model.Hosting
         public HostArguments Parse(string[] arguments)
         {
             if (arguments == null) throw new ArgumentNullException("arguments");
-            if (arguments.Length == 0) throw new ArgumentException(@"Expected at least one argument to be passed.", "arguments");
 
-            string command = arguments[0];
+	        string command = arguments.FirstOrDefault();
             var commandArgs = new List<KeyValuePair<string, string>>();
             var args = new List<KeyValuePair<string, string>>();
 

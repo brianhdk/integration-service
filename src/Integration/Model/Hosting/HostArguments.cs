@@ -7,8 +7,6 @@ namespace Vertica.Integration.Model.Hosting
     {
         public HostArguments(string command, KeyValuePair<string, string>[] commandArgs, KeyValuePair<string, string>[] args)
         {
-            if (String.IsNullOrWhiteSpace(command)) throw new ArgumentException(@"Value cannot be null or empty.", "command");
-
             Command = command;
 
             CommandArgs = new Arguments("-", commandArgs);

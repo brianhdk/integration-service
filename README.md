@@ -25,7 +25,7 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
  - [How to Disable IntegrationDb](#how-to-disable-integrationdb)
  - [How to Change Logger](#how-to-change-logger) 
  - [How to Register Custom dependencies/services](#how-to-register-custom-dependenciesservices)
- - [How to Setup connection to custom database](#how-to-setup-connection-to-custom-database) 
+ - [How to Setup connection to a custom database](#how-to-setup-connection-to-a-custom-database) 
  - [How to Setup MonitorFoldersStep](#how-to-setup-monitorfoldersstep)
  - [How to Extend MonitorTask](#how-to-extend-monitortask)
  - [How to Setup ArchiveFoldersStep](#how-to-setup-archivefoldersstep)
@@ -636,7 +636,7 @@ namespace ConsoleApplication16
 
 The code above registers all public classes in the same namespace as "M1434484967_AddCustomTableToCustomDb" to have their *Up()*-method invoked against a SQL Server referenced from the **ConnectionString** instance *customDb*.
 
-The code also creates a custom database connection. See [How to Setup connection to custom database](#how-to-setup-connection-to-custom-database) for more information about this topic.
+The code also creates a custom database connection. See [How to Setup connection to a custom database](#how-to-setup-connection-to-a-custom-database) for more information about this topic.
 
 ```c#
 using System;
@@ -1299,7 +1299,7 @@ namespace ConsoleApplication16
 
 [Back to Table of Contents](#table-of-contents)
 
-## How to Setup connection to custom database
+## How to Setup connection to a custom database
 
 Adding a Custom Connection to a Custom Database is very easy. First you need a couple of things:
 
