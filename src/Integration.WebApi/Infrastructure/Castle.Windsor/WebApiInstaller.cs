@@ -7,29 +7,32 @@ using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
+using Owin;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 
 namespace Vertica.Integration.WebApi.Infrastructure.Castle.Windsor
 {
-    internal class WebApiInstaller : IWindsorInstaller
+	internal class WebApiInstaller : IWindsorInstaller
 	{
-        private readonly Assembly[] _scanAssemblies;
+		private readonly HttpServerConfiguration _httpServerConfiguration;
+		private readonly Assembly[] _scanAssemblies;
         private readonly Type[] _addControllers;
         private readonly Type[] _removeControllers;
 
-        public WebApiInstaller(Assembly[] scanAssemblies, Type[] addControllers, Type[] removeControllers)
+	    public WebApiInstaller(Assembly[] scanAssemblies, Type[] addControllers, Type[] removeControllers, HttpServerConfiguration httpServerConfiguration)
         {
-            _scanAssemblies = scanAssemblies ?? new Assembly[0];
-            _addControllers = addControllers ?? new Type[0];
-            _removeControllers = removeControllers ?? new Type[0];
+		    _scanAssemblies = scanAssemblies ?? new Assembly[0];
+		    _addControllers = addControllers ?? new Type[0];
+		    _removeControllers = removeControllers ?? new Type[0];
+		    _httpServerConfiguration = httpServerConfiguration ?? new HttpServerConfiguration();
         }
 
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
 			container.Register(
 				Component.For<IHttpServerFactory>()
-					.UsingFactoryMethod(kernel => new HttpServerFactory(kernel)));
+					.UsingFactoryMethod(kernel => new HttpServerFactory(kernel, _httpServerConfiguration)));
 
             var types = new List<Type>();
 
@@ -63,15 +66,25 @@ namespace Vertica.Integration.WebApi.Infrastructure.Castle.Windsor
 	    private class HttpServerFactory : IHttpServerFactory
 	    {
 		    private readonly IKernel _kernel;
+		    private readonly HttpServerConfiguration _httpServerConfiguration;
 
-		    public HttpServerFactory(IKernel kernel)
+		    public HttpServerFactory(IKernel kernel, HttpServerConfiguration httpServerConfiguration)
 		    {
 			    _kernel = kernel;
+			    _httpServerConfiguration = httpServerConfiguration;
 		    }
 
-		    public IDisposable Create(string url)
+		    public IDisposable Create(string url, Action<IAppBuilder, HttpConfiguration> configuration = null)
 		    {
-			    return new HttpServer(url, _kernel);
+			    Action<IAppBuilder, HttpConfiguration> configurer = (app, httpConfig) =>
+			    {
+				    _httpServerConfiguration.Apply(app, httpConfig);
+
+				    if (configuration != null)
+					    configuration(app, httpConfig);
+			    };
+
+			    return new HttpServer(url, _kernel, configurer);
 		    }
 	    }
 

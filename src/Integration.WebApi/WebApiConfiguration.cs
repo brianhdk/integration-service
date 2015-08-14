@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Web.Http;
 using Castle.Windsor;
+using Vertica.Integration.WebApi.Infrastructure;
 using Vertica.Integration.WebApi.Infrastructure.Castle.Windsor;
 
 namespace Vertica.Integration.WebApi
@@ -12,6 +13,7 @@ namespace Vertica.Integration.WebApi
         private readonly List<Assembly> _scan;
         private readonly List<Type> _add;
         private readonly List<Type> _remove;
+	    private readonly HttpServerConfiguration _httpServerConfiguration;
 
         internal WebApiConfiguration(ApplicationConfiguration application)
         {
@@ -24,6 +26,7 @@ namespace Vertica.Integration.WebApi
             _scan = new List<Assembly>();
             _add = new List<Type>();
             _remove = new List<Type>();
+	        _httpServerConfiguration = new HttpServerConfiguration();
 
             // scan own assembly
             AddFromAssemblyOfThis<WebApiConfiguration>();
@@ -79,9 +82,18 @@ namespace Vertica.Integration.WebApi
 		    return this;
 	    }
 
-        void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
-        {
-            container.Install(new WebApiInstaller(_scan.ToArray(), _add.ToArray(), _remove.ToArray()));
-        }
+	    public WebApiConfiguration HttpServer(Action<HttpServerConfiguration> httpServer)
+	    {
+		    if (httpServer == null) throw new ArgumentNullException("httpServer");
+
+		    httpServer(_httpServerConfiguration);
+
+		    return this;
+	    }
+
+	    void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
+	    {
+			container.Install(new WebApiInstaller(_scan.ToArray(), _add.ToArray(), _remove.ToArray(), _httpServerConfiguration));
+	    }
     }
 }

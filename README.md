@@ -33,12 +33,16 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
 
 ## How to Get Started
 
-1. Choosing a Host for Integration Service
+1. Choosing a Host for Integration Service.
+
 	Typically Integration Service is hosted through a simple .NET Console Application (.exe). Add a new "Console Application" project to your existing (or new solution). 
 
   **NOTE:** Later you'll add a Class Library project where all your actual implementation code will be placed.
 
 2. Install Integration Service via NuGet
+
+	**NOTE:** Make sure that you have a NuGet Package Source configured for URL: http://nuget.vertica.dk/nuget
+	
   ```
   Install-Package Vertica.Integration.Host
   ```
@@ -60,6 +64,8 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
 4. Open file app.config, and fill-out the [Placeholder]'s with actual values:
  
   ### Database configuration
+  *By default Integration Service requires a database - but this can be disabled. See section [How to Disable IntegrationDb](#how-to-disable-integrationdb) to read more about the option of running Integration Service without a database.*
+  
   ```xml
   <connectionStrings>
       <add name="IntegrationDb" connectionString="Integrated Security=SSPI;Data Source=[NAME-OF-SQL-SERVER];Database=[NAME-OF-INTEGRATION-DATABASE]" />
@@ -71,8 +77,6 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
   <add name="IntegrationDb" connectionString="Server=tcp:xxxx.database.windows.net,1433;Database=IntegrationDb;User ID=xxxx@xxxx;Password=xxxx;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" />
   ```  
 
-  *By default Integration Service requires a database - but this can be disabled. See section [How to Disable IntegrationDb](#how-to-disable-integrationdb) to read more about the option of running Integration Service without a database.*
-  
   ### SMTP
   ```xml
   <mailSettings>

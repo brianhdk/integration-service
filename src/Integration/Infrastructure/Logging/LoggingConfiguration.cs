@@ -2,7 +2,6 @@
 using System.IO;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
-using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Infrastructure.Logging.Loggers;
 

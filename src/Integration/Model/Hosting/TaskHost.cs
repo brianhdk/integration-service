@@ -25,7 +25,7 @@ namespace Vertica.Integration.Model.Hosting
 		{
 			if (args == null) throw new ArgumentNullException("args");
 
-			return _factory.Exists(args.Command);
+			return !String.IsNullOrWhiteSpace(args.Command) && _factory.Exists(args.Command);
 		}
 
 		public void Handle(HostArguments args)

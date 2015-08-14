@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Reflection;
 using System.Web.Http;
@@ -19,27 +20,37 @@ namespace Vertica.Integration.WebApi.Infrastructure
     {
         private readonly IDisposable _httpServer;
         private readonly IKernel _kernel;
+		private readonly TextWriter _outputter;
 
-        public HttpServer(string url, IKernel kernel)
+		public HttpServer(string url, IKernel kernel, Action<IAppBuilder, HttpConfiguration> configuration = null)
         {
 	        if (String.IsNullOrWhiteSpace(url)) throw new ArgumentException(@"Value cannot be null or empty.", "url");
 	        if (kernel == null) throw new ArgumentNullException("kernel");
 
 	        _kernel = kernel;
+	        _outputter = kernel.Resolve<TextWriter>();
+
+			_outputter.WriteLine("Starting HttpServer listening on URL: {0}", url);
+			_outputter.WriteLine();
 
 	        _httpServer = WebApp.Start(new StartOptions(url), builder =>
             {
-                var configuration = new HttpConfiguration();
+                var httpConfiguration = new HttpConfiguration();
 
-                configuration.Filters.Add(new ExceptionHandlingAttribute(_kernel.Resolve<ILogger>()));
-                configuration.MessageHandlers.Add(new CachingHandler());
-                configuration.Formatters.Remove(configuration.Formatters.XmlFormatter);
+                httpConfiguration.Filters.Add(new ExceptionHandlingAttribute(_kernel.Resolve<ILogger>()));
+                httpConfiguration.MessageHandlers.Add(new CachingHandler());
+                httpConfiguration.Formatters.Remove(httpConfiguration.Formatters.XmlFormatter);
 
-                ConfigureJson(configuration);
-                MapRoutes(configuration);
-                ConfigureServices(configuration);
+                ConfigureJson(httpConfiguration);
 
-                builder.UseWebApi(configuration);
+                ConfigureServices(httpConfiguration);
+
+                builder.UseWebApi(httpConfiguration);
+
+	            if (configuration != null)
+		            configuration(builder, httpConfiguration);
+
+				MapRoutes(httpConfiguration);
             });
         }
 
@@ -52,17 +63,17 @@ namespace Vertica.Integration.WebApi.Infrastructure
             configuration.Services.Replace(typeof (IHttpControllerActivator), resolver);
         }
 
-        protected virtual ICollection<Type> GetControllerTypes()
+        private ICollection<Type> GetControllerTypes()
         {
             return _kernel.Resolve<IWebApiControllers>().Controllers;
         }
 
-        protected virtual IHttpController CreateController(HttpRequestMessage request, Type controllerType)
+        private IHttpController CreateController(HttpRequestMessage request, Type controllerType)
         {
             return _kernel.Resolve(controllerType) as IHttpController;
         }
 
-        protected virtual void MapRoutes(HttpConfiguration configuration)
+        private void MapRoutes(HttpConfiguration configuration)
         {
             if (configuration == null) throw new ArgumentNullException("configuration");
 
@@ -71,7 +82,7 @@ namespace Vertica.Integration.WebApi.Infrastructure
             configuration.Routes.MapHttpRoute(
                 name: "WebApi",
                 routeTemplate: "{controller}",
-                defaults: new {controller = "Home"});
+                defaults: new { controller = "Home" });
         }
 
         private static void ConfigureJson(HttpConfiguration configuration)
@@ -86,7 +97,12 @@ namespace Vertica.Integration.WebApi.Infrastructure
         public void Dispose()
         {
             if (_httpServer != null)
-                _httpServer.Dispose();
+            {
+	            _outputter.WriteLine("Shutting down HttpServer.");
+				_outputter.WriteLine();
+
+	            _httpServer.Dispose();
+            }
         }
 
         private class CustomResolver : IAssembliesResolver, IHttpControllerTypeResolver, IHttpControllerActivator

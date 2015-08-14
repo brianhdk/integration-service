@@ -86,6 +86,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\HttpServerConfiguration.cs" />
     <Compile Include="Infrastructure\Castle.Windsor\WebApiInstaller.cs" />
     <Compile Include="WebApiExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -162,6 +162,7 @@
     <Compile Include="Infrastructure\Extensions\ExceptionExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\NameExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\QueueExtensions.cs" />
+    <Compile Include="Infrastructure\Extensions\RepeatExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\StringExtensions.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\CastleWindsorExtensions.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ContainerExtensions.cs" />
@@ -198,6 +199,7 @@
     <Compile Include="Infrastructure\Remote\HttpClientFactory.cs" />
     <Compile Include="Infrastructure\Remote\IFtpClientFactory.cs" />
     <Compile Include="Infrastructure\Remote\IHttpClientFactory.cs" />
+    <Compile Include="Infrastructure\Repeat.cs" />
     <Compile Include="Infrastructure\Templating\AttributeParsing\AttributeValue.cs" />
     <Compile Include="Infrastructure\Templating\AttributeParsing\HashCodeCombiner.cs" />
     <Compile Include="Infrastructure\Templating\AttributeParsing\PositionTagged.cs" />

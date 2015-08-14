@@ -7,7 +7,7 @@ using Vertica.Integration.Model.Hosting.Handlers;
 
 namespace Vertica.Integration.Rebus
 {
-	internal class RebusHost : IHost
+	public class RebusHost : IHost
     {
 	    private readonly Func<IBus> _bus;
 	    private readonly IWindowsServiceHandler _windowsService;

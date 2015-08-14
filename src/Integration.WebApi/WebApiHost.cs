@@ -48,20 +48,20 @@ namespace Vertica.Integration.WebApi
 				WithUrl(url) 
 			});
 
-			var windowsService = new WindowsService(this.Name(), this.WindowsServiceDescription(url)).OnStart(() => _factory.Create(url));
+	        Func<IDisposable> createServer = () => _factory.Create(url);
+
+			var windowsService = new WindowsService(this.Name(), this.WindowsServiceDescription(url)).OnStart(createServer);
 
 	        if (!_windowsService.Handle(args, windowsService))
 	        {
-				using (_factory.Create(url))
+				using (createServer())
 				{
 					if (Environment.UserInteractive && !args.CommandArgs.Contains("noBrowser"))
 						Process.Start(url);
 
 					do
 					{
-						_outputter.WriteLine("Starting web-service listening on URL: {0}", url);
-						_outputter.WriteLine();
-						_outputter.WriteLine(@"Press ESCAPE to stop web-service...");
+						_outputter.WriteLine(@"Press ESCAPE to stop HttpServer...");
 						_outputter.WriteLine();
 
 					} while (WaitingForEscape());

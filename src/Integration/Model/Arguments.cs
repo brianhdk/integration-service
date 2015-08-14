@@ -43,13 +43,24 @@ namespace Vertica.Integration.Model
 
         public string this[int index]
         {
-            get { return _pairs[index].Value; }
+            get { return _pairs[index].Key; }
         }
 
         public string this[string key]
         {
-            get { return _dictionary[key]; }
+	        get
+	        {
+		        string value;
+		        TryGetValue(key, out value);
+
+		        return value;
+	        }
         }
+
+	    public int Length
+	    {
+			get { return _pairs.Length; }
+	    }
 
         public bool TryGetValue(string key, out string value)
         {
