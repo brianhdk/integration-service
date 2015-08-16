@@ -2,38 +2,26 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.VisualBasic.FileIO;
 
 namespace Vertica.Integration.Infrastructure.Parsing
 {
     public class CsvParser : ICsvParser
 	{
-        private readonly ICsvReader _csvReader;
-
-        public CsvParser(ICsvReader csvReader)
-        {
-            if (csvReader == null) throw new ArgumentNullException("csvReader");
-
-            _csvReader = csvReader;
-        }
-
-        public IEnumerable<CsvRow> Parse(Stream stream, bool firstLineIsHeader, Action<CsvConfiguration> csv = null)
+        public IEnumerable<CsvRow> Parse(Stream stream, Action<CsvConfiguration> csv = null)
 		{
 	        if (stream == null) throw new ArgumentNullException("stream");
 
-            string delimiter = CsvConfiguration.DefaultDelimiter;
+			var configuration = new CsvConfiguration();
 
-            string[][] lines = _csvReader.Read(stream, configuration =>
-            {
-                if (csv != null)
-                    csv(configuration);
+			if (csv != null)
+				csv(configuration);
 
-                delimiter = configuration.Delimiter;
-
-            }).ToArray();
+            string[][] lines = Read(stream, configuration).ToArray();
 
 	        Dictionary<string, int> headers = null;
 
-	        if (firstLineIsHeader && lines.Length > 0)
+	        if (configuration.FirstLineIsHeader && lines.Length > 0)
 	        {
 	            headers = lines.First()
 	                .Select((name, index) => new { name, index })
@@ -44,7 +32,18 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
             return lines
                 .Skip(headers != null ? 1 : 0)
-                .Select((x, i) => new CsvRow(x, delimiter, headers, (uint?) (i + lineNumberOffset)));
+                .Select((x, i) => new CsvRow(x, configuration.Delimiter, headers, (uint?) (i + lineNumberOffset)));
+		}
+
+	    private IEnumerable<string[]> Read(Stream stream, CsvConfiguration configuration)
+		{
+			using (var parser = new TextFieldParser(stream, configuration.Encoding))
+			{
+				parser.SetDelimiters(configuration.Delimiter);
+
+				while (!parser.EndOfData)
+					yield return parser.ReadFields() ?? new string[0];
+			}
 		}
 	}
 }

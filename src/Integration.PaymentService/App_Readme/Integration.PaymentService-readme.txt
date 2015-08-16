@@ -7,11 +7,8 @@ class Program
 {
     static void Main(string[] args)
     {
-		using (ApplicationContext context = ApplicationContext.Create(application => application
-            .UsePaymentService()))
-		{
-			context.Execute(args);
-		}
+		IntegrationStartup.Run(args, application => application
+            .UsePaymentService());
     }
 }
 

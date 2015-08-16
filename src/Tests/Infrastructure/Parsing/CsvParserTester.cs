@@ -14,8 +14,9 @@ namespace Vertica.Integration.Tests.Infrastructure.Parsing
         {
             CsvRow[] rows = Parse(@"Row1-Field1,Row1-Field2
 Row2-Field1,Row2-Field2",
-                false,
-                csv => csv.ChangeDelimiter(","));
+                csv => csv
+					.NoHeaders()
+					.ChangeDelimiter(","));
 
             Assert.That(rows.Length, Is.EqualTo(2));
             Assert.That(rows[0][0], Is.EqualTo("Row1-Field1"));
@@ -32,8 +33,7 @@ Row2-Field1,Row2-Field2",
         {
             CsvRow[] rows = Parse(@"Field1;Field2
 Row1-Field1;Row1-Field2
-Row2-Field1;Row2-Field2",
-                true);
+Row2-Field1;Row2-Field2");
 
             Assert.That(rows.Length, Is.EqualTo(2));
 
@@ -61,8 +61,7 @@ Row2-Field1;Row2-Field2",
         public void Parse_NoHeader_Returns_Delimiter_LinesNumbers_But_No_Headers()
         {
             CsvRow[] rows = Parse(@"Row1-Field1,Row1-Field2
-Row2-Field1,Row2-Field2",
-                false);
+Row2-Field1,Row2-Field2", csv => csv.NoHeaders());
 
             Assert.That(rows[0].Meta.LineNumber, Is.EqualTo(1));
             Assert.That(rows[0].Meta.Delimiter, Is.EqualTo(CsvConfiguration.DefaultDelimiter));
@@ -77,8 +76,7 @@ Row2-Field1,Row2-Field2",
         {
             CsvRow[] rows = Parse(@"Field1;Field2
 Row1-Field1;Row1-Field2
-Row2-Field1;Row2-Field2",
-                true);
+Row2-Field1;Row2-Field2");
 
             Assert.That(rows[0].Meta.LineNumber, Is.EqualTo(2));
             Assert.That(rows[0].Meta.Delimiter, Is.EqualTo(CsvConfiguration.DefaultDelimiter));
@@ -88,7 +86,7 @@ Row2-Field1;Row2-Field2",
             CollectionAssert.AreEqual(new[] { "Field1", "Field2" }, rows[1].Meta.Headers);
         }
 
-        private CsvRow[] Parse(string data, bool firstLineIsHeader, Action<CsvConfiguration> csv = null)
+        private CsvRow[] Parse(string data, Action<CsvConfiguration> csv = null)
         {
             using (var stream = new MemoryStream())
             using (var writer = new StreamWriter(stream))
@@ -97,9 +95,9 @@ Row2-Field1;Row2-Field2",
                 writer.Flush();
                 stream.Position = 0;
 
-                var subject = new CsvParser(new CsvReader());
+                var subject = new CsvParser();
 
-                return subject.Parse(stream, firstLineIsHeader, csv).ToArray();
+                return subject.Parse(stream, csv).ToArray();
             }
         }
     }

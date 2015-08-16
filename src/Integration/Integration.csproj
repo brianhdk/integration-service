@@ -186,10 +186,8 @@
     <Compile Include="Infrastructure\Logging\Loggers\NullLogger.cs" />
     <Compile Include="Infrastructure\Parsing\CsvConfiguration.cs" />
     <Compile Include="Infrastructure\Parsing\CsvParser.cs" />
-    <Compile Include="Infrastructure\Parsing\CsvReader.cs" />
     <Compile Include="Infrastructure\Parsing\CsvRow.cs" />
     <Compile Include="Infrastructure\Parsing\ICsvParser.cs" />
-    <Compile Include="Infrastructure\Parsing\ICsvReader.cs" />
     <Compile Include="Infrastructure\Remote\Ftp\FtpClient.cs" />
     <Compile Include="Infrastructure\Remote\Ftp\FtpClientConfiguration.cs" />
     <Compile Include="Infrastructure\Remote\FtpClientFactory.cs" />

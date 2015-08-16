@@ -22,6 +22,8 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
  - [Integrating Elmah](#integrating-elmah)
  - [Integrating Azure - BlobStorage](#integrating-azure---blobstorage)
  - [Integrating Payment Service](#integrating-payment-service)
+ - [Integrating RavenDB](#integrating-ravendb)
+ - [Integrating MongoDB](#integrating-mongodb)
  - [How to Disable IntegrationDb](#how-to-disable-integrationdb)
  - [How to Change Logger](#how-to-change-logger) 
  - [How to Register Custom dependencies/services](#how-to-register-custom-dependenciesservices)
@@ -949,13 +951,182 @@ TBD.
 
 ## CSV
 
-TBD (general usage, QueryToCsv). 
+There are a couple of helpers inside the project for working with CSV files both for reading and writing purposes.
+
+### Reading CSV
+
+The built-in *ICsvParser* is useful when reading CSV. Below is a simple example on how to use it:
+
+```c#
+using System.IO;
+using System.Linq;
+using Vertica.Integration.Infrastructure.Parsing;
+using Vertica.Integration.Model;
+
+namespace ConsoleApplication16
+{
+	public class ReadCsvFileDemoTask : Task
+	{
+		private readonly ICsvParser _csvParser;
+
+		public ReadCsvFileDemoTask(ICsvParser csvParser)
+		{
+			_csvParser = csvParser;
+		}
+
+		public override void StartTask(ITaskExecutionContext context)
+		{
+			// Reads a file with headers, outputting column "Name"
+			using (FileStream stream = File.OpenRead(@"C:\tmp\file-with-names.csv"))
+			{
+				CsvRow[] rows = _csvParser.Parse(stream).ToArray();
+
+				foreach (CsvRow row in rows)
+					context.Log.Message(row["Name"]);
+			}
+
+			// Reads a file with no headers and with a non-standard delimiter, outputting first column
+			using (FileStream stream = File.OpenRead(@"C:\tmp\odd-file.csv"))
+			{
+				CsvRow[] rows = _csvParser.Parse(stream, csv => csv.NoHeaders().ChangeDelimiter("|")).ToArray();
+
+				foreach (CsvRow row in rows)
+					context.Log.Message("{0}", row[0]);
+			}
+		}
+
+		public override string Description
+		{
+			get { return "TBD"; }
+		}
+	}
+}
+```
+
+### CsvRow type
+
+The *CsvRow*-type represents a single CSV row. Use this to get/set the value of a single column, either by name or by index.
+
+You can also read meta-data like headers and line number from a *CsvRow*.
+
+### Writing CSV
+
+On the *CsvRow*-type there is a static method *BeginRows(...)* which helps you to write CSV. See the examples below:
+
+```c#
+using System;
+using Vertica.Integration.Infrastructure.Parsing;
+using Vertica.Integration.Model;
+
+namespace ConsoleApplication16
+{
+	public class WriteCsvDemoTask : Task
+	{
+		public override void StartTask(ITaskExecutionContext context)
+		{
+			// Create CSV with header
+			string csv1 = CsvRow.BeginRows("Name", "Description")
+				.Configure(x => x.ReturnHeaderAsRow())
+				.Add("Name A", "Description A")
+				.Add("Name B", "Description B")
+				.ToString();
+
+			context.Log.Message(csv1);
+
+			// Create CSV without header - no validation of entered data
+			string csv2 = CsvRow.BeginRows()
+				.Add("Name A", "Description A")
+				.Add("Something", "Very", "Different")
+				.ToString();
+
+			context.Log.Message(csv2);
+
+			// Create CSV using a mapper which helps ensuring a valid schema
+			string csv3 = CsvRow.BeginRows("Name", "Description")
+				.AddUsingMapper(mapper => mapper
+					.Map("Description", "Description A")
+					.Map("Name", "Name A"))
+				.ToString();
+
+			context.Log.Message(csv3);
+
+			// Create CSV from a collection of elements using the mapper
+			string csv4 = CsvRow.BeginRows("Name", "Description")
+				.Configure(x => x.ReturnHeaderAsRow())
+				.FromUsingMapper(new[] { "A", "B", "C" }, (mapper, data) => mapper
+					.Map("Name", String.Format("Name {0}", data))
+					.Map("Description", String.Format("Description {0}", data)))
+				.ToString();
+
+			context.Log.Message(csv4);
+		}
+
+		public override string Description
+		{
+			get { return "TBD"; }
+		}
+	}
+}
+```
+
+### QueryToCsv extension method
+TODO
 
 [Back to Table of Contents](#table-of-contents)
 
 ## FTP
 
-TBD. 
+There is a built-in client for FTP - here are the steps to get you started:
+
+1. Create a constructor dependency on *IFtpClientFactory*. 
+2. Use the *Create(...)* method to have an instance of *IFtpClient* created.
+
+### Example
+
+This example shows a simple *Task* that downloads CSV files to a local drive:
+
+```c#
+using System.IO;
+using Vertica.Integration.Infrastructure.Parsing;
+using Vertica.Integration.Infrastructure.Remote;
+using Vertica.Integration.Infrastructure.Remote.Ftp;
+using Vertica.Integration.Model;
+
+namespace ConsoleApplication16
+{
+	public class FtpClientDemoTask : Task
+	{
+		private readonly IFtpClientFactory _ftpClientFactory;
+
+		public FtpClientDemoTask(IFtpClientFactory ftpClientFactory)
+		{
+			_ftpClientFactory = ftpClientFactory;
+		}
+
+		public override void StartTask(ITaskExecutionContext context)
+		{
+			IFtpClient client = _ftpClientFactory.Create("ftp://ftp.vertica.dk/BHK", ftp => ftp
+				.Credentials("GuestFTP", "VerticaPass1010"));
+
+			// Enter directory named APMM_SOCONF
+			client.NavigateDown("APMM_SOCONF");
+
+			// Navigate all CSV files in directory
+			foreach (string csvFile in client.ListDirectory(x => x.EndsWith(".csv")))
+			{
+				// Download file to local directory
+				client.DownloadToLocal(csvFile, new DirectoryInfo(@"c:\tmp\"));
+			}
+		}
+
+		public override string Description
+		{
+			get { return "TBD"; }
+		}
+	}
+}
+```
+
 [Back to Table of Contents](#table-of-contents)
 
 ## HTTP
@@ -999,6 +1170,8 @@ namespace ConsoleApplication16
 				HttpResponseMessage httpResponse = 
 					httpClient.PostAsJsonAsync("http://localhost:8123/Service", request)
 						.Result;
+
+				httpResponse.EnsureSuccessStatusCode();
 
 				Response response = 
 					httpResponse.Content.ReadAsAsync<Response>()
@@ -1123,6 +1296,192 @@ TBD.
 ## Integrating Payment Service
 
 TBD. 
+[Back to Table of Contents](#table-of-contents)
+
+## Integrating RavenDB
+
+You can integrate to RavenDB by installing the package below:
+
+```
+Install-Package Vertica.Integration.RavenDB
+```
+
+This allows you to have connections to one or more RavenDB databases.
+
+The example below shows you how to create two connections and how to use them from a Task:
+
+```c#
+using Raven.Client;
+using Vertica.Integration.Infrastructure;
+using Vertica.Integration.Model;
+using Vertica.Integration.RavenDB;
+using Vertica.Integration.RavenDB.Infrastructure;
+
+namespace ConsoleApplication16
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+			IntegrationStartup.Run(args, application => application
+				.UseRavenDb(ravenDb => ravenDb
+					.DefaultConnection(new DefaultRavenDb())
+					.AddConnection(new SecondRavenDb())));
+        }
+    }
+
+	// This connection will be served when using the IRavenDbFactory interface.
+	public class DefaultRavenDb : Connection
+	{
+		public DefaultRavenDb()
+			: base(ConnectionString.FromText("Url = http://localhost:8998; Database = MyRavenDb"))
+		{
+		}
+	}
+
+	// This connection will be served when using the generic IRavenDbFactory<SecondRavenDb> interface.
+	public class SecondRavenDb : Connection
+	{
+		public SecondRavenDb()
+			: base(ConnectionString.FromName("NameFromConnectionStringElement"))
+		{
+		}
+
+		protected override IDocumentStore Create()
+		{
+			// Control how the IDocumentStore is created here.
+			return base.Create();
+		}
+
+		protected override void Initialize(IDocumentStore documentStore)
+		{
+			base.Initialize(documentStore);
+
+			// Add custom initialization here.
+		}
+	}
+
+	public class RavenDbDemoTask : Task
+	{
+		private readonly IRavenDbFactory _ravenDb;
+		private readonly IRavenDbFactory<SecondRavenDb> _secondRavenDb;
+
+		public RavenDbDemoTask(IRavenDbFactory ravenDb, IRavenDbFactory<SecondRavenDb> secondRavenDb)
+		{
+			_ravenDb = ravenDb;
+			_secondRavenDb = secondRavenDb;
+		}
+
+		public override void StartTask(ITaskExecutionContext context)
+		{
+			using (IDocumentSession session = _ravenDb.DocumentStore.OpenSession())
+			{
+				// do anything here...
+			}
+
+			IDocumentStore documentStore = _secondRavenDb.DocumentStore;
+		}
+
+		public override string Description
+		{
+			get { return "TBD"; }
+		}
+	}
+}
+```
+
+[Back to Table of Contents](#table-of-contents)
+
+## Integrating MongoDB
+
+You can integrate to MongoDB by installing the package below:
+
+```
+Install-Package Vertica.Integration.MongoDB
+```
+
+This allows you to have connections to one or more MongoDB databases.
+
+The example below shows you how to create two connections and how to use them from a Task:
+
+```c#
+using System;
+using MongoDB.Driver;
+using Vertica.Integration.Infrastructure;
+using Vertica.Integration.Model;
+using Vertica.Integration.MongoDB;
+using Vertica.Integration.MongoDB.Infrastructure;
+
+namespace ConsoleApplication16
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+			IntegrationStartup.Run(args, application => application
+				.UseMongoDb(mongoDb => mongoDb
+					.DefaultConnection(new DefaultMongoDb())
+					.AddConnection(new SecondMongoDb())));
+        }
+    }
+
+	// This connection will be served when using the IMongoDbClientFactory interface.
+	public class DefaultMongoDb : Connection
+	{
+		public DefaultMongoDb()
+			: base(ConnectionString.FromText("mongodb://user:password@ds036178.mongolab.com:36178/brianhdk"))
+		{
+		}
+	}
+
+	// This connection will be served when using the generic IMongoDbClientFactory<SecondMongoDb> interface.
+	public class SecondMongoDb : Connection
+	{
+		public SecondMongoDb()
+			: base(ConnectionString.FromName("NameFromConnectionStringElement"))
+		{
+		}
+	}
+
+	public class MongoDbDemoTask : Task
+	{
+		private readonly IMongoDbClientFactory _mongoDb;
+		private readonly IMongoDbClientFactory<SecondMongoDb> _secondMongoDb;
+
+		public MongoDbDemoTask(IMongoDbClientFactory mongoDb, IMongoDbClientFactory<SecondMongoDb> secondMongoDb)
+		{
+			_mongoDb = mongoDb;
+			_secondMongoDb = secondMongoDb;
+		}
+
+		public override void StartTask(ITaskExecutionContext context)
+		{
+			IMongoCollection<SomeDocumentDto> documents =
+				_mongoDb.Database.GetCollection<SomeDocumentDto>("myDocuments");
+
+			// find specific document
+			SomeDocumentDto document = documents
+				.Find(x => x.Id == Guid.Parse("808F7DC5-B98E-4B53-801C-2C8FD3730AC4"))
+				.SingleOrDefaultAsync().Result;
+
+			IMongoClient client = _secondMongoDb.Client;
+		}
+
+		public override string Description
+		{
+			get { return "TBD"; }
+		}
+	}
+
+	public class SomeDocumentDto
+	{
+		public Guid Id { get; set; }
+		public string Name { get; set; }
+		public string Description { get; set; }
+	}
+}
+```
+
 [Back to Table of Contents](#table-of-contents)
 
 ## How to Disable IntegrationDb
@@ -1305,18 +1664,20 @@ namespace ConsoleApplication16
 
 ## How to Setup connection to a custom database
 
-Adding a Custom Connection to a Custom Database is very easy. First you need a couple of things:
+Adding a Custom Connection to a Custom Database is very easy.
 
-1. You need a ConnectionString to your database
-2. You need a Public Class that inherits from **Vertica.Integration.Infrastructure.Database.Connection**
-3. You need to register this Custom Connection
+The following example will walk you through the required steps.
+
+First you'll create an entry in your configuration file, app.config, with your connection string:
 
 ```xml
 <connectionStrings>
   <add name="CustomDb" connectionString="Integrated Security=SSPI;Data Source=[NAME-OF-SQL-SERVER];Database=[NAME-OF-CUSTOM-DATABASE]" />
 </connectionStrings>  
 ```
-Will add a new ConnectionString to configuration, named "CustomDb".
+
+Next you'll create a **public** class that inherits from **Vertica.Integration.Infrastructure.Database.Connection**
+In the constructor of this class you'll reference the connection string by it's name:
 
 ```c#
 using Vertica.Integration.Infrastructure;
@@ -1333,7 +1694,12 @@ namespace ClassLibrary2
     }
 }
 ```
-Will add a class that exposes the Custom Connection. Note: You can also use **ConnectionString.FromText("...")** to hard-code your connection string.
+
+**Note:** You can also use **ConnectionString.FromText("...")** if you just want to hard-code your connection string.
+
+Later you'll use this class every time you access the database through the generic **IDbFactory<>** interface.
+
+The next step is to register this new custom connection, this is done in the initial configuration:
 
 ```c#
 namespace ConsoleApplication16
@@ -1349,7 +1715,8 @@ namespace ConsoleApplication16
     }
 }
 ```
-Will register "CustomDb" as a Custom Connection for it to be used everywhere. The example below illustrates how to use it from a Task.
+
+Now that you've added "CustomDb" as a Custom Connection, let's see an example on how to use it from a Task.
 
 ```c#
 using System.Data;
@@ -1384,10 +1751,9 @@ namespace ClassLibrary2
     }
 }
 ```
-Shows how to use the Custom Connection by taking a dependency on **IDbFactory<CustomDb>**. 
 
 ###IDbFactory<TConnection>
-This factory gives you access to any custom connection you register.
+This factory gives you access to any custom connection that you register.
 
 The Factory exposes the underlying IDbConnection but more importantly it allows you to create an **IDbSession** against that connection. The **IDbSession** is a very thin Adapter on top of Dapper (https://github.com/StackExchange/dapper-dot-net), giving you few but powerful options to work against your database. If you need to open up the full capabilities of Dapper, then you can simply use it's extension methods, see example below:
 

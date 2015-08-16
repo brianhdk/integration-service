@@ -7,13 +7,10 @@ class Program
 {
     static void Main(string[] args)
     {
-		using (ApplicationContext context = ApplicationContext.Create(application => application
+		IntegrationStartup.Run(args, application => application
             .UseMongoDb(ravenDb => ravenDb
 				.DefaultConnection(new SomeConnection(...))
-				.AddConnection(new SomeOtherConnection(...)))))
-		{
-			context.Execute(args);
-		}
+				.AddConnection(new SomeOtherConnection(...))));
     }
 }
 

@@ -7,13 +7,10 @@ class Program
 {
     static void Main(string[] args)
     {
-		using (ApplicationContext context = ApplicationContext.Create(application => application
+		IntegrationStartup.Run(args, application => application
 			.UseRebus(rebus => rebus
 				.Bus(bus => bus. /* https://github.com/rebus-org/Rebus */ )
 				.Handlers(handlers => handlers
-					.AddFromAssemblyOfThis<...>()))))
-		{
-			context.Execute(args);
-		}
+					.AddFromAssemblyOfThis<...>())));
     }
 }

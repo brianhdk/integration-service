@@ -9,9 +9,17 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
         public CsvConfiguration()
         {
+	        FirstLineIsHeader = true;
             Encoding = Encoding.UTF8;
             Delimiter = DefaultDelimiter;
         }
+
+	    public CsvConfiguration NoHeaders()
+	    {
+		    FirstLineIsHeader = false;
+
+		    return this;
+	    }
 
         public CsvConfiguration ChangeEncoding(Encoding encoding)
         {
@@ -31,6 +39,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
             return this;
         }
 
+		public bool FirstLineIsHeader { get; private set; }
         public Encoding Encoding { get; private set; }
         public string Delimiter { get; private set; }
     }

@@ -5,7 +5,19 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
 {
     public static class FtpClientExtensions
     {
-        public static string DownloadToLocal(this IFtpClient client, string name, DirectoryInfo localDirectory)
+	    public static string DownloadToMemoryStream(this IFtpClient client, string name, MemoryStream memoryStream)
+	    {
+		    if (client == null) throw new ArgumentNullException("client");
+		    if (memoryStream == null) throw new ArgumentNullException("memoryStream");
+
+		    return client.Download(name, stream =>
+		    {
+			    stream.CopyTo(memoryStream);
+			    memoryStream.Position = 0;
+		    });
+	    }
+
+	    public static string DownloadToLocal(this IFtpClient client, string name, DirectoryInfo localDirectory)
         {
             if (client == null) throw new ArgumentNullException("client");
             if (localDirectory == null) throw new ArgumentNullException("localDirectory");

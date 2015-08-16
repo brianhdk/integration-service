@@ -15,5 +15,8 @@
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>Vertica Integration Service IntegrationService</tags>
-  </metadata>
+		<frameworkAssemblies>
+			<frameworkAssembly assemblyName="System.Net.Http" />
+		</frameworkAssemblies>
+	</metadata>
 </package>

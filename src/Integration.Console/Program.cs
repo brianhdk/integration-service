@@ -12,15 +12,15 @@ namespace Vertica.Integration.Console
 		{
 			using (IApplicationContext context = ApplicationContext.Create(application => application
 				//.Database(database => database.Change(db => db.ConnectionString = ConnectionString.FromName("IntegrationDb.Alternate")))
-				.UseWebApi(webApi => webApi
-					.WithPortal()
-					.HttpServer(httpServer => httpServer.Configure((app, config) => { })))
+				//.UseWebApi(webApi => webApi
+				//	.WithPortal()
+				//	.HttpServer(httpServer => httpServer.Configure((app, config) => { })))
                 //.UseIIS()
-				//.Fast()
+				.Fast()
 				//.Tasks(tasks => tasks
 				//	//.Task<Task1.SameNameTask>()
 				//	.Task<Task2.SameNameTask>())
-				//.RegisterTasks()
+				.RegisterTasks()
 				//.RegisterMigrations()
                 //.TestEventLogger()
 				//.TestTextFileLogger()

@@ -6,6 +6,6 @@ namespace Vertica.Integration.Infrastructure.Parsing
 {
 	public interface ICsvParser
 	{
-        IEnumerable<CsvRow> Parse(Stream stream, bool firstLineIsHeader, Action<CsvConfiguration> csv = null);
+        IEnumerable<CsvRow> Parse(Stream stream, Action<CsvConfiguration> csv = null);
 	}
 }

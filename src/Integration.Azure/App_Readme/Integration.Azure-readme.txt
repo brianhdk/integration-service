@@ -7,11 +7,8 @@ class Program
 {
     static void Main(string[] args)
     {
-		using (ApplicationContext context = ApplicationContext.Create(application => application
+		IntegrationStartup.Run(args, application => application
             .UseAzure(azure => azure
-                .ReplaceArchiveWithBlobStorage(ConnectionString.FromName("AzureBlobStorage.Archive")))))
-		{
-			context.Execute(args);
-		}
+                .ReplaceArchiveWithBlobStorage(ConnectionString.FromName("AzureBlobStorage.Archive"))));
     }
 }
