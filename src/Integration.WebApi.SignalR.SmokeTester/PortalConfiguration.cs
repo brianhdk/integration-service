@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 
-namespace Vertica.Integration.Portal
+namespace Integration.WebApi.SignalR.SmokeTester
 {
     public class PortalConfiguration
     {
@@ -31,7 +31,7 @@ namespace Vertica.Integration.Portal
             string folder = Path.Combine(BinFolder, String.Format("{0}-{1}", Name, Version));
 
 #if DEBUG
-            string developmentFolder = Path.Combine(folder, @"..\..\..\..\Integration.Portal");
+            string developmentFolder = Path.Combine(folder, @"..\..\..\..\Integration.WebApi.SignalR.SmokeTester");
 
             if (Directory.Exists(developmentFolder))
                 folder = developmentFolder;
