@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{12CFE066-0F4C-41DC-96AF-C6327A5E6C4E}</ProjectGuid>
+    <ProjectGuid>{80724F72-D000-4A40-B784-4B1F3BFA0D78}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Integration.WebApi.SignalR.SmokeTester</RootNamespace>
-    <AssemblyName>Integration.WebApi.SignalR.SmokeTester</AssemblyName>
+    <RootNamespace>Integration.WebApi.SignalR.SmokeTester2</RootNamespace>
+    <AssemblyName>Integration.WebApi.SignalR.SmokeTester2</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -35,6 +35,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Castle.Windsor, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNet.SignalR.Core.2.2.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
       <Private>True</Private>
@@ -49,10 +57,6 @@
     </Reference>
     <Reference Include="Microsoft.Owin.Host.HttpListener, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Owin.Host.HttpListener.3.0.1\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Hosting, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Owin.Hosting.3.0.1\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Owin.Security, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -88,20 +92,26 @@
   <ItemGroup>
     <Compile Include="AssetsController.cs" />
     <Compile Include="HomeController.cs" />
+    <Compile Include="ISomeService.cs" />
+    <Compile Include="MyErrorModule.cs" />
     <Compile Include="PortalConfiguration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestHub.cs" />
+    <Compile Include="ChatHub.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Integration.WebApi.SignalR\Integration.WebApi.SignalR.csproj">
-      <Project>{B2C0D9E2-5B61-444E-99A3-79C8EE3D569A}</Project>
-      <Name>Integration.WebApi.SignalR</Name>
-    </ProjectReference>
+    <Content Include="Assets\Scripts\jquery-1.6.4-vsdoc.js" />
+    <Content Include="Assets\Scripts\jquery-1.6.4.js" />
+    <Content Include="Assets\Scripts\jquery-1.6.4.min.js" />
+    <Content Include="Assets\Scripts\jquery.signalR-2.2.0.js" />
+    <Content Include="Assets\Scripts\jquery.signalR-2.2.0.min.js" />
+    <Content Include="Default.html" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Integration.WebApi\Integration.WebApi.csproj">
       <Project>{A6CB3949-9637-4952-AB0F-0DE199E29B36}</Project>
       <Name>Integration.WebApi</Name>
@@ -111,15 +121,6 @@
       <Name>Integration</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Default.html" />
-    <Content Include="Assets\Scripts\jquery-1.6.4-vsdoc.js" />
-    <Content Include="Assets\Scripts\jquery-1.6.4.js" />
-    <Content Include="Assets\Scripts\jquery-1.6.4.min.js" />
-    <Content Include="Assets\Scripts\jquery.signalR-2.2.0.js" />
-    <Content Include="Assets\Scripts\jquery.signalR-2.2.0.min.js" />
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

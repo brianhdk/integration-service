@@ -1,32 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web.Http;
-using Owin;
 
 namespace Vertica.Integration.WebApi.Infrastructure
 {
 	public class HttpServerConfiguration
 	{
-		private readonly List<Action<IAppBuilder, HttpConfiguration>> _configurations;
+		private readonly List<Action<IOwinConfiguration>> _configurers;
 
 		internal HttpServerConfiguration()
 		{
-			_configurations = new List<Action<IAppBuilder, HttpConfiguration>>();
+			_configurers = new List<Action<IOwinConfiguration>>();
 		}
 
-		public HttpServerConfiguration Configure(Action<IAppBuilder, HttpConfiguration> configuration)
+		public HttpServerConfiguration Configure(Action<IOwinConfiguration> configurer)
 		{
-			if (configuration == null) throw new ArgumentNullException("configuration");
+			if (configurer == null) throw new ArgumentNullException("configurer");
 
-			_configurations.Add(configuration);
+			_configurers.Add(configurer);
 
 			return this;
 		}
 
-		internal void Apply(IAppBuilder app, HttpConfiguration httpConfig)
+		internal void Apply(IOwinConfiguration configuration)
 		{
-			foreach (Action<IAppBuilder, HttpConfiguration> configuration in _configurations)
-				configuration(app, httpConfig);
+			if (configuration == null) throw new ArgumentNullException("configuration");
+
+			foreach (Action<IOwinConfiguration> configurer in _configurers)
+				configurer(configuration);
 		}
 	}
 }

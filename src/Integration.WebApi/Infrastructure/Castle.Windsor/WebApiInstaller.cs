@@ -7,7 +7,6 @@ using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
-using Owin;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 
@@ -74,17 +73,9 @@ namespace Vertica.Integration.WebApi.Infrastructure.Castle.Windsor
 			    _httpServerConfiguration = httpServerConfiguration;
 		    }
 
-		    public IDisposable Create(string url, Action<IAppBuilder, HttpConfiguration> configuration = null)
+			public IDisposable Create(string url)
 		    {
-			    Action<IAppBuilder, HttpConfiguration> configurer = (app, httpConfig) =>
-			    {
-				    _httpServerConfiguration.Apply(app, httpConfig);
-
-				    if (configuration != null)
-					    configuration(app, httpConfig);
-			    };
-
-			    return new HttpServer(url, _kernel, configurer);
+			    return new HttpServer(url, _kernel, configuration => _httpServerConfiguration.Apply(configuration));
 		    }
 	    }
 

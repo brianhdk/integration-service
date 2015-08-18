@@ -55,6 +55,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Microsoft.Owin.Host.HttpListener.3.0.1\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -118,6 +122,10 @@
     <ProjectReference Include="..\Integration.Rebus\Integration.Rebus.csproj">
       <Project>{9078656D-7C5E-469C-BFC6-1B9AB2CE9AE1}</Project>
       <Name>Integration.Rebus</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration.WebApi.SignalR\Integration.WebApi.SignalR.csproj">
+      <Project>{B2C0D9E2-5B61-444E-99A3-79C8EE3D569A}</Project>
+      <Name>Integration.WebApi.SignalR</Name>
     </ProjectReference>
     <ProjectReference Include="..\Integration.WebApi\Integration.WebApi.csproj">
       <Project>{A6CB3949-9637-4952-AB0F-0DE199E29B36}</Project>

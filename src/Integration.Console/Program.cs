@@ -3,6 +3,7 @@ using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Model;
 using Vertica.Integration.Portal;
 using Vertica.Integration.WebApi;
+using Vertica.Integration.WebApi.SignalR;
 
 namespace Vertica.Integration.Console
 {
@@ -12,15 +13,18 @@ namespace Vertica.Integration.Console
 		{
 			using (IApplicationContext context = ApplicationContext.Create(application => application
 				//.Database(database => database.Change(db => db.ConnectionString = ConnectionString.FromName("IntegrationDb.Alternate")))
-				//.UseWebApi(webApi => webApi
-				//	.WithPortal()
-				//	.HttpServer(httpServer => httpServer.Configure((app, config) => { })))
+				.Database(database => database.AddConnection(new CustomDb(ConnectionString.FromText("..."))))
+				.UseWebApi(webApi => webApi
+					.WithPortal()
+					.WithSignalR(signalR => signalR.AddFromAssemblyOfThis<Program>())
+				)
                 //.UseIIS()
-				.Fast()
+				//.Fast()
 				//.Tasks(tasks => tasks
 				//	//.Task<Task1.SameNameTask>()
 				//	.Task<Task2.SameNameTask>())
-				.RegisterTasks()
+
+				//.RegisterTasks()
 				//.RegisterMigrations()
                 //.TestEventLogger()
 				//.TestTextFileLogger()

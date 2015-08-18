@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
+using System.Web.Http.ExceptionHandling;
 using Castle.MicroKernel;
 using Microsoft.Owin.Hosting;
 using Newtonsoft.Json;
@@ -22,7 +23,7 @@ namespace Vertica.Integration.WebApi.Infrastructure
         private readonly IKernel _kernel;
 		private readonly TextWriter _outputter;
 
-		public HttpServer(string url, IKernel kernel, Action<IAppBuilder, HttpConfiguration> configuration = null)
+		public HttpServer(string url, IKernel kernel, Action<IOwinConfiguration> configuration = null)
         {
 	        if (String.IsNullOrWhiteSpace(url)) throw new ArgumentException(@"Value cannot be null or empty.", "url");
 	        if (kernel == null) throw new ArgumentNullException("kernel");
@@ -35,22 +36,23 @@ namespace Vertica.Integration.WebApi.Infrastructure
 
 	        _httpServer = WebApp.Start(new StartOptions(url), builder =>
             {
+				builder.Properties["host.TraceOutput"] = _outputter;
+
                 var httpConfiguration = new HttpConfiguration();
 
-                httpConfiguration.Filters.Add(new ExceptionHandlingAttribute(_kernel.Resolve<ILogger>()));
-                httpConfiguration.MessageHandlers.Add(new CachingHandler());
-                httpConfiguration.Formatters.Remove(httpConfiguration.Formatters.XmlFormatter);
+				if (configuration != null)
+					configuration(new OwinConfiguration(builder, httpConfiguration, kernel));
 
-                ConfigureJson(httpConfiguration);
+				httpConfiguration.Filters.Add(new ExceptionHandlingAttribute(_kernel.Resolve<ILogger>()));
+				httpConfiguration.MessageHandlers.Add(new CachingHandler());
+				httpConfiguration.Formatters.Remove(httpConfiguration.Formatters.XmlFormatter);
 
-                ConfigureServices(httpConfiguration);
-
-                builder.UseWebApi(httpConfiguration);
-
-	            if (configuration != null)
-		            configuration(builder, httpConfiguration);
+				ConfigureJson(httpConfiguration);
+				ConfigureServices(httpConfiguration);
 
 				MapRoutes(httpConfiguration);
+
+				builder.UseWebApi(httpConfiguration);
             });
         }
 
@@ -61,6 +63,11 @@ namespace Vertica.Integration.WebApi.Infrastructure
             configuration.Services.Replace(typeof (IAssembliesResolver), resolver);
             configuration.Services.Replace(typeof (IHttpControllerTypeResolver), resolver);
             configuration.Services.Replace(typeof (IHttpControllerActivator), resolver);
+
+			// TODO
+			// https://damienbod.wordpress.com/2014/02/12/exploring-web-api-exception-handling/
+			//config.Services.Add(typeof(IExceptionLogger), new SlabLogExceptionLogger());
+			//configuration.Services.Replace(typeof(IExceptionHandler), new GlobalExceptionHandler());
         }
 
         private ICollection<Type> GetControllerTypes()
@@ -104,6 +111,24 @@ namespace Vertica.Integration.WebApi.Infrastructure
 	            _httpServer.Dispose();
             }
         }
+
+		private class OwinConfiguration : IOwinConfiguration
+		{
+			internal OwinConfiguration(IAppBuilder app, HttpConfiguration httpConfiguration, IKernel kernel)
+			{
+				if (app == null) throw new ArgumentNullException("app");
+				if (httpConfiguration == null) throw new ArgumentNullException("httpConfiguration");
+				if (kernel == null) throw new ArgumentNullException("kernel");
+
+				App = app;
+				Http = httpConfiguration;
+				Kernel = kernel;
+			}
+
+			public IAppBuilder App { get; private set; }
+			public HttpConfiguration Http { get; private set; }
+			public IKernel Kernel { get; private set; }
+		}
 
         private class CustomResolver : IAssembliesResolver, IHttpControllerTypeResolver, IHttpControllerActivator
         {
