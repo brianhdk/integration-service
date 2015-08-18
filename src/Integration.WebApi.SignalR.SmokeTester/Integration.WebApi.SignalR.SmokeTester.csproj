@@ -112,7 +112,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Default.html" />
+    <Content Include="HubTester.html" />
     <Content Include="Assets\Scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="Assets\Scripts\jquery-1.6.4.js" />
     <Content Include="Assets\Scripts\jquery-1.6.4.min.js" />
