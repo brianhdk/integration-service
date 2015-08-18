@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Web.Http;
 using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Tracing;
 using Owin;
 
@@ -34,6 +35,8 @@ namespace Vertica.Integration.WebApi.SignalR
 						owin.App.MapSignalR(hubConfiguration);
 
 						IDependencyResolver resolver = hubConfiguration.Resolver;
+
+						resolver.Register(typeof(IAssemblyLocator), () => owin.Kernel.Resolve<IAssemblyLocator>());
 
 						ITraceManager traceManager = resolver.Resolve<ITraceManager>();
 						traceManager.Switch.Level = SourceLevels.Warning;

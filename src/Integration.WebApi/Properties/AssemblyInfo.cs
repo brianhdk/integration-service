@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Vertica.Integration.WebApi")]
 [assembly: AssemblyDescription("Extends Integration Service with the ability to simple host WebApi controllers.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Vertia A/S")]
+[assembly: AssemblyCompany("Vertica A/S")]
 [assembly: AssemblyProduct("")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
@@ -31,4 +31,4 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.5.*")]
+[assembly: AssemblyVersion("1.6.*")]

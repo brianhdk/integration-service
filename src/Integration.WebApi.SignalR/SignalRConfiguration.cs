@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Castle.Windsor;
-using Microsoft.AspNet.SignalR.Hubs;
+using Vertica.Integration.WebApi.SignalR.Infrastructure.Castle.Windsor;
 
 namespace Vertica.Integration.WebApi.SignalR
 {
     public class SignalRConfiguration : IInitializable<IWindsorContainer>
     {
-        private readonly List<Assembly> _scan;
+        private readonly List<Assembly> _assemblies;
 		//private readonly List<Type> _pipelineModules;
 
 	    internal SignalRConfiguration(ApplicationConfiguration application)
@@ -18,7 +18,7 @@ namespace Vertica.Integration.WebApi.SignalR
 			Application = application
 				.Extensibility(extensibility => extensibility.Register(this));
 
-            _scan = new List<Assembly>();
+            _assemblies = new List<Assembly>();
 			//_pipelineModules = new List<Type>();
         }
 
@@ -26,21 +26,14 @@ namespace Vertica.Integration.WebApi.SignalR
 
 		public SignalRConfiguration AddFromAssemblyOfThis<T>()
         {
-            _scan.Add(typeof (T).Assembly);
+            _assemblies.Add(typeof (T).Assembly);
 
             return this;
         }
 
-		//public SignalRConfiguration AddPipelineModule<T>(T module) where T : HubPipelineModule
-		//{
-		//	_pipelineModules.Add(typeof (T));
-
-		//	return this;
-		//}
-
 	    void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
 	    {
-			//container.Install(new WebApiInstaller(_scan.ToArray(), _add.ToArray(), _remove.ToArray(), _httpServerConfiguration));
+			container.Install(new SignalRInstaller(_assemblies.ToArray()));
 	    }
     }
 }

@@ -3,10 +3,12 @@ using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
 using Owin;
 using Vertica.Integration.Experiments;
+using Vertica.Integration.Experiments.SignalR;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Model;
 using Vertica.Integration.Portal;
 using Vertica.Integration.WebApi;
+using Vertica.Integration.WebApi.SignalR;
 
 namespace Vertica.Integration.Console
 {
@@ -27,7 +29,7 @@ namespace Vertica.Integration.Console
 						});
 					}))
 					.WithPortal()
-					//.WithSignalR(signalR => signalR.AddFromAssemblyOfThis<Program>())
+					.WithSignalR(signalR => signalR.AddFromAssemblyOfThis<ChatHub>())
 				)
                 //.UseIIS()
 				//.Fast()
