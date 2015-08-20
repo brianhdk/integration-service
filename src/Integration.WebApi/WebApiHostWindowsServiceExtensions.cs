@@ -11,7 +11,7 @@ namespace Vertica.Integration.WebApi
 		{
 			if (migration == null) throw new ArgumentNullException("migration");
 
-			url = WebApiHost.EnsureUrl(url);
+			url = WebApiHost.EnsureUrl(url, migration.Resolve<IRuntimeSettings>());
 
 			migration.InstallAsWindowsService(
 				WebApiHost.Command,

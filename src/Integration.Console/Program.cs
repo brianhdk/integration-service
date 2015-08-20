@@ -3,7 +3,9 @@ using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
 using Owin;
 using Vertica.Integration.Experiments;
+using Vertica.Integration.Experiments.Logging;
 using Vertica.Integration.Experiments.SignalR;
+using Vertica.Integration.Experiments.WebApi;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Model;
 using Vertica.Integration.Portal;
@@ -19,13 +21,15 @@ namespace Vertica.Integration.Console
 			using (IApplicationContext context = ApplicationContext.Create(application => application
 				//.Database(database => database.Change(db => db.ConnectionString = ConnectionString.FromName("IntegrationDb.Alternate")))
 				.Database(database => database.AddConnection(new CustomDb(ConnectionString.FromText("..."))))
+				.Logging(logging => logging.Use<ConsoleLogger>())
 				.UseWebApi(webApi => webApi
+					.AddFromAssemblyOfThis<TestController>()
 					.HttpServer(httpServer => httpServer.Configure(configurer =>
 					{
 						configurer.App.UseFileServer(new FileServerOptions
 						{
 							RequestPath = PathString.Empty,
-							FileSystem = new PhysicalFileSystem(@"..\..\..\Integration.WebApi.SignalR.SmokeTester")
+							FileSystem = new PhysicalFileSystem(@"..\..\..\Integration.Experiments\SignalR\Html")
 						});
 					}))
 					.WithPortal()

@@ -87,15 +87,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Infrastructure\GlobalExceptionHandler.cs" />
+    <Compile Include="Infrastructure\ExceptionLogger.cs" />
     <Compile Include="Infrastructure\HttpServerConfiguration.cs" />
     <Compile Include="Infrastructure\Castle.Windsor\WebApiInstaller.cs" />
     <Compile Include="Infrastructure\IOwinConfiguration.cs" />
     <Compile Include="WebApiExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebApiHost.cs" />
-    <Compile Include="Infrastructure\CachingHandler.cs" />
-    <Compile Include="Infrastructure\ExceptionHandlingAttribute.cs" />
+    <Compile Include="Infrastructure\NoCachingHandler.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Infrastructure\HttpServer.cs" />
     <Compile Include="Infrastructure\IHttpServerFactory.cs" />

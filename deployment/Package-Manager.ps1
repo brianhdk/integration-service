@@ -19,8 +19,8 @@ $settings = @{
         "nuget" = Resolve-Path $script_directory\..\.nuget\NuGet.exe
     }
 	"packages" = @{
-		#"destination" = "\\nuget.vertica.dk\nuget.vertica.dk\root\Packages"
-		"destination" = "D:\Dropbox\Development\NuGet.Packages"
+		"destination" = "\\nuget.vertica.dk\nuget.vertica.dk\root\Packages"
+		#"destination" = "D:\Dropbox\Development\NuGet.Packages"
 	}
 }
 

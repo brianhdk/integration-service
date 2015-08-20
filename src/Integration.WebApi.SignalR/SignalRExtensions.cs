@@ -5,6 +5,8 @@ using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Tracing;
 using Owin;
+using Vertica.Integration.Infrastructure.Logging;
+using Vertica.Integration.WebApi.SignalR.Infrastructure;
 
 namespace Vertica.Integration.WebApi.SignalR
 {
@@ -41,11 +43,8 @@ namespace Vertica.Integration.WebApi.SignalR
 						ITraceManager traceManager = resolver.Resolve<ITraceManager>();
 						traceManager.Switch.Level = SourceLevels.Warning;
 
-						//IHubPipeline hubPipeline = resolver.Resolve<IHubPipeline>();
-						//hubPipeline.AddModule(new MyErrorModule());
-
-						//GlobalHost.TraceManager.Switch.Level = SourceLevels.Warning;
-						//GlobalHost.HubPipeline.AddModule(new MyErrorModule());
+						IHubPipeline hubPipeline = resolver.Resolve<IHubPipeline>();
+						hubPipeline.AddModule(new ErrorLoggingModule(owin.Kernel.Resolve<ILogger>()));
 					}));
 
 					return configuration;

@@ -101,7 +101,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Rebus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Rebus.0.92.3\lib\NET45\Rebus.dll</HintPath>
+      <HintPath>..\..\packages\Rebus.0.92.4\lib\NET45\Rebus.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Rebus.AzureServiceBus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -113,9 +113,18 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -134,6 +143,7 @@
     <Compile Include="ConfigurationExtensions.cs" />
     <Compile Include="CustomDb.cs" />
     <Compile Include="CustomDbTask.cs" />
+    <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Migrations\IntegrationDb\M1438274532_InstallTaskAsWindowsService.cs" />
     <Compile Include="Migrations\IntegrationDb\M1438174532_Void.cs" />
     <Compile Include="Migrations\IntegrationDb\M1436190505_SetupMonitorConfiguration_MonitorFoldersStep_Ultimate.cs" />
@@ -166,11 +176,14 @@
     <Compile Include="EventLoggerTesterTask.cs" />
     <Compile Include="TestIISTask.cs" />
     <Compile Include="TextFileLoggerTesterTask.cs" />
+    <Compile Include="WebApi\TestController.cs" />
     <Compile Include="XssTestingStep.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="SignalR\Html\jquery.signalR-2.2.0.js" />
     <None Include="app.config" />
     <None Include="packages.config" />
+    <Content Include="SignalR\Html\jquery-1.6.4.js" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Integration.IIS\Integration.IIS.csproj">
@@ -205,6 +218,10 @@
       <Project>{460f774f-2c89-47f4-84bd-b97653060e68}</Project>
       <Name>Integration</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="SignalR\Html\Default.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

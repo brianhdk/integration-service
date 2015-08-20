@@ -43,8 +43,7 @@ namespace Vertica.Integration.WebApi.Infrastructure
 				if (configuration != null)
 					configuration(new OwinConfiguration(builder, httpConfiguration, kernel));
 
-				httpConfiguration.Filters.Add(new ExceptionHandlingAttribute(_kernel.Resolve<ILogger>()));
-				httpConfiguration.MessageHandlers.Add(new CachingHandler());
+				httpConfiguration.MessageHandlers.Add(new NoCachingHandler());
 				httpConfiguration.Formatters.Remove(httpConfiguration.Formatters.XmlFormatter);
 
 				ConfigureJson(httpConfiguration);
@@ -64,10 +63,7 @@ namespace Vertica.Integration.WebApi.Infrastructure
             configuration.Services.Replace(typeof (IHttpControllerTypeResolver), resolver);
             configuration.Services.Replace(typeof (IHttpControllerActivator), resolver);
 
-			// TODO
-			// https://damienbod.wordpress.com/2014/02/12/exploring-web-api-exception-handling/
-			//config.Services.Add(typeof(IExceptionLogger), new SlabLogExceptionLogger());
-			//configuration.Services.Replace(typeof(IExceptionHandler), new GlobalExceptionHandler());
+			configuration.Services.Add(typeof(IExceptionLogger), new ExceptionLogger(_kernel.Resolve<ILogger>()));
         }
 
         private ICollection<Type> GetControllerTypes()

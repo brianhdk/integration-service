@@ -10,14 +10,13 @@ using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Hosting;
 using Vertica.Integration.Model.Hosting.Handlers;
-using Action = Vertica.Integration.Model.Hosting.Handlers.Action;
 using Arguments = Vertica.Integration.Model.Arguments;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
 	public abstract class IntegrationMigration : Migration
 	{
-		protected T Resolve<T>()
+		public T Resolve<T>()
 		{
 			return Kernel.Resolve<T>();
 		}

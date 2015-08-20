@@ -21,12 +21,14 @@ namespace Vertica.Integration.WebApi
 
 	    private readonly IWindowsServiceHandler _windowsService;
 	    private readonly IHttpServerFactory _factory;
+	    private readonly IRuntimeSettings _settings;
 	    private readonly TextWriter _outputter;
 
-	    public WebApiHost(IWindowsServiceHandler windowsService, IHttpServerFactory factory, TextWriter outputter)
+	    public WebApiHost(IWindowsServiceHandler windowsService, IHttpServerFactory factory, IRuntimeSettings settings, TextWriter outputter)
 	    {
 		    _windowsService = windowsService;
 		    _factory = factory;
+		    _settings = settings;
 		    _outputter = outputter;
 	    }
 
@@ -82,10 +84,10 @@ namespace Vertica.Integration.WebApi
 		    }
 	    }
 
-	    internal static string EnsureUrl(string url)
+	    internal static string EnsureUrl(string url, IRuntimeSettings settings)
 	    {
 			if (String.IsNullOrWhiteSpace(url))
-				url = GenerateUrl();
+				url = GetOrGenerateUrl(settings);
 
 		    return url;
 	    }
@@ -96,14 +98,14 @@ namespace Vertica.Integration.WebApi
 			return new KeyValuePair<string, string>(Url, url);
 		}
 
-	    private static string ParseUrl(HostArguments args)
+	    private string ParseUrl(HostArguments args)
 		{
 			if (args == null) throw new ArgumentNullException("args");
 
 			string url;
 			args.Args.TryGetValue(Url, out url);
 
-			return EnsureUrl(url);
+			return EnsureUrl(url, _settings);
 		}
 
 	    private static void AssertUrl(string url)
@@ -118,14 +120,19 @@ namespace Vertica.Integration.WebApi
 			throw new InvalidOperationException(String.Format("'{0}' is not a valid absolute url.", url));
 		}
 
-	    private static string GenerateUrl()
-		{
-			var listener = new TcpListener(IPAddress.Loopback, 0);
-			listener.Start();
+	    private static string GetOrGenerateUrl(IRuntimeSettings settings)
+	    {
+			string url = settings["WebApiHost.DefaultUrl"];
 
-			string url = String.Format("http://{0}", listener.LocalEndpoint);
+		    if (String.IsNullOrWhiteSpace(url))
+		    {
+				var listener = new TcpListener(IPAddress.Loopback, 0);
+				listener.Start();
 
-			listener.Stop();
+				url = String.Format("http://{0}", listener.LocalEndpoint);
+
+				listener.Stop();
+		    }
 
 			return url;
 		}
