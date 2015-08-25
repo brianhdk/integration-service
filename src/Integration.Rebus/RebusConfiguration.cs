@@ -4,6 +4,7 @@ using Castle.Windsor;
 using Rebus.Bus;
 using Rebus.CastleWindsor;
 using Rebus.Config;
+using Rebus.Logging;
 
 namespace Vertica.Integration.Rebus
 {
@@ -46,7 +47,7 @@ namespace Vertica.Integration.Rebus
 				    {
 					    RebusConfigurer rebus =
 						    Configure.With(new CastleWindsorContainerAdapter(container))
-							    .Logging(logging => logging.ColoredConsole());
+							    .Logging(logging => logging.ColoredConsole(LogLevel.Warn));
 
 						// TODO: Look at this, whether to support logging to our own logging infrastructure (which we don't have)
 
