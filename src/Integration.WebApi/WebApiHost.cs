@@ -61,12 +61,7 @@ namespace Vertica.Integration.WebApi
 					if (Environment.UserInteractive && !args.CommandArgs.Contains("noBrowser"))
 						Process.Start(url);
 
-					do
-					{
-						_outputter.WriteLine(@"Press ESCAPE to stop HttpServer...");
-						_outputter.WriteLine();
-
-					} while (WaitingForEscape());
+					_outputter.WaitUntilEscapeKeyIsHit(@"Press ESCAPE to stop HttpServer...");
 				}
 	        }
         }
@@ -136,14 +131,5 @@ namespace Vertica.Integration.WebApi
 
 			return url;
 		}
-
-	    private static bool WaitingForEscape()
-        {
-			// We can't do anything but to return true.
-	        if (!Environment.UserInteractive)
-		        return true;
-
-            return Console.ReadKey(intercept: true /* don't display */).Key != ConsoleKey.Escape;
-        }
     }
 }

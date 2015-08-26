@@ -1,0 +1,181 @@
+﻿using System;
+using System.IO;
+using Microsoft.ServiceBus;
+using Microsoft.ServiceBus.Messaging;
+using Microsoft.WindowsAzure.Storage.Blob;
+using Vertica.Integration.Azure;
+using Vertica.Integration.Azure.Infrastructure.BlobStorage;
+using Vertica.Integration.Azure.Infrastructure.ServiceBus;
+using Vertica.Integration.Infrastructure;
+using Vertica.Integration.Infrastructure.Extensions;
+using Vertica.Integration.Model;
+using Vertica.Integration.Model.Hosting;
+
+namespace Vertica.Integration.Experiments.Azure
+{
+	public static class AzureTester
+	{
+		public static ApplicationConfiguration TestAzure(this ApplicationConfiguration application)
+		{
+			if (application == null) throw new ArgumentNullException("application");
+
+			application
+				.Tasks(tasks => tasks
+					.Task<AzureServiceBusTesterTask>()
+					.Task<AzureBlobStorageTesterTask>())
+				.Hosts(hosts => hosts
+					.Host<AzureServiceBusHost>())
+				.UseAzure(azure => azure
+					.ServiceBus(serviceBus => serviceBus
+						.DefaultConnection(ConnectionString.FromName("AzureServiceBus")))
+					.BlobStorage(blobStorage => blobStorage
+						.ReplaceArchiver(ConnectionString.FromName("AzureBlobStorage"))
+						.DefaultConnection(ConnectionString.FromName("AzureBlobStorage"))));
+
+			return application;
+		}
+	}
+
+	public class AzureBlobStorageTesterTask : Task
+	{
+		private readonly IAzureBlobStorageClientFactory _blobStorageClientFactory;
+
+		public AzureBlobStorageTesterTask(IAzureBlobStorageClientFactory blobStorageClientFactory)
+		{
+			_blobStorageClientFactory = blobStorageClientFactory;
+		}
+
+		public override void StartTask(ITaskExecutionContext context)
+		{
+			CloudBlobClient client = _blobStorageClientFactory.Create();
+
+			CloudBlobContainer container = client.GetContainerReference("task");
+			container.CreateIfNotExists();
+
+			string id = Guid.NewGuid().ToString("N");
+
+			CloudBlockBlob newBlock = container.GetBlockBlobReference(id);
+			newBlock.UploadFromFile(@"D:\Dropbox\Photos\ipad_IMG_6578.jpg", FileMode.Open);
+
+			CloudBlockBlob savedBlock = container.GetBlockBlobReference(id);
+
+			using (var memoryStream = new MemoryStream())
+			{
+				savedBlock.DownloadToStream(memoryStream);
+
+				File.WriteAllBytes(@"c:\tmp\test.jpg", memoryStream.ToArray());
+			}
+		}
+
+		public override string Description
+		{
+			get { return "TBD"; }
+		}
+	}
+
+	public class AzureServiceBusTesterTask : Task
+	{
+		private readonly IAzureServiceBusClientFactory _serviceBusClientFactory;
+
+		public AzureServiceBusTesterTask(IAzureServiceBusClientFactory serviceBusClientFactory)
+		{
+			_serviceBusClientFactory = serviceBusClientFactory;
+		}
+
+		public override void StartTask(ITaskExecutionContext context)
+		{
+			NamespaceManager manager = _serviceBusClientFactory.CreateNamespaceManager();
+
+			if (!manager.QueueExists("TestQueue"))
+				manager.CreateQueue("TestQueue");
+
+			QueueClient client = _serviceBusClientFactory.CreateQueueClient("TestQueue");
+
+			client.Send(new BrokeredMessage("Hello") { ReplyTo = "MyQueue" });
+			client.Send(new BrokeredMessage(new[] { "Test", "Test2", "Test3"}) { ReplyTo = "MyQueue" });
+		}
+
+		public override string Description
+		{
+			get { return "TBD"; }
+		}
+	}
+
+	public class AzureServiceBusHost : IHost
+	{
+		private readonly IAzureServiceBusClientFactory _serviceBusClientFactory;
+		private readonly TextWriter _writer;
+
+		public AzureServiceBusHost(IAzureServiceBusClientFactory serviceBusClientFactory, TextWriter writer)
+		{
+			_serviceBusClientFactory = serviceBusClientFactory;
+			_writer = writer;
+		}
+
+		public bool CanHandle(HostArguments args)
+		{
+			return String.Equals(this.Name(), args.Command, StringComparison.OrdinalIgnoreCase);
+		}
+
+		public void Handle(HostArguments args)
+		{
+			bool running = true;
+
+			string queueName = "ChatQueue";
+
+			var manager = _serviceBusClientFactory.CreateNamespaceManager();
+
+			if (!manager.QueueExists(queueName))
+				manager.CreateQueue(queueName);
+
+
+			System.Threading.Tasks.Task sender = System.Threading.Tasks.Task.Run(() =>
+			{
+				QueueClient queueClient = _serviceBusClientFactory.CreateQueueClient(queueName);
+
+				_writer.RepeatUntilEscapeKeyIsHit(() =>
+				{
+					_writer.Write("Message: ");
+
+					queueClient.Send(new BrokeredMessage(Console.ReadLine()));
+				});
+
+				running = false;
+			});
+
+			var receiver = System.Threading.Tasks.Task.Run(() =>
+			{
+				QueueClient queueClient = _serviceBusClientFactory.CreateQueueClient(queueName);
+
+				while (running)
+				{
+					try
+					{
+						BrokeredMessage message = queueClient.Receive(TimeSpan.FromSeconds(2));
+
+						if (message != null)
+						{
+							using (message)
+							{
+								_writer.WriteLine(message.GetBody<string>());
+
+								message.Complete();
+							}							
+						}
+					}
+					catch (Exception ex)
+					{
+						_writer.WriteLine(ex.Message);
+					}
+				}
+			});
+
+			System.Threading.Tasks.Task.WaitAll(sender, receiver);
+		}
+
+		public string Description
+		{
+			get { return "TBD"; }
+		}
+	}
+}

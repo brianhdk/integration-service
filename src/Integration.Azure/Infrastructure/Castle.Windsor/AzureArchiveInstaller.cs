@@ -32,8 +32,8 @@ namespace Vertica.Integration.Azure.Infrastructure.Castle.Windsor
             container.Register(
                 Component
                     .For<IArchiveService>()
-                    .UsingFactoryMethod(kernel => new AzureBlobArchiveService(
-                        kernel.Resolve<IAzureBlobClientFactory<ArchiveConnection>>(), _containerName))
+                    .UsingFactoryMethod(kernel => new AzureBlobStorageArchiveService(
+                        kernel.Resolve<IAzureBlobStorageClientFactory<ArchiveConnection>>(), _containerName))
                     .IsDefault());
         }
     }

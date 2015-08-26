@@ -25,6 +25,15 @@ namespace Vertica.Integration.MongoDB
 
         public ApplicationConfiguration Application { get; private set; }
 
+		public MongoDbConfiguration DefaultConnection(ConnectionString connectionString)
+		{
+			if (connectionString == null) throw new ArgumentNullException("connectionString");
+
+			_defaultConnection = new MongoDbInstaller(new DefaultConnection(connectionString));
+
+			return this;
+		}
+
 		public MongoDbConfiguration DefaultConnection(Connection connection)
         {
 			if (connection == null) throw new ArgumentNullException("connection");

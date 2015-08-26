@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using Castle.MicroKernel.Registration;
-using Castle.Windsor;
-using Vertica.Integration.Azure.Infrastructure.Castle.Windsor;
-using Vertica.Integration.Infrastructure;
+using Vertica.Integration.Azure.Infrastructure.BlobStorage;
+using Vertica.Integration.Azure.Infrastructure.ServiceBus;
 
 namespace Vertica.Integration.Azure
 {
-    public class AzureConfiguration : IInitializable<IWindsorContainer>
+    public class AzureConfiguration
     {
-        private readonly List<IWindsorInstaller> _installers;
+	    private readonly AzureBlobStorageConfiguration _blobStorage;
+		private readonly AzureServiceBusConfiguration _serviceBus;
 
         internal AzureConfiguration(ApplicationConfiguration application)
         {
@@ -17,35 +15,28 @@ namespace Vertica.Integration.Azure
 
 			Application = application.Extensibility(extensibility => extensibility.Register(this));
 
-            _installers = new List<IWindsorInstaller>();
+	        _blobStorage = new AzureBlobStorageConfiguration(application);
+	        _serviceBus = new AzureServiceBusConfiguration(application);
         }
 
         public ApplicationConfiguration Application { get; private set; }
-
-        public AzureConfiguration ReplaceArchiveWithBlobStorage(ConnectionString connectionString, string containerName = "archives")
+		
+        public AzureConfiguration BlobStorage(Action<AzureBlobStorageConfiguration> blobStorage)
         {
-            if (connectionString == null) throw new ArgumentNullException("connectionString");
-            if (String.IsNullOrWhiteSpace(containerName)) throw new ArgumentException(@"Value cannot be null or empty.", "containerName");
+	        if (blobStorage == null) throw new ArgumentNullException("blobStorage");
 
-            _installers.Add(new AzureArchiveInstaller(connectionString, containerName));
-
-            return this;
-        }
-
-        public AzureConfiguration ReplaceFileSystemWithBlobStorage(ConnectionString connectionString, string containerName = "filesystem")
-        {
-            if (connectionString == null) throw new ArgumentNullException("connectionString");
-            if (String.IsNullOrWhiteSpace(containerName)) throw new ArgumentException(@"Value cannot be null or empty.", "containerName");
-
-            _installers.Add(new AzureFileSystemInstaller(connectionString, containerName));
+	        blobStorage(_blobStorage);
 
             return this;            
         }
 
-        void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
-        {
-            foreach (IWindsorInstaller installer in _installers)
-                container.Install(installer);
-        }
+		public AzureConfiguration ServiceBus(Action<AzureServiceBusConfiguration> serviceBus)
+		{
+			if (serviceBus == null) throw new ArgumentNullException("serviceBus");
+
+			serviceBus(_serviceBus);
+
+			return this;
+		}
     }
 }

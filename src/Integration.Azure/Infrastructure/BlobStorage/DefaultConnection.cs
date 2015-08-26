@@ -1,11 +1,11 @@
 ﻿using System;
-using MongoDB.Driver;
+using Microsoft.WindowsAzure.Storage.Blob;
 using Vertica.Integration.Infrastructure;
 
-namespace Vertica.Integration.MongoDB.Infrastructure
+namespace Vertica.Integration.Azure.Infrastructure.BlobStorage
 {
 	public sealed class DefaultConnection : Connection
-    {
+	{
 		private readonly Connection _connection;
 
 		internal DefaultConnection(ConnectionString connectionString)
@@ -14,30 +14,19 @@ namespace Vertica.Integration.MongoDB.Infrastructure
 		}
 
 		internal DefaultConnection(Connection connection)
-            : base(connection.ConnectionString)
+			: base(connection.ConnectionString)
 		{
 			if (connection == null) throw new ArgumentNullException("connection");
 
 			_connection = connection;
 		}
 
-		protected internal override MongoUrl MongoUrl
-		{
-			get
-			{
-				if (_connection != null)
-					return _connection.MongoUrl;
-
-				return base.MongoUrl;
-			}
-		}
-
-		protected internal override IMongoClient Create()
+		protected internal override CloudBlobClient Create()
 		{
 			if (_connection != null)
 				return _connection.Create();
 
 			return base.Create();
 		}
-    }
+	}
 }

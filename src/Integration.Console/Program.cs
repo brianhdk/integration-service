@@ -3,6 +3,7 @@ using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
 using Owin;
 using Vertica.Integration.Experiments;
+using Vertica.Integration.Experiments.Azure;
 using Vertica.Integration.Experiments.Logging;
 using Vertica.Integration.Experiments.SignalR;
 using Vertica.Integration.Experiments.WebApi;
@@ -20,27 +21,24 @@ namespace Vertica.Integration.Console
 		{
 			using (IApplicationContext context = ApplicationContext.Create(application => application
 				//.Database(database => database.Change(db => db.ConnectionString = ConnectionString.FromName("IntegrationDb.Alternate")))
-				.Database(database => database.AddConnection(new CustomDb(ConnectionString.FromText("..."))))
-				.Logging(logging => logging.Use<ConsoleLogger>())
-				.UseWebApi(webApi => webApi
-					.AddFromAssemblyOfThis<TestController>()
-					.HttpServer(httpServer => httpServer.Configure(configurer =>
-					{
-						configurer.App.UseFileServer(new FileServerOptions
-						{
-							RequestPath = PathString.Empty,
-							FileSystem = new PhysicalFileSystem(@"..\..\..\Integration.Experiments\SignalR\Html")
-						});
-					}))
-					.WithPortal()
-					.WithSignalR(signalR => signalR.AddFromAssemblyOfThis<ChatHub>())
-				)
+				//.Database(database => database.AddConnection(new CustomDb(ConnectionString.FromText("..."))))
+				//.Logging(logging => logging.Use<ConsoleLogger>())
+				//.UseWebApi(webApi => webApi
+				//	.AddFromAssemblyOfThis<TestController>()
+				//	.HttpServer(httpServer => httpServer.Configure(configurer =>
+				//	{
+				//		configurer.App.UseFileServer(new FileServerOptions
+				//		{
+				//			RequestPath = PathString.Empty,
+				//			FileSystem = new PhysicalFileSystem(@"..\..\..\Integration.Experiments\SignalR\Html")
+				//		});
+				//	}))
+				//	.WithPortal()
+				//	.WithSignalR(signalR => signalR.AddFromAssemblyOfThis<ChatHub>())
+				//)
                 //.UseIIS()
-				//.Fast()
-				//.Tasks(tasks => tasks
-				//	//.Task<Task1.SameNameTask>()
-				//	.Task<Task2.SameNameTask>())
-
+				.Fast()
+				//.TestAzure()
 				//.RegisterTasks()
 				//.RegisterMigrations()
                 //.TestEventLogger()
@@ -51,7 +49,7 @@ namespace Vertica.Integration.Console
 				//.TestMongoDbTask()
 				//.Hosts(hosts => hosts.Remove<WebApiHost>())
 				//.RegisterMigrations()
-				//.TestRebus()
+				.TestRebus(args)
 				//.TestRavenDb()
                 .Void()))
 			{

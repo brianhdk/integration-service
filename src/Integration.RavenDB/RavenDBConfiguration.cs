@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
+using Vertica.Integration.Infrastructure;
 using Vertica.Integration.RavenDB.Infrastructure;
 using Vertica.Integration.RavenDB.Infrastructure.Castle.Windsor;
 
@@ -23,7 +24,16 @@ namespace Vertica.Integration.RavenDB
 
         public ApplicationConfiguration Application { get; private set; }
 
-		public RavenDbConfiguration DefaultConnection(Connection connection)
+	    public RavenDbConfiguration DefaultConnection(ConnectionString connectionString)
+	    {
+		    if (connectionString == null) throw new ArgumentNullException("connectionString");
+
+		    _defaultConnection = new RavenDbInstaller(new DefaultConnection(connectionString));
+
+			return this;
+	    }
+
+	    public RavenDbConfiguration DefaultConnection(Connection connection)
         {
 			if (connection == null) throw new ArgumentNullException("connection");
 

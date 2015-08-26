@@ -1,8 +1,9 @@
 ﻿using System;
-using Raven.Client;
+using Microsoft.ServiceBus;
+using Microsoft.ServiceBus.Messaging;
 using Vertica.Integration.Infrastructure;
 
-namespace Vertica.Integration.RavenDB.Infrastructure
+namespace Vertica.Integration.Azure.Infrastructure.ServiceBus
 {
 	public sealed class DefaultConnection : Connection
 	{
@@ -21,24 +22,20 @@ namespace Vertica.Integration.RavenDB.Infrastructure
 			_connection = connection;
 		}
 
-		protected internal override void Initialize(IDocumentStore documentStore)
+		protected internal override NamespaceManager CreateNamespaceManager()
 		{
 			if (_connection != null)
-			{
-				_connection.Initialize(documentStore);
-			}
-			else
-			{
-				base.Initialize(documentStore);
-			}
+				return _connection.CreateNamespaceManager();
+
+			return base.CreateNamespaceManager();
 		}
 
-		protected internal override IDocumentStore Create()
+		protected internal override QueueClient CreateQueueClient(string queueName = null)
 		{
 			if (_connection != null)
-				return _connection.Create();
+				return _connection.CreateQueueClient(queueName);
 
-			return base.Create();
+			return base.CreateQueueClient(queueName);
 		}
 	}
 }

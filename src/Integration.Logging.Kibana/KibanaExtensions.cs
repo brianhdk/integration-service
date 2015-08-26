@@ -1,5 +1,5 @@
 ﻿using System;
-using Vertica.Integration.Azure.Infrastructure.Castle.Windsor;
+using Vertica.Integration.Azure;
 using Vertica.Integration.Logging.Kibana.Infrastructure;
 
 namespace Vertica.Integration.Logging.Kibana
@@ -15,8 +15,10 @@ namespace Vertica.Integration.Logging.Kibana
             if (kibana != null)
                 kibana(configuration);
 
-            builder.AddCustomInstaller(new AzureBlobStorageInstaller<KibanaConnection>(
-                new KibanaConnection(configuration.AzureBlobStorageConnectionString)));
+	        builder.UseAzure(azure => azure.BlobStorage(blobStorage =>
+	        {
+		        blobStorage.AddConnection(new KibanaConnection(configuration.AzureBlobStorageConnectionString));
+	        }));
 
             return builder;
         }

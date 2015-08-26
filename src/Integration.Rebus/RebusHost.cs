@@ -31,18 +31,13 @@ namespace Vertica.Integration.Rebus
         {
             if (args == null) throw new ArgumentNullException("args");
 
+			// Initialize Rebus
 			_bus();
 
 	        var windowsService = new WindowsService(this.Name(), Description).OnStart(() => new VoidDisposer());
 
 	        if (!_windowsService.Handle(args, windowsService))
-	        {
-		        do
-		        {
-			        _outputter.WriteLine(@"Press ESCAPE to stop Rebus...");
-			        _outputter.WriteLine();
-		        } while (WaitingForEscape());
-	        }
+				_outputter.WaitUntilEscapeKeyIsHit(@"Press ESCAPE to stop Rebus...");
         }
 
 		private class VoidDisposer : IDisposable
@@ -56,14 +51,5 @@ namespace Vertica.Integration.Rebus
         {
             get { return "Hosts Rebus"; }
         }
-
-		private static bool WaitingForEscape()
-		{
-			// We can't do anything but to return true.
-			if (!Environment.UserInteractive)
-				return true;
-
-			return Console.ReadKey(intercept: true /* don't display */).Key != ConsoleKey.Escape;
-		}
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 using Vertica.Integration.Infrastructure;
 
 namespace Vertica.Integration.Azure.Infrastructure.BlobStorage
@@ -12,6 +14,14 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage
 			ConnectionString = connectionString;
 		}
 
-        internal ConnectionString ConnectionString { get; private set; }
+        protected internal ConnectionString ConnectionString { get; private set; }
+
+		protected internal virtual CloudBlobClient Create()
+		{
+			CloudStorageAccount account = CloudStorageAccount.Parse(ConnectionString);
+			CloudBlobClient client = account.CreateCloudBlobClient();
+
+			return client;
+		}
 	}
 }

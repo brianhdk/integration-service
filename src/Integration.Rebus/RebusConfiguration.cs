@@ -14,10 +14,12 @@ namespace Vertica.Integration.Rebus
 	    {
 		    if (application == null) throw new ArgumentNullException("application");
 
-		    application.Extensibility(extensibility => extensibility.Register(this));
+		    Application = application.Extensibility(extensibility => extensibility.Register(this));
 
 		    HandlersConfiguration = new RebusHandlersConfiguration(application);
 	    }
+
+		public ApplicationConfiguration Application { get; private set; }
 
 		private RebusHandlersConfiguration HandlersConfiguration { get; set; }
 

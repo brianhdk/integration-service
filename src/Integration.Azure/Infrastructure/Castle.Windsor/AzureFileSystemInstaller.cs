@@ -33,7 +33,7 @@ namespace Vertica.Integration.Azure.Infrastructure.Castle.Windsor
                 Component
                     .For<IFileSystemService>()
                     .UsingFactoryMethod(kernel => new AzureFileSystemService(
-                        kernel.Resolve<IAzureBlobClientFactory<FileSystemConnection>>(), _containerName))
+                        kernel.Resolve<IAzureBlobStorageClientFactory<FileSystemConnection>>(), _containerName))
                     .IsDefault());
         }
     }

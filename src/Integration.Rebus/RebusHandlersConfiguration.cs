@@ -17,11 +17,13 @@ namespace Vertica.Integration.Rebus
 		{
 			if (application == null) throw new ArgumentNullException("application");
 
-			application.Extensibility(extensibility => extensibility.Register(this));
+			Application = application.Extensibility(extensibility => extensibility.Register(this));
 
 			_scan = new List<Assembly>();
             _handlers = new List<Type>();
 		}
+
+		public ApplicationConfiguration Application { get; private set; }
 
 		public RebusHandlersConfiguration AddFromAssemblyOfThis<T>()
 		{

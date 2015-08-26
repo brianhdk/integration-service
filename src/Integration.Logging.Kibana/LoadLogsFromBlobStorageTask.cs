@@ -9,9 +9,9 @@ namespace Vertica.Integration.Logging.Kibana
 {
     public class LoadLogsFromBlobStorageTask : Task
     {
-        private readonly IAzureBlobClientFactory<KibanaConnection> _factory;
+        private readonly IAzureBlobStorageClientFactory<KibanaConnection> _factory;
 
-        public LoadLogsFromBlobStorageTask(IAzureBlobClientFactory<KibanaConnection> factory)
+        public LoadLogsFromBlobStorageTask(IAzureBlobStorageClientFactory<KibanaConnection> factory)
         {
             _factory = factory;
         }

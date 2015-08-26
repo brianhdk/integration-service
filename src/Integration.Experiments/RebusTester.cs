@@ -1,10 +1,12 @@
 ﻿using System;
 using System.IO;
-using Microsoft.Azure;
+using System.Linq;
 using Rebus.Bus;
 using Rebus.Config;
 using Rebus.Handlers;
 using Rebus.Routing.TypeBased;
+using Vertica.Integration.Infrastructure;
+using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Model;
 using Vertica.Integration.Rebus;
 using Task = System.Threading.Tasks.Task;
@@ -15,29 +17,26 @@ namespace Vertica.Integration.Experiments
 	{
 		public static ApplicationConfiguration TestRebus(this ApplicationConfiguration application, string[] args)
 		{
-			string connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
+			string connectionString = ConnectionString.FromName("AzureServiceBus");
 
 			return application
 				.UseRebus(rebus => rebus
 					.Bus(bus => bus
-						.Routing(routing => routing.TypeBased()
-							.Map<string>("InputQueue_RebusHost")
-							.Map<DateTimeOffset>("InputQueue_RebusTask")
-						)
+						.Routing(routing => routing.TypeBased().Map<string>("InputQueue_RebusHost"))
 						.Transport(transport => transport.UseAzureServiceBus(connectionString, "InputQueue_" + args[0])))
 					.Handlers(handlers => handlers
-						.AddFromAssemblyOfThis<ChatHandler>()))
+						.AddFromAssemblyOfThis<StringHandler>()))
 				.Tasks(tasks => tasks
 					.Task<RebusTask>());
 		}
 	}
 
-	public class ChatHandler : IHandleMessages<string>
+	public class StringHandler : IHandleMessages<string>
 	{
 		private readonly TextWriter _outputter;
 		private readonly IBus _bus;
 
-		public ChatHandler(TextWriter outputter, IBus bus)
+		public StringHandler(TextWriter outputter, IBus bus)
 		{
 			_outputter = outputter;
 			_bus = bus;
@@ -46,15 +45,15 @@ namespace Vertica.Integration.Experiments
 		public Task Handle(string message)
 		{
 			return _outputter.WriteLineAsync(message)
-				.ContinueWith(t => _bus.Reply(new[] { "a", "b", "c"}));
+				.ContinueWith(t => _bus.Reply(message.ToCharArray().Select(x => x.ToString()).ToArray()));
 		}
 	}
 
-	public class DateHandler : IHandleMessages<string[]>
+	public class StringArrayHandler : IHandleMessages<string[]>
 	{
 		private readonly TextWriter _outputter;
 
-		public DateHandler(TextWriter outputter)
+		public StringArrayHandler(TextWriter outputter)
 		{
 			_outputter = outputter;
 		}
@@ -68,27 +67,20 @@ namespace Vertica.Integration.Experiments
 	public class RebusTask : Model.Task
 	{
 		private readonly Func<IBus> _bus;
+		private readonly TextWriter _writer;
 
-		public RebusTask(Func<IBus> bus)
+		public RebusTask(Func<IBus> bus, TextWriter writer)
 		{
 			_bus = bus;
+			_writer = writer;
 		}
 
 		public override void StartTask(ITaskExecutionContext context)
 		{
-			do
+			_writer.RepeatUntilEscapeKeyIsHit(() =>
 			{
 				_bus().Send(Console.ReadLine()).Wait();
-
-				Console.WriteLine(@"Press ESCAPE to stop Rebus...");
-				Console.WriteLine();
-
-			} while (WaitingForEscape());
-		}
-
-		private static bool WaitingForEscape()
-		{
-			return Console.ReadKey(intercept: true /* don't display */).Key != ConsoleKey.Escape;
+			});
 		}
 
 		public override string Description

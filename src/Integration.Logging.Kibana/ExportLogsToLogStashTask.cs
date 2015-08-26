@@ -10,9 +10,9 @@ namespace Vertica.Integration.Logging.Kibana
 {
     public class ExportLogsToLogStashTask : Task<ExportLogsToLogStashWorkItem>
     {
-        private readonly IAzureBlobClientFactory<KibanaConnection> _factory;
+        private readonly IAzureBlobStorageClientFactory<KibanaConnection> _factory;
 
-        public ExportLogsToLogStashTask(IAzureBlobClientFactory<KibanaConnection> factory, IEnumerable<IStep<ExportLogsToLogStashWorkItem>> steps)
+        public ExportLogsToLogStashTask(IAzureBlobStorageClientFactory<KibanaConnection> factory, IEnumerable<IStep<ExportLogsToLogStashWorkItem>> steps)
             : base(steps)
         {
             _factory = factory;
