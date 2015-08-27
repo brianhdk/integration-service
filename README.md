@@ -21,7 +21,7 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
  - [Sending out e-mails](#sending-out-e-mails)
  - [Setting up Portal](#setting-up-portal)
  - [Integrating Elmah](#integrating-elmah)
- - [Integrating Azure - BlobStorage](#integrating-azure---blobstorage)
+ - [Integrating Azure Blob Storage](#integrating-azure-blob-storage)
  - [Integrating Payment Service](#integrating-payment-service)
  - [Integrating RavenDB](#integrating-ravendb)
  - [Integrating MongoDB](#integrating-mongodb)
@@ -1409,10 +1409,158 @@ namespace ConsoleApplication16
 
 [Back to Table of Contents](#table-of-contents)
 
-## Integrating Azure - BlobStorage
+## Integrating Azure Blob Storage
 
-TBD. 
+You can integrate to Azure Blob Storage by installing the package below:
+
+```
+Install-Package Vertica.Integration.Azure
+```
+
+This allows you to create one or more connections to a Storage account on Azure.
+
+The example below shows you how to configure two connections and how to use them from a Task:
+
+```c#
+using Microsoft.WindowsAzure.Storage.Blob;
+using Vertica.Integration.Azure;
+using Vertica.Integration.Azure.Infrastructure.BlobStorage;
+using Vertica.Integration.Infrastructure;
+using Vertica.Integration.Model;
+
+namespace ConsoleApplication16
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+			IntegrationStartup.Run(args, application => application
+				.UseAzure(azure => azure
+					.BlobStorage(blobStorage => blobStorage
+						.DefaultConnection(ConnectionString.FromText("DefaultEndpointsProtocol=https;AccountName=integrationservice;AccountKey=xyz"))
+						.AddConnection(new SecondaryAccount()))));
+        }
+    }
+
+	public class SecondaryAccount : Connection
+	{
+		public SecondaryAccount() 
+			: base(ConnectionString.FromName("AnotherBlobStorageAccount"))
+		{
+		}
+	}
+
+	public class BlobStorageDemoTask : Task
+	{
+		private readonly IAzureBlobStorageClientFactory _defaultClientFactory;
+		private readonly IAzureBlobStorageClientFactory<SecondaryAccount> _secondaryClientFactory;
+
+		public BlobStorageDemoTask(IAzureBlobStorageClientFactory defaultClientFactory, IAzureBlobStorageClientFactory<SecondaryAccount> secondaryClientFactory)
+		{
+			_defaultClientFactory = defaultClientFactory;
+			_secondaryClientFactory = secondaryClientFactory;
+		}
+
+		public override void StartTask(ITaskExecutionContext context)
+		{
+			CloudBlobClient defaultClient = _defaultClientFactory.Create();
+			CloudBlobContainer defaultContainer = defaultClient.GetContainerReference("container");
+			CloudBlockBlob defaultFileBlob = defaultContainer.GetBlockBlobReference("file.jpg");
+
+			CloudBlobClient secondaryClient = _secondaryClientFactory.Create();
+			CloudBlobContainer secondaryContainer = secondaryClient.GetContainerReference("container");
+			CloudBlockBlob secondaryFileBlob = secondaryContainer.GetBlockBlobReference("file.jpg");
+		}
+
+		public override string Description
+		{
+			get { return "TBD"; }
+		}
+	}
+}
+```
+
 [Back to Table of Contents](#table-of-contents)
+
+## Integrating Azure Service Bus Queue
+
+You can integrate to Azure Service Bus Queue by installing the package below:
+
+```
+Install-Package Vertica.Integration.Azure
+```
+
+This allows you to create one or more connections to a Service Bus account on Azure.
+
+The example below shows you how to configure two connections and how to use them from a Task:
+
+```c#
+using Microsoft.ServiceBus.Messaging;
+using Vertica.Integration.Azure;
+using Vertica.Integration.Azure.Infrastructure.ServiceBus;
+using Vertica.Integration.Infrastructure;
+using Vertica.Integration.Model;
+
+namespace ConsoleApplication16
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+			IntegrationStartup.Run(args, application => application
+				.UseAzure(azure => azure
+					.ServiceBus(serviceBus => serviceBus
+						.DefaultConnection(ConnectionString.FromText("Endpoint=sb://integration-service.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=xyz"))
+						.AddConnection(new SecondaryAccount()))));
+        }
+    }
+
+	public class SecondaryAccount : Connection
+	{
+		public SecondaryAccount() 
+			: base(ConnectionString.FromName("AnotherServiceBusAccount"))
+		{
+		}
+	}
+
+	public class BlobStorageDemoTask : Task
+	{
+		private readonly IAzureServiceBusClientFactory _defaultClientFactory;
+		private readonly IAzureServiceBusClientFactory<SecondaryAccount> _secondaryClientFactory;
+
+		public BlobStorageDemoTask(IAzureServiceBusClientFactory defaultClientFactory, IAzureServiceBusClientFactory<SecondaryAccount> secondaryClientFactory)
+		{
+			_defaultClientFactory = defaultClientFactory;
+			_secondaryClientFactory = secondaryClientFactory;
+		}
+
+		public override void StartTask(ITaskExecutionContext context)
+		{
+			QueueClient defaultQueueClient = _defaultClientFactory.CreateQueueClient("queueName");
+			defaultQueueClient.Send(new BrokeredMessage("Some message"));
+
+			QueueClient secondaryQueueClient = _secondaryClientFactory.CreateQueueClient("queueName");
+			BrokeredMessage message = secondaryQueueClient.Receive();
+
+			try
+			{
+				string body = message.GetBody<string>();
+				message.Complete();
+			}
+			catch
+			{
+				message.Abandon();
+				throw;
+			}
+		}
+
+		public override string Description
+		{
+			get { return "TBD"; }
+		}
+	}
+}
+```
 
 ## Integrating Payment Service
 
