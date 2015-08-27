@@ -96,6 +96,13 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
   </smtp>
   ```    
 
+  Vertica example:
+  ```xml
+  <smtp from="your-email@vertica.dk">
+        <network host="mail01.vertica.dk" />
+  </smtp>
+  ```    
+  
 4. Run **MigrateTask** to ensure an up-to-date-schema
  - From Visual Studio, open Project Properties of your Console Application project, navigate to the "Debug"-tab, and write "MigrateTask" (without quotes) in the multi-line textbox "Command line arguments".
  - Make sure your project is "Set as StartUp Project" and then Start it: CTRL+F5 or F5
@@ -1205,9 +1212,10 @@ namespace ConsoleApplication16
 ## Sending out e-mails
 
 
-Integration Service has a built-in service *IEmailService* for sending out e-mails in an easy way. The default implementation of *IEmailService* uses the SMTP configuration, so before you use it, [make sure SMTP is configured correct](#smtp).
+Integration Service has a built-in service *IEmailService* to send out e-mails. 
+The default implementation of *IEmailService* uses the SMTP configuration, so before you use it, [make sure SMTP is configured correct](#smtp).
 
-*IEmailService* has a single *Send(...)* method, which requires an instance of a class that inherits from the abstract class *EmailTemplate*. 
+*IEmailService* has a *Send(...)* method, which requires an instance of a class that inherits from the abstract class *EmailTemplate*. 
 
 You can easily implement your own classes inheriting from *EmailTemplate* but in most cases the built-in *TextBasedEmailTemplate* is sufficient. Below is an example of a Task that sends an e-mail using the *TextBasedEmailTemplate* class:
 
@@ -1292,7 +1300,8 @@ namespace ConsoleApplication16
 The example above shows how you can use the method *AddAttachment(...)* to include attachments. From there on, it's System.Net.Mail API that takes over handling these attachments.
 It also shows how you can attach something that is not just a simple existing file on the file system, but in this case a Stream from a HTTP Request containing an image.
 
-If you find your self in need of creating attachments directly from Azure BlobStorage, here's how you do that:
+### Attach a Blob from Azure Storage
+If you find your self in need of creating attachments directly from blobs in Azure Storage, here's how you do that:
 
 ```c#
 CloudBlobClient client = _blobStorageClientFactory.Create();
