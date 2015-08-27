@@ -9,12 +9,12 @@ using Castle.Windsor;
 
 namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 {
-    public class ConventionInstaller : IWindsorInstaller
+	public class ConventionInstaller : IWindsorInstaller
     {
         private readonly List<Assembly> _assemblies;
         private readonly List<Type> _ignoreTypes;
 
-        public ConventionInstaller()
+		internal ConventionInstaller()
         {
             _assemblies = new List<Assembly>();
             _ignoreTypes = new List<Type>();

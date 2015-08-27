@@ -167,10 +167,12 @@
     <Compile Include="Infrastructure\Factories\Castle.Windsor\CastleWindsorExtensions.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ContainerExtensions.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\HostsInstaller.cs" />
+    <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\Install.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\InstanceInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ConventionInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\HostFactoryInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\TaskInstaller.cs" />
+    <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ServiceInstaller.cs" />
     <Compile Include="Infrastructure\IO\FileSystemService.cs" />
     <Compile Include="Infrastructure\IO\IDirectory.cs" />
     <Compile Include="Infrastructure\IO\IFile.cs" />

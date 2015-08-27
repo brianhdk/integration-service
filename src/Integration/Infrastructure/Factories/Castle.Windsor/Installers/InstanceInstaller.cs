@@ -5,7 +5,7 @@ using Castle.Windsor;
 
 namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 {
-    public class InstanceInstaller<T> : IWindsorInstaller where T : class
+	internal class InstanceInstaller<T> : IWindsorInstaller where T : class
     {
         private readonly T _instance;
 

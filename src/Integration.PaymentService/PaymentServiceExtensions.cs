@@ -10,7 +10,7 @@ namespace Vertica.Integration.PaymentService
         {
             if (builder == null) throw new ArgumentNullException("builder");
 
-            builder.AddCustomInstaller(new ConventionInstaller()
+            builder.AddCustomInstaller(Install.ByConvention
                 .AddFromAssemblyOfThis<ITransactionStatusService>());
 
             return builder;

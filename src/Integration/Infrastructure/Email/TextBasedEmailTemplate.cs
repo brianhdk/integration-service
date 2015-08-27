@@ -10,6 +10,7 @@ namespace Vertica.Integration.Infrastructure.Email
         private readonly string _subject;
         private readonly StringBuilder _text;
         private readonly List<Attachment> _attachments;
+		private MailPriority? _priority;
 
         public TextBasedEmailTemplate(string subject, params object[] args)
         {
@@ -32,6 +33,13 @@ namespace Vertica.Integration.Infrastructure.Email
             return this;
         }
 
+	    public TextBasedEmailTemplate Priority(MailPriority priority)
+	    {
+		    _priority = priority;
+
+		    return this;
+	    }
+
         public TextBasedEmailTemplate AddAttachment(Attachment attachment)
         {
             if (attachment == null) throw new ArgumentNullException("attachment");
@@ -41,22 +49,27 @@ namespace Vertica.Integration.Infrastructure.Email
             return this;
         }
 
-        public override string Subject
+		protected internal override string Subject
         {
             get { return _subject; }
         }
 
-        public override bool IsHtml
+		protected internal override bool IsHtml
         {
             get { return false; }
         }
 
-        public override string GetBody()
+		protected internal override string GetBody()
         {
             return _text.ToString();
         }
 
-        public override IEnumerable<Attachment> Attachments
+		protected internal override MailPriority? MailPriority
+	    {
+		    get { return _priority; }
+	    }
+
+		protected internal override IEnumerable<Attachment> Attachments
         {
             get { return _attachments; }
         }

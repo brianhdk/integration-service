@@ -5,7 +5,7 @@ namespace Vertica.Integration.Infrastructure.Email
 {
 	public class EmailService : IEmailService
 	{
-		public void Send(EmailTemplate template, string[] recipients)
+		public void Send(EmailTemplate template, params string[] recipients)
 		{
 			if (template == null) throw new ArgumentNullException("template");
 		    if (recipients == null) throw new ArgumentNullException("recipients");

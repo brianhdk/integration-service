@@ -9,6 +9,9 @@ class Program
     {
 		IntegrationStartup.Run(args, application => application
             .UseAzure(azure => azure
-                .ReplaceArchiveWithBlobStorage(ConnectionString.FromName("AzureBlobStorage.Archive"))));
+                .BlobStorage(blobStorage => blobStorage
+					.DefaultConnection(ConnectionString.FromText("...")))
+				.ServiceBus(serviceBus => serviceBus
+					.DefaultConnection(ConnectionString.FromText("...")))));
     }
 }

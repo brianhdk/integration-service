@@ -55,7 +55,7 @@ namespace Vertica.Integration.MongoDB
 
         void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
         {
-	        container.Install(new ConventionInstaller().AddFromAssemblyOfThis<MongoDbConfiguration>());
+	        container.Install(Install.ByConvention.AddFromAssemblyOfThis<MongoDbConfiguration>());
 
 	        if (_defaultConnection != null)
 		        container.Install(_defaultConnection);

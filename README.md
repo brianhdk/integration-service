@@ -18,6 +18,7 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
  - [CSV](#csv)
  - [FTP](#ftp)
  - [HTTP](#http)
+ - [Sending out e-mails](#sending-out-e-mails)
  - [Setting up Portal](#setting-up-portal)
  - [Integrating Elmah](#integrating-elmah)
  - [Integrating Azure - BlobStorage](#integrating-azure---blobstorage)
@@ -1201,6 +1202,117 @@ namespace ConsoleApplication16
 
 [Back to Table of Contents](#table-of-contents)
 
+## Sending out e-mails
+
+
+Integration Service has a built-in service *IEmailService* for sending out e-mails in an easy way. The default implementation of *IEmailService* uses the SMTP configuration, so before you use it, [make sure SMTP is configured correct](#smtp).
+
+*IEmailService* has a single *Send(...)* method, which requires an instance of a class that inherits from the abstract class *EmailTemplate*. 
+
+You can easily implement your own classes inheriting from *EmailTemplate* but in most cases the built-in *TextBasedEmailTemplate* is sufficient. Below is an example of a Task that sends an e-mail using the *TextBasedEmailTemplate* class:
+
+```c#
+using Vertica.Integration.Infrastructure.Email;
+using Vertica.Integration.Model;
+
+namespace ConsoleApplication16
+{
+	public class EmailDemoTask : Task
+	{
+		private readonly IEmailService _emailService;
+
+		public EmailDemoTask(IEmailService emailService)
+		{
+			_emailService = emailService;
+		}
+
+		public override void StartTask(ITaskExecutionContext context)
+		{
+			var email = new TextBasedEmailTemplate("Some nice subject")
+				.WriteLine("This is the first line in this text-based e-mail.")
+				.WriteLine("This is the second line in the e-mail. Notice the fluent-interface.");
+
+			_emailService.Send(email, "bhk@vertica.dk");
+		}
+
+		public override string Description
+		{
+			get { return "TBD"; }
+		}
+	}
+}
+```
+
+If you need to attach files to the e-mail, this can also easily be done, see this example below:
+
+```c#
+using System;
+using System.IO;
+using System.Net.Http;
+using System.Net.Mail;
+using Vertica.Integration.Infrastructure.Email;
+using Vertica.Integration.Infrastructure.Remote;
+using Vertica.Integration.Model;
+
+namespace ConsoleApplication16
+{
+	public class EmailWithAttachmentDemoTask : Task
+	{
+		private readonly IHttpClientFactory _httpClientFactory;
+		private readonly IEmailService _emailService;
+
+		public EmailWithAttachmentDemoTask(IEmailService emailService, IHttpClientFactory httpClientFactory)
+		{
+			_emailService = emailService;
+			_httpClientFactory = httpClientFactory;
+		}
+
+		public override void StartTask(ITaskExecutionContext context)
+		{
+			using (HttpClient client = _httpClientFactory.Create())
+			using (Stream imageStream = client.GetStreamAsync("https://dl.dropboxusercontent.com/u/4142207/never-delete.jpg").Result)
+			{
+				var email = new TextBasedEmailTemplate("Annual report {0}", DateTime.Now.Year)
+					.WriteLine("Please see attached the annual report for {0}.", DateTime.Now.Year)
+					.AddAttachment(new Attachment(@"c:\tmp\annual-report.pdf")) // Existing file
+					.AddAttachment(new Attachment(imageStream, "image.jpg"));
+
+				_emailService.Send(email, "bhk@vertica.dk");
+			}
+		}
+
+		public override string Description
+		{
+			get { return "TBD"; }
+		}
+	}
+}
+```
+
+The example above shows how you can use the method *AddAttachment(...)* to include attachments. From there on, it's System.Net.Mail API that takes over handling these attachments.
+It also shows how you can attach something that is not just a simple existing file on the file system, but in this case a Stream from a HTTP Request containing an image.
+
+If you find your self in need of creating attachments directly from Azure BlobStorage, here's how you do that:
+
+```c#
+CloudBlobClient client = _blobStorageClientFactory.Create();
+CloudBlobContainer container = client.GetContainerReference("mycontainer");
+CloudBlockBlob blob = container.GetBlockBlobReference("blob-id.jpg");
+
+using (var memoryStream = new MemoryStream())
+{
+	blob.DownloadToStream(memoryStream);
+	memoryStream.Position = 0;
+
+	var email = new TextBasedEmailTemplate("Some subject")
+		.AddAttachment(new Attachment(memoryStream, "blob-id.jpg"));
+		
+	_emailService.Send(email, "bhk@vertica.dk");
+}
+```
+
+[Back to Table of Contents](#table-of-contents)
+
 ## Setting up Portal
 
 Portal is "just" an administration interface on top of the Integration Service. From the Portal you can see various information including Tasks, Logging. From the Portal you can also administer Configurations.
@@ -1325,19 +1437,10 @@ namespace ConsoleApplication16
         {
 			IntegrationStartup.Run(args, application => application
 				.UseRavenDb(ravenDb => ravenDb
-					.DefaultConnection(new DefaultRavenDb())
+					.DefaultConnection(ConnectionString.FromText("Url = http://localhost:8998; Database = MyRavenDb"))
 					.AddConnection(new SecondRavenDb())));
         }
     }
-
-	// This connection will be served when using the IRavenDbFactory interface.
-	public class DefaultRavenDb : Connection
-	{
-		public DefaultRavenDb()
-			: base(ConnectionString.FromText("Url = http://localhost:8998; Database = MyRavenDb"))
-		{
-		}
-	}
 
 	// This connection will be served when using the generic IRavenDbFactory<SecondRavenDb> interface.
 	public class SecondRavenDb : Connection
@@ -1420,19 +1523,10 @@ namespace ConsoleApplication16
         {
 			IntegrationStartup.Run(args, application => application
 				.UseMongoDb(mongoDb => mongoDb
-					.DefaultConnection(new DefaultMongoDb())
+					.DefaultConnection(ConnectionString.FromText("mongodb://user:password@ds036178.mongolab.com:36178/project"))
 					.AddConnection(new SecondMongoDb())));
         }
     }
-
-	// This connection will be served when using the IMongoDbClientFactory interface.
-	public class DefaultMongoDb : Connection
-	{
-		public DefaultMongoDb()
-			: base(ConnectionString.FromText("mongodb://user:password@ds036178.mongolab.com:36178/brianhdk"))
-		{
-		}
-	}
 
 	// This connection will be served when using the generic IMongoDbClientFactory<SecondMongoDb> interface.
 	public class SecondMongoDb : Connection

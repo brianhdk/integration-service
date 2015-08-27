@@ -2,6 +2,6 @@
 {
 	public interface IEmailService
 	{
-		void Send(EmailTemplate template, string[] recipients);
+		void Send(EmailTemplate template, params string[] recipients);
 	}
 }
