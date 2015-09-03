@@ -1,7 +1,7 @@
 ﻿Hi, and thanks for trying out the Integration Service platform.
 To get started, modify your Program.cs as shown below to begin working with this.
 
-Also make sure to visit the Project Home on https://github.com/vertica-as/integration-service for further documentation.
+Also make sure to visit the Project Home on https://github.com/vertica-as/integration-service#integrating-mongodb for further documentation.
 
 class Program
 {
@@ -9,8 +9,16 @@ class Program
     {
 		IntegrationStartup.Run(args, application => application
             .UseMongoDb(ravenDb => ravenDb
-				.DefaultConnection(new SomeConnection(...))
-				.AddConnection(new SomeOtherConnection(...))));
+				.DefaultConnection(ConnectionString.FromText("mongodb://user:password@ds036178.mongolab.com:36178/project"))
+				.AddConnection(new SecondMongoDb())));
+    }
+}
+
+public class SecondMongoDb : Connection
+{
+    public SecondMongoDb()
+        : base(ConnectionString.FromName("NameFromConnectionStringElement"))
+    {
     }
 }
 

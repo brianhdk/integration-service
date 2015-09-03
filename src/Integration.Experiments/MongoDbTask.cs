@@ -20,8 +20,8 @@ namespace Vertica.Integration.Experiments
                         .Clear()
                         .IncludeLogRotator()))
                 .UseMongoDb(mongoDB => mongoDB
-					.DefaultConnection(new DefaultMongoDb(ConnectionString.FromText("mongodb://bhk:XXXXXXX@ds036178.mongolab.com:36178/brianhdk")))
-					.AddConnection(new AnotherMongoDb(ConnectionString.FromText("mongodb://contestant:XXXXXXX@ds036178.mongolab.com:36178/brianhdk"))));
+					.DefaultConnection(new DefaultMongoDb(ConnectionString.FromText("mongodb://bhk:bhk2015!@ds036178.mongolab.com:36178/brianhdk")))
+					.AddConnection(new AnotherMongoDb(ConnectionString.FromText("mongodb://contestant:veD8jepa@ds036178.mongolab.com:36178/brianhdk"))));
         }
     }
 
@@ -50,7 +50,7 @@ namespace Vertica.Integration.Experiments
 
         public override void StartTask(ITaskExecutionContext context)
         {
-	        IMongoCollection<TestDto> dtos = _anotherDb.Database.GetCollection<TestDto>("testDtos");
+	        IMongoCollection<TestDto> dtos = _defaultDb.Database.GetCollection<TestDto>("testDtos");
 
 			//foreach (var dto in dtos.Find(x => true).ToListAsync().Result)
 			//{

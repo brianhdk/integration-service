@@ -8,6 +8,7 @@ using Vertica.Integration.Experiments.Logging;
 using Vertica.Integration.Experiments.SignalR;
 using Vertica.Integration.Experiments.WebApi;
 using Vertica.Integration.Infrastructure;
+using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Model;
 using Vertica.Integration.Portal;
 using Vertica.Integration.WebApi;
@@ -23,19 +24,20 @@ namespace Vertica.Integration.Console
 				//.Database(database => database.Change(db => db.ConnectionString = ConnectionString.FromName("IntegrationDb.Alternate")))
 				//.Database(database => database.AddConnection(new CustomDb(ConnectionString.FromText("..."))))
 				//.Logging(logging => logging.Use<ConsoleLogger>())
-				//.UseWebApi(webApi => webApi
-				//	.AddFromAssemblyOfThis<TestController>()
-				//	.HttpServer(httpServer => httpServer.Configure(configurer =>
-				//	{
-				//		configurer.App.UseFileServer(new FileServerOptions
-				//		{
-				//			RequestPath = PathString.Empty,
-				//			FileSystem = new PhysicalFileSystem(@"..\..\..\Integration.Experiments\SignalR\Html")
-				//		});
-				//	}))
-				//	.WithPortal()
-				//	.WithSignalR(signalR => signalR.AddFromAssemblyOfThis<ChatHub>())
-				//)
+				.UseWebApi(webApi => webApi
+					.AddFromAssemblyOfThis<TestController>()
+					.HttpServer(httpServer => httpServer.Configure(configurer =>
+					{
+						configurer.App.UseFileServer(new FileServerOptions
+						{
+							RequestPath = PathString.Empty,
+							FileSystem = new PhysicalFileSystem(@"..\..\..\Integration.Experiments\SignalR\Html")
+						});
+					}))
+					.WithPortal()
+					.WithSignalR(signalR => signalR.AddFromAssemblyOfThis<ChatHub>())
+				)
+				.AddCustomInstaller(Install.Service<ChatHub.RandomChatter>())
                 //.UseIIS()
 				.Fast()
 				//.TestAzure()
@@ -49,7 +51,7 @@ namespace Vertica.Integration.Console
 				//.TestMongoDbTask()
 				//.Hosts(hosts => hosts.Remove<WebApiHost>())
 				//.RegisterMigrations()
-				.TestRebus(args)
+				//.TestRebus(args)
 				//.TestRavenDb()
                 .Void()))
 			{

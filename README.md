@@ -1177,7 +1177,7 @@ namespace ConsoleApplication16
 				var request = new Request();
 
 				HttpResponseMessage httpResponse = 
-					httpClient.PostAsJsonAsync("http://localhost:8123/Service", request)
+					httpClient.PutAsJsonAsync("http://localhost:8123/Service", request)
 						.Result;
 
 				httpResponse.EnsureSuccessStatusCode();
@@ -1315,7 +1315,7 @@ using (var memoryStream = new MemoryStream())
 	memoryStream.Position = 0;
 
 	var email = new TextBasedEmailTemplate("Some subject")
-		.AddAttachment(new Attachment(memoryStream, "blob-id.jpg"));
+		.AddAttachment(new Attachment(memoryStream, blob.Name));
 		
 	_emailService.Send(email, "bhk@vertica.dk");
 }
@@ -1996,7 +1996,11 @@ namespace ClassLibrary2
             using (IDbSession session = _customDb.OpenSession())
             using (IDbTransaction transaction = session.BeginTransaction())
             {
-                session.Execute("...");
+                // session.Execute("...");
+				// session.Query<string>("SELECT 'HELLO';");
+				// ... more on https://github.com/StackExchange/dapper-dot-net
+				// ... see below for advanced example on how to use full capabilities of Dapper
+
                 transaction.Commit();
             }
         }
