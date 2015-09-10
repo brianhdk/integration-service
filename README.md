@@ -1928,8 +1928,9 @@ First you'll create an entry in your configuration file, app.config, with your c
 </connectionStrings>  
 ```
 
-Next you'll create a **public** class that inherits from **Vertica.Integration.Infrastructure.Database.Connection**
-In the constructor of this class you'll reference the connection string by it's name:
+Next step is to create a **public class** that inherits from *Vertica.Integration.Infrastructure.Database.Connection*.
+
+In the constructor of this class you can then reference the connection string by name:
 
 ```c#
 using Vertica.Integration.Infrastructure;
@@ -1949,9 +1950,7 @@ namespace ClassLibrary2
 
 **Note:** You can also use **ConnectionString.FromText("...")** if you just want to hard-code your connection string.
 
-Later you'll use this class every time you access the database through the generic **IDbFactory<>** interface.
-
-The next step is to register this new custom connection, this is done in the initial configuration:
+The next step is to register the database connection, this is done in the initial configuration:
 
 ```c#
 namespace ConsoleApplication16
@@ -1967,8 +1966,9 @@ namespace ConsoleApplication16
     }
 }
 ```
+You can now access the database connection, through the generic **IDbFactory<>** interface. 
 
-Now that you've added "CustomDb" as a Custom Connection, let's see an example on how to use it from a Task.
+The following example shows how to do that from a Task.
 
 ```c#
 using System.Data;
@@ -2008,10 +2008,11 @@ namespace ClassLibrary2
 }
 ```
 
-###IDbFactory<TConnection>
+###IDbFactory<<TConnection>>
 This factory gives you access to any custom connection that you register.
 
-The Factory exposes the underlying IDbConnection but more importantly it allows you to create an **IDbSession** against that connection. The **IDbSession** is a very thin Adapter on top of Dapper (https://github.com/StackExchange/dapper-dot-net), giving you few but powerful options to work against your database. If you need to open up the full capabilities of Dapper, then you can simply use it's extension methods, see example below:
+The Factory exposes the underlying IDbConnection but more importantly it allows you to create an **IDbSession** against that connection. 
+The **IDbSession** is a very thin Adapter on top of Dapper (https://github.com/StackExchange/dapper-dot-net), giving you few but powerful options to work against your database. If you need to open up the full capabilities of Dapper, then you can simply use it's extension methods, see example below:
 
 ```c#
 using (IDbConnection connection = _customDb.GetConnection())
@@ -2028,8 +2029,6 @@ using (IDbConnection connection = _customDb.GetConnection())
 	}
 }
 ```
-
-
 From the **IDbSession** you can also create an **IDbTransaction**-scope. Use the BeginTransaction()-method to create such.
 
 [Back to Table of Contents](#table-of-contents)
