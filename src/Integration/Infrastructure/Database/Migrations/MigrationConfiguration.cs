@@ -14,7 +14,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
         {
             if (application == null) throw new ArgumentNullException("application");
 
-			Application = application.Extensibility(extensibility => extensibility.Register(this));
+			Application = application;
 
             _customTargets = new List<MigrationTarget>();
 

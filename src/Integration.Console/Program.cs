@@ -6,6 +6,7 @@ using Vertica.Integration.Experiments;
 using Vertica.Integration.Experiments.Azure;
 using Vertica.Integration.Experiments.Logging;
 using Vertica.Integration.Experiments.SignalR;
+using Vertica.Integration.Experiments.SQLite;
 using Vertica.Integration.Experiments.WebApi;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
@@ -24,22 +25,23 @@ namespace Vertica.Integration.Console
 				//.Database(database => database.Change(db => db.ConnectionString = ConnectionString.FromName("IntegrationDb.Alternate")))
 				//.Database(database => database.AddConnection(new CustomDb(ConnectionString.FromText("..."))))
 				//.Logging(logging => logging.Use<ConsoleLogger>())
-				.UseWebApi(webApi => webApi
-					.AddFromAssemblyOfThis<TestController>()
-					.HttpServer(httpServer => httpServer.Configure(configurer =>
-					{
-						configurer.App.UseFileServer(new FileServerOptions
-						{
-							RequestPath = PathString.Empty,
-							FileSystem = new PhysicalFileSystem(@"..\..\..\Integration.Experiments\SignalR\Html")
-						});
-					}))
-					.WithPortal()
-					.WithSignalR(signalR => signalR.AddFromAssemblyOfThis<ChatHub>())
-				)
-				.AddCustomInstaller(Install.Service<ChatHub.RandomChatter>())
+				//.UseWebApi(webApi => webApi
+				//	.AddFromAssemblyOfThis<TestController>()
+				//	.HttpServer(httpServer => httpServer.Configure(configurer =>
+				//	{
+				//		configurer.App.UseFileServer(new FileServerOptions
+				//		{
+				//			RequestPath = PathString.Empty,
+				//			FileSystem = new PhysicalFileSystem(@"..\..\..\Integration.Experiments\SignalR\Html")
+				//		});
+				//	}))
+				//	.WithPortal()
+				//	.WithSignalR(signalR => signalR.AddFromAssemblyOfThis<ChatHub>())
+				//)
+				//.AddCustomInstaller(Install.Service<ChatHub.RandomChatter>())
                 //.UseIIS()
 				.Fast()
+				.TestSQLite()
 				//.TestAzure()
 				//.RegisterTasks()
 				//.RegisterMigrations()

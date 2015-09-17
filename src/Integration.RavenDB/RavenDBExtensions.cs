@@ -11,7 +11,7 @@ namespace Vertica.Integration.RavenDB
 
 			return application.Extensibility(extensibility =>
 			{
-				RavenDbConfiguration configuration = extensibility.Cache(() => new RavenDbConfiguration(application));
+				RavenDbConfiguration configuration = extensibility.Register(() => new RavenDbConfiguration(application));
 
 				ravenDb(configuration);
 			});

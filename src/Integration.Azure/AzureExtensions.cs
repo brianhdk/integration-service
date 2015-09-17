@@ -10,7 +10,7 @@ namespace Vertica.Integration.Azure
 
 			return application.Extensibility(extensibility =>
 			{
-				AzureConfiguration configuration = extensibility.Cache(() => new AzureConfiguration(application));
+				AzureConfiguration configuration = extensibility.Register(() => new AzureConfiguration(application));
 
 				if (azure != null)
 					azure(configuration);

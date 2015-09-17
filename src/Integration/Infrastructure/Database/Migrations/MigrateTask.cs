@@ -10,6 +10,7 @@ using FluentMigrator.Runner.Announcers;
 using FluentMigrator.Runner.Initialization;
 using FluentMigrator.Runner.Processors;
 using FluentMigrator.Runner.Processors.SqlServer;
+using FluentMigrator.Runner.Processors.SQLite;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
 using Vertica.Utilities_v4.Extensions.AttributeExt;
@@ -210,6 +211,8 @@ ELSE
                     return new SqlServer2012ProcessorFactory();
                 case DatabaseServer.SqlServer2014:
                     return new SqlServer2014ProcessorFactory();
+				case DatabaseServer.Sqlite:
+					return new SQLiteProcessorFactory();
                 default:
                     throw new ArgumentOutOfRangeException("databaseServer");
             }

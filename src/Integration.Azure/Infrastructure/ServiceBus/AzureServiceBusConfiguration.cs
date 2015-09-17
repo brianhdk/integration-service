@@ -16,7 +16,7 @@ namespace Vertica.Integration.Azure.Infrastructure.ServiceBus
         {
             if (application == null) throw new ArgumentNullException("application");
 
-			Application = application.Extensibility(extensibility => extensibility.Register(this));
+			Application = application;
 
             _installers = new List<IWindsorInstaller>();
         }

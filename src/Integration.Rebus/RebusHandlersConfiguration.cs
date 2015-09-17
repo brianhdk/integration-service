@@ -17,7 +17,7 @@ namespace Vertica.Integration.Rebus
 		{
 			if (application == null) throw new ArgumentNullException("application");
 
-			Application = application.Extensibility(extensibility => extensibility.Register(this));
+			Application = application;
 
 			_scan = new List<Assembly>();
             _handlers = new List<Type>();

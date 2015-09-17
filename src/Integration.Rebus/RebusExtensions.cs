@@ -11,7 +11,7 @@ namespace Vertica.Integration.Rebus
 
 	        return application.Extensibility(extensibility =>
 	        {
-				RebusConfiguration configuration = extensibility.Cache(() =>
+				RebusConfiguration configuration = extensibility.Register(() =>
 		        {
 			        application.Hosts(x => x.Host<RebusHost>());
 

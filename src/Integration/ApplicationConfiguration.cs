@@ -36,14 +36,23 @@ namespace Vertica.Integration
 
             _customInstallers = new List<IWindsorInstaller>();
 
-            _database = new DatabaseConfiguration(this);
-            _tasks = new TasksConfiguration(this);
-            _logging = new LoggingConfiguration(this);
-            _migration = new MigrationConfiguration(this);
-            _hosts = new HostsConfiguration(this);
+            _database = Register(() => new DatabaseConfiguration(this));
+            _tasks = Register(() => new TasksConfiguration(this));
+            _logging = Register(() => new LoggingConfiguration(this));
+            _migration = Register(() => new MigrationConfiguration(this));
+            _hosts = Register(() => new HostsConfiguration(this));
 
 			_runtimeSettings = typeof (AppConfigRuntimeSettings);
         }
+
+		private T Register<T>(Func<T> factory) where T : class
+		{
+			T result = null;
+
+			Extensibility(extensibility => result = extensibility.Register(factory));
+
+			return result;
+		}
 
         public bool IgnoreSslErrors { get; set; }
 

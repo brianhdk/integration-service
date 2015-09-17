@@ -13,7 +13,7 @@ namespace Vertica.Integration.Infrastructure.Database
         {
             if (application == null) throw new ArgumentNullException("application");
 
-	        Application = application.Extensibility(extensibility => extensibility.Register(this));
+	        Application = application;
         }
 
         public ApplicationConfiguration Application { get; private set; }

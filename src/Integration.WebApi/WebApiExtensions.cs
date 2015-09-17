@@ -10,7 +10,7 @@ namespace Vertica.Integration.WebApi
 
 			return application.Extensibility(extensibility =>
 			{
-				var configuration = extensibility.Cache(() => new WebApiConfiguration(application));
+				var configuration = extensibility.Register(() => new WebApiConfiguration(application));
 
 				if (webApi != null)
 					webApi(configuration);

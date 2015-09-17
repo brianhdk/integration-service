@@ -16,7 +16,7 @@ namespace Vertica.Integration.Infrastructure.Logging
         {
             if (application == null) throw new ArgumentNullException("application");
 
-			Application = application.Extensibility(extensibility => extensibility.Register(this));
+			Application = application;
         }
 
         public ApplicationConfiguration Application { get; private set; }

@@ -14,7 +14,7 @@ namespace Vertica.Integration.Model.Hosting
         {
             if (application == null) throw new ArgumentNullException("application");
 
-			Application = application.Extensibility(extensibility => extensibility.Register(this));
+			Application = application;
 
             _add = new List<Type>();
             _remove = new List<Type>();

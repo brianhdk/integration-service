@@ -23,7 +23,7 @@ namespace Vertica.Integration.WebApi.SignalR
 
 			webApi.Application.Extensibility(extensibility =>
 			{
-				extensibility.Cache(() =>
+				extensibility.Register(() =>
 				{
 					var configuration = new SignalRConfiguration(webApi.Application);
 
