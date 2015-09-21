@@ -13,9 +13,9 @@ namespace Vertica.Integration.Infrastructure.Database
 	        ConnectionString = connectionString;
 		}
 
-		protected ConnectionString ConnectionString { get; private set; }
+		public ConnectionString ConnectionString { get; private set; }
 
-		public virtual IDbConnection GetConnection()
+		protected internal virtual IDbConnection GetConnection()
 		{
 			return new SqlConnection(ConnectionString);
 		}

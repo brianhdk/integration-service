@@ -1,13 +1,12 @@
 using System;
 using Castle.Windsor;
 using Vertica.Integration.Infrastructure.Database.Castle.Windsor;
-using Vertica.Integration.Infrastructure.Database.Databases;
 
 namespace Vertica.Integration.Infrastructure.Database
 {
     public class DatabaseConfiguration : IInitializable<IWindsorContainer>
     {
-        private ConnectionString _databaseConnectionString;
+	    private DefaultConnection _defaultConnection;
 
         internal DatabaseConfiguration(ApplicationConfiguration application)
         {
@@ -20,29 +19,31 @@ namespace Vertica.Integration.Infrastructure.Database
 
         public bool IntegrationDbDisabled { get; private set; }
 
-        public ConnectionString ConnectionString
-        {
-            get
-            {
-                if (_databaseConnectionString == null)
-                    _databaseConnectionString = ConnectionString.FromName("IntegrationDb");
-
-                return _databaseConnectionString;
-            }
-            set
-            {
-                IntegrationDbDisabled = value == null;
-                _databaseConnectionString = value;
-            }
-        }
-
         public DatabaseConfiguration DisableIntegrationDb()
         {
             IntegrationDbDisabled = true;
             return this;
         }
 
-        public DatabaseConfiguration AddConnection<TConnection>(TConnection connection)
+	    public DatabaseConfiguration IntegrationDb(ConnectionString connectionString)
+	    {
+		    if (connectionString == null) throw new ArgumentNullException("connectionString");
+
+		    _defaultConnection = new DefaultConnection(connectionString);
+
+		    return this;
+	    }
+
+	    public DatabaseConfiguration IntegrationDb(Connection connection)
+	    {
+		    if (connection == null) throw new ArgumentNullException("connection");
+
+		    _defaultConnection = new DefaultConnection(connection);
+
+			return this;
+	    }
+
+	    public DatabaseConfiguration AddConnection<TConnection>(TConnection connection)
             where TConnection : Connection
         {
             Application.AddCustomInstaller(new DbInstaller<TConnection>(connection));
@@ -60,7 +61,9 @@ namespace Vertica.Integration.Infrastructure.Database
 
         void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
         {
-            container.Install(new DbInstaller(IntegrationDbDisabled ? IntegrationDb.Disabled : new IntegrationDb(ConnectionString)));
+	        container.Install(new DbInstaller(IntegrationDbDisabled ? 
+				DefaultConnection.Disabled : 
+				_defaultConnection ?? new DefaultConnection(ConnectionString.FromName("IntegrationDb"))));
         }
     }
 }

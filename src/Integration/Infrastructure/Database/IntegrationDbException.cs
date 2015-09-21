@@ -2,7 +2,7 @@
 using System.Data.SqlClient;
 using System.Runtime.Serialization;
 
-namespace Vertica.Integration.Infrastructure.Database.Databases
+namespace Vertica.Integration.Infrastructure.Database
 {
     [Serializable]
     public class IntegrationDbException : Exception

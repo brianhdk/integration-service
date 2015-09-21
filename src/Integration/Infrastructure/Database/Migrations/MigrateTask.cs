@@ -20,38 +20,41 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
     public class MigrateTask : Task
     {
         private readonly IKernel _kernel;
-        private readonly MigrationTarget[] _targets;
+        private readonly MigrationDb[] _dbs;
         private readonly IDisposable _loggingDisabler;
         private readonly bool _databaseCreated;
 	    private readonly ITaskFactory _taskFactory;
 	    private readonly ITaskRunner _taskRunner;
 
-        public MigrateTask(Func<IDbFactory> db, ILogger logger, IKernel kernel, MigrationConfiguration configuration, ITaskFactory taskFactory, ITaskRunner taskRunner)
+        public MigrateTask(Func<IDbFactory> db, ILogger logger, IKernel kernel, IMigrationDbs dbs, ITaskFactory taskFactory, ITaskRunner taskRunner)
         {
             _kernel = kernel;
 	        _taskFactory = taskFactory;
 	        _taskRunner = taskRunner;
-	        _targets = configuration.CustomTargets;
 
-            if (!configuration.IntegrationDbDisabled)
-            {
-                string connectionString = EnsureIntegrationDb(db(), configuration.CheckExistsIntegrationDb, out _databaseCreated);
+	        try
+	        {
+				string connectionString = EnsureIntegrationDb(db(), dbs.CheckExistsAndCreateIntegrationDbIfNotFound, out _databaseCreated);
 
-                var integrationDb = new MigrationTarget(
-                    configuration.IntegrationDbDatabaseServer,
-                    ConnectionString.FromText(connectionString),
-                    typeof(M1_Baseline).Assembly,
-                    typeof(M1_Baseline).Namespace);
+				var integrationDb = new MigrationDb(
+					dbs.IntegrationDbDatabaseServer,
+					ConnectionString.FromText(connectionString),
+					typeof(M1_Baseline).Assembly,
+					typeof(M1_Baseline).Namespace);
 
-                StringBuilder output;
-                MigrationRunner runner = CreateRunner(integrationDb, out output);
+				StringBuilder output;
+				MigrationRunner runner = CreateRunner(integrationDb, out output);
 
-                // Latest migration has not been applied, so we'll have to disable any logging.
-                if (!runner.VersionLoader.VersionInfo.HasAppliedMigration(FindLatestMigration()))
-                    _loggingDisabler = logger.Disable();
+				// Latest migration has not been applied, so we'll have to disable any logging.
+				if (!runner.VersionLoader.VersionInfo.HasAppliedMigration(FindLatestMigration()))
+					_loggingDisabler = logger.Disable();
 
-                _targets = new[] { integrationDb }.Concat(_targets).ToArray();                
-            }
+				_dbs = dbs.WithIntegrationDb(integrationDb).ToArray();
+	        }
+	        catch (DatabaseDisabledException)
+	        {
+				_dbs = dbs.ToArray();
+	        }
         }
 
         private static long FindLatestMigration()
@@ -75,20 +78,21 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
         public override string Description
         {
-            get { return "Runs migrations against all configured targets. Will also execute any custom task if provided by Arguments."; }
+            get { return "Runs migrations against all configured databases. Will also execute any custom task if provided by Arguments."; }
         }
 
         public override void StartTask(ITaskExecutionContext context)
         {
             bool enableLogger = _loggingDisabler != null;
 
-            foreach (MigrationTarget destination in _targets)
+            foreach (MigrationDb destination in _dbs)
             {
                 StringBuilder output;
                 MigrationRunner runner = CreateRunner(destination, out output);
 
                 runner.MigrateUp(useAutomaticTransactionManagement: true);
-
+				runner.Processor.Dispose();
+				
                 if (output.Length > 0)
                     context.Log.Message(output.ToString());
 
@@ -126,11 +130,11 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 	        }
         }
 
-        private static string EnsureIntegrationDb(IDbFactory db, bool checkExistsIntegrationDb, out bool databaseCreated)
+        private static string EnsureIntegrationDb(IDbFactory db, bool checkExistsAndCreateIntegrationDbIfNotFound, out bool databaseCreated)
         {
             using (IDbConnection connection = db.GetConnection())
             {
-                if (!checkExistsIntegrationDb)
+                if (!checkExistsAndCreateIntegrationDbIfNotFound)
                 {
                     databaseCreated = false;
                     return connection.ConnectionString;
@@ -179,7 +183,7 @@ ELSE
             }
         }
 
-        private MigrationRunner CreateRunner(MigrationTarget target, out StringBuilder output)
+        private MigrationRunner CreateRunner(MigrationDb db, out StringBuilder output)
         {
             var sb = output = new StringBuilder();
 
@@ -191,16 +195,16 @@ ELSE
                 sb.Append(s);
             });
 
-            IMigrationProcessorFactory factory = CreateFactory(target.DatabaseServer);
-            IMigrationProcessor processor = factory.Create(target.ConnectionString, announcer, new MigrationOptions());
+            IMigrationProcessorFactory factory = CreateFactory(db.DatabaseServer);
+            IMigrationProcessor processor = factory.Create(db.ConnectionString, announcer, new MigrationOptions());
 
             var context = new RunnerContext(announcer)
             {
-                Namespace = target.NamespaceContainingMigrations,
+                Namespace = db.NamespaceContainingMigrations,
                 ApplicationContext = _kernel
             };
 
-            return new MigrationRunner(target.Assembly, context, processor);
+            return new MigrationRunner(db.Assembly, context, processor);
         }
 
         private static IMigrationProcessorFactory CreateFactory(DatabaseServer databaseServer)

@@ -9,7 +9,7 @@ namespace Vertica.Integration.RavenDB
 	{
 		private readonly Lazy<IDocumentStore> _documentStore;
 
-		public RavenDbFactory(Connection connection)
+		public RavenDbFactory(TConnection connection)
 		{
 			if (connection == null) throw new ArgumentNullException("connection");
 			

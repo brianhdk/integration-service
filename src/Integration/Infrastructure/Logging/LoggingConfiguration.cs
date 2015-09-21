@@ -28,9 +28,9 @@ namespace Vertica.Integration.Infrastructure.Logging
             return this;
         }
 
-        public LoggingConfiguration NullLogger()
+        public LoggingConfiguration Disable()
         {
-            return Use<NullLogger>();
+            return Use<VoidLogger>();
         }
 
         public LoggingConfiguration EventLogger()

@@ -5,16 +5,16 @@ namespace Vertica.Integration.SQLite
 {
 	public static class SQLiteExtensions
 	{
-		public static DatabaseConfiguration SQLite(this DatabaseConfiguration database, Action<SQLiteConfiguration> sqlite = null)
+		public static DatabaseConfiguration SQLite(this DatabaseConfiguration database, Action<SQLiteConfiguration> sqlite)
 		{
 			if (database == null) throw new ArgumentNullException("database");
+			if (sqlite == null) throw new ArgumentNullException("sqlite");
 
 			database.Application.Extensibility(extensibility =>
 			{
-				var configuration = extensibility.Register(() => new SQLiteConfiguration(database));
+				SQLiteConfiguration configuration = extensibility.Register(() => new SQLiteConfiguration(database));
 
-				if (sqlite != null)
-					sqlite(configuration);
+				sqlite(configuration);
 			});
 
 			return database;

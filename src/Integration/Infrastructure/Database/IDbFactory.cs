@@ -6,7 +6,7 @@ namespace Vertica.Integration.Infrastructure.Database
 	{
 	}
 
-    public interface IDbFactory<TConnection>
+    public interface IDbFactory<out TConnection>
 		where TConnection : Connection
     {
         IDbConnection GetConnection();

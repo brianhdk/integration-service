@@ -1,6 +1,6 @@
 ﻿namespace Vertica.Integration.Infrastructure.Logging.Loggers
 {
-    public class NullLogger : Logger
+    public class VoidLogger : Logger
     {
         protected override string Insert(TaskLog log)
         {

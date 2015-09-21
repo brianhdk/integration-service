@@ -10,7 +10,7 @@ namespace Vertica.Integration.MongoDB
         private readonly Lazy<IMongoClient> _client;
         private readonly Lazy<IMongoDatabase> _database;
 
-        public MongoDBClientFactory(Connection connection)
+		public MongoDBClientFactory(TConnection connection)
         {
             if (connection == null) throw new ArgumentNullException("connection");
 

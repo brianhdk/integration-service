@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
-using Vertica.Integration.Infrastructure.Database.Databases;
 using Vertica.Integration.Infrastructure.Parsing;
 
 namespace Vertica.Integration.Infrastructure.Database.Extensions

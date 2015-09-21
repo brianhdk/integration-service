@@ -198,7 +198,6 @@
     <Compile Include="RebusTester.cs" />
     <Compile Include="RunAllTasks.cs" />
     <Compile Include="SignalR\ChatHub.cs" />
-    <Compile Include="SQLite\SQLiteTester.cs" />
     <Compile Include="Step.cs" />
     <Compile Include="TaskExecutingTask.cs" />
     <Compile Include="HelloTask.cs" />

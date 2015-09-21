@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
-using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Database.Migrations;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
@@ -55,8 +54,6 @@ namespace Vertica.Integration
 		}
 
         public bool IgnoreSslErrors { get; set; }
-
-        public ConnectionString DatabaseConnectionString { get { return _database.ConnectionString; } }
 
         public ApplicationConfiguration AddCustomInstaller(IWindsorInstaller installer)
         {
