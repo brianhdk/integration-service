@@ -123,7 +123,9 @@
     <Compile Include="Infrastructure\Archiving\IArchiveService.cs" />
     <Compile Include="Infrastructure\Archiving\Archive.cs" />
     <Compile Include="Infrastructure\Configuration\Configuration.cs" />
+    <Compile Include="Infrastructure\Configuration\ConfigurationRepository.cs" />
     <Compile Include="Infrastructure\Configuration\ConfigurationService.cs" />
+    <Compile Include="Infrastructure\Configuration\IConfigurationRepository.cs" />
     <Compile Include="Infrastructure\Configuration\IConfigurationService.cs" />
     <Compile Include="Infrastructure\ConnectionString.cs" />
     <Compile Include="Infrastructure\Database\Castle.Windsor\DbInstaller.cs" />

@@ -1,19 +1,7 @@
-﻿using Microsoft.Owin;
-using Microsoft.Owin.FileSystems;
-using Microsoft.Owin.StaticFiles;
-using Owin;
-using Vertica.Integration.Experiments;
-using Vertica.Integration.Experiments.Azure;
-using Vertica.Integration.Experiments.Logging;
-using Vertica.Integration.Experiments.SignalR;
-using Vertica.Integration.Experiments.SQLite;
-using Vertica.Integration.Experiments.WebApi;
-using Vertica.Integration.Infrastructure;
-using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
+﻿using Vertica.Integration.Experiments;
 using Vertica.Integration.Model;
 using Vertica.Integration.Portal;
 using Vertica.Integration.WebApi;
-using Vertica.Integration.WebApi.SignalR;
 
 namespace Vertica.Integration.Console
 {
@@ -25,6 +13,8 @@ namespace Vertica.Integration.Console
 				//.Database(database => database.Change(db => db.ConnectionString = ConnectionString.FromName("IntegrationDb.Alternate")))
 				//.Database(database => database.AddConnection(new CustomDb(ConnectionString.FromText("..."))))
 				//.Logging(logging => logging.Use<ConsoleLogger>())
+				.UseWebApi(webApi => webApi
+					.WithPortal())
 				//.UseWebApi(webApi => webApi
 				//	.AddFromAssemblyOfThis<TestController>()
 				//	.HttpServer(httpServer => httpServer.Configure(configurer =>
@@ -41,7 +31,6 @@ namespace Vertica.Integration.Console
 				//.AddCustomInstaller(Install.Service<ChatHub.RandomChatter>())
                 //.UseIIS()
 				//.Fast()
-				.TestSQLite()
 				//.TestAzure()
 				//.RegisterTasks()
 				.RegisterMigrations()

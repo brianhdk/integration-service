@@ -1,33 +1,28 @@
 using System;
 using System.ComponentModel;
-using System.Data;
-using System.Linq;
 using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 using Vertica.Integration.Infrastructure.Archiving;
-using Vertica.Integration.Infrastructure.Database;
-using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Logging;
-using Vertica.Utilities_v4;
 using Vertica.Utilities_v4.Extensions.AttributeExt;
 using Vertica.Utilities_v4.Extensions.StringExt;
 
 namespace Vertica.Integration.Infrastructure.Configuration
 {
-    public class ConfigurationService : IConfigurationService
-    {
-        private readonly Func<IDbFactory> _db;
-        private readonly IArchiveService _archive;
+	public class ConfigurationService : IConfigurationService
+	{
+		private readonly IConfigurationRepository _repository;
+		private readonly IArchiveService _archive;
         private readonly ILogger _logger;
         private readonly JsonSerializerSettings _serializerSettings;
 
-        public ConfigurationService(Func<IDbFactory> db, IArchiveService archive, ILogger logger)
+        public ConfigurationService(IArchiveService archive, IConfigurationRepository repository, ILogger logger)
         {
-            _archive = archive;
-            _logger = logger;
-            _db = db;
+	        _repository = repository;
+	        _logger = logger;
+	        _archive = archive;
 
-            _serializerSettings = new JsonSerializerSettings
+	        _serializerSettings = new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.Auto
             };
@@ -37,7 +32,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
         {
             if (typeof (TConfiguration) == typeof(Configuration)) throw new ArgumentException("Getting a Configuration of type Configuration is not allowed.");
 
-            Configuration existing = Get(GetId<TConfiguration>());
+            Configuration existing = _repository.Get(GetId<TConfiguration>());
 
             if (existing != null)
             {
@@ -57,121 +52,51 @@ namespace Vertica.Integration.Infrastructure.Configuration
             if (String.IsNullOrWhiteSpace(updatedBy)) throw new ArgumentException(@"Value cannot be null or empty.", "updatedBy");
             if (configuration is Configuration) throw new ArgumentException(@"Use the specific Save method when saving this Configuration instance.", "configuration");
 
-            SaveInternal(
-                GetId<TConfiguration>(warnIfMissingGuid: true),
-                JsonConvert.SerializeObject(configuration, Formatting.Indented, _serializerSettings),
-                updatedBy,
-                createArchiveBackup,
-                typeof(TConfiguration));
+			string id = GetId<TConfiguration>(warnIfMissingGuid: true);
+
+	        if (createArchiveBackup)
+		        Backup(id);
+
+	        Type configurationType = typeof (TConfiguration);
+			
+	        _repository.Save(new Configuration
+            {
+	            Id = id,
+				Name = configurationType.Name,
+				Description = GetDescription(configurationType),
+				JsonData = JsonConvert.SerializeObject(configuration, Formatting.Indented, _serializerSettings),
+				UpdatedBy = updatedBy
+            });
 
             return Get<TConfiguration>();
         }
 
-        public Configuration[] GetAll()
-        {
-            using (IDbSession session = OpenSession())
-            {
-                return
-                    session
-                        .Query<Configuration>("SELECT Id, Name, Created, Updated, UpdatedBy FROM Configuration")
-                        .ToArray();
-            }
-        }
+		public ArchiveCreated Backup(string id)
+		{
+			if (String.IsNullOrWhiteSpace(id)) throw new ArgumentException(@"Value cannot be null or empty.", "id");
 
-        public Configuration Get(string id)
-        {
-            if (String.IsNullOrWhiteSpace(id)) throw new ArgumentException(@"Value cannot be null or empty.", "id");
+			Configuration current = _repository.Get(id);
 
-            using (IDbSession session = OpenSession())
-            {
-                return
-                    session
-                        .Query<Configuration>(
-                            "SELECT Id, Name, Description, JsonData, Created, Updated, UpdatedBy FROM Configuration WHERE (Id = @id)",
-                            new { id })
-                        .SingleOrDefault();
-            }
-        }
+			if (current == null)
+				return null;
 
-        public Configuration Save(Configuration configuration, string updatedBy, bool createArchiveBackup = false)
-        {
-            if (configuration == null) throw new ArgumentNullException("configuration");
+			return _archive.Archive(current.Name, archive =>
+			{
+				archive.Options
+					.GroupedBy("Backup")
+					.ExpiresAfterMonths(1);
 
-            SaveInternal(configuration.Id, configuration.JsonData, updatedBy, createArchiveBackup);
+				archive.IncludeContent("data", current.JsonData, ".json");
+				archive.IncludeContent("meta", String.Join(Environment.NewLine,
+					current.Id,
+					current.Name,
+					current.Description,
+					current.Updated.ToString(),
+					current.UpdatedBy));
+			});
+		}
 
-            return Get(configuration.Id);
-        }
-
-        public void Delete(string id)
-        {
-            if (String.IsNullOrWhiteSpace(id)) throw new ArgumentException(@"Value cannot be null or empty.");
-
-            using (IDbSession session = OpenSession())
-            using (IDbTransaction transaction = session.BeginTransaction())
-            {
-                session.Execute("DELETE FROM Configuration WHERE (Id = @id)", new {id});
-                transaction.Commit();
-            }
-        }
-
-        private void SaveInternal(string id, string jsonData, string updatedBy, bool createArchiveBackup, Type configurationType = null)
-        {
-            string name = (configurationType != null ? configurationType.Name : id).MaxLength(100);
-
-            if (createArchiveBackup)
-            {
-                Configuration configuration = Get(id);
-
-                if (configuration != null)
-                {
-                    _archive.Archive(configuration.Name, archive =>
-                    {
-                        archive.Options
-                            .GroupedBy("Backup")
-                            .ExpiresAfterMonths(1);
-
-                        archive.IncludeContent("data", configuration.JsonData, ".json");
-                        archive.IncludeContent("meta", String.Join(Environment.NewLine,
-                            configuration.Id,
-                            configuration.Name,
-                            configuration.Description,
-                            configuration.Updated.ToString(),
-                            configuration.UpdatedBy));
-                    });
-                }
-            }
-
-            using (IDbSession session = OpenSession())
-            using (IDbTransaction transaction = session.BeginTransaction())
-            {
-                string description = GetDescription(configurationType).MaxLength(255);
-
-                string updateNameDescriptionSql = configurationType != null
-                    ? ", Name = @name, Description = @description"
-                    : String.Empty;
-
-                session.Execute(String.Format(@"
-IF NOT EXISTS (SELECT Id FROM Configuration WHERE (Id = @id))
-	BEGIN
-		INSERT INTO Configuration (Id, Name, Description, JsonData, Created, Updated, UpdatedBy)
-			VALUES (@id, @name, @description, @jsonData, @updated, @updated, @updatedBy);
-	END
-ELSE
-	BEGIN
-		UPDATE Configuration SET
-			JsonData = @jsonData,
-			Updated = @updated,
-            UpdatedBy = @updatedBy
-            {0}
-		WHERE (Id = @id)
-	END
-", updateNameDescriptionSql), new { id, name, description, jsonData, updated = Time.UtcNow, updatedBy });
-
-                transaction.Commit();
-            }
-        }
-
-        private string GetDescription(Type configurationType)
+		private string GetDescription(Type configurationType)
         {
             if (configurationType == null)
                 return null;
@@ -222,10 +147,5 @@ IMPORTANT: Remember to use the ""D"" format for Guids, e.g. 1EB3F675-C634-412F-A
 
             return null;
         }
-
-		private IDbSession OpenSession()
-		{
-			return _db().OpenSession();
-		}
     }
 }
