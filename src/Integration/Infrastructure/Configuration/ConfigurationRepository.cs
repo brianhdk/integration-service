@@ -2,6 +2,7 @@ using System;
 using System.Data;
 using System.Linq;
 using Vertica.Integration.Infrastructure.Database;
+using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Utilities_v4;
 
 namespace Vertica.Integration.Infrastructure.Configuration
@@ -45,7 +46,10 @@ namespace Vertica.Integration.Infrastructure.Configuration
 		{
 			if (configuration == null) throw new ArgumentNullException("configuration");
 
+			configuration.Name = configuration.Name.MaxLength(50);
+			configuration.Description = configuration.Description.MaxLength(255);
 			configuration.Updated = Time.UtcNow;
+			configuration.UpdatedBy = configuration.UpdatedBy.MaxLength(50);
 
 			using (IDbSession session = OpenSession())
 			using (IDbTransaction transaction = session.BeginTransaction())
@@ -71,7 +75,7 @@ ELSE
 				transaction.Commit();
 			}
 
-			return Get(configuration.Id);
+			return configuration;
 		}
 
 		public void Delete(string id)
