@@ -97,7 +97,7 @@ namespace Vertica.Integration.Experiments
             return application
                 .Database(database => database.DisableIntegrationDb())
                 .Logging(logger => logger
-                    .UseTextFileLogger(/*textFile => textFile
+                    .TextFileLogger(/*textFile => textFile
                         .ToLocation(new DirectoryInfo(@"c:\tmp"))
                         .OrganizeSubFoldersBy(x => x.Custom(new CustomOrganizer()))*/))
                 .Tasks(tasks => tasks

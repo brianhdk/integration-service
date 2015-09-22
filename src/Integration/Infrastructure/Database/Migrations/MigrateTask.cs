@@ -32,28 +32,28 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 	        _taskFactory = taskFactory;
 	        _taskRunner = taskRunner;
 
-	        try
+	        if (!dbs.IntegrationDbDisabled)
 	        {
-				string connectionString = EnsureIntegrationDb(db(), dbs.CheckExistsAndCreateIntegrationDbIfNotFound, out _databaseCreated);
+		        string connectionString = EnsureIntegrationDb(db(), dbs.CheckExistsAndCreateIntegrationDbIfNotFound, out _databaseCreated);
 
-				var integrationDb = new MigrationDb(
-					dbs.IntegrationDbDatabaseServer,
-					ConnectionString.FromText(connectionString),
-					typeof(M1_Baseline).Assembly,
-					typeof(M1_Baseline).Namespace);
+		        var integrationDb = new MigrationDb(
+			        dbs.IntegrationDbDatabaseServer,
+			        ConnectionString.FromText(connectionString),
+			        typeof (M1_Baseline).Assembly,
+			        typeof (M1_Baseline).Namespace);
 
-				StringBuilder output;
-				MigrationRunner runner = CreateRunner(integrationDb, out output);
+		        StringBuilder output;
+		        MigrationRunner runner = CreateRunner(integrationDb, out output);
 
-				// Latest migration has not been applied, so we'll have to disable any logging.
-				if (!runner.VersionLoader.VersionInfo.HasAppliedMigration(FindLatestMigration()))
-					_loggingDisabler = logger.Disable();
+		        // Latest migration has not been applied, so we'll have to disable any logging.
+		        if (!runner.VersionLoader.VersionInfo.HasAppliedMigration(FindLatestMigration()))
+			        _loggingDisabler = logger.Disable();
 
-				_dbs = dbs.WithIntegrationDb(integrationDb).ToArray();
+		        _dbs = dbs.WithIntegrationDb(integrationDb).ToArray();
 	        }
-	        catch (DatabaseDisabledException)
+	        else
 	        {
-				_dbs = dbs.ToArray();
+		        _dbs = dbs.ToArray();
 	        }
         }
 

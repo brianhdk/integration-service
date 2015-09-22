@@ -7,11 +7,11 @@ using Vertica.Utilities_v4;
 
 namespace Vertica.Integration.Infrastructure.Configuration
 {
-	public class ConfigurationRepository : IConfigurationRepository
+	internal class DbConfigurationRepository : IConfigurationRepository
 	{
 		private readonly Func<IDbFactory> _db;
 
-		public ConfigurationRepository(Func<IDbFactory> db)
+		public DbConfigurationRepository(Func<IDbFactory> db)
 		{
 			_db = db;
 		}

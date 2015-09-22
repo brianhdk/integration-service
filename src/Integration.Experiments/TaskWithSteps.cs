@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Vertica.Integration.Model;
 
@@ -11,12 +12,12 @@ namespace Vertica.Integration.Experiments
 
         public override string Description
         {
-            get { throw new System.NotImplementedException(); }
+			get { throw new NotSupportedException(); }
         }
 
         public override TaskWorkItem Start(ITaskExecutionContext context)
         {
-            throw new System.NotImplementedException();
+			throw new NotSupportedException();
         }
     }
 }

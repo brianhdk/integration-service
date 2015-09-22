@@ -115,16 +115,18 @@
     <Compile Include="Infrastructure\ActionRepeater.cs" />
     <Compile Include="Infrastructure\Archiving\ArchiveOptions.cs" />
     <Compile Include="Infrastructure\Archiving\BeginArchive.cs" />
-    <Compile Include="Infrastructure\Archiving\ArchiveService.cs" />
+    <Compile Include="Infrastructure\Archiving\DbArchiveService.cs" />
     <Compile Include="Infrastructure\Archiving\ArchiveExtensions.cs" />
     <Compile Include="Infrastructure\Archiving\CleanUpArchivesStep.cs" />
     <Compile Include="Infrastructure\Archiving\ArchiveCreated.cs" />
     <Compile Include="Infrastructure\Archiving\DumpArchiveTask.cs" />
+    <Compile Include="Infrastructure\Archiving\FileBasedArchiveService.cs" />
     <Compile Include="Infrastructure\Archiving\IArchiveService.cs" />
     <Compile Include="Infrastructure\Archiving\Archive.cs" />
     <Compile Include="Infrastructure\Configuration\Configuration.cs" />
-    <Compile Include="Infrastructure\Configuration\ConfigurationRepository.cs" />
+    <Compile Include="Infrastructure\Configuration\DbConfigurationRepository.cs" />
     <Compile Include="Infrastructure\Configuration\ConfigurationService.cs" />
+    <Compile Include="Infrastructure\Configuration\FileBasedConfigurationRepository.cs" />
     <Compile Include="Infrastructure\Configuration\IConfigurationRepository.cs" />
     <Compile Include="Infrastructure\Configuration\IConfigurationService.cs" />
     <Compile Include="Infrastructure\ConnectionString.cs" />
@@ -178,6 +180,7 @@
     <Compile Include="Infrastructure\IO\IDirectory.cs" />
     <Compile Include="Infrastructure\IO\IFile.cs" />
     <Compile Include="Infrastructure\IO\IFileSystemService.cs" />
+    <Compile Include="Infrastructure\AdvancedConfiguration.cs" />
     <Compile Include="Infrastructure\Logging\IReferenceErrorLog.cs" />
     <Compile Include="Infrastructure\Logging\ITarget.cs" />
     <Compile Include="Infrastructure\Logging\Loggers\EventLogger.cs" />
@@ -185,7 +188,6 @@
     <Compile Include="Infrastructure\Logging\Loggers\Logger.cs" />
     <Compile Include="Infrastructure\Logging\Loggers\TextFileLogger.cs" />
     <Compile Include="Infrastructure\Logging\Loggers\TextFileLoggerConfiguration.cs" />
-    <Compile Include="Infrastructure\Logging\Loggers\TextFileLoggerExtensions.cs" />
     <Compile Include="Infrastructure\Logging\Loggers\VoidLogger.cs" />
     <Compile Include="Infrastructure\Parsing\CsvConfiguration.cs" />
     <Compile Include="Infrastructure\Parsing\CsvParser.cs" />
@@ -207,6 +209,7 @@
     <Compile Include="Infrastructure\Templating\HtmlHelper.cs" />
     <Compile Include="Infrastructure\Templating\RawString.cs" />
     <Compile Include="Infrastructure\Extensions\OutputterExtensions.cs" />
+    <Compile Include="InMemoryRuntimeSettings.cs" />
     <Compile Include="IRuntimeSettings.cs" />
     <Compile Include="Model\Arguments.cs" />
     <Compile Include="Model\ContextWorkItem.cs" />
@@ -241,7 +244,7 @@
     <Compile Include="Infrastructure\Logging\ErrorLog.cs" />
     <Compile Include="Infrastructure\Logging\ILogger.cs" />
     <Compile Include="Infrastructure\Logging\LogEntry.cs" />
-    <Compile Include="Infrastructure\Logging\Loggers\DefaultLogger.cs" />
+    <Compile Include="Infrastructure\Logging\Loggers\DbLogger.cs" />
     <Compile Include="Infrastructure\Logging\MessageLog.cs" />
     <Compile Include="Infrastructure\Logging\Severity.cs" />
     <Compile Include="Infrastructure\Logging\StepLog.cs" />

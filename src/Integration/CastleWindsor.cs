@@ -23,7 +23,7 @@ namespace Vertica.Integration
                 subject.Initialize(container);
 
             container.Install(
-                new ConventionInstaller()
+				Install.ByConvention
                     .AddFromAssemblyOfThis<ConventionInstaller>()
 					.Ignore<IHost>()
                     .Ignore<ITask>()

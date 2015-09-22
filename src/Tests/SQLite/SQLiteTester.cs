@@ -18,21 +18,14 @@ namespace Vertica.Integration.Tests.SQLite
 		[SetUp]
 		public void Initialize()
 		{
-			_fileName = String.Format("{0:N}.sqlite", Guid.NewGuid());
+			_fileName = String.Format("Data\\{0:N}.sqlite", Guid.NewGuid());
 
 			var connection = new TestSqliteConnection(_fileName);
 
-			_context = ApplicationContext.Create(application => application
-				.Logging(logging => logging.Disable())
-				.Database(database => database
-					.DisableIntegrationDb()
-					.SQLite(sqlite => sqlite.AddConnection(connection)))
-				.Migration(migration => migration
-					.AddFromNamespaceOfThis<M1_CreateMyTable>(DatabaseServer.Sqlite, connection.ConnectionString))
-				.Tasks(tasks => tasks
-					.Clear()
-					.Task<MigrateTask>()
-					.AddFromAssemblyOfThis<SQLiteTester>()));
+			_context = TestableApplicationContext.Create(application => application
+				.Database(database => database.SQLite(sqlite => sqlite.AddConnection(connection)))
+				.Migration(migration => migration.AddFromNamespaceOfThis<M1_CreateMyTable>(DatabaseServer.Sqlite, connection.ConnectionString))
+				.Tasks(tasks => tasks.Clear().Task<MigrateTask>().AddFromAssemblyOfThis<SQLiteTester>()));
 		}
 
 		[TearDown]
@@ -40,8 +33,7 @@ namespace Vertica.Integration.Tests.SQLite
 		{
 			_context.Dispose();
 
-			if (File.Exists(_fileName))
-				File.Delete(_fileName);
+			File.Delete(_fileName);
 		}
 
 		[TestCase("TestMigrationsTask")]
@@ -86,7 +78,7 @@ SELECT last_insert_rowid();", new { Name = "Test" });
 		public class TestSqliteConnection : SQLiteConnection
 		{
 			public TestSqliteConnection(string fileName)
-				: base(FromFileInCurrentDirectory(fileName))
+				: base(FromCurrentDirectory(fileName))
 			{
 			}
 		}

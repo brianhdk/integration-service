@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Vertica.Integration.Infrastructure.Logging.Loggers
 {
-    public class EventLogger : Logger
+	internal class EventLogger : Logger
     {
         private static readonly CultureInfo English = CultureInfo.GetCultureInfo("en-US");
 

@@ -68,6 +68,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
         void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
         {
+	        Application.Database(database => _dbs.IntegrationDbDisabled = database.IntegrationDbDisabled);
             container.RegisterInstance<IMigrationDbs>(_dbs);
         }
 
@@ -109,6 +110,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 				_types.Add(migration);
 			}
 
+			public bool IntegrationDbDisabled { get; set; }
 		    public DatabaseServer IntegrationDbDatabaseServer { get; set; }
 		    public bool CheckExistsAndCreateIntegrationDbIfNotFound { get; set; }
 
@@ -116,10 +118,13 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 		    {
 			    if (integrationDb == null) throw new ArgumentNullException("integrationDb");
 
+			    if (IntegrationDbDisabled)
+				    throw new InvalidOperationException(@"IntegrationDb is disabled.");
+
 			    _dbs.Insert(0, integrationDb);
 
-				foreach (Type migration in _types)
-					_dbs.Insert(1, integrationDb.CopyTo(migration));
+			    foreach (Type migration in _types)
+				    _dbs.Insert(1, integrationDb.CopyTo(migration));
 
 			    return this;
 		    }

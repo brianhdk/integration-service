@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 
 namespace Vertica.Integration
 {
@@ -11,7 +12,12 @@ namespace Vertica.Integration
 
 		public string this[string name]
 		{
-			get { return ConfigurationManager.AppSettings[name]; }
+			get
+			{
+				if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
+
+				return ConfigurationManager.AppSettings[name];
+			}
 		}
 	}
 }

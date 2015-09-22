@@ -52,7 +52,7 @@ namespace Vertica.Integration.SQLite
 	    private class IntegrationDb : SQLiteConnection
 	    {
 		    public IntegrationDb(ConnectionString connectionString)
-				: base(connectionString ?? FromFileInCurrentDirectory("IntegrationDb.sqlite"))
+				: base(connectionString ?? FromCurrentDirectory("IntegrationDb.sqlite"))
 		    {
 		    }
 	    }
@@ -70,13 +70,18 @@ namespace Vertica.Integration.SQLite
 			return new System.Data.SQLite.SQLiteConnection(ConnectionString);
 		}
 
-		protected static ConnectionString FromFileInCurrentDirectory(string fileName)
+		protected static ConnectionString FromCurrentDirectory(string filePath)
 		{
-			if (String.IsNullOrWhiteSpace(fileName)) throw new ArgumentException(@"Value cannot be null or empty.", "fileName");
+			if (String.IsNullOrWhiteSpace(filePath)) throw new ArgumentException(@"Value cannot be null or empty.", "filePath");
 
-			string file = Path.Combine(Environment.CurrentDirectory, fileName);
+			filePath = Path.Combine(Environment.CurrentDirectory, filePath);
 
-			return ConnectionString.FromText(String.Format("Data Source={0}", file));
+			DirectoryInfo directoryInfo = new FileInfo(filePath).Directory;
+
+			if (directoryInfo != null && !directoryInfo.Exists)
+				directoryInfo.Create();
+
+			return ConnectionString.FromText(String.Format("Data Source={0}", filePath));
 		}
 	}
 }

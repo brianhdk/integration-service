@@ -5,11 +5,11 @@ using Vertica.Integration.Infrastructure.Database.Extensions;
 
 namespace Vertica.Integration.Infrastructure.Logging.Loggers
 {
-    internal class DefaultLogger : Logger
+    internal class DbLogger : Logger
     {
         private readonly IDbFactory _db;
 
-        public DefaultLogger(IDbFactory db)
+        public DbLogger(IDbFactory db)
         {
             _db = db;
         }

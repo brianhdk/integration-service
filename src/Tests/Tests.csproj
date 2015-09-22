@@ -86,7 +86,10 @@
     <Compile Include="Domain\Monitoring\MessageContainsTextTester.cs" />
     <Compile Include="Domain\Monitoring\MonitorWorkItemTester.cs" />
     <Compile Include="Domain\Monitoring\PingUrlsStepIntegrationTester.cs" />
-    <Compile Include="Infrastructure\Archiving\ArchiveServiceTester.cs" />
+    <Compile Include="Infrastructure\AdvancedConfigurationTester.cs" />
+    <Compile Include="Infrastructure\Archiving\DbArchiveServiceTester.cs" />
+    <Compile Include="Infrastructure\Archiving\FileBasedArchiveServiceTester.cs" />
+    <Compile Include="Infrastructure\Configuration\FileBasedConfigurationRepositoryTester.cs" />
     <Compile Include="Infrastructure\Parsing\CsvParserTester.cs" />
     <Compile Include="Infrastructure\Parsing\CsvRowTester.cs" />
     <Compile Include="Infrastructure\RazorEngine\RazorEngineTester.cs" />
@@ -97,6 +100,7 @@
     <Compile Include="Model\Web\ErrorsControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLite\SQLiteTester.cs" />
+    <Compile Include="TestableApplicationContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

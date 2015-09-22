@@ -2,24 +2,24 @@
 using System.Globalization;
 using System.IO;
 using System.Text;
+using Vertica.Utilities_v4.Extensions.StringExt;
 
 namespace Vertica.Integration.Infrastructure.Logging.Loggers
 {
-    /// <summary>
-    /// Use the UseTextFileLogger(...) extension method from <see cref="TextFileLoggerExtensions"/> for more control and configuration.
-    /// </summary>
-    public class TextFileLogger : Logger
+	internal class TextFileLogger : Logger
     {
         private static readonly CultureInfo English = CultureInfo.GetCultureInfo("en-US");
 
-        private readonly TextFileLoggerConfiguration _configuration;
+		private readonly string _baseDirectory;
+		private readonly TextFileLoggerConfiguration _configuration;
 
-        public TextFileLogger(TextFileLoggerConfiguration configuration = null)
+        public TextFileLogger(IRuntimeSettings settings, TextFileLoggerConfiguration configuration)
         {
-            _configuration = configuration ?? new TextFileLoggerConfiguration();
+	        _baseDirectory = settings["TextLogger.BaseDirectory"].NullIfEmpty() ?? "Data\\Logs";
+	        _configuration = configuration;
         }
 
-        protected override string Insert(TaskLog log)
+		protected override string Insert(TaskLog log)
         {
             FileInfo filePath = EnsureFilePath(log);
 
@@ -103,12 +103,12 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
 
         private FileInfo EnsureFilePath(TaskLog log)
         {
-            return EnsureFilePath(_configuration.GetFilePath(log));
+            return EnsureFilePath(_configuration.GetFilePath(log, _baseDirectory));
         }
 
         private FileInfo EnsureFilePath(ErrorLog log)
         {
-            return EnsureFilePath(_configuration.GetFilePath(log));
+            return EnsureFilePath(_configuration.GetFilePath(log, _baseDirectory));
         }
 
         private FileInfo EnsureFilePath(FileInfo filePath)

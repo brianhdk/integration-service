@@ -1,17 +1,10 @@
 ﻿using System;
-using System.IO;
-using Castle.MicroKernel.Registration;
-using Castle.Windsor;
-using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Infrastructure.Logging.Loggers;
 
 namespace Vertica.Integration.Infrastructure.Logging
 {
-    public class LoggingConfiguration : IInitializable<IWindsorContainer>
+    public class LoggingConfiguration
     {
-        private Type _logger;
-        private TextWriter _console;
-
         internal LoggingConfiguration(ApplicationConfiguration application)
         {
             if (application == null) throw new ArgumentNullException("application");
@@ -23,8 +16,8 @@ namespace Vertica.Integration.Infrastructure.Logging
 
         public LoggingConfiguration Use<T>() where T : Logger
         {
-            _logger = typeof (T);
-
+	        Application.Advanced(advanced => advanced.Register<ILogger, T>());
+            
             return this;
         }
 
@@ -38,31 +31,18 @@ namespace Vertica.Integration.Infrastructure.Logging
             return Use<EventLogger>();
         }
 
-        public LoggingConfiguration Console(TextWriter writer)
-        {
-            if (writer == null) throw new ArgumentNullException("writer");
+		public LoggingConfiguration TextFileLogger(Action<TextFileLoggerConfiguration> textFileLogger = null)
+		{
+			Application.Extensibility(extensibility =>
+			{
+				TextFileLoggerConfiguration configuration =
+					extensibility.Register(() => new TextFileLoggerConfiguration());
 
-            _console = writer;
+				if (textFileLogger != null)
+					textFileLogger(configuration);
+			});
 
-            return this;
-        }
-
-        void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
-        {
-	        if (_logger == null)
-	        {
-		        bool dbDisabled = true;
-		        Application.Database(cfg => dbDisabled = cfg.IntegrationDbDisabled);
-
-		        if (dbDisabled)
-			        EventLogger();
-		        else
-			        Use<DefaultLogger>();
-	        }
-
-	        container.Register(Component.For<ILogger>().ImplementedBy(_logger));
-
-            container.RegisterInstance(_console ?? (Environment.UserInteractive ? System.Console.Out : TextWriter.Null));
-        }
+			return Use<TextFileLogger>();
+		}
     }
 }

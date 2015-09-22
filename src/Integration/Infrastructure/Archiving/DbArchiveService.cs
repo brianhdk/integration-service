@@ -8,11 +8,11 @@ using Vertica.Utilities_v4;
 
 namespace Vertica.Integration.Infrastructure.Archiving
 {
-    public class ArchiveService : IArchiveService
+	internal class DbArchiveService : IArchiveService
     {
         private readonly Func<IDbFactory> _db;
 
-        public ArchiveService(Func<IDbFactory> db)
+        public DbArchiveService(Func<IDbFactory> db)
         {
             _db = db;
         }
