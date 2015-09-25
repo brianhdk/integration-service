@@ -209,6 +209,11 @@
     <Compile Include="Infrastructure\Templating\HtmlHelper.cs" />
     <Compile Include="Infrastructure\Templating\RawString.cs" />
     <Compile Include="Infrastructure\Extensions\OutputterExtensions.cs" />
+    <Compile Include="Infrastructure\Windows\WindowsServiceConfiguration.cs" />
+    <Compile Include="Infrastructure\Windows\IWindowsServices.cs" />
+    <Compile Include="Infrastructure\Windows\IWindowsFactory.cs" />
+    <Compile Include="Infrastructure\Windows\WindowsServices.cs" />
+    <Compile Include="Infrastructure\Windows\WindowsFactory.cs" />
     <Compile Include="InMemoryRuntimeSettings.cs" />
     <Compile Include="IRuntimeSettings.cs" />
     <Compile Include="Model\Arguments.cs" />

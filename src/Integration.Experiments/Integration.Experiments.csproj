@@ -78,7 +78,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ServiceBus, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\WindowsAzure.ServiceBus.3.0.1\lib\net45-full\Microsoft.ServiceBus.dll</HintPath>
+      <HintPath>..\..\packages\WindowsAzure.ServiceBus.3.0.3\lib\net45-full\Microsoft.ServiceBus.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -114,19 +114,19 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Raven.Abstractions, Version=3.0.0.0, Culture=neutral, PublicKeyToken=37f41c7f99471593, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\RavenDB.Client.3.0.3785\lib\net45\Raven.Abstractions.dll</HintPath>
+      <HintPath>..\..\packages\RavenDB.Client.3.0.3800\lib\net45\Raven.Abstractions.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Raven.Client.Lightweight, Version=3.0.0.0, Culture=neutral, PublicKeyToken=37f41c7f99471593, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\RavenDB.Client.3.0.3785\lib\net45\Raven.Client.Lightweight.dll</HintPath>
+      <HintPath>..\..\packages\RavenDB.Client.3.0.3800\lib\net45\Raven.Client.Lightweight.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Rebus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Rebus.0.98.5\lib\NET45\Rebus.dll</HintPath>
+      <HintPath>..\..\packages\Rebus.0.98.12\lib\NET45\Rebus.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Rebus.AzureServiceBus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Rebus.AzureServiceBus.0.98.5\lib\NET45\Rebus.AzureServiceBus.dll</HintPath>
+      <HintPath>..\..\packages\Rebus.AzureServiceBus.0.98.12\lib\NET45\Rebus.AzureServiceBus.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -170,6 +170,7 @@
   <ItemGroup>
     <Compile Include="ArchiveTesterTask.cs" />
     <Compile Include="Azure\AzureTester.cs" />
+    <Compile Include="BizTalkTracker\BizTalkTrackerTester.cs" />
     <Compile Include="ConfigurationExtensions.cs" />
     <Compile Include="CustomDb.cs" />
     <Compile Include="CustomDbTask.cs" />

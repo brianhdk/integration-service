@@ -1,4 +1,5 @@
 ﻿using Vertica.Integration.Experiments;
+using Vertica.Integration.Experiments.BizTalkTracker;
 using Vertica.Integration.Model;
 using Vertica.Integration.Portal;
 using Vertica.Integration.WebApi;
@@ -13,8 +14,8 @@ namespace Vertica.Integration.Console
 				//.Database(database => database.Change(db => db.ConnectionString = ConnectionString.FromName("IntegrationDb.Alternate")))
 				//.Database(database => database.AddConnection(new CustomDb(ConnectionString.FromText("..."))))
 				//.Logging(logging => logging.Use<ConsoleLogger>())
-				.UseWebApi(webApi => webApi
-					.WithPortal())
+				//.UseWebApi(webApi => webApi
+				//	.WithPortal())
 				//.UseWebApi(webApi => webApi
 				//	.AddFromAssemblyOfThis<TestController>()
 				//	.HttpServer(httpServer => httpServer.Configure(configurer =>
@@ -33,7 +34,7 @@ namespace Vertica.Integration.Console
 				//.Fast()
 				//.TestAzure()
 				//.RegisterTasks()
-				.RegisterMigrations()
+				//.RegisterMigrations()
                 //.TestEventLogger()
 				//.TestTextFileLogger()
                 //.TestPaymentService()
@@ -44,6 +45,7 @@ namespace Vertica.Integration.Console
 				//.RegisterMigrations()
 				//.TestRebus(args)
 				//.TestRavenDb()
+				.TestBizTalkTracker()
                 .Void()))
 			{
                 context.Execute(args);

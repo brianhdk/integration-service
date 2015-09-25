@@ -34,6 +34,11 @@ namespace Vertica.Integration.Infrastructure
             return new ConnectionString(() => text);
         }
 
+	    public static ConnectionString Empty
+	    {
+			get { return FromText(String.Empty); }
+	    }
+
         public override string ToString()
         {
             return _value.Value ?? String.Empty;

@@ -1848,7 +1848,8 @@ namespace ConsoleApplication16.Migrations.SQLite
 
 ## How to Disable IntegrationDb
 
-If you are using Integration Service in a way where the requirement on an underlying database seems overkill. Maybe you're using it to expose some few HTTP services or maybe you're using it as a "Run-Once" Legacy Migration platform.
+It is possible to disable the IntegrationDb entirely, if you are using the Integration Service in a way where the requirement on an underlying database seems overkill. 
+Maybe you're using it to expose some few HTTP services or maybe you're using it as a "Run-Once" Legacy Migration platform.
 
 Disabling the IntegrationDb is easy. Use the **.Database(...)** method on part of bootstrapping Integration Service.
 
@@ -1866,7 +1867,7 @@ namespace ConsoleApplication16
 }
 ```
 
-**NOTE** If you Disable IntegrationDb, you will not be able to use all Built-In services/tasks, but Integration Service will provide a detailed error message if you try to do so:
+**NOTE** If you Disable IntegrationDb, we'll try to use fallback implementations for some of the built-in functionality, e.g. logging, configuration and archiving, but if some dependency requires the IntegrationDb (IDbFactory), Integration Service will make sure to provide a detailed error message:
 ```
 Unhandled Exception: Vertica.Integration.Infrastructure.Database.Databases.DatabaseDisabledException: IntegrationDb has been disabled.
 
