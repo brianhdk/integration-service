@@ -3,9 +3,9 @@ using System.Configuration;
 
 namespace Vertica.Integration.Infrastructure
 {
-    public sealed class ConnectionString
+    public sealed class ConnectionString : IEquatable<ConnectionString>
     {
-        private readonly Lazy<string> _value;
+	    private readonly Lazy<string> _value;
 
         private ConnectionString(Func<string> value)
         {
@@ -36,8 +36,27 @@ namespace Vertica.Integration.Infrastructure
 
         public override string ToString()
         {
-            return _value.Value;
+            return _value.Value ?? String.Empty;
         }
+
+		public bool Equals(ConnectionString other)
+		{
+			if (ReferenceEquals(null, other)) return false;
+			if (ReferenceEquals(this, other)) return true;
+			return ToString().Equals(other.ToString(), StringComparison.OrdinalIgnoreCase);
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(null, obj)) return false;
+			if (ReferenceEquals(this, obj)) return true;
+			return obj is ConnectionString && Equals((ConnectionString)obj);
+		}
+
+		public override int GetHashCode()
+		{
+			return ToString().ToLowerInvariant().GetHashCode();
+		}
 
         public static implicit operator string(ConnectionString connectionString)
         {

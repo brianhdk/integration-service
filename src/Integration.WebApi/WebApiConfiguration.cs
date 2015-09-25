@@ -19,9 +19,7 @@ namespace Vertica.Integration.WebApi
         {
             if (application == null) throw new ArgumentNullException("application");
 
-			Application = application
-				.Extensibility(extensibility => extensibility.Register(this))
-				.Hosts(hosts => hosts.Host<WebApiHost>());
+			Application = application.Hosts(hosts => hosts.Host<WebApiHost>());
 
             _scan = new List<Assembly>();
             _add = new List<Type>();

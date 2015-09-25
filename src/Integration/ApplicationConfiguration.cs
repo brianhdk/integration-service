@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Vertica.Integration.Infrastructure;
@@ -14,7 +13,7 @@ using Vertica.Utilities_v4.Extensions.EnumerableExt;
 
 namespace Vertica.Integration
 {
-	public class ApplicationConfiguration : IInitializable<IWindsorContainer>, IDisposable
+	public class ApplicationConfiguration : IInitializable<IWindsorContainer>
     {
 		private readonly ExtensibilityConfiguration _extensibility;
 
@@ -25,8 +24,7 @@ namespace Vertica.Integration
         private readonly LoggingConfiguration _logging;
         private readonly MigrationConfiguration _migration;
         private readonly HostsConfiguration _hosts;
-
-		private Type _runtimeSettings;
+		private readonly AdvancedConfiguration _advanced;
 
 		internal ApplicationConfiguration()
         {
@@ -36,18 +34,26 @@ namespace Vertica.Integration
 
             _customInstallers = new List<IWindsorInstaller>();
 
-            _database = new DatabaseConfiguration(this);
-            _tasks = new TasksConfiguration(this);
-            _logging = new LoggingConfiguration(this);
-            _migration = new MigrationConfiguration(this);
-            _hosts = new HostsConfiguration(this);
+            _database = Register(() => new DatabaseConfiguration(this));
+            _tasks = Register(() => new TasksConfiguration(this));
+            _logging = Register(() => new LoggingConfiguration(this));
+            _migration = Register(() => new MigrationConfiguration(this));
+            _hosts = Register(() => new HostsConfiguration(this));
+			_advanced = Register(() => new AdvancedConfiguration(this));
 
-			_runtimeSettings = typeof (AppConfigRuntimeSettings);
+			Register(() => this);
         }
 
-        public bool IgnoreSslErrors { get; set; }
+		private T Register<T>(Func<T> factory) where T : class
+		{
+			T result = null;
 
-        public ConnectionString DatabaseConnectionString { get { return _database.ConnectionString; } }
+			Extensibility(extensibility => result = extensibility.Register(factory));
+
+			return result;
+		}
+
+        public bool IgnoreSslErrors { get; set; }
 
         public ApplicationConfiguration AddCustomInstaller(IWindsorInstaller installer)
         {
@@ -109,6 +115,14 @@ namespace Vertica.Integration
             return this;
         }
 
+		public ApplicationConfiguration Advanced(Action<AdvancedConfiguration> advanced)
+		{
+			if (advanced != null)
+				advanced(_advanced);
+
+			return this;
+		}
+
 		public ApplicationConfiguration Extensibility(Action<ExtensibilityConfiguration> extensibility)
 		{
 			if (extensibility != null)
@@ -120,12 +134,18 @@ namespace Vertica.Integration
 		public ApplicationConfiguration RuntimeSettings<T>()
 			where T : IRuntimeSettings
 		{
-			_runtimeSettings = typeof (T);
-
-			return this;
+			return Advanced(advanced => advanced.Register<IRuntimeSettings, T>());
 		}
 
-        public ApplicationConfiguration Change(Action<ApplicationConfiguration> change)
+		public ApplicationConfiguration RuntimeSettings<T>(T instance)
+			where T : IRuntimeSettings
+		{
+			if (instance == null) throw new ArgumentNullException("instance");
+
+			return Advanced(advanced => advanced.Register<IRuntimeSettings>(() => instance));
+		}
+
+		public ApplicationConfiguration Change(Action<ApplicationConfiguration> change)
         {
             if (change != null)
                 change(this);
@@ -135,36 +155,7 @@ namespace Vertica.Integration
 
 		void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
         {
-	        container.Register(Component
-				.For<IRuntimeSettings>()
-				.ImplementedBy(_runtimeSettings));
-
             container.Install(_customInstallers.ToArray());
         }
-
-        internal IEnumerable<IInitializable<IWindsorContainer>> ContainerInitializations
-        {
-            get { return _extensibility.ContainerInitializations.Concat(new[] {this}); }
-        }
-
-		public void Dispose()
-		{
-			var exceptions = new List<Exception>();
-
-			_extensibility.Disposers.ForEach(d => 
-			{
-				try
-				{
-					d.Dispose();
-				}
-				catch (Exception ex)
-				{
-					exceptions.Add(ex);
-				}
-			});
-
-			if (exceptions.Count > 0)
-				throw new AggregateException(exceptions);
-		}
     }
 }

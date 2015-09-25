@@ -1,4 +1,5 @@
 ﻿using System;
+using Castle.MicroKernel;
 using Raven.Client;
 using Raven.Client.Document;
 using Vertica.Integration.Infrastructure;
@@ -16,13 +17,18 @@ namespace Vertica.Integration.RavenDB.Infrastructure
 
 		protected internal ConnectionString ConnectionString { get; private set; }
 
-		protected internal virtual void Initialize(IDocumentStore documentStore)
+		protected internal virtual void Initialize(IDocumentStore documentStore, IKernel kernel)
 		{
+			if (documentStore == null) throw new ArgumentNullException("documentStore");
+			if (kernel == null) throw new ArgumentNullException("kernel");
+
 			documentStore.Initialize();
 		}
 
-		protected internal virtual IDocumentStore Create()
+		protected internal virtual IDocumentStore Create(IKernel kernel)
 		{
+			if (kernel == null) throw new ArgumentNullException("kernel");
+
 			var documentStore = new DocumentStore();
 			documentStore.ParseConnectionString(ConnectionString);
 

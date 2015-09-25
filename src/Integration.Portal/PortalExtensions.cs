@@ -14,7 +14,7 @@ namespace Vertica.Integration.Portal
 
 	        webApi.Application.Extensibility(extensibility =>
             {
-	            extensibility.Cache(() =>
+	            extensibility.Register(() =>
 	            {
 					if (!Directory.Exists(PortalConfiguration.Folder))
 					{

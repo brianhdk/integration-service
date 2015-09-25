@@ -6,14 +6,14 @@ using Vertica.Integration.Infrastructure.Database;
 
 namespace Vertica.Integration.Tests.Infrastructure.Archiving
 {
-    [TestFixture]
-    public class ArchiveServiceTester
+	[TestFixture]
+    public class DbArchiveServiceTester
     {
         [Test]
         public void ArchiveText_Verify_DbInteraction()
         {
             IDbSession session;
-            ArchiveService subject = Initialize(out session);
+            DbArchiveService subject = Initialize(out session);
 
             const int expectedId = 1;
             session.ExecuteScalar<int>(null).ReturnsForAnyArgs(expectedId);
@@ -23,7 +23,7 @@ namespace Vertica.Integration.Tests.Infrastructure.Archiving
             Assert.That(archive.Id, Is.EqualTo(expectedId.ToString()));
         }
 
-        private ArchiveService Initialize(out IDbSession session)
+        private DbArchiveService Initialize(out IDbSession session)
         {
             var dbFactory = Substitute.For<IDbFactory>();
             session = Substitute.For<IDbSession>();
@@ -33,7 +33,7 @@ namespace Vertica.Integration.Tests.Infrastructure.Archiving
             IDbTransaction transaction = Substitute.For<IDbTransaction>();
             session.BeginTransaction().Returns(transaction);
 
-            return new ArchiveService(() => dbFactory);
+            return new DbArchiveService(() => dbFactory);
         }
     }
 }

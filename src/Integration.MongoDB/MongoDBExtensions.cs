@@ -14,7 +14,7 @@ namespace Vertica.Integration.MongoDB
 
 			return application.Extensibility(extensibility =>
 			{
-				MongoDbConfiguration configuration = extensibility.Cache(() => new MongoDbConfiguration(application));
+				MongoDbConfiguration configuration = extensibility.Register(() => new MongoDbConfiguration(application));
 
 				mongoDb(configuration);
 			});

@@ -1,24 +1,28 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
-using Vertica.Integration.Infrastructure.Database.Databases;
+using Castle.MicroKernel;
 
 namespace Vertica.Integration.Infrastructure.Database
 {
-    internal class DbFactory<TConnection> : IDbFactory<TConnection> where TConnection : Connection
+	internal class DbFactory<TConnection> : IDbFactory<TConnection>
+		where TConnection : Connection
     {
-	    private readonly Connection _connection;
+		private readonly TConnection _connection;
+		private readonly IKernel _kernel;
 
-	    public DbFactory(Connection connection)
+		public DbFactory(TConnection connection, IKernel kernel)
 	    {
 		    if (connection == null) throw new ArgumentNullException("connection");
+			if (kernel == null) throw new ArgumentNullException("kernel");
 
-		    _connection = connection;
+			_connection = connection;
+			_kernel = kernel;
 	    }
 
-	    public IDbConnection GetConnection()
+		public IDbConnection GetConnection()
 	    {
-		    return _connection.GetConnection();
+		    return _connection.GetConnection(_kernel);
         }
 
         public IDbSession OpenSession()
@@ -29,16 +33,16 @@ namespace Vertica.Integration.Infrastructure.Database
 
     internal class DbFactory : IDbFactory
     {
-        private readonly IDbFactory<DefaultConnection> _decoree;
+	    private readonly IDbFactory<DefaultConnection> _decoree;
 
         public DbFactory(IDbFactory<DefaultConnection> decoree)
         {
-            if (decoree == null) throw new ArgumentNullException("decoree");
+	        if (decoree == null) throw new ArgumentNullException("decoree");
 
-            _decoree = decoree;
+	        _decoree = decoree;
         }
 
-        public IDbConnection GetConnection()
+		public IDbConnection GetConnection()
         {
             return _decoree.GetConnection();
         }

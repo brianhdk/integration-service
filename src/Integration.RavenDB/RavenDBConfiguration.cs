@@ -17,7 +17,7 @@ namespace Vertica.Integration.RavenDB
         {
             if (application == null) throw new ArgumentNullException("application");
 
-			Application = application.Extensibility(extensibility => extensibility.Register(this));
+			Application = application;
 
 			_connections = new List<IWindsorInstaller>();
         }

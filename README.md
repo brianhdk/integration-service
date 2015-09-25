@@ -26,6 +26,7 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
  - [Integrating Payment Service](#integrating-payment-service)
  - [Integrating RavenDB](#integrating-ravendb)
  - [Integrating MongoDB](#integrating-mongodb)
+ - [Integrating SQLite](#integrating-sqlite) 
  - [How to Disable IntegrationDb](#how-to-disable-integrationdb)
  - [How to Change Logger](#how-to-change-logger) 
  - [How to Register Custom dependencies/services](#how-to-register-custom-dependenciesservices)
@@ -1608,15 +1609,15 @@ namespace ConsoleApplication16
 		{
 		}
 
-		protected override IDocumentStore Create()
+		protected override IDocumentStore Create(IKernel kernel)
 		{
 			// Control how the IDocumentStore is created here.
-			return base.Create();
+			return base.Create(kernel);
 		}
 
-		protected override void Initialize(IDocumentStore documentStore)
+		protected override void Initialize(IDocumentStore documentStore, IKernel kernel)
 		{
-			base.Initialize(documentStore);
+			base.Initialize(documentStore, kernel);
 
 			// Add custom initialization here.
 		}
@@ -1730,6 +1731,115 @@ namespace ConsoleApplication16
 		public Guid Id { get; set; }
 		public string Name { get; set; }
 		public string Description { get; set; }
+	}
+}
+```
+
+[Back to Table of Contents](#table-of-contents)
+
+## Integrating SQLite
+
+You can integrate to SQLite by installing the package below:
+
+```
+Install-Package Vertica.Integration.SQLite
+```
+
+This allows you to have connections to one or more SQLite databases.
+
+The example below shows you how to create a connection and how to use it from a Task:
+
+```c#
+using ConsoleApplication16.Migrations.SQLite;
+using Vertica.Integration.Infrastructure.Database;
+using Vertica.Integration.Infrastructure.Database.Migrations;
+using Vertica.Integration.Model;
+using Vertica.Integration.SQLite;
+
+namespace ConsoleApplication16
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+	        var sqliteConnection = new MyConnection("myDb.sqlite");
+
+			IntegrationStartup.Run(args, application => application
+				.Database(database => database
+					.SQLite(sqlite => sqlite.AddConnection(sqliteConnection)))
+				.Migration(migration => migration
+					.AddFromNamespaceOfThis<M1_SQLiteMigration>(DatabaseServer.Sqlite, sqliteConnection.ConnectionString))
+				.Tasks(tasks => tasks.Task<MyTask>()));
+        }
+    }
+
+	public class MyConnection : SQLiteConnection
+	{
+		public MyConnection(string fileName)
+			: base(FromCurrentDirectory(fileName))
+		{
+		}
+	}
+
+	public class MyTask : Task
+	{
+		private readonly ITaskFactory _taskFactory;
+		private readonly ITaskRunner _taskRunner;
+		private readonly IDbFactory<MyConnection> _myConnection;
+
+		public MyTask(IDbFactory<MyConnection> myConnection, ITaskFactory taskFactory, ITaskRunner taskRunner)
+		{
+			_myConnection = myConnection;
+			_taskFactory = taskFactory;
+			_taskRunner = taskRunner;
+		}
+
+		public override string Description
+		{
+			get { return "TBD"; }
+		}
+
+		public override void StartTask(ITaskExecutionContext context)
+		{
+			// Execute migrations - to ensure the database tables are created
+			//  - normally you'll not do this from a Task, but part of your deployment.
+			_taskRunner.Execute(_taskFactory.Get<MigrateTask>());
+
+			using (var session = _myConnection.OpenSession())
+			{
+				int id = session.ExecuteScalar<int>(@"
+INSERT INTO MyTable (Name) VALUES (@Name);
+SELECT last_insert_rowid();", new { Name = "Test" });
+
+				context.Log.Message("Number of rows: {0}", id);
+			}
+		}
+	}
+}
+```
+
+Below is the Migration class used in the example above.
+
+```c#
+using System;
+using FluentMigrator;
+
+namespace ConsoleApplication16.Migrations.SQLite
+{
+	[Migration(1)]
+	public class M1_SQLiteMigration : Migration
+	{
+		public override void Up()
+		{
+			Create.Table("MyTable")
+				.WithColumn("ID").AsInt32().PrimaryKey().Identity()
+				.WithColumn("Name").AsString().NotNullable();
+		}
+
+		public override void Down()
+		{
+			throw new NotSupportedException();
+		}
 	}
 }
 ```

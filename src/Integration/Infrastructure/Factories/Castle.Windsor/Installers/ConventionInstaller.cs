@@ -45,11 +45,11 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
                             classType.GetInterfaces().Any(classInterface => _assemblies.Contains(classInterface.Assembly)) &&
                             !_ignoreTypes.Any(ignoreType => ignoreType.IsAssignableFrom(classType)))
                         .WithService.DefaultInterfaces()
-                        .Configure(registration => ConfigureRegistration(registration)));
+                        .Configure(registration => SetLifestyle(registration.IsFallback())));
             }
         }
 
-        private static ComponentRegistration<object> ConfigureRegistration(ComponentRegistration registration)
+        private static ComponentRegistration<object> SetLifestyle(ComponentRegistration<object> registration)
         {
             if (!Attribute.IsDefined(registration.Implementation, typeof(LifestyleAttribute)))
                 return registration.LifeStyle.Singleton;

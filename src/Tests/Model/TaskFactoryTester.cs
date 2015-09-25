@@ -5,6 +5,7 @@ using NUnit.Framework;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Exceptions;
+using Vertica.Integration.Tests.SQLite;
 
 namespace Vertica.Integration.Tests.Model
 {
@@ -121,14 +122,16 @@ namespace Vertica.Integration.Tests.Model
 
         private static TasksConfiguration AddFromTestAssembly(TasksConfiguration tasks)
         {
-            // skip this because it requires a bit more setup to work (e.g).
-            return tasks.Clear().AddFromAssemblyOfThis<TaskFactoryTester>();
+            return tasks
+				.Clear()
+				.AddFromAssemblyOfThis<TaskFactoryTester>()
+				.Remove<SQLiteTester.TestMigrationsTask>();
         }
 
         private static IDisposable CreateSubject(out ITaskFactory subject, Action<TasksConfiguration> tasks)
         {
             var configuration = new ApplicationConfiguration()
-                .Logging(x => x.NullLogger())
+                .Logging(x => x.Disable())
                 .Database(x => x.DisableIntegrationDb());
 
             configuration.Tasks(tasks);

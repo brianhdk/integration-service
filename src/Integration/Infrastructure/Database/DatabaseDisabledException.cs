@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Vertica.Integration.Infrastructure.Database.Databases
+namespace Vertica.Integration.Infrastructure.Database
 {
     [Serializable]
     public class DatabaseDisabledException : Exception

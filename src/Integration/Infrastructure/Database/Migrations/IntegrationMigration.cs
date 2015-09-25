@@ -26,6 +26,11 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 			get { return Resolve<IConfigurationService>(); }
 		}
 
+		protected IConfigurationRepository ConfigurationRepository
+		{
+			get { return Resolve<IConfigurationRepository>(); }
+		}
+
 		protected IRuntimeSettings RuntimeSettings
 		{
 			get { return Resolve<IRuntimeSettings>(); }
@@ -38,7 +43,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
 		protected Configuration.Configuration GetRawConfiguration(string id)
 		{
-			return ConfigurationService.Get(id);
+			return ConfigurationRepository.Get(id);
 		}
 
 		protected T GetConfiguration<T>() where T : class, new()
@@ -79,7 +84,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 				SaveRawConfiguration(newConfiguration);
 
 				// Delete the old configuration
-				ConfigurationService.Delete(oldConfiguration.Id);
+				ConfigurationRepository.Delete(oldConfiguration.Id);
 			}
 		}
 

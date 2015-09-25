@@ -3,14 +3,13 @@ using System.Text;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
-using Vertica.Integration.Infrastructure.Database.Databases;
 
 namespace Vertica.Integration.Infrastructure.Database.Castle.Windsor
 {
     internal class DbInstaller : DbInstaller<DefaultConnection>
 	{
 		public DbInstaller(DefaultConnection connection)
-			: base(connection)
+			: base(connection, connection.IsDisabled)
 		{
 		}
 
@@ -27,30 +26,33 @@ namespace Vertica.Integration.Infrastructure.Database.Castle.Windsor
 		}
 	}
 
-	public class DbInstaller<TConnection> : IWindsorInstaller
+	internal class DbInstaller<TConnection> : IWindsorInstaller
 		where TConnection : Connection
 	{
 		private readonly TConnection _connection;
+		private readonly bool _isDisabled;
 
-	    public DbInstaller(TConnection connection)
+		public DbInstaller(TConnection connection, bool isDisabled = false)
 		{
 			if (connection == null) throw new ArgumentNullException("connection");
 
 			_connection = connection;
+			_isDisabled = isDisabled;
 		}
 
 		public virtual void Install(IWindsorContainer container, IConfigurationStore store)
 		{
-            var disabled = _connection as IDisabledConnection;
+			if (container.Kernel.HasComponent(typeof(IDbFactory<TConnection>)))
+				throw new InvalidOperationException(String.Format("Only one {0} can be installed.", typeof(TConnection).FullName));
 
-		    if (disabled != null)
+		    if (_isDisabled)
 		    {
 		        container.Register(
 		            Component.For<IDbFactory<TConnection>>()
 		                .UsingFactoryMethod<IDbFactory<TConnection>>((kernel, model, context) =>
 		                {
 		                    var sb = new StringBuilder();
-		                    sb.AppendLine(disabled.ExceptionMessage);
+							sb.AppendLine("DbFactory has been disabled.");
 		                    sb.AppendLine();
 
 		                    sb.AppendLine("Examine the DependencyChain below to see which component has a dependency of this:");
@@ -65,7 +67,7 @@ namespace Vertica.Integration.Infrastructure.Database.Castle.Windsor
 		    {
                 container.Register(
                     Component.For<IDbFactory<TConnection>>()
-                        .UsingFactoryMethod(() => new DbFactory<TConnection>(_connection)));
+                        .UsingFactoryMethod(kernel => new DbFactory<TConnection>(_connection, kernel)));
 		    }
 		}
 	}

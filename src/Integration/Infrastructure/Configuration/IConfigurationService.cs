@@ -1,4 +1,6 @@
-﻿namespace Vertica.Integration.Infrastructure.Configuration
+﻿using Vertica.Integration.Infrastructure.Archiving;
+
+namespace Vertica.Integration.Infrastructure.Configuration
 {
     public interface IConfigurationService
     {
@@ -8,9 +10,6 @@
         TConfiguration Save<TConfiguration>(TConfiguration configuration, string updatedBy, bool createArchiveBackup = false)
             where TConfiguration : class, new();
 
-        Configuration[] GetAll();
-        Configuration Get(string id);
-        Configuration Save(Configuration configuration, string updatedBy, bool createArchiveBackup = false);
-        void Delete(string id);
+	    ArchiveCreated Backup(string id);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using Castle.MicroKernel;
 using Raven.Client;
 using Vertica.Integration.RavenDB.Infrastructure;
 
@@ -9,14 +10,14 @@ namespace Vertica.Integration.RavenDB
 	{
 		private readonly Lazy<IDocumentStore> _documentStore;
 
-		public RavenDbFactory(Connection connection)
+		public RavenDbFactory(TConnection connection, IKernel kernel)
 		{
 			if (connection == null) throw new ArgumentNullException("connection");
 			
 			_documentStore = new Lazy<IDocumentStore>(() =>
 			{
-				IDocumentStore documentStore = connection.Create();
-				connection.Initialize(documentStore);
+				IDocumentStore documentStore = connection.Create(kernel);
+				connection.Initialize(documentStore, kernel);
 
 				return documentStore;
 			});

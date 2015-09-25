@@ -1,4 +1,5 @@
 ﻿using System;
+using Castle.MicroKernel;
 using MongoDB.Driver;
 using Vertica.Integration.Infrastructure;
 
@@ -15,14 +16,18 @@ namespace Vertica.Integration.MongoDB.Infrastructure
 
 		protected internal ConnectionString ConnectionString { get; private set; }
 
-		protected internal virtual MongoUrl MongoUrl
+		protected internal virtual MongoUrl CreateMongoUrl(IKernel kernel)
 		{
-			get { return new MongoUrl(ConnectionString); }
+			if (kernel == null) throw new ArgumentNullException("kernel");
+
+			return new MongoUrl(ConnectionString);
 		}
 
-	    protected internal virtual IMongoClient Create()
+		protected internal virtual IMongoClient Create(IKernel kernel)
 	    {
-	        return new MongoClient(MongoUrl);
+		    if (kernel == null) throw new ArgumentNullException("kernel");
+
+			return new MongoClient(CreateMongoUrl(kernel));
 	    }
 	}
 }

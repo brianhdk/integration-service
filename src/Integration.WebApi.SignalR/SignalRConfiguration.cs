@@ -15,8 +15,7 @@ namespace Vertica.Integration.WebApi.SignalR
         {
             if (application == null) throw new ArgumentNullException("application");
 
-			Application = application
-				.Extensibility(extensibility => extensibility.Register(this));
+			Application = application;
 
             _assemblies = new List<Assembly>();
 			//_pipelineModules = new List<Type>();

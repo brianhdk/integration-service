@@ -18,7 +18,7 @@ namespace Vertica.Integration.Model
         {
             if (application == null) throw new ArgumentNullException("application");
 
-			Application = application.Extensibility(extensibility => extensibility.Register(this));
+			Application = application;
 
             _scan = new List<Assembly>();
             _simpleTasks = new List<Type>();

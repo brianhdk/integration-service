@@ -1,4 +1,5 @@
 ﻿using System;
+using Castle.MicroKernel;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Vertica.Integration.Infrastructure;
@@ -16,8 +17,10 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage
 
         protected internal ConnectionString ConnectionString { get; private set; }
 
-		protected internal virtual CloudBlobClient Create()
+		protected internal virtual CloudBlobClient Create(IKernel kernel)
 		{
+			if (kernel == null) throw new ArgumentNullException("kernel");
+
 			CloudStorageAccount account = CloudStorageAccount.Parse(ConnectionString);
 			CloudBlobClient client = account.CreateCloudBlobClient();
 

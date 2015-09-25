@@ -16,17 +16,17 @@ namespace Vertica.Integration.Experiments.Logging
 
 		protected override string Insert(TaskLog log)
 		{
-			throw new NotImplementedException();
+			throw new NotSupportedException();
 		}
 
 		protected override string Insert(MessageLog log)
 		{
-			throw new NotImplementedException();
+			throw new NotSupportedException();
 		}
 
 		protected override string Insert(StepLog log)
 		{
-			throw new NotImplementedException();
+			throw new NotSupportedException();
 		}
 
 		protected override string Insert(ErrorLog log)

@@ -1,4 +1,21 @@
-﻿$ErrorActionPreference = "Stop"
+﻿[CmdletBinding()]
+Param(
+	[Parameter(Mandatory=$false)]
+	[ValidateSet("Local", "Remote")]
+	[string]$target = "Local"
+)
+
+function Get-Target() {
+
+    if ($target -eq "Remote") {
+
+		Return "\\nuget.vertica.dk\nuget.vertica.dk\root\Packages"
+	}
+
+	Return "D:\Dropbox\Development\NuGet.Packages"
+}
+
+$ErrorActionPreference = "Stop"
 $script_directory = Split-Path -Parent $PSCommandPath
 
 $settings = @{
@@ -14,12 +31,13 @@ $settings = @{
 		"integration_ravendb" = Resolve-Path $script_directory\..\src\Integration.RavenDB
 		"integration_mongodb" = Resolve-Path $script_directory\..\src\Integration.MongoDB
 		"integration_rebus" = Resolve-Path $script_directory\..\src\Integration.Rebus
+		"integration_sqlite" = Resolve-Path $script_directory\..\src\Integration.SQLite
     }
     "tools" = @{
         "nuget" = Resolve-Path $script_directory\..\.nuget\NuGet.exe
     }
 	"packages" = @{
-		"destination" = "\\nuget.vertica.dk\nuget.vertica.dk\root\Packages"
+		"destination" = Get-Target
 		#"destination" = "D:\Dropbox\Development\NuGet.Packages"
 	}
 }

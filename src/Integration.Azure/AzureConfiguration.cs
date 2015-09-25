@@ -6,17 +6,18 @@ namespace Vertica.Integration.Azure
 {
     public class AzureConfiguration
     {
-	    private readonly AzureBlobStorageConfiguration _blobStorage;
-		private readonly AzureServiceBusConfiguration _serviceBus;
+	    private AzureBlobStorageConfiguration _blobStorage;
+		private AzureServiceBusConfiguration _serviceBus;
 
         internal AzureConfiguration(ApplicationConfiguration application)
         {
             if (application == null) throw new ArgumentNullException("application");
 
-			Application = application.Extensibility(extensibility => extensibility.Register(this));
-
-	        _blobStorage = new AzureBlobStorageConfiguration(application);
-	        _serviceBus = new AzureServiceBusConfiguration(application);
+			Application = application.Extensibility(extensibility =>
+			{
+				_blobStorage = extensibility.Register(() => new AzureBlobStorageConfiguration(application));
+				_serviceBus = extensibility.Register(() => new AzureServiceBusConfiguration(application));				
+			});
         }
 
         public ApplicationConfiguration Application { get; private set; }

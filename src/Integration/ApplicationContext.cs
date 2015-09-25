@@ -12,7 +12,6 @@ namespace Vertica.Integration
     public sealed class ApplicationContext : IApplicationContext
     {
         private static readonly Lazy<Action> EnsureSingleton = new Lazy<Action>(() => () => { });
-		private static readonly Lazy<Action> Disposed = new Lazy<Action>(() => () => { });
 
 	    private readonly ApplicationConfiguration _configuration;
 
@@ -20,7 +19,9 @@ namespace Vertica.Integration
 	    private readonly IArgumentsParser _parser;
 	    private readonly IHost[] _hosts;
 
-	    private ApplicationContext(Action<ApplicationConfiguration> application)
+		private readonly Lazy<Action> _disposed = new Lazy<Action>(() => () => { });
+
+	    internal ApplicationContext(Action<ApplicationConfiguration> application)
         {
             _configuration = new ApplicationConfiguration();
 
@@ -44,10 +45,10 @@ namespace Vertica.Integration
 
 	        EnsureSingleton.Value();
 
-	        return new ApplicationContext(application);
+		    return new ApplicationContext(application);
 	    }
 
-        public void Execute(params string[] args)
+	    public void Execute(params string[] args)
         {
             if (args == null) throw new ArgumentNullException("args");
 
@@ -71,15 +72,28 @@ namespace Vertica.Integration
 
         public void Dispose()
 		{
-			if (Disposed.IsValueCreated)
+			if (_disposed.IsValueCreated)
 				throw new InvalidOperationException("ApplicationContext has already been disposed.");
 
-			Disposed.Value();
+			_disposed.Value();
+
+			_configuration.Extensibility(extensibility => 
+			{
+				foreach (var disposable in extensibility.OfType<IDisposable>())
+				{
+					try
+					{
+						disposable.Dispose();
+					}
+					catch (Exception ex)
+					{
+						LogException(ex);
+					}
+				}
+			});
 
 			AppDomain.CurrentDomain.UnhandledException -= LogException;
-
 			_container.Dispose();
-			_configuration.Dispose();
 		}
 
         private void LogException(object sender, UnhandledExceptionEventArgs e)

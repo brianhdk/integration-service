@@ -1,4 +1,5 @@
 ﻿using System;
+using Castle.MicroKernel;
 using MongoDB.Driver;
 using Vertica.Integration.Infrastructure;
 
@@ -21,23 +22,20 @@ namespace Vertica.Integration.MongoDB.Infrastructure
 			_connection = connection;
 		}
 
-		protected internal override MongoUrl MongoUrl
-		{
-			get
-			{
-				if (_connection != null)
-					return _connection.MongoUrl;
-
-				return base.MongoUrl;
-			}
-		}
-
-		protected internal override IMongoClient Create()
+		protected internal override MongoUrl CreateMongoUrl(IKernel kernel)
 		{
 			if (_connection != null)
-				return _connection.Create();
+				return _connection.CreateMongoUrl(kernel);
 
-			return base.Create();
+			return base.CreateMongoUrl(kernel);
+		}
+
+		protected internal override IMongoClient Create(IKernel kernel)
+		{
+			if (_connection != null)
+				return _connection.Create(kernel);
+
+			return base.Create(kernel);
 		}
     }
 }
