@@ -6,14 +6,14 @@ namespace Vertica.Integration.PaymentService
 {
     public static class PaymentServiceExtensions
     {
-        public static ApplicationConfiguration UsePaymentService(this ApplicationConfiguration builder)
+        public static ApplicationConfiguration UsePaymentService(this ApplicationConfiguration application)
         {
-            if (builder == null) throw new ArgumentNullException("builder");
+            if (application == null) throw new ArgumentNullException("application");
 
-            builder.AddCustomInstaller(Install.ByConvention
+            application.AddCustomInstaller(Install.ByConvention
                 .AddFromAssemblyOfThis<ITransactionStatusService>());
 
-            return builder;
+            return application;
         }
     }
 }
