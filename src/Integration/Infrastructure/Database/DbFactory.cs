@@ -1,6 +1,7 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using Castle.MicroKernel;
 
 namespace Vertica.Integration.Infrastructure.Database
 {
@@ -8,17 +9,20 @@ namespace Vertica.Integration.Infrastructure.Database
 		where TConnection : Connection
     {
 		private readonly TConnection _connection;
+		private readonly IKernel _kernel;
 
-		public DbFactory(TConnection connection)
+		public DbFactory(TConnection connection, IKernel kernel)
 	    {
 		    if (connection == null) throw new ArgumentNullException("connection");
+			if (kernel == null) throw new ArgumentNullException("kernel");
 
-		    _connection = connection;
+			_connection = connection;
+			_kernel = kernel;
 	    }
 
 		public IDbConnection GetConnection()
 	    {
-		    return _connection.GetConnection();
+		    return _connection.GetConnection(_kernel);
         }
 
         public IDbSession OpenSession()

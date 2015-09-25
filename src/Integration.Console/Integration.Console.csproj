@@ -140,6 +140,10 @@
       <Project>{9078656D-7C5E-469C-BFC6-1B9AB2CE9AE1}</Project>
       <Name>Integration.Rebus</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Integration.SQLite\Integration.SQLite.csproj">
+      <Project>{F644F439-7604-44D1-97C0-855081F8A2D8}</Project>
+      <Name>Integration.SQLite</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Integration.WebApi.SignalR\Integration.WebApi.SignalR.csproj">
       <Project>{B2C0D9E2-5B61-444E-99A3-79C8EE3D569A}</Project>
       <Name>Integration.WebApi.SignalR</Name>

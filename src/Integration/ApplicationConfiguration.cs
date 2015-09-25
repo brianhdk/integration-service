@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Vertica.Integration.Infrastructure;
@@ -14,7 +13,7 @@ using Vertica.Utilities_v4.Extensions.EnumerableExt;
 
 namespace Vertica.Integration
 {
-	public class ApplicationConfiguration : IInitializable<IWindsorContainer>, IDisposable
+	public class ApplicationConfiguration : IInitializable<IWindsorContainer>
     {
 		private readonly ExtensibilityConfiguration _extensibility;
 
@@ -41,6 +40,8 @@ namespace Vertica.Integration
             _migration = Register(() => new MigrationConfiguration(this));
             _hosts = Register(() => new HostsConfiguration(this));
 			_advanced = Register(() => new AdvancedConfiguration(this));
+
+			Register(() => this);
         }
 
 		private T Register<T>(Func<T> factory) where T : class
@@ -156,30 +157,5 @@ namespace Vertica.Integration
         {
             container.Install(_customInstallers.ToArray());
         }
-
-        internal IEnumerable<IInitializable<IWindsorContainer>> ContainerInitializations
-        {
-            get { return _extensibility.ContainerInitializations.Concat(new[] { this }); }
-        }
-
-		public void Dispose()
-		{
-			var exceptions = new List<Exception>();
-
-			_extensibility.Disposers.ForEach(d => 
-			{
-				try
-				{
-					d.Dispose();
-				}
-				catch (Exception ex)
-				{
-					exceptions.Add(ex);
-				}
-			});
-
-			if (exceptions.Count > 0)
-				throw new AggregateException(exceptions);
-		}
     }
 }

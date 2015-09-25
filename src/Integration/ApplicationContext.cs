@@ -77,10 +77,23 @@ namespace Vertica.Integration
 
 			_disposed.Value();
 
-			AppDomain.CurrentDomain.UnhandledException -= LogException;
+			_configuration.Extensibility(extensibility => 
+			{
+				foreach (var disposable in extensibility.OfType<IDisposable>())
+				{
+					try
+					{
+						disposable.Dispose();
+					}
+					catch (Exception ex)
+					{
+						LogException(ex);
+					}
+				}
+			});
 
+			AppDomain.CurrentDomain.UnhandledException -= LogException;
 			_container.Dispose();
-			_configuration.Dispose();
 		}
 
         private void LogException(object sender, UnhandledExceptionEventArgs e)

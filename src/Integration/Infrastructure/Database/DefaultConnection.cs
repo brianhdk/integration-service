@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using Castle.MicroKernel;
 
 namespace Vertica.Integration.Infrastructure.Database
 {
@@ -27,12 +28,12 @@ namespace Vertica.Integration.Infrastructure.Database
 			_connection = connection;
 		}
 
-		protected internal override IDbConnection GetConnection()
+		protected internal override IDbConnection GetConnection(IKernel kernel)
 		{
 			if (_connection != null)
-				return _connection.GetConnection();
+				return _connection.GetConnection(kernel);
 					
-			return base.GetConnection();
+			return base.GetConnection(kernel);
 		}
 
 		internal bool IsDisabled

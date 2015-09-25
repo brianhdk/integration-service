@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using Castle.MicroKernel;
 
 namespace Vertica.Integration.Infrastructure.Database
 {
@@ -15,8 +16,10 @@ namespace Vertica.Integration.Infrastructure.Database
 
 		public ConnectionString ConnectionString { get; private set; }
 
-		protected internal virtual IDbConnection GetConnection()
+		protected internal virtual IDbConnection GetConnection(IKernel kernel)
 		{
+			if (kernel == null) throw new ArgumentNullException("kernel");
+
 			return new SqlConnection(ConnectionString);
 		}
 	}

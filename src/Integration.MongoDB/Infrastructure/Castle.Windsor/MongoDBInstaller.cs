@@ -42,7 +42,7 @@ namespace Vertica.Integration.MongoDB.Infrastructure.Castle.Windsor
         {
             container.Register(
                 Component.For<IMongoDbClientFactory<TConnection>>()
-                    .UsingFactoryMethod(() => new MongoDBClientFactory<TConnection>(_connection)));
+                    .UsingFactoryMethod(kernel => new MongoDBClientFactory<TConnection>(_connection, kernel)));
         }
     }
 }

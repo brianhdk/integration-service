@@ -1,4 +1,5 @@
 ﻿using System;
+using Castle.MicroKernel;
 using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
 using Vertica.Integration.Infrastructure;
@@ -22,20 +23,20 @@ namespace Vertica.Integration.Azure.Infrastructure.ServiceBus
 			_connection = connection;
 		}
 
-		protected internal override NamespaceManager CreateNamespaceManager()
+		protected internal override NamespaceManager CreateNamespaceManager(IKernel kernel)
 		{
 			if (_connection != null)
-				return _connection.CreateNamespaceManager();
+				return _connection.CreateNamespaceManager(kernel);
 
-			return base.CreateNamespaceManager();
+			return base.CreateNamespaceManager(kernel);
 		}
 
-		protected internal override QueueClient CreateQueueClient(string queueName = null)
+		protected internal override QueueClient CreateQueueClient(IKernel kernel, string queueName = null)
 		{
 			if (_connection != null)
-				return _connection.CreateQueueClient(queueName);
+				return _connection.CreateQueueClient(kernel, queueName);
 
-			return base.CreateQueueClient(queueName);
+			return base.CreateQueueClient(kernel, queueName);
 		}
 	}
 }

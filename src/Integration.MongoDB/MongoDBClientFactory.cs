@@ -1,4 +1,5 @@
 ﻿using System;
+using Castle.MicroKernel;
 using MongoDB.Driver;
 using Vertica.Integration.MongoDB.Infrastructure;
 
@@ -10,13 +11,14 @@ namespace Vertica.Integration.MongoDB
         private readonly Lazy<IMongoClient> _client;
         private readonly Lazy<IMongoDatabase> _database;
 
-		public MongoDBClientFactory(TConnection connection)
+		public MongoDBClientFactory(TConnection connection, IKernel kernel)
         {
             if (connection == null) throw new ArgumentNullException("connection");
+			if (kernel == null) throw new ArgumentNullException("kernel");
 
-            _client = new Lazy<IMongoClient>(() =>
+			_client = new Lazy<IMongoClient>(() =>
             {
-                IMongoClient client = connection.Create();
+                IMongoClient client = connection.Create(kernel);
                 client.Settings.Freeze();
 
                 return client;
@@ -24,10 +26,15 @@ namespace Vertica.Integration.MongoDB
 
             _database = new Lazy<IMongoDatabase>(() =>
             {
-                if (String.IsNullOrWhiteSpace(connection.MongoUrl.DatabaseName))
+	            MongoUrl mongoUrl = connection.CreateMongoUrl(kernel);
+
+	            if (mongoUrl == null)
+		            return null;
+
+                if (String.IsNullOrWhiteSpace(mongoUrl.DatabaseName))
                     return null;
 
-                return Client.GetDatabase(connection.MongoUrl.DatabaseName);
+                return Client.GetDatabase(mongoUrl.DatabaseName);
             });
         }
 

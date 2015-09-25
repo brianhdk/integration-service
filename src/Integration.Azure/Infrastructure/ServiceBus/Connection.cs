@@ -1,4 +1,5 @@
 ﻿using System;
+using Castle.MicroKernel;
 using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
 using Vertica.Integration.Infrastructure;
@@ -16,13 +17,17 @@ namespace Vertica.Integration.Azure.Infrastructure.ServiceBus
 
         protected internal ConnectionString ConnectionString { get; private set; }
 
-		protected internal virtual NamespaceManager CreateNamespaceManager()
+		protected internal virtual NamespaceManager CreateNamespaceManager(IKernel kernel)
 		{
+			if (kernel == null) throw new ArgumentNullException("kernel");
+
 			return NamespaceManager.CreateFromConnectionString(ConnectionString);
 		}
 
-		protected internal virtual QueueClient CreateQueueClient(string queueName = null)
+		protected internal virtual QueueClient CreateQueueClient(IKernel kernel, string queueName = null)
 		{
+			if (kernel == null) throw new ArgumentNullException("kernel");
+
 			if (!String.IsNullOrWhiteSpace(queueName))
 				return QueueClient.CreateFromConnectionString(ConnectionString, queueName);
 

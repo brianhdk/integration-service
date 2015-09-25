@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Castle.Facilities.TypedFactory;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.Resolvers;
@@ -19,8 +20,11 @@ namespace Vertica.Integration
             container.Kernel.AddFacility<TypedFactoryFacility>();
             container.Register(Component.For<ILazyComponentLoader>().ImplementedBy<LazyOfTComponentLoader>());
 
-            foreach (IInitializable<IWindsorContainer> subject in configuration.ContainerInitializations)
-                subject.Initialize(container);
+	        configuration.Extensibility(extensibility =>
+	        {
+		        foreach (var subject in extensibility.OfType<IInitializable<IWindsorContainer>>())
+			        subject.Initialize(container);
+	        });
 
             container.Install(
 				Install.ByConvention

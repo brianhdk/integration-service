@@ -1,4 +1,5 @@
 ﻿using System;
+using Castle.MicroKernel;
 using Raven.Client;
 using Vertica.Integration.Infrastructure;
 
@@ -21,24 +22,24 @@ namespace Vertica.Integration.RavenDB.Infrastructure
 			_connection = connection;
 		}
 
-		protected internal override void Initialize(IDocumentStore documentStore)
+		protected internal override void Initialize(IDocumentStore documentStore, IKernel kernel)
 		{
 			if (_connection != null)
 			{
-				_connection.Initialize(documentStore);
+				_connection.Initialize(documentStore, kernel);
 			}
 			else
 			{
-				base.Initialize(documentStore);
+				base.Initialize(documentStore, kernel);
 			}
 		}
 
-		protected internal override IDocumentStore Create()
+		protected internal override IDocumentStore Create(IKernel kernel)
 		{
 			if (_connection != null)
-				return _connection.Create();
+				return _connection.Create(kernel);
 
-			return base.Create();
+			return base.Create(kernel);
 		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using Castle.MicroKernel;
 using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace Vertica.Integration.Azure.Infrastructure.BlobStorage
@@ -7,15 +8,17 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage
         where TConnection : Connection
     {
 	    private readonly TConnection _connection;
+	    private readonly IKernel _kernel;
 
-	    public AzureBlobStorageClientFactory(TConnection connection)
+	    public AzureBlobStorageClientFactory(TConnection connection, IKernel kernel)
 	    {
 		    _connection = connection;
+		    _kernel = kernel;
 	    }
 
 	    public CloudBlobClient Create()
 	    {
-		    return _connection.Create();
+		    return _connection.Create(_kernel);
 	    }
     }
 

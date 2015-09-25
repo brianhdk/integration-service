@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Vertica.Integration.SQLite")]
-[assembly: AssemblyDescription("Makes it possible to add SQLite connections.")]
+[assembly: AssemblyDescription("Extends the Database configuration to allow SQLite specific connections.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Vertica A/S")]
 [assembly: AssemblyProduct("")]

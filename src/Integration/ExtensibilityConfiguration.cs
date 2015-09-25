@@ -1,11 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Castle.Windsor;
 
 namespace Vertica.Integration
 {
-	public class ExtensibilityConfiguration
+	public class ExtensibilityConfiguration : IEnumerable<object>
 	{
 		private readonly Dictionary<Type, object> _extensions;
 
@@ -32,14 +31,14 @@ namespace Vertica.Integration
 			return value;
 		}
 
-		internal IEnumerable<IInitializable<IWindsorContainer>> ContainerInitializations
+		IEnumerator IEnumerable.GetEnumerator()
 		{
-			get { return _extensions.Values.OfType<IInitializable<IWindsorContainer>>(); }
+			return GetEnumerator();
 		}
 
-		internal IEnumerable<IDisposable> Disposers
+		public IEnumerator<object> GetEnumerator()
 		{
-			get { return _extensions.Values.OfType<IDisposable>(); }
+			return _extensions.Values.GetEnumerator();
 		}
 	}
 }
