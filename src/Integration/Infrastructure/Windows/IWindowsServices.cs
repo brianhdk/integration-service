@@ -12,7 +12,9 @@ namespace Vertica.Integration.Infrastructure.Windows
 		void Stop(string serviceName);
 		void Restart(string serviceName, string[] args = null);
 
-		void Install(Action<WindowsServiceConfiguration> windowsService, string exePath, string[] args = null);
+		void Install(WindowsServiceConfiguration windowsService);
 		void Uninstall(string serviceName);
+
+		void Run(string serviceName, Func<IDisposable> onStartFactory);
 	}
 }

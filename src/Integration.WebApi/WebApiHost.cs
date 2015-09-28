@@ -50,36 +50,33 @@ namespace Vertica.Integration.WebApi
 				WithUrl(url) 
 			});
 
-	        Func<IDisposable> createServer = () => _factory.Create(url);
+	        if (InstallOrRunAsWindowsService(args, url))
+		        return;
 
-			var windowsService = new WindowsService(this.Name(), this.WindowsServiceDescription(url)).OnStart(createServer);
+			using (_factory.Create(url))
+			{
+				if (Environment.UserInteractive && !args.CommandArgs.Contains("noBrowser"))
+					Process.Start(url);
 
-	        if (!_windowsService.Handle(args, windowsService))
-	        {
-				using (createServer())
-				{
-					if (Environment.UserInteractive && !args.CommandArgs.Contains("noBrowser"))
-						Process.Start(url);
-
-					_outputter.WaitUntilEscapeKeyIsHit(@"Press ESCAPE to stop HttpServer...");
-				}
-	        }
+				_outputter.WaitUntilEscapeKeyIsHit(@"Press ESCAPE to stop HttpServer...");
+			}
         }
+
+		private bool InstallOrRunAsWindowsService(HostArguments args, string url)
+		{
+			return _windowsService.Handle(args, new HandleAsWindowsService(this.Name(), this.Name(), String.Format("[URL: {0}] {1}", url, Description), () => _factory.Create(url)));
+		}
 
 	    public string Description
-        {
-			get { return HostDescription; }
-        }
-
-	    internal static string HostDescription
 	    {
 		    get
 		    {
-			    return @"WebApiHost is used to host and expose all WebApi ApiControllers registred part of the initial configuration. To start this Host, use the following command: ""WebApiHost url:http://localhost:8080"" (you can choose any valid URL).";
+			    return
+@"WebApiHost is used to host and expose all WebApi ApiControllers registred part of the initial configuration. To start this Host, use the following command: ""WebApiHost url:http://localhost:8080"" (you can choose any valid URL).";
 		    }
 	    }
 
-	    internal static string EnsureUrl(string url, IRuntimeSettings settings)
+	    private static string EnsureUrl(string url, IRuntimeSettings settings)
 	    {
 			if (String.IsNullOrWhiteSpace(url))
 				url = GetOrGenerateUrl(settings);
@@ -87,7 +84,7 @@ namespace Vertica.Integration.WebApi
 		    return url;
 	    }
 
-	    internal static KeyValuePair<string, string> WithUrl(string url)
+	    private static KeyValuePair<string, string> WithUrl(string url)
 	    {
 		    AssertUrl(url);
 			return new KeyValuePair<string, string>(Url, url);

@@ -1,24 +1,51 @@
 ﻿using System;
+using System.Configuration.Install;
 using System.ServiceProcess;
-using Vertica.Integration.Model.Hosting.Handlers;
 
 namespace Vertica.Integration.Infrastructure.Windows
 {
 	public class WindowsServiceConfiguration
 	{
+		private readonly string _serviceName;
 		private Credentials _credentials;
 		private ServiceStartMode _startMode;
+		private string _displayName;
+		private string _description;
 
-		public WindowsServiceConfiguration()
+		public WindowsServiceConfiguration(string serviceName, string exePath, string args = null)
 		{
+			if (String.IsNullOrWhiteSpace(serviceName)) throw new ArgumentException(@"Value cannot be null or empty.", "serviceName");
+			if (String.IsNullOrWhiteSpace(exePath)) throw new ArgumentException(@"Value cannot be null or empty.", "exePath");
+
+			_serviceName = serviceName;
+			ExePath = exePath;
+			Args = args;
 			WithAccount(ServiceAccount.LocalSystem);
 			StartMode(ServiceStartMode.Manual);
+		}
+
+		public string ExePath { get; private set; }
+		public string Args { get; private set; }
+
+		public WindowsServiceConfiguration DisplayName(string displayName)
+		{
+			if (String.IsNullOrWhiteSpace(displayName)) throw new ArgumentException(@"Value cannot be null or empty.", "displayName");
+
+			_displayName = displayName;
+			return this;
+		}
+
+		public WindowsServiceConfiguration Description(string description)
+		{
+			if (String.IsNullOrWhiteSpace(description)) throw new ArgumentException(@"Value cannot be null or empty.", "description");
+
+			_description = description;
+			return this;
 		}
 
 		public WindowsServiceConfiguration StartMode(ServiceStartMode startMode)
 		{
 			_startMode = startMode;
-
 			return this;
 		}
 
@@ -45,6 +72,28 @@ namespace Vertica.Integration.Infrastructure.Windows
 			};
 
 			return this;
+		}
+
+		internal ServiceInstaller CreateInstaller(ServiceProcessInstaller parent)
+		{
+			if (parent == null) throw new ArgumentNullException("parent");
+
+			if (_credentials != null)
+			{
+				parent.Account = _credentials.Account;
+				parent.Username = _credentials.Username;
+				parent.Password = _credentials.Password;
+			}
+
+			return new ServiceInstaller
+			{
+				Context = new InstallContext(String.Empty, new[] {String.Format("/assemblypath={0}", ExePath)}),
+				ServiceName = _serviceName,
+				DisplayName = _displayName ?? _serviceName,
+				Description = _description ?? _displayName ?? _serviceName,
+				StartType = _startMode,
+				Parent = parent
+			};
 		}
 	}
 }

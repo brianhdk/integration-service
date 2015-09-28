@@ -48,24 +48,14 @@ namespace Vertica.Integration.Infrastructure.Windows
 			Start(serviceName, args);
 		}
 
-		public void Install(Action<WindowsServiceConfiguration> windowsService, string exePath, string[] args = null)
+		public void Install(WindowsServiceConfiguration windowsService)
 		{
 			if (windowsService == null) throw new ArgumentNullException("windowsService");
 
-			var configuration = new WindowsServiceConfiguration();
-			windowsService(configuration);
-
 			using (var process = new ServiceProcessInstaller())
-			using (var installer = new ServiceInstaller())
+			using (var installer = windowsService.CreateInstaller(process))
 			{
-				installer.Context = new InstallContext(String.Empty, new[] { String.Format("/assemblypath={0}", exePath) });
-				installer.ServiceName = Path.GetFileNameWithoutExtension(exePath);
-				installer.DisplayName = Path.GetFileNameWithoutExtension(exePath);
-				installer.Description = "TBD";
-				installer.StartType = ServiceStartMode.Manual;
-				installer.Parent = process;
-
-				if (args != null)
+				if (windowsService.Args != null)
 				{
 					installer.AfterInstall += (sender, installArgs) =>
 					{
@@ -75,7 +65,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 							.SingleOrDefault(x => x.ServiceName.Equals(installer.ServiceName));
 
 						if (controller != null)
-							Win32Service.SetServiceArguments(controller, exePath, args);
+							Win32Service.SetServiceArguments(controller, windowsService.ExePath, windowsService.Args);
 
 						Dispose(services);
 					};					
@@ -99,6 +89,16 @@ namespace Vertica.Integration.Infrastructure.Windows
 				// ReSharper disable AssignNullToNotNullAttribute
 				installer.Uninstall(null); // dictionary must be null, otherwise uninstall will fail
 				// ReSharper restore AssignNullToNotNullAttribute
+			}
+		}
+
+		public void Run(string serviceName, Func<IDisposable> onStartFactory)
+		{
+			if (String.IsNullOrWhiteSpace(serviceName)) throw new ArgumentException(@"Value cannot be null or empty.", "serviceName");
+
+			using (var runner = new WindowsServiceRunner(serviceName, onStartFactory))
+			{
+				ServiceBase.Run(runner);
 			}
 		}
 
@@ -154,10 +154,10 @@ namespace Vertica.Integration.Infrastructure.Windows
 
 		private static class Win32Service
 		{
-			public static void SetServiceArguments(ServiceController serviceController, string exePath, string[] args)
+			public static void SetServiceArguments(ServiceController serviceController, string exePath, string args)
 			{
 				exePath = Path.GetFullPath(exePath.Trim(' ', '\'', '"'));
-				exePath = String.Format("\"{0}\" {1}", exePath, String.Join(" ", args)).TrimEnd();
+				exePath = String.Format("\"{0}\" {1}", exePath, args).TrimEnd();
 
 				if (!ChangeConfiguration(serviceController, exePath))
 					throw new Win32Exception();

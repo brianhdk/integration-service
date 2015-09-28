@@ -176,10 +176,8 @@
     <Compile Include="CustomDbTask.cs" />
     <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Migrations\IntegrationDb\M1442845190_UpdateConfiguration.cs" />
-    <Compile Include="Migrations\IntegrationDb\M1438274532_InstallTaskAsWindowsService.cs" />
     <Compile Include="Migrations\IntegrationDb\M1438174532_Void.cs" />
     <Compile Include="Migrations\IntegrationDb\M1436190505_SetupMonitorConfiguration_MonitorFoldersStep_Ultimate.cs" />
-    <Compile Include="Migrations\IntegrationDb\M143827475_InstallTaskAsScheduleTask.cs" />
     <Compile Include="MongoDbTask.cs" />
     <Compile Include="Monitoring\MonitorDataStep.cs" />
     <Compile Include="MaintenanceTaskTester.cs" />

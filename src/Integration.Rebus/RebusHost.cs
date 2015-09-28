@@ -34,18 +34,11 @@ namespace Vertica.Integration.Rebus
 			// Initialize Rebus
 			_bus();
 
-	        var windowsService = new WindowsService(this.Name(), Description).OnStart(() => new VoidDisposer());
+	        var windowsService = new HandleAsWindowsService(this.Name(), this.Name(), Description);
 
 	        if (!_windowsService.Handle(args, windowsService))
 				_outputter.WaitUntilEscapeKeyIsHit(@"Press ESCAPE to stop Rebus...");
         }
-
-		private class VoidDisposer : IDisposable
-		{
-			public void Dispose()
-			{
-			}
-		}
 
 		public string Description
         {

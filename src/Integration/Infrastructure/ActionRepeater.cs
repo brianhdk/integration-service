@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Vertica.Integration.Infrastructure
 {
-	internal class ActionRepeater : IDisposable
+	public class ActionRepeater : IDisposable
     {
         private readonly TimeSpan _delay;
         private readonly TextWriter _outputter;
@@ -58,7 +58,6 @@ namespace Vertica.Integration.Infrastructure
         public static ActionRepeater Start(Action task, TimeSpan delay, TextWriter outputter)
         {
             var repeater = new ActionRepeater(delay, outputter);
-
             repeater.Repeat(task);
 
             return repeater;

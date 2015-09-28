@@ -1,6 +1,6 @@
 ﻿using System.ServiceProcess;
 
-namespace Vertica.Integration.Model.Hosting.Handlers
+namespace Vertica.Integration.Infrastructure.Windows
 {
 	public class Credentials
 	{

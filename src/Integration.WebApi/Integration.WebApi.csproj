@@ -101,7 +101,6 @@
     <Compile Include="Infrastructure\Castle.Windsor\IWebApiControllers.cs" />
     <Compile Include="Controllers\TasksController.cs" />
     <Compile Include="WebApiConfiguration.cs" />
-    <Compile Include="WebApiHostWindowsServiceExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Integration\Integration.csproj">

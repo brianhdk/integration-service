@@ -1,6 +1,13 @@
-﻿using Vertica.Integration.Infrastructure.Windows;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Reflection;
+using System.ServiceProcess;
+using Vertica.Integration.Infrastructure.Extensions;
+using Vertica.Integration.Infrastructure.Windows;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Hosting;
+using Vertica.Utilities_v4;
 
 namespace Vertica.Integration.Experiments.BizTalkTracker
 {
@@ -10,7 +17,7 @@ namespace Vertica.Integration.Experiments.BizTalkTracker
 		{
 			return application
 				.Database(database => database.DisableIntegrationDb())
-				.Hosts(hosts => hosts.Clear().Host<BizTalkTrackerHost>())
+				//.Hosts(hosts => hosts.Clear().Host<BizTalkTrackerHost>())
 				.Tasks(tasks => tasks.Task<DummyTask>());
 		}
 
@@ -32,19 +39,42 @@ namespace Vertica.Integration.Experiments.BizTalkTracker
 			{
 				// Installer windows service hvis den ikke allerede eksisterer
 
-				using (IWindowsServices windowsServices = _windowsFactory.WindowsServices())
+				using (IWindowsServices windowsServices = _windowsFactory.CreateWindowsServices())
 				{
-					// For at vide om den allerede findes som Windows Service, bør dette tjekkes
+					// Hvis vi kører i UDV - så start tasken her.
 
-					//var serviceExists = windowsServices.Exists("SomeNoneExistingService");
-					//var status = windowsServices.GetStatus("hMailServer");
-					//windowsServices.Restart("hMailServer");
-
-					windowsServices.Uninstall("Integration.Host");
-
-					windowsServices.Install(
-						configuration => { },
-						@"D:\vertica-tfs01\AMO-Toys\DigitalServicePlatform\development\src\Integration.Host\bin\Debug\Integration.Host.exe");
+					if (Environment.UserInteractive)
+					{
+						if (!windowsServices.Exists(this.Name()))
+						{
+							windowsServices.Install(
+								new WindowsServiceConfiguration(
+									this.Name(),
+									Assembly.GetEntryAssembly().Location)
+									.Description(Description)
+									.DisplayName(this.Name())
+									.StartMode(ServiceStartMode.Automatic));
+						}
+						else if (args.CommandArgs.Contains("uninstall"))
+						{
+							windowsServices.Uninstall(this.Name());
+						}
+						else
+						{
+							windowsServices.Start(this.Name());
+							Process.Start("http://localhost");
+						}
+					}
+					else
+					{
+						windowsServices.Run(this.Name(), () =>
+						{
+							return TimeSpan.FromSeconds(5).Repeat(() =>
+							{
+								File.WriteAllText(@"c:\tmp\" + Guid.NewGuid().ToString("N") + ".txt", "");
+							});
+						});							
+					}
 				}
 			}
 
@@ -63,7 +93,6 @@ namespace Vertica.Integration.Experiments.BizTalkTracker
 
 			public override void StartTask(ITaskExecutionContext context)
 			{
-
 			}
 		}
 	}

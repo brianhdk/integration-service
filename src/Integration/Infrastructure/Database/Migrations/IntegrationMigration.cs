@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
-using System.Linq;
 using Castle.MicroKernel;
 using FluentMigrator;
 using Vertica.Integration.Infrastructure.Configuration;
-using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Hosting;
-using Vertica.Integration.Model.Hosting.Handlers;
-using Arguments = Vertica.Integration.Model.Arguments;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
@@ -105,72 +100,16 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 			return Resolve<ITaskFactory>().Get<TTask>();
 		}
 
-		protected void InstallAsWindowsService<TTask>(Action<InstallWindowsService> serviceArgs = null, Arguments arguments = null) where TTask : class, ITask
+		protected void RunExecute(HostArguments args)
 		{
-			ITask task = GetTask<TTask>();
-
-			InstallAsWindowsService(task.Name(), task.Description, serviceArgs, arguments);
+			Resolve<IApplicationContext>().Execute(args);
 		}
 
-		public void InstallAsWindowsService(string command, string description, Action<InstallWindowsService> serviceArgs = null, Arguments arguments = null)
+		protected void RunExecute(params string[] args)
 		{
-			if (String.IsNullOrWhiteSpace(command)) throw new ArgumentException(@"Value cannot be null or empty.", "command");
-			if (String.IsNullOrWhiteSpace(description)) throw new ArgumentException(@"Value cannot be null or empty.", "description");
-
-			var handler = Resolve<IWindowsServiceHandler>();
-
-			var windowsService = new WindowsService(command, description);
-
-			var install = new InstallWindowsService();
-
-			if (serviceArgs != null)
-				serviceArgs(install);
-
-			KeyValuePair<string, string>[] args = (arguments ?? new Arguments()).ToArray();
-
-			handler.Handle(new HostArguments(command, install.ToArray(), args), windowsService);
+			Resolve<IApplicationContext>().Execute(args);
 		}
-
-		protected void UninstallWindowsService<TTask>() where TTask : class, ITask
-		{
-			UninstallWindowsService(typeof(TTask).TaskName());
-		}
-
-		public void UninstallWindowsService(string command)
-		{
-			if (String.IsNullOrWhiteSpace(command)) throw new ArgumentException(@"Value cannot be null or empty.", "command");
-
-			var handler = Resolve<IWindowsServiceHandler>();
-
-			KeyValuePair<string, string>[] commandArgs = { WindowsServiceHandler.UninstallCommand };
-
-			handler.Handle(
-				new HostArguments(command, commandArgs, Arguments.Empty.ToArray()),
-				new WindowsService(command, "dummy"));
-		}
-
-		protected ScheduleTaskConfiguration InstallAsScheduleTask<TTask>(Credentials credentials, Arguments arguments = null, string scheduleTaskFolder = null)
-			where TTask : class, ITask
-		{
-			ITask task = GetTask<TTask>();
-			var conf = new ScheduleTaskConfiguration(task, credentials);
-			conf.AddTaskAction<TTask>(arguments);
-
-			return conf;
-		}
-
-		protected ScheduleTaskConfiguration InstallScheduleTask(Credentials credentials, string name, string description = null, string scheduleTaskFolder = null)
-		{
-			return new ScheduleTaskConfiguration(name, description, credentials, scheduleTaskFolder);
-		}
-
-		protected void UninstallScheduleTask<TTask>(string scheduleTaskFolder = null) where TTask : class, ITask
-		{
-			var installer = new ScheduleTaskInstaller();
-			ITask task = GetTask<TTask>();
-			installer.Uninstall(new ScheduleTask(task, scheduleTaskFolder));
-		}
-
+		
 		public override void Down()
 		{
 		}

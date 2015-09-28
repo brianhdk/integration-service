@@ -2,6 +2,6 @@
 {
     public interface IWindowsServiceHandler
     {
-        bool Handle(HostArguments args, WindowsService service);
+        bool Handle(HostArguments args, HandleAsWindowsService service);
     }
 }

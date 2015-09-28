@@ -11,14 +11,16 @@ namespace Vertica.Integration.Model.Hosting
 		private readonly ITaskFactory _factory;
 		private readonly ITaskRunner _runner;
 		private readonly IWindowsServiceHandler _windowsService;
-		private readonly IScheduleTaskHandler _scheduleTask;
+		private readonly IScheduledTaskHandler _scheduledTask;
+		private readonly TextWriter _textWriter;
 
-		public TaskHost(ITaskFactory factory, ITaskRunner runner, IWindowsServiceHandler windowsService, IScheduleTaskHandler scheduleTask)
+		public TaskHost(ITaskFactory factory, ITaskRunner runner, IWindowsServiceHandler windowsService, IScheduledTaskHandler scheduledTask, TextWriter textWriter)
 		{
 			_factory = factory;
 			_runner = runner;
 			_windowsService = windowsService;
-			_scheduleTask = scheduleTask;
+			_scheduledTask = scheduledTask;
+			_textWriter = textWriter;
 		}
 
 		public bool CanHandle(HostArguments args)
@@ -34,33 +36,40 @@ namespace Vertica.Integration.Model.Hosting
 
 			ITask task = _factory.Get(args.Command);
 
-			var windowsService = new WindowsService(task.Name(), task.Description).OnStart(() =>
+			if (InstallOrRunAsWindowsService(args, task))
+				return;
+
+			if (InstallAsScheduledTask(args, task))
+				return;
+
+			_runner.Execute(task, args.Args);
+		}
+
+		private bool InstallOrRunAsWindowsService(HostArguments args, ITask task)
+		{
+			Func<IDisposable> onStart = () =>
 			{
-				Action run = () => _runner.Execute(task, args.Args);
+				string value;
+				args.CommandArgs.TryGetValue("interval", out value);
 
-				return run.Repeat(args.ParseRepeat(), TextWriter.Null);
-			});
+				TimeSpan interval;
+				if (!TimeSpan.TryParse(value, out interval))
+					interval = TimeSpan.FromMinutes(1);
 
-			if (!InstallOrRunAsWindowsService(args, windowsService) && !InstallAsScheduleTask(args, task))
-				_runner.Execute(task, args.Args);
+				return interval.Repeat(() => _runner.Execute(task, args.Args), _textWriter);
+			};
+
+			return _windowsService.Handle(args, new HandleAsWindowsService(task.Name(), task.Name(), task.Description, onStart));
 		}
 
-		private bool InstallOrRunAsWindowsService(HostArguments args, WindowsService windowsService)
+		private bool InstallAsScheduledTask(HostArguments args, ITask task)
 		{
-			return _windowsService.Handle(args, windowsService);
-		}
-
-		private bool InstallAsScheduleTask(HostArguments args, ITask windowsService)
-		{
-			return _scheduleTask.Handle(windowsService, args);
+			return _scheduledTask.Handle(args, task);
 		}
 
 		public string Description
 		{
-			get
-			{
-				return "Handles execution of Tasks.";
-			}
+			get { return "Handles execution of Tasks."; }
 		}
 	}
 }
