@@ -248,6 +248,10 @@
       <Project>{F644F439-7604-44D1-97C0-855081F8A2D8}</Project>
       <Name>Integration.SQLite</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Integration.WebApi.SignalR\Integration.WebApi.SignalR.csproj">
+      <Project>{B2C0D9E2-5B61-444E-99A3-79C8EE3D569A}</Project>
+      <Name>Integration.WebApi.SignalR</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Integration.WebApi\Integration.WebApi.csproj">
       <Project>{A6CB3949-9637-4952-AB0F-0DE199E29B36}</Project>
       <Name>Integration.WebApi</Name>

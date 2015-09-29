@@ -11,11 +11,15 @@ namespace Vertica.Integration.Model.Hosting
         {
             if (arguments == null) throw new ArgumentNullException("arguments");
 
-	        string command = arguments.FirstOrDefault();
+	        string command = arguments.FirstOrDefault() ?? String.Empty;
+
+	        if (command.TrimStart().StartsWith("-"))
+		        command = String.Empty;
+
             var commandArgs = new List<KeyValuePair<string, string>>();
             var args = new List<KeyValuePair<string, string>>();
 
-            var remaining = new Queue<string>(arguments.Skip(1));
+            var remaining = new Queue<string>(arguments.Skip(String.IsNullOrWhiteSpace(command) ? 0 : 1));
 
             while (remaining.Count > 0)
             {

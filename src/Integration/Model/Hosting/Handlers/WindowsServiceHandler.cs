@@ -19,14 +19,14 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 		internal const string ServiceAccountPasswordCommand = "password";
 
 	    private readonly IRuntimeSettings _runtimeSettings;
-		private readonly IWindowsFactory _windows;
+		private readonly IWindowsServices _windowsServices;
 	    
 	    public WindowsServiceHandler(IRuntimeSettings runtimeSettings, IWindowsFactory windows)
 	    {
 		    if (runtimeSettings == null) throw new ArgumentNullException("runtimeSettings");
 
 		    _runtimeSettings = runtimeSettings;
-			_windows = windows;
+			_windowsServices = windows.WindowsServices();
 	    }
 
         public bool Handle(HostArguments args, HandleAsWindowsService service)
@@ -41,48 +41,45 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 	        Func<KeyValuePair<string, string>, bool> actionIs = command =>
 		        String.Equals(command.Value, action, StringComparison.OrdinalIgnoreCase);
 
-	        using (IWindowsServices windowsServices = _windows.CreateWindowsServices())
-	        {
-				if (actionIs(InstallCommand))
-				{
-					var configuration = new WindowsServiceConfiguration(GetServiceName(service), ExePath, ServiceArgs(args))
-						.DisplayName(Prefix(service.DisplayName))
-						.Description(service.Description);
+			if (actionIs(InstallCommand))
+			{
+				var configuration = new WindowsServiceConfiguration(GetServiceName(service), ExePath, ServiceArgs(args))
+					.DisplayName(Prefix(service.DisplayName))
+					.Description(service.Description);
 
-					string startMode;
-					args.CommandArgs.TryGetValue(ServiceStartMode, out startMode);
+				string startMode;
+				args.CommandArgs.TryGetValue(ServiceStartMode, out startMode);
 
-					ServiceStartMode serviceStartMode;
-					if (Enum.TryParse(startMode, true, out serviceStartMode))
-						configuration.StartMode(serviceStartMode);
+				ServiceStartMode serviceStartMode;
+				if (Enum.TryParse(startMode, true, out serviceStartMode))
+					configuration.StartMode(serviceStartMode);
 
-					string account;
-					args.CommandArgs.TryGetValue(ServiceAccountCommand, out account);
+				string account;
+				args.CommandArgs.TryGetValue(ServiceAccountCommand, out account);
 
-					ServiceAccount serviceAccount;
-					if (Enum.TryParse(account, true, out serviceAccount))
-						configuration.WithAccount(serviceAccount);
+				ServiceAccount serviceAccount;
+				if (Enum.TryParse(account, true, out serviceAccount))
+					configuration.WithAccount(serviceAccount);
 
-					string username;
-					args.CommandArgs.TryGetValue(ServiceAccountUsernameCommand, out username);
+				string username;
+				args.CommandArgs.TryGetValue(ServiceAccountUsernameCommand, out username);
 
-					string password;
-					args.CommandArgs.TryGetValue(ServiceAccountPasswordCommand, out password);
+				string password;
+				args.CommandArgs.TryGetValue(ServiceAccountPasswordCommand, out password);
 
-					if (!String.IsNullOrWhiteSpace(username) && !String.IsNullOrWhiteSpace(password))
-						configuration.WithCredentials(username, password);
+				if (!String.IsNullOrWhiteSpace(username) && !String.IsNullOrWhiteSpace(password))
+					configuration.WithCredentials(username, password);
 
-					windowsServices.Install(configuration);
-				}
-				else if (actionIs(UninstallCommand))
-				{
-					windowsServices.Uninstall(GetServiceName(service));
-				}
-				else
-				{
-					windowsServices.Run(GetServiceName(service), service.OnStartFactory);
-				}		        
-	        }
+				_windowsServices.Install(configuration);
+			}
+			else if (actionIs(UninstallCommand))
+			{
+				_windowsServices.Uninstall(GetServiceName(service));
+			}
+			else
+			{
+				_windowsServices.Run(GetServiceName(service), service.OnStartFactory);
+			}		        
 
             return true;
         }

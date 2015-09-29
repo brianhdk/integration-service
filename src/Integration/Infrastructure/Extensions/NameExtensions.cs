@@ -17,7 +17,7 @@ namespace Vertica.Integration.Infrastructure.Extensions
         {
             if (host == null) throw new ArgumentNullException("host");
 
-            return host.GetType().TaskName();
+            return host.GetType().HostName();
         }
 
         public static string TaskName(this Type task)

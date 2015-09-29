@@ -6,51 +6,45 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.ServiceProcess;
+using Vertica.Utilities_v4;
 
 namespace Vertica.Integration.Infrastructure.Windows
 {
 	internal class WindowsServices : IWindowsServices
 	{
 		private readonly string _machineName;
-		private readonly Lazy<ServiceController[]> _services; 
 
 		public WindowsServices(string machineName = null)
 		{
 			_machineName = machineName;
-			_services = new Lazy<ServiceController[]>(GetServices);
 		}
 
 		public bool Exists(string serviceName)
 		{
-			return GetService(serviceName, throwIfNotFound: false) != null;
+			return WithService(serviceName, service => service != null, throwIfNotFound: false);
 		}
 
 		public ServiceControllerStatus GetStatus(string serviceName)
 		{
-			ServiceController service = GetService(serviceName);
-
-			return service.Status;
+			return WithService(serviceName, service => service.Status);
 		}
 
-		public void Start(string serviceName, string[] args = null)
+		public void Start(string serviceName, string[] args = null, TimeSpan? timeout = null)
 		{
-			Ensure(serviceName, ServiceControllerStatus.Running, service => service.Start(args ?? new string[0]));
+			Ensure(serviceName, ServiceControllerStatus.Running, service => service.Start(args ?? new string[0]), timeout);
 		}
 
-		public void Stop(string serviceName)
+		public void Stop(string serviceName, TimeSpan? timeout = null)
 		{
-			Ensure(serviceName, ServiceControllerStatus.Stopped, service => service.Stop());
-		}
-
-		public void Restart(string serviceName, string[] args = null)
-		{
-			Stop(serviceName);
-			Start(serviceName, args);
+			Ensure(serviceName, ServiceControllerStatus.Stopped, service => service.Stop(), timeout);
 		}
 
 		public void Install(WindowsServiceConfiguration windowsService)
 		{
 			if (windowsService == null) throw new ArgumentNullException("windowsService");
+
+			if (!String.IsNullOrWhiteSpace(_machineName))
+				throw new InvalidOperationException("Not supported on remote machines.");
 
 			using (var process = new ServiceProcessInstaller())
 			using (var installer = windowsService.CreateInstaller(process))
@@ -68,7 +62,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 							Win32Service.SetServiceArguments(controller, windowsService.ExePath, windowsService.Args);
 
 						Dispose(services);
-					};					
+					};
 				}
 
 				installer.Install(new Hashtable());
@@ -77,19 +71,22 @@ namespace Vertica.Integration.Infrastructure.Windows
 
 		public void Uninstall(string serviceName)
 		{
-			ServiceController service = GetService(serviceName);
-
-			using (var process = new ServiceProcessInstaller())
-			using (var installer = new ServiceInstaller())
+			WithService(serviceName, service =>
 			{
-				installer.Context = new InstallContext(String.Empty, new string[0]);
-				installer.ServiceName = service.ServiceName;
-				installer.Parent = process;
+				using (var process = new ServiceProcessInstaller())
+				using (var installer = new ServiceInstaller())
+				{
+					installer.Context = new InstallContext(String.Empty, new string[0]);
+					installer.ServiceName = service.ServiceName;
+					installer.Parent = process;
 
-				// ReSharper disable AssignNullToNotNullAttribute
-				installer.Uninstall(null); // dictionary must be null, otherwise uninstall will fail
-				// ReSharper restore AssignNullToNotNullAttribute
-			}
+					// ReSharper disable AssignNullToNotNullAttribute
+					installer.Uninstall(null); // dictionary must be null, otherwise uninstall will fail
+					// ReSharper restore AssignNullToNotNullAttribute
+				}
+
+				return true;
+			});
 		}
 
 		public void Run(string serviceName, Func<IDisposable> onStartFactory)
@@ -102,46 +99,60 @@ namespace Vertica.Integration.Infrastructure.Windows
 			}
 		}
 
-		public void Dispose()
-		{
-			if (!_services.IsValueCreated)
-				return;
-
-			Dispose(_services.Value);
-		}
-
 		private static void Dispose(ServiceController[] services)
 		{
 			foreach (var service in services)
 				service.Dispose();
 		}
 
-		private void Ensure(string serviceName, ServiceControllerStatus status, Action<ServiceController> action)
+		private void Ensure(string serviceName, ServiceControllerStatus status, Action<ServiceController> action, TimeSpan? timeout)
 		{
-			ServiceController service = GetService(serviceName);
-
-			if (service.Status != status)
+			WithService(serviceName, service =>
 			{
-				action(service);
-				service.WaitForStatus(status);
-			}
+				if (service.Status != status)
+				{
+					action(service);
+
+					if (timeout.HasValue)
+						service.WaitForStatus(status, timeout.Value);
+					else
+						service.WaitForStatus(status);
+				}
+
+				return new object();
+			});
 		}
 
-		// ReSharper disable once UnusedParameter.Local
-		private ServiceController GetService(string serviceName, bool throwIfNotFound = true)
+		private TResult WithService<TResult>(string serviceName, Func<ServiceController, TResult> service, bool throwIfNotFound = true)
 		{
 			if (String.IsNullOrWhiteSpace(serviceName)) throw new ArgumentException(@"Value cannot be null or empty.", "serviceName");
 
-			ServiceController service = _services.Value.SingleOrDefault(x =>
-				String.Equals(x.ServiceName, serviceName, StringComparison.OrdinalIgnoreCase));
+			TResult result = default(TResult);
 
-			if (service == null && throwIfNotFound)
-				throw new InvalidOperationException(
-					String.Format("Service with name '{0}' does not exist.{1}", 
-						serviceName,
-						!String.IsNullOrWhiteSpace(_machineName) ? String.Format(" Machine: {0}", _machineName) : String.Empty));
+			using (GetServices(services =>
+			{
+				ServiceController actualService = services.SingleOrDefault(x =>
+					String.Equals(x.ServiceName, serviceName, StringComparison.OrdinalIgnoreCase));
 
-			return service;
+				if (actualService == null && throwIfNotFound)
+					throw new InvalidOperationException(
+						String.Format("Service with name '{0}' does not exist.{1}",
+							serviceName,
+							!String.IsNullOrWhiteSpace(_machineName) ? String.Format(" Machine: {0}", _machineName) : String.Empty));
+
+				result = service(actualService);
+			}))
+			{
+				return result;
+			}
+		}
+
+		private IDisposable GetServices(Action<ServiceController[]> services)
+		{
+			ServiceController[] list = GetServices();
+			services(list);
+
+			return new DisposableAction(() => Dispose(list));
 		}
 
 		private ServiceController[] GetServices()

@@ -17,6 +17,7 @@ namespace Vertica.Integration.Tests.Model.Hosting
         [TestCase("Task -service: install Args: c:\\", "Task", "service", "install", "Args", "c:\\")]
         [TestCase("Task -service : install Args : Value", "Task", "service", "install", "Args", "Value")]
         [TestCase("Task -service :install Args:Value", "Task", "service", "install", "Args", "Value")]
+		[TestCase("-uninstall", "", "uninstall", null, null, null)]
         public void Parse_TestCases(string arguments, string expectedCommand, string expectedSingleCommandArgsKey, string expectedSingleCommandArgsValue, string expectedSingleArgsKey, string expectedSingleArgsValue)
         {
             var subject = new ArgumentsParser();

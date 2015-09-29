@@ -2,7 +2,7 @@
 {
 	public interface IWindowsFactory
 	{
-		IWindowsServices CreateWindowsServices(string machineName = null);
-		IScheduledTasks CreateScheduledTasks(string machineName = null);
+		IWindowsServices WindowsServices(string machineName = null);
+		IScheduledTasks ScheduledTasks(string machineName = null);
 	}
 }

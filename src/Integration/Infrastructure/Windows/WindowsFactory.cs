@@ -2,12 +2,12 @@
 {
 	public class WindowsFactory : IWindowsFactory
 	{
-		public IWindowsServices CreateWindowsServices(string machineName = null)
+		public IWindowsServices WindowsServices(string machineName = null)
 		{
 			return new WindowsServices(machineName);
 		}
 
-		public IScheduledTasks CreateScheduledTasks(string machineName = null)
+		public IScheduledTasks ScheduledTasks(string machineName = null)
 		{
 			return new ScheduledTasks(machineName);
 		}

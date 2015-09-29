@@ -82,10 +82,13 @@ namespace Vertica.Integration.WebApi.Infrastructure
 
             configuration.MapHttpAttributeRoutes();
 
-            configuration.Routes.MapHttpRoute(
-                name: "WebApi",
-                routeTemplate: "{controller}",
-                defaults: new { controller = "Home" });
+	        if (!configuration.Routes.ContainsKey("WebApi"))
+	        {
+				configuration.Routes.MapHttpRoute(
+					name: "WebApi",
+					routeTemplate: "{controller}",
+					defaults: new { controller = "Home" });
+	        }
         }
 
         private static void ConfigureJson(HttpConfiguration configuration)
