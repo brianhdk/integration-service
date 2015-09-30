@@ -6,6 +6,7 @@ using System.ServiceProcess;
 using System.Web.Http;
 using System.Web.Http.Routing;
 using Microsoft.Owin;
+using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Windows;
 using Vertica.Integration.Model;
@@ -32,10 +33,12 @@ namespace Vertica.Integration.Experiments.BizTalkTracker
 		{
 			private readonly IWindowsServices _windowsServices;
 			private readonly IHttpServerFactory _httpServerFactory;
+			private readonly TextWriter _textWriter;
 
-			public BizTalkTrackerTesterHost(IWindowsFactory windowsFactory, IHttpServerFactory httpServerFactory)
+			public BizTalkTrackerTesterHost(IWindowsFactory windowsFactory, IHttpServerFactory httpServerFactory, TextWriter textWriter)
 			{
 				_httpServerFactory = httpServerFactory;
+				_textWriter = textWriter;
 				_windowsServices = windowsFactory.WindowsServices();
 			}
 
@@ -50,7 +53,11 @@ namespace Vertica.Integration.Experiments.BizTalkTracker
 
 				// Hvis vi kører i UDV - så start tasken her.
 
-				
+				string username = _textWriter.ReadLine("Enter username: ");
+				string password = _textWriter.ReadPassword();
+
+				_textWriter.WriteLine("{0} / {1}", username, password);
+
 				//_windowsServices.Start("BizTalkTrackerHost");
 				//Console.WriteLine("Started");
 
