@@ -167,6 +167,7 @@
     <Compile Include="Infrastructure\Extensions\RepeatExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\StringExtensions.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\CastleWindsorExtensions.cs" />
+    <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\CollectionInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ContainerExtensions.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\HostsInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\Install.cs" />

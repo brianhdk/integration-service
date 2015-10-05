@@ -34,6 +34,7 @@ namespace Vertica.Integration.WebApi.Infrastructure
 			_outputter.WriteLine("Starting HttpServer listening on URL: {0}", url);
 			_outputter.WriteLine();
 
+			// TODO: Make it possible to add multiple URL's to listen on
 	        _httpServer = WebApp.Start(new StartOptions(url), builder =>
             {
 				builder.Properties["host.TraceOutput"] = _outputter;

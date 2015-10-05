@@ -1896,7 +1896,7 @@ Integration Service uses Castle Windsor (https://github.com/castleproject/Windso
 
 The extension point is easy, like other parts, it takes place in the Bootstrapping code of Integration Service.
 
-The example below illustrates how to use built-in **ConventionInstaller** to auto-register classes based on conventions.
+The example below illustrates how to use built-in **Install**-class to auto-register classes based on conventions.
 
 ```c#
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
@@ -1909,10 +1909,8 @@ namespace ConsoleApplication16
         static void Main(string[] args)
         {
             IntegrationStartup.Run(args, application => application
-                .AddCustomInstaller(new ConventionInstaller()
-                    .AddFromAssemblyOfThis<ISomeService>())
-                .Tasks(tasks => tasks
-                    .Task<UseSomeServiceTask>()));
+                .AddCustomInstaller(Install.ByConvention.AddFromAssemblyOfThis<ISomeService>())
+                .Tasks(tasks => tasks.Task<UseSomeServiceTask>()));
         }
     }
 

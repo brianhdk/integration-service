@@ -10,6 +10,11 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 			get { return new ConventionInstaller(); }
 		}
 
+		public static CollectionInstaller<TService> Collection<TService>()
+		{
+			return new CollectionInstaller<TService>();
+		}
+
 		public static IWindsorInstaller Instance<T>(T instance) where T : class
 		{
 			return new InstanceInstaller<T>(instance);
