@@ -26,8 +26,17 @@ namespace Vertica.Integration.Infrastructure.Logging
             return Use<VoidLogger>();
         }
 
-        public LoggingConfiguration EventLogger()
+        public LoggingConfiguration EventLogger(Action<EventLoggerConfiguration> eventLogger = null)
         {
+			Application.Extensibility(extensibility =>
+			{
+				EventLoggerConfiguration configuration =
+					extensibility.Register(() => new EventLoggerConfiguration());
+
+				if (eventLogger != null)
+					eventLogger(configuration);
+			});
+
             return Use<EventLogger>();
         }
 

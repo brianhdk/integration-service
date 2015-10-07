@@ -1,8 +1,15 @@
-﻿using Vertica.Integration.Experiments;
+﻿using Microsoft.Owin;
+using Microsoft.Owin.FileSystems;
+using Microsoft.Owin.StaticFiles;
+using Owin;
+using Vertica.Integration.Experiments;
 using Vertica.Integration.Experiments.BizTalkTracker;
+using Vertica.Integration.Experiments.SignalR;
+using Vertica.Integration.Experiments.WebApi;
 using Vertica.Integration.Model;
 using Vertica.Integration.Portal;
 using Vertica.Integration.WebApi;
+using Vertica.Integration.WebApi.SignalR;
 
 namespace Vertica.Integration.Console
 {
@@ -16,19 +23,19 @@ namespace Vertica.Integration.Console
 				//.Logging(logging => logging.Use<ConsoleLogger>())
 				//.UseWebApi(webApi => webApi
 				//	.WithPortal())
-				//.UseWebApi(webApi => webApi
-				//	.AddFromAssemblyOfThis<TestController>()
-				//	.HttpServer(httpServer => httpServer.Configure(configurer =>
-				//	{
-				//		configurer.App.UseFileServer(new FileServerOptions
-				//		{
-				//			RequestPath = PathString.Empty,
-				//			FileSystem = new PhysicalFileSystem(@"..\..\..\Integration.Experiments\SignalR\Html")
-				//		});
-				//	}))
-				//	.WithPortal()
-				//	.WithSignalR(signalR => signalR.AddFromAssemblyOfThis<ChatHub>())
-				//)
+				.UseWebApi(webApi => webApi
+					.AddFromAssemblyOfThis<TestController>()
+					.HttpServer(httpServer => httpServer.Configure(configurer =>
+					{
+						configurer.App.UseFileServer(new FileServerOptions
+						{
+							RequestPath = PathString.Empty,
+							FileSystem = new PhysicalFileSystem(@"..\..\..\Integration.Experiments\SignalR\Html")
+						});
+					}))
+					//.WithPortal()
+					.WithSignalR(signalR => signalR.AddFromAssemblyOfThis<ChatHub>())
+				)
 				//.AddCustomInstaller(Install.Service<ChatHub.RandomChatter>())
                 //.UseIIS()
 				//.Fast()
@@ -45,7 +52,7 @@ namespace Vertica.Integration.Console
 				//.RegisterMigrations()
 				//.TestRebus(args)
 				//.TestRavenDb()
-				.TestBizTalkTracker()
+				//.TestBizTalkTracker()
                 .Void()))
 			{
                 context.Execute(args);

@@ -184,6 +184,7 @@
     <Compile Include="Infrastructure\Logging\IReferenceErrorLog.cs" />
     <Compile Include="Infrastructure\Logging\ITarget.cs" />
     <Compile Include="Infrastructure\Logging\Loggers\EventLogger.cs" />
+    <Compile Include="Infrastructure\Logging\Loggers\EventLoggerConfiguration.cs" />
     <Compile Include="Infrastructure\Logging\LoggingConfiguration.cs" />
     <Compile Include="Infrastructure\Logging\Loggers\Logger.cs" />
     <Compile Include="Infrastructure\Logging\Loggers\TextFileLogger.cs" />

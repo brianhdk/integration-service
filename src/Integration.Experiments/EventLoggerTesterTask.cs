@@ -91,7 +91,7 @@ namespace Vertica.Integration.Experiments
         {
             return application
                 .Fast()
-                .Logging(logger => logger.EventLogger())
+                .Logging(logger => logger.EventLogger(eventLogger => eventLogger.Source("Custom Source")))
                 .Tasks(tasks => tasks
                     .Clear()
                     .Task<EventLoggerTesterTask>()

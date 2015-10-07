@@ -13,15 +13,23 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
 
 	    private readonly string _sourceName;
 
-	    public EventLogger(IRuntimeSettings runtimeSettings)
+	    public EventLogger(EventLoggerConfiguration configuration, IRuntimeSettings runtimeSettings)
 	    {
-		    ApplicationEnvironment environment = runtimeSettings.Environment;
+		    if (configuration == null) throw new ArgumentNullException("configuration");
+		    if (runtimeSettings == null) throw new ArgumentNullException("runtimeSettings");
 
-		    _sourceName = String.Concat("Integration Service",
-			    environment != null ? String.Format(" [{0}]", environment) : String.Empty);
+		    _sourceName = configuration.SourceName ?? IntegrationService(runtimeSettings);
 	    }
 
-	    protected override string Insert(TaskLog log)
+		private static string IntegrationService(IRuntimeSettings runtimeSettings)
+		{
+			ApplicationEnvironment environment = runtimeSettings.Environment;
+
+			return String.Concat("Integration Service",
+				environment != null ? String.Format(" [{0}]", environment) : String.Empty);
+		}
+
+		protected override string Insert(TaskLog log)
         {
             return GenerateEventId().ToString();
         }

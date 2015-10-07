@@ -126,7 +126,11 @@ namespace Vertica.Integration
                 if (logger is EventLogger)
                     throw;
 
-                new EventLogger(_container.Resolve<IRuntimeSettings>()).LogError(exception);
+	            var configuration = _container.Kernel.HasComponent(typeof (EventLoggerConfiguration))
+		            ? _container.Resolve<EventLoggerConfiguration>()
+		            : new EventLoggerConfiguration();
+
+                new EventLogger(configuration, _container.Resolve<IRuntimeSettings>()).LogError(exception);
             }
         }
     }
