@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace Vertica.Integration
+﻿namespace Vertica.Integration
 {
 	/// <summary>
 	/// Provides read-only runtime settings such as name of Environment.

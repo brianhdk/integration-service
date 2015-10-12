@@ -44,13 +44,13 @@ namespace Vertica.Integration.WebApi.SignalR
 						resolver.Register(typeof (IAssemblyLocator), () => owin.Kernel.Resolve<IAssemblyLocator>());
 						resolver.Register(typeof (IHubActivator), () => new CustomHubActivator(resolver));
 
-						ITraceManager traceManager = resolver.Resolve<ITraceManager>();
-						traceManager.Switch.Level = SourceLevels.Warning;
-
 						IHubPipeline hubPipeline = resolver.Resolve<IHubPipeline>();
 						hubPipeline.AddModule(new ErrorLoggingModule(owin.Kernel.Resolve<ILogger>()));
 
 						owin.App.MapSignalR(hubConfiguration);
+
+						ITraceManager traceManager = resolver.Resolve<ITraceManager>();
+						traceManager.Switch.Level = SourceLevels.Warning;
 					}));
 
 					return configuration;
@@ -79,7 +79,17 @@ namespace Vertica.Integration.WebApi.SignalR
 				object service = _defaultResolver.GetService(serviceType);
 
 				if (service == null && _kernel.HasComponent(serviceType))
-					return _kernel.Resolve(serviceType);
+				{
+					try
+					{
+						service = _kernel.Resolve(serviceType);
+					}
+					catch (Exception ex)
+					{
+						_kernel.Resolve<ILogger>().LogError(ex);
+						throw;
+					}
+				}
 
 				return service;
 			}

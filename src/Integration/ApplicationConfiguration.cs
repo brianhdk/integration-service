@@ -83,10 +83,10 @@ namespace Vertica.Integration
             return this;
         }
 
-        public ApplicationConfiguration Logging(Action<LoggingConfiguration> logger)
+        public ApplicationConfiguration Logging(Action<LoggingConfiguration> logging)
         {
-            if (logger != null)
-                logger(_logging);
+            if (logging != null)
+                logging(_logging);
 
             return this;
         }

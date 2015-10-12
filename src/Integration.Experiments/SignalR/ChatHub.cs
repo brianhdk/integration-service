@@ -4,22 +4,23 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.SignalR;
-using Microsoft.AspNet.SignalR.Hubs;
 
 namespace Vertica.Integration.Experiments.SignalR
 {
 	public class ChatHub : Hub
 	{
-		private readonly Func<RandomChatter> _chatter;
+		private readonly RandomChatter _chatter;
 
-		public ChatHub(Func<RandomChatter> chatter)
+		public ChatHub(RandomChatter chatter)
 		{
+			if (chatter == null) throw new ArgumentNullException("chatter");
+
 			_chatter = chatter;
 		}
 
 		public override Task OnConnected()
 		{
-			_chatter();
+			_chatter.Start();
 
 			return base.OnConnected();
 		}
@@ -41,19 +42,24 @@ namespace Vertica.Integration.Experiments.SignalR
 
 		public class RandomChatter
 		{
-			public RandomChatter()
+			public void Start()
 			{
-				IHubConnectionContext<dynamic> clients = GlobalHost.ConnectionManager.GetHubContext<ChatHub>().Clients;
+				if (Started)
+					return;
+
+				Started = true;
 
 				Task.Run(() =>
 				{
 					for (int i = 0; i < 20; i++)
 					{
-						clients.All.broadCastMessage("Random", Guid.NewGuid().ToString("N"));
+						GlobalHost.ConnectionManager.GetHubContext<ChatHub>().Clients.All.broadCastMessage("Random", Guid.NewGuid().ToString("N"));
 						Thread.Sleep(1000);
 					}
 				});
 			}
+
+			private bool Started { get; set; }
 		}
 	}
 }

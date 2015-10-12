@@ -6,6 +6,7 @@ using Vertica.Integration.Experiments;
 using Vertica.Integration.Experiments.BizTalkTracker;
 using Vertica.Integration.Experiments.SignalR;
 using Vertica.Integration.Experiments.WebApi;
+using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Model;
 using Vertica.Integration.Portal;
 using Vertica.Integration.WebApi;
@@ -24,7 +25,7 @@ namespace Vertica.Integration.Console
 				//.UseWebApi(webApi => webApi
 				//	.WithPortal())
 				.UseWebApi(webApi => webApi
-					.AddFromAssemblyOfThis<TestController>()
+					//.AddFromAssemblyOfThis<TestController>()
 					.HttpServer(httpServer => httpServer.Configure(configurer =>
 					{
 						configurer.App.UseFileServer(new FileServerOptions

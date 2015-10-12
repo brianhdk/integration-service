@@ -7,7 +7,7 @@ using Vertica.Integration.Infrastructure.Parsing;
 
 namespace Vertica.Integration.Infrastructure.Database.Extensions
 {
-    public static class DbExtensions
+	public static class DbExtensions
     {
         /// <summary>
         /// Wraps the session and catches SqlException providing the client a better error message with actions on how to resolve it.
@@ -41,9 +41,13 @@ namespace Vertica.Integration.Infrastructure.Database.Extensions
                     .Configure(x =>
                     {
                         if (configuration != null)
-                            configuration(x);
+                        {
+	                        configuration(x);
+                        }
                         else
-                            x.ReturnHeaderAsRow();
+                        {
+	                        x.ReturnHeaderAsRow();
+                        }
                     })
                     .From(query, data =>
                     {

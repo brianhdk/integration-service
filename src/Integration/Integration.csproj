@@ -137,6 +137,7 @@
     <Compile Include="Infrastructure\Database\DbSession.cs" />
     <Compile Include="Infrastructure\Database\DefaultConnection.cs" />
     <Compile Include="Infrastructure\Database\Extensions\DbExtensions.cs" />
+    <Compile Include="Infrastructure\Database\Extensions\SqlDbExtensions.cs" />
     <Compile Include="Infrastructure\Database\IntegrationDbException.cs" />
     <Compile Include="Infrastructure\Database\IDbFactory.cs" />
     <Compile Include="Infrastructure\Database\IDbSession.cs" />
