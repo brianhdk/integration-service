@@ -40,13 +40,33 @@ namespace Vertica.Integration.Infrastructure.Database
         {
             return SqlMapper.ExecuteScalar<T>(_connection, sql, param, CurrentTransaction);
         }
-        
-        public IEnumerable<T> Query<T>(string sql, dynamic param = null)
+
+	    public IEnumerable<dynamic> Query(string sql, dynamic param = null)
+	    {
+		    return SqlMapper.Query(_connection, sql, param, CurrentTransaction);
+	    }
+
+	    public IEnumerable<T> Query<T>(string sql, dynamic param = null)
         {
             return SqlMapper.Query<T>(_connection, sql, param, CurrentTransaction);
         }
 
-        public IDbConnection Connection
+		public IEnumerable<TReturn> Query<TFirst, TSecond, TReturn>(string sql, Func<TFirst, TSecond, TReturn> map, object param = null, string splitOn = "Id")
+		{
+			return _connection.Query(sql, map, param, CurrentTransaction, splitOn: splitOn);
+		}
+
+		public IEnumerable<TReturn> Query<TFirst, TSecond, TThird, TReturn>(string sql, Func<TFirst, TSecond, TThird, TReturn> map, object param = null, string splitOn = "Id")
+		{
+			return _connection.Query(sql, map, param, CurrentTransaction, splitOn: splitOn);
+		}
+
+		public IEnumerable<TReturn> Query<TFirst, TSecond, TThird, TFourth, TReturn>(string sql, Func<TFirst, TSecond, TThird, TFourth, TReturn> map, object param = null, string splitOn = "Id")
+		{
+			return _connection.Query(sql, map, param, CurrentTransaction, splitOn: splitOn);
+		}
+
+	    public IDbConnection Connection
         {
             get { return _connection; }
         }

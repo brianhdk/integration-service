@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using Dapper;
 using Vertica.Integration.Infrastructure.Parsing;
 
 namespace Vertica.Integration.Infrastructure.Database.Extensions
@@ -32,7 +31,7 @@ namespace Vertica.Integration.Infrastructure.Database.Extensions
             if (session == null) throw new ArgumentNullException("session");
             if (String.IsNullOrWhiteSpace(sql)) throw new ArgumentException(@"Value cannot be null or empty.", "sql");
 
-            IEnumerable<dynamic> query = SqlMapper.Query(session.Connection, sql, param, session.CurrentTransaction);
+            IEnumerable<dynamic> query = session.Query(sql, param);
 
             string[] headers = null;
 
