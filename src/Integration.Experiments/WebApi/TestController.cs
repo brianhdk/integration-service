@@ -5,24 +5,8 @@ using System.Web.Http;
 
 namespace Vertica.Integration.Experiments.WebApi
 {
-	public class ResolvingController : ApiController
-	{
-		public ResolvingController(string s)
-		{
-			
-		}
-
-		public HttpResponseMessage Get()
-		{
-			return Request.CreateResponse("OK");
-		}
-	}
 	public class TestController : ApiController
 	{
-		//public TestController(string s)
-		//{
-		//}
-
 		public HttpResponseMessage Get(string name = null)
 		{
 			if (String.Equals(name, "invalid", StringComparison.OrdinalIgnoreCase))

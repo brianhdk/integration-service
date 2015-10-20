@@ -23,10 +23,11 @@ namespace Vertica.Integration.WebApi.Infrastructure
         private readonly IKernel _kernel;
 		private readonly TextWriter _outputter;
 
-		public HttpServer(string url, IKernel kernel, Action<IOwinConfiguration> configuration = null)
+		public HttpServer(string url, IKernel kernel, Action<IOwinConfiguration> configuration)
         {
 	        if (String.IsNullOrWhiteSpace(url)) throw new ArgumentException(@"Value cannot be null or empty.", "url");
 	        if (kernel == null) throw new ArgumentNullException("kernel");
+			if (configuration == null) throw new ArgumentNullException("configuration");
 
 	        _kernel = kernel;
 	        _outputter = kernel.Resolve<TextWriter>();
@@ -41,11 +42,7 @@ namespace Vertica.Integration.WebApi.Infrastructure
 
                 var httpConfiguration = new HttpConfiguration();
 
-				if (configuration != null)
-					configuration(new OwinConfiguration(builder, httpConfiguration, kernel));
-
-				httpConfiguration.MessageHandlers.Add(new NoCachingHandler());
-				httpConfiguration.Formatters.Remove(httpConfiguration.Formatters.XmlFormatter);
+				configuration(new OwinConfiguration(builder, httpConfiguration, kernel));
 
 				ConfigureJson(httpConfiguration);
 				ConfigureServices(httpConfiguration);

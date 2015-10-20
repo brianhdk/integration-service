@@ -11,7 +11,11 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
     {
         private Organizer _organizer;
 
-        public TextFileLoggerConfiguration OrganizeSubFoldersBy(Func<BasedOn, Organizer> basedOn)
+	    internal TextFileLoggerConfiguration()
+	    {
+	    }
+
+	    public TextFileLoggerConfiguration OrganizeSubFoldersBy(Func<BasedOn, Organizer> basedOn)
         {
             _organizer = basedOn(new BasedOn());
 

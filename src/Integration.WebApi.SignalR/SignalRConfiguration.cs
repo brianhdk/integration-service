@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Castle.Windsor;
+using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Hubs;
 using Vertica.Integration.WebApi.SignalR.Infrastructure.Castle.Windsor;
 
 namespace Vertica.Integration.WebApi.SignalR
@@ -9,7 +11,8 @@ namespace Vertica.Integration.WebApi.SignalR
     public class SignalRConfiguration : IInitializable<IWindsorContainer>
     {
         private readonly List<Assembly> _assemblies;
-		//private readonly List<Type> _pipelineModules;
+	    private readonly List<Type> _removeHubs; 
+		private readonly List<Type> _removeModules;
 
 	    internal SignalRConfiguration(ApplicationConfiguration application)
         {
@@ -18,7 +21,10 @@ namespace Vertica.Integration.WebApi.SignalR
 			Application = application;
 
             _assemblies = new List<Assembly>();
-			//_pipelineModules = new List<Type>();
+			_removeModules = new List<Type>();
+			_removeHubs = new List<Type>();
+
+		    AddFromAssemblyOfThis<SignalRConfiguration>();
         }
 
         public ApplicationConfiguration Application { get; private set; }
@@ -30,9 +36,23 @@ namespace Vertica.Integration.WebApi.SignalR
             return this;
         }
 
+	    public SignalRConfiguration RemoveHub<THub>() where THub : Hub
+	    {
+		    _removeHubs.Add(typeof (THub));
+
+		    return this;
+	    }
+
+		public SignalRConfiguration RemovePipeline<THubPipelineModule>() where THubPipelineModule : HubPipelineModule
+		{
+			_removeModules.Add(typeof (THubPipelineModule));
+
+			return this;
+		}
+
 	    void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
 	    {
-			container.Install(new SignalRInstaller(_assemblies.ToArray()));
+			container.Install(new SignalRInstaller(_assemblies.ToArray(), _removeHubs.ToArray(), _removeModules.ToArray()));
 	    }
     }
 }

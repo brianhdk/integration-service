@@ -4,7 +4,7 @@ using Vertica.Integration.Infrastructure.Logging;
 
 namespace Vertica.Integration.WebApi.SignalR.Infrastructure
 {
-	internal class ErrorLoggingModule : HubPipelineModule
+	public class ErrorLoggingModule : HubPipelineModule
 	{
 		private readonly ILogger _logger;
 

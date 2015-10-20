@@ -9,7 +9,7 @@ using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Tracing;
 using Owin;
 using Vertica.Integration.Infrastructure.Logging;
-using Vertica.Integration.WebApi.SignalR.Infrastructure;
+using Vertica.Integration.WebApi.SignalR.Infrastructure.Castle.Windsor;
 using IDependencyResolver = Microsoft.AspNet.SignalR.IDependencyResolver;
 
 namespace Vertica.Integration.WebApi.SignalR
@@ -26,28 +26,35 @@ namespace Vertica.Integration.WebApi.SignalR
 				extensibility.Register(() =>
 				{
 					var configuration = new SignalRConfiguration(webApi.Application);
-
 					signalR(configuration);
 
 					webApi.HttpServer(httpServer => httpServer.Configure(owin =>
 					{
 						owin.Http.Routes.IgnoreRoute("signalR", "signalr/{*pathInfo}");
 
-						GlobalHost.DependencyResolver = new CustomResolver(GlobalHost.DependencyResolver, owin.Kernel);
+						IDependencyResolver resolver = 
+							GlobalHost.DependencyResolver = 
+								new CustomResolver(GlobalHost.DependencyResolver, owin.Kernel);
 
+						// TODO: Expose HubConfiguration for customization? E.g. JSONP
 						var hubConfiguration = new HubConfiguration
 						{
+							Resolver = resolver,
 							EnableDetailedErrors = true
 						};
 
-						IDependencyResolver resolver = hubConfiguration.Resolver;
 						resolver.Register(typeof (IAssemblyLocator), () => owin.Kernel.Resolve<IAssemblyLocator>());
 						resolver.Register(typeof (IHubActivator), () => new CustomHubActivator(resolver));
+						resolver.Register(typeof (IHubDescriptorProvider), () => new CustomHubDescriptorProvider(resolver, owin.Kernel.Resolve<IHubsProvider>()));
 
 						IHubPipeline hubPipeline = resolver.Resolve<IHubPipeline>();
-						hubPipeline.AddModule(new ErrorLoggingModule(owin.Kernel.Resolve<ILogger>()));
+						foreach (var pipelineModule in owin.Kernel.ResolveAll<IHubPipelineModule>())
+							hubPipeline.AddModule(pipelineModule);
 
 						owin.App.MapSignalR(hubConfiguration);
+
+						// TODO: Look at the possibility to add custom trace sources programatically
+						// https://msdn.microsoft.com/en-us/library/ms228984(v=vs.110).aspx
 
 						ITraceManager traceManager = resolver.Resolve<ITraceManager>();
 						traceManager.Switch.Level = SourceLevels.Warning;
@@ -58,6 +65,30 @@ namespace Vertica.Integration.WebApi.SignalR
 			});
 
 			return webApi;
+		}
+
+		private class CustomHubDescriptorProvider : ReflectedHubDescriptorProvider, IHubDescriptorProvider
+		{
+			private readonly HashSet<Type> _hubs;
+
+			public CustomHubDescriptorProvider(IDependencyResolver resolver, IHubsProvider hubsProvider)
+				: base(resolver)
+			{
+				_hubs = new HashSet<Type>(hubsProvider.Hubs.Distinct());
+			}
+
+			public new IList<HubDescriptor> GetHubs()
+			{
+				return base.GetHubs().Where(x => _hubs.Contains(x.HubType)).ToList();
+			}
+
+			public new bool TryGetHub(string hubName, out HubDescriptor descriptor)
+			{
+				if (base.TryGetHub(hubName, out descriptor) && _hubs.Contains(descriptor.HubType))
+					return true;
+
+				return false;
+			}
 		}
 
 		private class CustomResolver : IDependencyResolver

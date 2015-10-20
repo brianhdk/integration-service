@@ -6,6 +6,10 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
 {
     public class EventLoggerConfiguration : IInitializable<IWindsorContainer>
     {
+	    internal EventLoggerConfiguration()
+	    {
+	    }
+
 	    public EventLoggerConfiguration Source(string name)
 	    {
 		    if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");

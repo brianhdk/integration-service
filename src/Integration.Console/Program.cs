@@ -1,4 +1,6 @@
-﻿using Microsoft.Owin;
+﻿using System;
+using Microsoft.Owin;
+using Microsoft.Owin.Diagnostics;
 using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
 using Owin;
@@ -11,6 +13,7 @@ using Vertica.Integration.Model;
 using Vertica.Integration.Portal;
 using Vertica.Integration.WebApi;
 using Vertica.Integration.WebApi.SignalR;
+using Vertica.Integration.WebApi.SignalR.Infrastructure;
 
 namespace Vertica.Integration.Console
 {
@@ -25,7 +28,7 @@ namespace Vertica.Integration.Console
 				//.UseWebApi(webApi => webApi
 				//	.WithPortal())
 				.UseWebApi(webApi => webApi
-					//.AddFromAssemblyOfThis<TestController>()
+					.AddFromAssemblyOfThis<TestController>()
 					.HttpServer(httpServer => httpServer.Configure(configurer =>
 					{
 						configurer.App.UseFileServer(new FileServerOptions
@@ -33,11 +36,23 @@ namespace Vertica.Integration.Console
 							RequestPath = PathString.Empty,
 							FileSystem = new PhysicalFileSystem(@"..\..\..\Integration.Experiments\SignalR\Html")
 						});
+
+						configurer.App.UseErrorPage(new ErrorPageOptions { ShowSourceCode = false });
+
+						configurer.App.Use((ctx, next) =>
+						{
+							if (ctx.Request.Path.Value == "/fail")
+								throw new Exception("Failed");
+							if (ctx.Request.Path.Value == "/write")
+								return ctx.Response.WriteAsync("Yo!");
+
+							return next.Invoke();
+						});
 					}))
-					//.WithPortal()
 					.WithSignalR(signalR => signalR.AddFromAssemblyOfThis<ChatHub>())
 				)
-				//.AddCustomInstaller(Install.Service<ChatHub.RandomChatter>())
+				.Logging(logging => logging.TextWriter())
+				.AddCustomInstaller(Install.Service<ChatHub.RandomChatter>())
                 //.UseIIS()
 				//.Fast()
 				//.TestAzure()
