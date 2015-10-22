@@ -28,15 +28,15 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
         public ArchiveOptions Options { get; private set; }
 
-        public void IncludeFile(FileInfo file)
+		public BeginArchive IncludeFile(FileInfo file)
         {
             if (file == null) throw new ArgumentNullException("file");
             if (!file.Exists) throw new ArgumentException(String.Format(@"File '{0}' does not exist.", file.FullName));
 
-            CreateEntryFromFile(file);
+            return CreateEntryFromFile(file);
         }
 
-        public void IncludeFolder(DirectoryInfo folder)
+        public BeginArchive IncludeFolder(DirectoryInfo folder)
         {
             if (folder == null) throw new ArgumentNullException("folder");
             if (!folder.Exists) throw new ArgumentException(String.Format(@"File '{0}' does not exist.", folder.FullName));
@@ -44,10 +44,10 @@ namespace Vertica.Integration.Infrastructure.Archiving
             var path = new Stack<string>();
             path.Push(folder.Name);
 
-            IncludeFolderRecursive(folder, path);
+            return IncludeFolderRecursive(folder, path);
         }
 
-        private void IncludeFolderRecursive(DirectoryInfo folder, Stack<string> path)
+        private BeginArchive IncludeFolderRecursive(DirectoryInfo folder, Stack<string> path)
         {
             foreach (FileInfo file in folder.EnumerateFiles())
                 CreateEntryFromFile(file, Path.Combine(path.Reverse().ToArray()));
@@ -58,14 +58,18 @@ namespace Vertica.Integration.Infrastructure.Archiving
                 IncludeFolderRecursive(subDirectory, path);
                 path.Pop();
             }
+
+	        return this;
         }
 
-        private void CreateEntryFromFile(FileInfo file, string relativePath = null)
+        private BeginArchive CreateEntryFromFile(FileInfo file, string relativePath = null)
         {
             _archive.CreateEntryFromFile(file.FullName, Path.Combine(relativePath ?? String.Empty, file.Name));
+
+	        return this;
         }
 
-        public void IncludeContent(string name, string content, string extension = null)
+        public BeginArchive IncludeContent(string name, string content, string extension = null)
         {
             if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
 
@@ -77,25 +81,31 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
             using (var writer = new StreamWriter(entry.Open()))
                 writer.Write(content);
+
+	        return this;
         }
 
-        public void IncludeBinary(string fileName, byte[] content)
+        public BeginArchive IncludeBinary(string fileName, byte[] content)
         {
             if (String.IsNullOrWhiteSpace(fileName)) throw new ArgumentException(@"Value cannot be null or empty.", "fileName");
 
             ZipArchiveEntry entry = _archive.CreateEntry(fileName);
 
             using (var writer = new BinaryWriter(entry.Open()))
-                writer.Write(content);               
+                writer.Write(content);
+
+	        return this;
         }
 
-        public void IncludeObjectAsJson(object obj, string fileNameWithoutExtension = null)
+        public BeginArchive IncludeObjectAsJson(object obj, string fileNameWithoutExtension = null)
         {
             if (obj == null) throw new ArgumentNullException("obj");
 
             string content = JsonConvert.SerializeObject(obj, Formatting.Indented);
 
             IncludeContent(fileNameWithoutExtension ?? obj.GetType().Name, content, ".json");
+
+	        return this;
         }
 
         public void Dispose()
