@@ -6,7 +6,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 {
     public class ArchiveOptions
     {
-        internal ArchiveOptions(string name)
+	    public ArchiveOptions(string name)
         {
             Named(name);
         }
