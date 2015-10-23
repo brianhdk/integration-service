@@ -25,8 +25,6 @@ namespace Vertica.Integration.WebApi.SignalR.Infrastructure.Castle.Windsor
 
 		public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-			container.RegisterInstance<IAssemblyLocator>(new AssemblyLocator(_assemblies));
-
 			var hubs = new List<Type>();
 
 			foreach (Assembly assembly in _assemblies)
@@ -71,23 +69,5 @@ namespace Vertica.Integration.WebApi.SignalR.Infrastructure.Castle.Windsor
 				get { return _hubs; }
 			}
 		}
-
-		/// <summary>
-		/// Used by HubDescriptor to locate all Hubs.
-		/// </summary>
-		private class AssemblyLocator : IAssemblyLocator
-        {
-			private readonly IList<Assembly> _assemblies;
-
-			public AssemblyLocator(IList<Assembly> assemblies)
-			{
-				_assemblies = assemblies;
-			}
-
-			public IList<Assembly> GetAssemblies()
-			{
-				return _assemblies;
-			}
-        }
 	}
 }

@@ -11,7 +11,7 @@ namespace Vertica.Integration.Experiments.SignalR
 	{
 		private readonly RandomChatter _chatter;
 
-		public ChatHub(RandomChatter chatter, string s = null)
+		public ChatHub(RandomChatter chatter)
 		{
 			if (chatter == null) throw new ArgumentNullException("chatter");
 

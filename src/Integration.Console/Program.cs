@@ -1,19 +1,18 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using Microsoft.Owin;
 using Microsoft.Owin.Diagnostics;
 using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
 using Owin;
 using Vertica.Integration.Experiments;
-using Vertica.Integration.Experiments.BizTalkTracker;
 using Vertica.Integration.Experiments.SignalR;
 using Vertica.Integration.Experiments.WebApi;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Model;
-using Vertica.Integration.Portal;
 using Vertica.Integration.WebApi;
 using Vertica.Integration.WebApi.SignalR;
-using Vertica.Integration.WebApi.SignalR.Infrastructure;
 
 namespace Vertica.Integration.Console
 {
@@ -27,6 +26,7 @@ namespace Vertica.Integration.Console
 				//.Logging(logging => logging.Use<ConsoleLogger>())
 				//.UseWebApi(webApi => webApi
 				//	.WithPortal())
+				//.Advanced(advanced => advanced.Register(() => TextWriter.Null))
 				.UseWebApi(webApi => webApi
 					.AddFromAssemblyOfThis<TestController>()
 					.HttpServer(httpServer => httpServer.Configure(configurer =>
@@ -49,9 +49,14 @@ namespace Vertica.Integration.Console
 							return next.Invoke();
 						});
 					}))
-					.WithSignalR(signalR => signalR.AddFromAssemblyOfThis<ChatHub>())
+					.WithSignalR(signalR => signalR
+						//.SkipTraceConfiguration()
+						.TraceLevel(SourceLevels.All)
+						.AddFromAssemblyOfThis<ChatHub>())
 				)
+				.Logging(logging => logging.Disable())
 				.Logging(logging => logging.TextWriter())
+				
 				.AddCustomInstaller(Install.Service<ChatHub.RandomChatter>())
                 //.UseIIS()
 				//.Fast()
