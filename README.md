@@ -1852,7 +1852,7 @@ namespace ConsoleApplication16.Migrations.SQLite
 To setup a Perfion integration, start by adding the following package:
 
   ```
-  Install-Package Vertica.Integration.Host
+  Install-Package Vertica.Integration.Perfion
   ```
 
 The example below shows you how some of the features you can use when working with this Perfion integration, including how to download files/images.
@@ -1923,7 +1923,7 @@ namespace ConsoleApplication16
 
 				if (image != null)
 				{
-					// download RAW
+					// download raw file
 					File.WriteAllBytes(Path.Combine(@"C:\tmp\perfion\", image.Name), 
 						image.Download());
 
