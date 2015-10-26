@@ -51,12 +51,11 @@ namespace Vertica.Integration.Console
 					}))
 					.WithSignalR(signalR => signalR
 						//.SkipTraceConfiguration()
-						.TraceLevel(SourceLevels.All)
+						//.TraceLevel(SourceLevels.All)
 						.AddFromAssemblyOfThis<ChatHub>())
 				)
-				.Logging(logging => logging.Disable())
-				.Logging(logging => logging.TextWriter())
-				
+				//.Logging(logging => logging.Disable())
+				//.Logging(logging => logging.TextWriter())
 				.AddCustomInstaller(Install.Service<ChatHub.RandomChatter>())
                 //.UseIIS()
 				//.Fast()

@@ -32,6 +32,7 @@ $settings = @{
 		"integration_mongodb" = Resolve-Path $script_directory\..\src\Integration.MongoDB
 		"integration_rebus" = Resolve-Path $script_directory\..\src\Integration.Rebus
 		"integration_sqlite" = Resolve-Path $script_directory\..\src\Integration.SQLite
+		"integration_perfion" = Resolve-Path $script_directory\..\src\Integration.Perfion
     }
     "tools" = @{
         "nuget" = Resolve-Path $script_directory\..\.nuget\NuGet.exe

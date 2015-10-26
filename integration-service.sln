@@ -71,6 +71,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.WebApi.SignalR"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.SQLite", "src\Integration.SQLite\Integration.SQLite.csproj", "{F644F439-7604-44D1-97C0-855081F8A2D8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Perfion", "src\Integration.Perfion\Integration.Perfion.csproj", "{218A773A-C382-42F7-9882-CB6D51B2EDF0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -157,6 +159,10 @@ Global
 		{F644F439-7604-44D1-97C0-855081F8A2D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F644F439-7604-44D1-97C0-855081F8A2D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F644F439-7604-44D1-97C0-855081F8A2D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{218A773A-C382-42F7-9882-CB6D51B2EDF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{218A773A-C382-42F7-9882-CB6D51B2EDF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{218A773A-C382-42F7-9882-CB6D51B2EDF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{218A773A-C382-42F7-9882-CB6D51B2EDF0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

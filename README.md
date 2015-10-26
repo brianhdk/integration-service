@@ -27,6 +27,7 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
  - [Integrating RavenDB](#integrating-ravendb)
  - [Integrating MongoDB](#integrating-mongodb)
  - [Integrating SQLite](#integrating-sqlite) 
+ - [Integrating Perfion PIM](#integrating-perfion-pim)  
  - [How to Disable IntegrationDb](#how-to-disable-integrationdb)
  - [How to Change Logger](#how-to-change-logger) 
  - [How to Register Custom dependencies/services](#how-to-register-custom-dependenciesservices)
@@ -1839,6 +1840,103 @@ namespace ConsoleApplication16.Migrations.SQLite
 		public override void Down()
 		{
 			throw new NotSupportedException();
+		}
+	}
+}
+```
+
+[Back to Table of Contents](#table-of-contents)
+
+## Integrating Perfion PIM
+
+To setup a Perfion integration, start by adding the following package:
+
+  ```
+  Install-Package Vertica.Integration.Host
+  ```
+
+The example below shows you how some of the features you can use when working with this Perfion integration, including how to download files/images.
+
+```c#
+using System.Collections.Specialized;
+using System.IO;
+using Vertica.Integration.Infrastructure;
+using Vertica.Integration.Model;
+using Vertica.Integration.Perfion;
+
+namespace ConsoleApplication16
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+			IntegrationStartup.Run(args, application => application
+				.Tasks(tasks => tasks.Task<PerfionTask>())
+				.UsePerfion(perfion => perfion
+					// Hard-coded connection string (NOT RECOMMENDED)
+					.Change(x => x.ConnectionString = ConnectionString.FromText("http://perfion-api.local/Perfion/GetData.asmx"))
+
+					//// Based on element in app.config: <add name="Perfion" connectionString="http://perfion-api.local/Perfion/GetData.asmx" />
+					//.Change(x => x.ConnectionString = ConnectionString.FromName("Perfion"))
+
+					// ... or just simply add a connection-string element in app.config, name it "Perfion.APIService.Url" and we'll auto-wire it up.
+
+					// Enable archiving lets us create an entry in the archive with the data retrieved from Perfion
+					.EnableArchiving()
+				));
+        }
+    }
+
+	public class PerfionTask : Task
+	{
+		private readonly IPerfionService _perfion;
+
+		public PerfionTask(IPerfionService perfion)
+		{
+			_perfion = perfion;
+		}
+
+		public override void StartTask(ITaskExecutionContext context)
+		{
+			PerfionXml xml = _perfion.Query(@"
+<Query>
+	<Select languages='EN'>
+		<Feature id='**' />
+	</Select>
+	<From id='Product,Category'/>
+</Query>");
+
+			foreach (PerfionXml.Component category in xml.Components("Category"))
+			{
+				PerfionXml.Component parent = category.Parent;
+
+				context.Log.Message("Category {0} with parent {1}", category.Name(), parent != null ? parent.Name() : "n/a");
+			}
+
+			foreach (PerfionXml.Component product in xml.Components("Product"))
+			{
+				PerfionXml.Component parentCategory = product.FindRelation("Category");
+
+				context.Log.Message("Product {0} in Category {1}", product.Name(), parentCategory.Name());
+
+				PerfionXml.Image image = product.GetImage("Image");
+
+				if (image != null)
+				{
+					// download RAW
+					File.WriteAllBytes(Path.Combine(@"C:\tmp\perfion\", image.Name), 
+						image.Download());
+
+					// download thumb (100x100)
+					File.WriteAllBytes(Path.Combine(@"c:\tmp\perfion\thumbs\", image.Name), 
+						image.Download(new NameValueCollection { { "size", "100x100" }}));
+				}
+			}
+		}
+
+		public override string Description
+		{
+			get { return "TBD"; }
 		}
 	}
 }

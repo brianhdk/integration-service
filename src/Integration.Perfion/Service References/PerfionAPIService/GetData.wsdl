@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://perfion.com/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s1="http://microsoft.com/wsdl/types/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://perfion.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://perfion.com/">
+      <s:import namespace="http://microsoft.com/wsdl/types/" />
+      <s:element name="ExecuteQuery">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="query" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ExecuteQueryResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ExecuteQueryResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetFilterAsHtml">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="filterID" type="s1:guid" />
+            <s:element minOccurs="0" maxOccurs="1" name="searchFeature" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetFilterAsHtmlResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetFilterAsHtmlResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetFilterAsXml">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="filterID" type="s1:guid" />
+            <s:element minOccurs="0" maxOccurs="1" name="searchFeature" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="language" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetFilterAsXmlResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetFilterAsXmlResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CalcImageScale">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="maxWidth" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="maxHeight" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="imageIDs" type="tns:ArrayOfGuid" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfGuid">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="guid" type="s1:guid" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CalcImageScaleResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CalcImageScaleResult" type="s:float" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FilterValuesToUrlQueryPart">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="formNamesAndValuesXml" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FilterValuesToUrlQueryPartResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FilterValuesToUrlQueryPartResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="XmlSubmitToUrlQueryPart">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="xmlSubmit" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="XmlSubmitToUrlQueryPartResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="XmlSubmitToUrlQueryPartResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ShortFormToXmlWhereClause">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="shortFormQuery" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ShortFormToXmlWhereClauseResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ShortFormToXmlWhereClauseResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetLanguages">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetLanguagesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetLanguagesResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSelectableFeatures">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="language" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSelectableFeaturesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetSelectableFeaturesResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTypesUsedBy">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="itemIDs" type="tns:ArrayOfInt" />
+            <s:element minOccurs="0" maxOccurs="1" name="language" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfInt">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="int" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetTypesUsedByResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetTypesUsedByResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://microsoft.com/wsdl/types/">
+      <s:simpleType name="guid">
+        <s:restriction base="s:string">
+          <s:pattern value="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" />
+        </s:restriction>
+      </s:simpleType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="ExecuteQuerySoapIn">
+    <wsdl:part name="parameters" element="tns:ExecuteQuery" />
+  </wsdl:message>
+  <wsdl:message name="ExecuteQuerySoapOut">
+    <wsdl:part name="parameters" element="tns:ExecuteQueryResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetFilterAsHtmlSoapIn">
+    <wsdl:part name="parameters" element="tns:GetFilterAsHtml" />
+  </wsdl:message>
+  <wsdl:message name="GetFilterAsHtmlSoapOut">
+    <wsdl:part name="parameters" element="tns:GetFilterAsHtmlResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetFilterAsXmlSoapIn">
+    <wsdl:part name="parameters" element="tns:GetFilterAsXml" />
+  </wsdl:message>
+  <wsdl:message name="GetFilterAsXmlSoapOut">
+    <wsdl:part name="parameters" element="tns:GetFilterAsXmlResponse" />
+  </wsdl:message>
+  <wsdl:message name="CalcImageScaleSoapIn">
+    <wsdl:part name="parameters" element="tns:CalcImageScale" />
+  </wsdl:message>
+  <wsdl:message name="CalcImageScaleSoapOut">
+    <wsdl:part name="parameters" element="tns:CalcImageScaleResponse" />
+  </wsdl:message>
+  <wsdl:message name="FilterValuesToUrlQueryPartSoapIn">
+    <wsdl:part name="parameters" element="tns:FilterValuesToUrlQueryPart" />
+  </wsdl:message>
+  <wsdl:message name="FilterValuesToUrlQueryPartSoapOut">
+    <wsdl:part name="parameters" element="tns:FilterValuesToUrlQueryPartResponse" />
+  </wsdl:message>
+  <wsdl:message name="XmlSubmitToUrlQueryPartSoapIn">
+    <wsdl:part name="parameters" element="tns:XmlSubmitToUrlQueryPart" />
+  </wsdl:message>
+  <wsdl:message name="XmlSubmitToUrlQueryPartSoapOut">
+    <wsdl:part name="parameters" element="tns:XmlSubmitToUrlQueryPartResponse" />
+  </wsdl:message>
+  <wsdl:message name="ShortFormToXmlWhereClauseSoapIn">
+    <wsdl:part name="parameters" element="tns:ShortFormToXmlWhereClause" />
+  </wsdl:message>
+  <wsdl:message name="ShortFormToXmlWhereClauseSoapOut">
+    <wsdl:part name="parameters" element="tns:ShortFormToXmlWhereClauseResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetLanguagesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetLanguages" />
+  </wsdl:message>
+  <wsdl:message name="GetLanguagesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetLanguagesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetSelectableFeaturesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetSelectableFeatures" />
+  </wsdl:message>
+  <wsdl:message name="GetSelectableFeaturesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetSelectableFeaturesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetTypesUsedBySoapIn">
+    <wsdl:part name="parameters" element="tns:GetTypesUsedBy" />
+  </wsdl:message>
+  <wsdl:message name="GetTypesUsedBySoapOut">
+    <wsdl:part name="parameters" element="tns:GetTypesUsedByResponse" />
+  </wsdl:message>
+  <wsdl:portType name="GetDataSoap">
+    <wsdl:operation name="ExecuteQuery">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Execute Query against the Perfion database</wsdl:documentation>
+      <wsdl:input message="tns:ExecuteQuerySoapIn" />
+      <wsdl:output message="tns:ExecuteQuerySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetFilterAsHtml">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a Perfion search filter as Html</wsdl:documentation>
+      <wsdl:input message="tns:GetFilterAsHtmlSoapIn" />
+      <wsdl:output message="tns:GetFilterAsHtmlSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetFilterAsXml">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a Perfion search filter as Xml</wsdl:documentation>
+      <wsdl:input message="tns:GetFilterAsXmlSoapIn" />
+      <wsdl:output message="tns:GetFilterAsXmlSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CalcImageScale">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Calculates the image dpi to use accross a series of images to make them of proportionate size and to fit each of them within a specified size.</wsdl:documentation>
+      <wsdl:input message="tns:CalcImageScaleSoapIn" />
+      <wsdl:output message="tns:CalcImageScaleSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FilterValuesToUrlQueryPart">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Transforms a list of form names and values to a url query part</wsdl:documentation>
+      <wsdl:input message="tns:FilterValuesToUrlQueryPartSoapIn" />
+      <wsdl:output message="tns:FilterValuesToUrlQueryPartSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="XmlSubmitToUrlQueryPart">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Transforms an Xml submit to a url query part</wsdl:documentation>
+      <wsdl:input message="tns:XmlSubmitToUrlQueryPartSoapIn" />
+      <wsdl:output message="tns:XmlSubmitToUrlQueryPartSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ShortFormToXmlWhereClause">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Transforms shortform query to a PXmlQuery where section</wsdl:documentation>
+      <wsdl:input message="tns:ShortFormToXmlWhereClauseSoapIn" />
+      <wsdl:output message="tns:ShortFormToXmlWhereClauseSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLanguages">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Required by Perfion.AddIn. Usage is not documented and this method may disappear or change in the future without warning.</wsdl:documentation>
+      <wsdl:input message="tns:GetLanguagesSoapIn" />
+      <wsdl:output message="tns:GetLanguagesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSelectableFeatures">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Required by Perfion.AddIn. Usage is not documented and this method may disappear or change in the future without warning.</wsdl:documentation>
+      <wsdl:input message="tns:GetSelectableFeaturesSoapIn" />
+      <wsdl:output message="tns:GetSelectableFeaturesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTypesUsedBy">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Required by Perfion.AddIn. Usage is not documented and this method may disappear or change in the future without warning.</wsdl:documentation>
+      <wsdl:input message="tns:GetTypesUsedBySoapIn" />
+      <wsdl:output message="tns:GetTypesUsedBySoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="GetDataSoap" type="tns:GetDataSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="ExecuteQuery">
+      <soap:operation soapAction="http://perfion.com/ExecuteQuery" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFilterAsHtml">
+      <soap:operation soapAction="http://perfion.com/GetFilterAsHtml" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFilterAsXml">
+      <soap:operation soapAction="http://perfion.com/GetFilterAsXml" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CalcImageScale">
+      <soap:operation soapAction="http://perfion.com/CalcImageScale" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FilterValuesToUrlQueryPart">
+      <soap:operation soapAction="http://perfion.com/FilterValuesToUrlQueryPart" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="XmlSubmitToUrlQueryPart">
+      <soap:operation soapAction="http://perfion.com/XmlSubmitToUrlQueryPart" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ShortFormToXmlWhereClause">
+      <soap:operation soapAction="http://perfion.com/ShortFormToXmlWhereClause" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLanguages">
+      <soap:operation soapAction="http://perfion.com/GetLanguages" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSelectableFeatures">
+      <soap:operation soapAction="http://perfion.com/GetSelectableFeatures" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTypesUsedBy">
+      <soap:operation soapAction="http://perfion.com/GetTypesUsedBy" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="GetDataSoap12" type="tns:GetDataSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="ExecuteQuery">
+      <soap12:operation soapAction="http://perfion.com/ExecuteQuery" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFilterAsHtml">
+      <soap12:operation soapAction="http://perfion.com/GetFilterAsHtml" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFilterAsXml">
+      <soap12:operation soapAction="http://perfion.com/GetFilterAsXml" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CalcImageScale">
+      <soap12:operation soapAction="http://perfion.com/CalcImageScale" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FilterValuesToUrlQueryPart">
+      <soap12:operation soapAction="http://perfion.com/FilterValuesToUrlQueryPart" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="XmlSubmitToUrlQueryPart">
+      <soap12:operation soapAction="http://perfion.com/XmlSubmitToUrlQueryPart" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ShortFormToXmlWhereClause">
+      <soap12:operation soapAction="http://perfion.com/ShortFormToXmlWhereClause" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLanguages">
+      <soap12:operation soapAction="http://perfion.com/GetLanguages" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSelectableFeatures">
+      <soap12:operation soapAction="http://perfion.com/GetSelectableFeatures" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTypesUsedBy">
+      <soap12:operation soapAction="http://perfion.com/GetTypesUsedBy" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="GetData">
+    <wsdl:port name="GetDataSoap" binding="tns:GetDataSoap">
+      <soap:address location="http://perfion-api.local/Perfion/GetData.asmx" />
+    </wsdl:port>
+    <wsdl:port name="GetDataSoap12" binding="tns:GetDataSoap12">
+      <soap12:address location="http://perfion-api.local/Perfion/GetData.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
