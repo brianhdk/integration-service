@@ -1855,7 +1855,7 @@ To setup a Perfion integration, start by adding the following package:
   Install-Package Vertica.Integration.Perfion
   ```
 
-The example below shows you how some of the features you can use when working with this Perfion integration, including how to download files/images.
+The example below illustrates some of the features you can use when working with this Perfion integration, including how to download files/images.
 
 ```c#
 using System.Collections.Specialized;
