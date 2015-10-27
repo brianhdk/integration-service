@@ -1858,11 +1858,15 @@ To setup a Perfion integration, start by adding the following package:
 The example below illustrates some of the features you can use when working with this Perfion integration, including how to download files/images.
 
 ```c#
+using System;
 using System.Collections.Specialized;
 using System.IO;
+using System.Text;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Model;
 using Vertica.Integration.Perfion;
+using Vertica.Utilities_v4.Collections;
+using Vertica.Utilities_v4.Extensions.EnumerableExt;
 
 namespace ConsoleApplication16
 {
@@ -1906,12 +1910,22 @@ namespace ConsoleApplication16
 	<From id='Product,Category'/>
 </Query>");
 
-			foreach (PerfionXml.Component category in xml.Components("Category"))
-			{
-				PerfionXml.Component parent = category.Parent;
+			Tree<PerfionXml.Component, string, int> categories = xml.Components("Category")
+				.ToTree(x => x.Id, (x, p) => x.ParentId.HasValue ? p.Value(x.ParentId.Value) : p.None, x => x.Name());
 
-				context.Log.Message("Category {0} with parent {1}", category.Name(), parent != null ? parent.Name() : "n/a");
+			var treeVisualization = new StringBuilder();
+
+			foreach (var level1Category in categories)
+			{
+				treeVisualization.AppendLine(level1Category.Model);
+
+				foreach (var level2Category in level1Category)
+				{
+					treeVisualization.AppendLine(String.Format("-- {0}", level2Category.Model));
+				}
 			}
+
+			context.Log.Message(treeVisualization.ToString());
 
 			foreach (PerfionXml.Component product in xml.Components("Product"))
 			{
@@ -1923,7 +1937,7 @@ namespace ConsoleApplication16
 
 				if (image != null)
 				{
-					// download raw file
+					// download RAW
 					File.WriteAllBytes(Path.Combine(@"C:\tmp\perfion\", image.Name), 
 						image.Download());
 
