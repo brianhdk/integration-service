@@ -77,8 +77,8 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Vertica.Utilities_v4">
-      <HintPath>..\..\packages\Vertica.Utilities_v4.4.0.47.0\lib\net40\Vertica.Utilities_v4.dll</HintPath>
+    <Reference Include="Vertica.Utilities_v4, Version=4.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Vertica.Utilities_v4.4.0.48.0\lib\net40\Vertica.Utilities_v4.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
