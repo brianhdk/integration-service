@@ -273,7 +273,6 @@
     <Compile Include="Model\ITaskRunner.cs" />
     <Compile Include="Model\Log.cs" />
     <Compile Include="Model\Output.cs" />
-    <Compile Include="Startup\Argument.cs" />
     <Compile Include="Model\Step.cs" />
     <Compile Include="Model\Task.cs" />
     <Compile Include="Model\TaskExecutionResult.cs" />
