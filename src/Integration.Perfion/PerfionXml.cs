@@ -5,6 +5,8 @@ using System.Linq;
 using System.Xml.Linq;
 using Vertica.Integration.Infrastructure.Archiving;
 using Vertica.Integration.Perfion.Infrastructure;
+using Vertica.Utilities_v4.Collections;
+using Vertica.Utilities_v4.Extensions.EnumerableExt;
 
 namespace Vertica.Integration.Perfion
 {
@@ -51,6 +53,21 @@ namespace Vertica.Integration.Perfion
 			if (name == null) throw new ArgumentNullException("name");
 
 			return Root.Elements(name).Select(x => new Component(this, x));
+		}
+
+		public Tree<Component, int> Tree(XName name)
+		{
+			if (name == null) throw new ArgumentNullException("name");
+
+			return Components(name).ToTree(x => x.Id, (x, p) => x.ParentId.HasValue ? p.Value(x.ParentId.Value) : p.None);
+		}
+
+		public Tree<Component, TModel, int> Tree<TModel>(XName name, Func<Component, TModel> projection)
+		{
+			if (name == null) throw new ArgumentNullException("name");
+			if (projection == null) throw new ArgumentNullException("projection");
+
+			return Components(name).ToTree(x => x.Id, (x, p) => x.ParentId.HasValue ? p.Value(x.ParentId.Value) : p.None, projection);
 		}
 
 		public override string ToString()
