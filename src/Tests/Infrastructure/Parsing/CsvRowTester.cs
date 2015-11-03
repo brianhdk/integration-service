@@ -76,6 +76,21 @@ John Doe;30
 Jane Doe;31"));
         }
 
+		[Test]
+		public void Create_Csv_Tab_Delimiter()
+		{
+			string csv = CsvRow
+				.BeginRows("Name", "Age")
+				.Configure(x => x.ReturnHeaderAsRow().ChangeDelimiter("\t"))
+				.Add("John Doe", "30")
+				.Add("Jane Doe", "31")
+				.ToString();
+
+			Assert.That(csv, Is.EqualTo(@"Name	Age
+John Doe	30
+Jane Doe	31"));
+		}
+
         [Test]
         public void Create_Csv_Null_Value_ToString()
         {

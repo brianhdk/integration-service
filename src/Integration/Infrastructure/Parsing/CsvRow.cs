@@ -165,15 +165,13 @@ namespace Vertica.Integration.Infrastructure.Parsing
             internal CsvRowMetadata(CsvRow row, string delimiter, uint? lineNumber = null)
             {
                 if (row == null) throw new ArgumentNullException("row");
-                if (String.IsNullOrWhiteSpace(delimiter))
-                    throw new ArgumentException(@"Value cannot be null or empty.", "delimiter");
 
                 _row = row;
 
                 if (_row._headers != null)
                     Headers = new CsvRowHeaders(this);
 
-                Delimiter = delimiter;
+                Delimiter = delimiter ?? String.Empty;
                 LineNumber = lineNumber;
             }
 
@@ -336,10 +334,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
             public ICsvRowBuilderConfiguration ChangeDelimiter(string delimiter)
             {
-                if (String.IsNullOrWhiteSpace(delimiter))
-                    throw new ArgumentException(@"Value cannot be null or empty.", "delimiter");
-
-                _delimiter = delimiter;
+                _delimiter = delimiter ?? String.Empty;
 
                 return this;
             }
