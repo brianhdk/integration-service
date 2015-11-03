@@ -65,8 +65,11 @@ namespace Vertica.Integration
 		}
 
 		public static readonly ApplicationEnvironment Development = new ApplicationEnvironment("Development");
-		public static readonly ApplicationEnvironment Staging = new ApplicationEnvironment("Staging");
+		public static readonly ApplicationEnvironment Stage = new ApplicationEnvironment("Stage");
 		public static readonly ApplicationEnvironment Production = new ApplicationEnvironment("Production");
+
+		[Obsolete("Renamed to Stage.")]
+		public static readonly ApplicationEnvironment Staging = new ApplicationEnvironment("Staging");
 
 		public static ApplicationEnvironment Custom(string name)
 		{
@@ -75,8 +78,13 @@ namespace Vertica.Integration
 			if (custom.Equals(Development))
 				return Development;
 
+			if (custom.Equals(Stage))
+				return Stage;
+
+#pragma warning disable 618
 			if (custom.Equals(Staging))
 				return Staging;
+#pragma warning restore 618
 
 			if (custom.Equals(Production))
 				return Production;
