@@ -14,7 +14,7 @@ namespace Vertica.Integration
 	{
         public static IWindsorContainer Initialize(ApplicationConfiguration configuration)
 		{
-		    if (configuration == null) throw new ArgumentNullException("configuration");
+	        if (configuration == null) throw new ArgumentNullException("configuration");
 
             var container = new WindsorContainer();
             container.Kernel.AddFacility<TypedFactoryFacility>();
@@ -29,6 +29,7 @@ namespace Vertica.Integration
             container.Install(
 				Install.ByConvention
                     .AddFromAssemblyOfThis<ConventionInstaller>()
+					.Ignore<IApplicationContext>()
 					.Ignore<IHost>()
                     .Ignore<ITask>()
                     .Ignore<IStep>());

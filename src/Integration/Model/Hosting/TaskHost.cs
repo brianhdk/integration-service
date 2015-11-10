@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Model.Hosting.Handlers;
-using Action = System.Action;
 
 namespace Vertica.Integration.Model.Hosting
 {

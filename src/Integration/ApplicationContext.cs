@@ -28,7 +28,7 @@ namespace Vertica.Integration
             if (application != null)
                 application(_configuration);
 
-		    _configuration.RegisterDependency(this);
+		    _configuration.RegisterDependency<IApplicationContext>(this);
 
             if (_configuration.IgnoreSslErrors)
 			    ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
