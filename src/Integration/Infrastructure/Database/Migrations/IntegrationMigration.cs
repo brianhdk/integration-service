@@ -6,6 +6,7 @@ using FluentMigrator;
 using Vertica.Integration.Infrastructure.Configuration;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Hosting;
+using Arguments = Vertica.Integration.Model.Arguments;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
@@ -88,11 +89,24 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 			return new ConfigurationUpdater<T>(GetConfiguration<T>(), SaveConfiguration);
 		}
 
-		protected void RunTask<TTask>() where TTask : class, ITask
+		protected void RunTask(string name, Arguments arguments = null)
 		{
-			ITask task = GetTask<TTask>();
+			RunTask(GetTask(name));
+		}
 
-			Resolve<ITaskRunner>().Execute(task);
+		protected void RunTask<TTask>(Arguments arguments = null) where TTask : class, ITask
+		{
+			RunTask(GetTask<TTask>());
+		}
+
+		protected void RunTask(ITask task, Arguments arguments = null)
+		{
+			Resolve<ITaskRunner>().Execute(task, arguments);
+		}
+
+		protected ITask GetTask(string name)
+		{
+			return Resolve<ITaskFactory>().Get(name);
 		}
 
 		protected ITask GetTask<TTask>() where TTask : class, ITask

@@ -75,12 +75,12 @@ namespace Vertica.Integration.Perfion
 			return _document.ToString();
 		}
 
-		public class Image
+		public class File
 		{
 			private readonly PerfionXml _xml;
 			private readonly XElement _element;
 
-			public Image(PerfionXml xml, XElement element)
+			public File(PerfionXml xml, XElement element)
 			{
 				if (xml == null) throw new ArgumentNullException("xml");
 				if (element == null) throw new ArgumentNullException("element");
@@ -114,10 +114,25 @@ namespace Vertica.Integration.Perfion
 				get { return _element.AttributeOrThrow("fileModifiedDate").AsDateTime(); }
 			}
 
-			public byte[] Download(NameValueCollection options = null)
+			public byte[] Download()
 			{
-				if (options == null)
-					return _xml.Service.DownloadFile(Id);
+				return _xml.Service.DownloadFile(Id);
+			}
+		}
+
+		public class Image : File
+		{
+			private readonly PerfionXml _xml;
+
+			public Image(PerfionXml xml, XElement element)
+				: base(xml, element)
+			{
+				_xml = xml;
+			}
+
+			public byte[] Download(NameValueCollection options)
+			{
+				if (options == null) throw new ArgumentNullException("options");
 
 				return _xml.Service.DownloadImage(Id, options);
 			}
@@ -218,16 +233,26 @@ namespace Vertica.Integration.Perfion
 				return _xml.Components(relatedComponent).FirstOrDefault(x => x.Id == id.Value);
 			}
 
-			public Image GetImage(XName name)
+			public File[] GetFiles(XName name)
 			{
 				if (name == null) throw new ArgumentNullException("name");
 
-				XElement element = _element.Element(name);
+				return _element
+					.Elements(name)
+					.OrderBy(x => Int32.Parse(x.AttributeOrThrow("seq").Value))
+					.Select(x => new File(_xml, x))
+					.ToArray();
+			}
 
-				if (element == null)
-					return null;
+			public Image[] GetImages(XName name)
+			{
+				if (name == null) throw new ArgumentNullException("name");
 
-				return new Image(_xml, element);
+				return _element
+					.Elements(name)
+					.OrderBy(x => Int32.Parse(x.AttributeOrThrow("seq").Value))
+					.Select(x => new Image(_xml, x))
+					.ToArray();
 			}
 		}
 	}

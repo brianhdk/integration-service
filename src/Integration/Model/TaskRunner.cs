@@ -20,6 +20,8 @@ namespace Vertica.Integration.Model
 
 		public TaskExecutionResult Execute(ITask task, Arguments arguments = null)
 		{
+			if (task == null) throw new ArgumentNullException("task");
+
 			// latebound because we don't know the exact generic type at compile time
 			return ExecuteInternal((dynamic) task, arguments);
 		}
