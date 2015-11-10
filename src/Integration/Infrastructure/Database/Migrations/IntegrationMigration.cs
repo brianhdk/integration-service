@@ -91,12 +91,12 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
 		protected void RunTask(string name, Arguments arguments = null)
 		{
-			RunTask(GetTask(name));
+			RunTask(GetTask(name), arguments);
 		}
 
 		protected void RunTask<TTask>(Arguments arguments = null) where TTask : class, ITask
 		{
-			RunTask(GetTask<TTask>());
+			RunTask(GetTask<TTask>(), arguments);
 		}
 
 		protected void RunTask(ITask task, Arguments arguments = null)
