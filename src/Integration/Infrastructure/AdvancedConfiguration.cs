@@ -24,8 +24,8 @@ namespace Vertica.Integration.Infrastructure
 
 	        _types = new Dictionary<Type, Tuple<Type, Type>>();
 			_instances = new Dictionary<Type, Tuple<Func<object>, Func<object>>>();
-
-		    Register<ILogger, DbLogger, EventLogger>();
+			
+			Register<ILogger, DbLogger, EventLogger>();
 		    Register<IConfigurationRepository, DbConfigurationRepository, FileBasedConfigurationRepository>();
 		    Register<IArchiveService, DbArchiveService, FileBasedArchiveService>();
 		    Register<IRuntimeSettings, AppConfigRuntimeSettings>();

@@ -10,6 +10,9 @@ namespace Vertica.Integration.Infrastructure.Logging
             if (application == null) throw new ArgumentNullException("application");
 
 			Application = application;
+
+			// Make sure that the EventLoggerConfiguration has been registred as this will be used as a fallback.
+			Application.Extensibility(extensibility => extensibility.Register(() => new EventLoggerConfiguration()));
         }
 
         public ApplicationConfiguration Application { get; private set; }
@@ -28,14 +31,8 @@ namespace Vertica.Integration.Infrastructure.Logging
 
         public LoggingConfiguration EventLogger(Action<EventLoggerConfiguration> eventLogger = null)
         {
-			Application.Extensibility(extensibility =>
-			{
-				EventLoggerConfiguration configuration =
-					extensibility.Register(() => new EventLoggerConfiguration());
-
-				if (eventLogger != null)
-					eventLogger(configuration);
-			});
+	        if (eventLogger != null)
+		        Application.Extensibility(extensibility => eventLogger(extensibility.Get<EventLoggerConfiguration>()));
 
             return Use<EventLogger>();
         }

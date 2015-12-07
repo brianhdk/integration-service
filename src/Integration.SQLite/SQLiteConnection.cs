@@ -19,7 +19,7 @@ namespace Vertica.Integration.SQLite
 			return new System.Data.SQLite.SQLiteConnection(ConnectionString);
 		}
 
-		protected static ConnectionString FromCurrentDirectory(string filePath)
+		public static ConnectionString FromCurrentDirectory(string filePath)
 		{
 			if (String.IsNullOrWhiteSpace(filePath)) throw new ArgumentException(@"Value cannot be null or empty.", "filePath");
 
