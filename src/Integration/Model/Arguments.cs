@@ -93,7 +93,7 @@ namespace Vertica.Integration.Model
 
 	    public static Arguments Empty
         {
-            get { return new Arguments(); }
+            get { return new Arguments(null, new KeyValuePair<string, string>()); }
         }
     }
 }
