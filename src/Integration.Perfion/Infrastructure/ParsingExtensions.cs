@@ -6,7 +6,7 @@ namespace Vertica.Integration.Perfion.Infrastructure
 {
 	public static class ParsingExtensions
 	{
-		private static readonly CultureInfo English = CultureInfo.GetCultureInfo("en-US");
+		internal static readonly CultureInfo English = CultureInfo.GetCultureInfo("en-US");
 
 		public static int AsInt32(this XAttribute attribute)
 		{

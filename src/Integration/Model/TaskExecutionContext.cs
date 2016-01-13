@@ -7,9 +7,10 @@ namespace Vertica.Integration.Model
         public TaskExecutionContext(ILog log, Arguments arguments)
         {
             if (log == null) throw new ArgumentNullException("log");
+	        if (arguments == null) throw new ArgumentNullException("arguments");
 
-            Log = log;
-            Arguments = arguments ?? Arguments.Empty;
+	        Log = log;
+            Arguments = arguments;
         }
 
         public ILog Log { get; private set; }

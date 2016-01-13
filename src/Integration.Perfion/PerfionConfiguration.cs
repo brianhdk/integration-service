@@ -6,7 +6,7 @@ using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 
 namespace Vertica.Integration.Perfion
 {
-	public class PerfionConfiguration : IPerfionConfiguration, IInitializable<IWindsorContainer>
+	public class PerfionConfiguration : IInitializable<IWindsorContainer>
 	{
 		internal PerfionConfiguration(ApplicationConfiguration application)
 		{
@@ -14,13 +14,33 @@ namespace Vertica.Integration.Perfion
 
 			Application = application
 				.AddCustomInstaller(Install.ByConvention
-					.AddFromAssemblyOfThis<IPerfionService>()
+					.AddFromAssemblyOfThis<PerfionConfiguration>()
 					.Ignore<PerfionConfiguration>());
+
+			ServiceClientInternal = new ServiceClientConfiguration();
 		}
 
-		public ConnectionString ConnectionString { get; set; }
+		internal ConnectionString ConnectionStringInternal { get; set; }
+		internal ArchiveOptions ArchiveOptions { get; private set; }
+		internal ServiceClientConfiguration ServiceClientInternal { get; private set; }
 
-		public ArchiveOptions ArchiveOptions { get; private set; }
+		public PerfionConfiguration ConnectionString(ConnectionString connectionString)
+		{
+			if (connectionString == null) throw new ArgumentNullException("connectionString");
+
+			ConnectionStringInternal = connectionString;
+
+			return this;
+		}
+
+		public PerfionConfiguration ServiceClient(Action<ServiceClientConfiguration> serviceClient)
+		{
+			if (serviceClient == null) throw new ArgumentNullException("serviceClient");
+
+			serviceClient(ServiceClientInternal);
+
+			return this;
+		}
 
 		public PerfionConfiguration Change(Action<PerfionConfiguration> change)
 		{
@@ -47,10 +67,10 @@ namespace Vertica.Integration.Perfion
 
 		void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
 		{
-			if (ConnectionString == null)
-				ConnectionString = ConnectionString.FromName("Perfion.APIService.Url");
+			if (ConnectionStringInternal == null)
+				ConnectionStringInternal = Integration.Infrastructure.ConnectionString.FromName("Perfion.APIService.Url");
 
-			container.RegisterInstance<IPerfionConfiguration>(this);
+			container.RegisterInstance(this);
 		}
 	}
 }

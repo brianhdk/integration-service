@@ -24,7 +24,7 @@ namespace Vertica.Integration.Model
 
 	    internal Arguments(string prefix, params KeyValuePair<string, string>[] pairs)
         {
-		    _prefix = prefix;
+		    _prefix = prefix ?? String.Empty;
 
 		    var uniqueKeys = Eq<KeyValuePair<string, string>>.By(
                 (x, y) => String.Equals(x.Key, y.Key, StringComparison.OrdinalIgnoreCase),
@@ -93,7 +93,7 @@ namespace Vertica.Integration.Model
 
 	    public static Arguments Empty
         {
-            get { return new Arguments(null, new KeyValuePair<string, string>()); }
+            get { return new Arguments(new string[0]); }
         }
     }
 }

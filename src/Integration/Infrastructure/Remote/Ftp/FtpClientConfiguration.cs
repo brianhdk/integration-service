@@ -44,7 +44,9 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
         internal FtpWebRequest CreateRequest(string path)
         {
             FtpWebRequest request = _request(path);
-            request.Credentials = _credentials;
+
+			if (_credentials != null)
+				request.Credentials = _credentials;
 
             return request;
         }

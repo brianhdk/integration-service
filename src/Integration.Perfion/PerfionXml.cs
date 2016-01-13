@@ -15,9 +15,8 @@ namespace Vertica.Integration.Perfion
 		private readonly IPerfionService _service;
 		private readonly XDocument _document;
 
-		public PerfionXml(IPerfionService service, XDocument document, ArchiveCreated archive)
+		public PerfionXml(IPerfionService service, XDocument document)
 		{
-			Archive = archive;
 			if (service == null) throw new ArgumentNullException("service");
 			if (document == null) throw new ArgumentNullException("document");
 			if (document.Root == null) throw new ArgumentException(@"Document is missing required root element.");
@@ -36,7 +35,7 @@ namespace Vertica.Integration.Perfion
 			get { return _document; }
 		}
 
-		public ArchiveCreated Archive { get; private set; }
+		public ArchiveCreated Archive { get; internal set; }
 
 		public XElement Root
 		{
@@ -253,6 +252,55 @@ namespace Vertica.Integration.Perfion
 					.OrderBy(x => Int32.Parse(x.AttributeOrThrow("seq").Value))
 					.Select(x => new Image(_xml, x))
 					.ToArray();
+			}
+
+
+			public int? AsInt32(XName name, string language = null)
+			{
+				if (name == null) throw new ArgumentNullException("name");
+
+				string value = this[name, language];
+
+				if (String.IsNullOrWhiteSpace(value))
+					return null;
+
+				return Int32.Parse(value);
+			}
+
+			public DateTime? AsDateTime(XName name, string language = null)
+			{
+				if (name == null) throw new ArgumentNullException("name");
+
+				string value = this[name, language];
+
+				if (String.IsNullOrWhiteSpace(value))
+					return null;
+
+				return DateTime.Parse(value, ParsingExtensions.English);
+			}
+
+			public double? AsDouble(XName name, string language = null)
+			{
+				if (name == null) throw new ArgumentNullException("name");
+
+				string value = this[name, language];
+
+				if (String.IsNullOrWhiteSpace(value))
+					return null;
+
+				return Double.Parse(value, ParsingExtensions.English);
+			}
+
+			public decimal? AsDecimal(XName name, string language = null)
+			{
+				if (name == null) throw new ArgumentNullException("name");
+
+				string value = this[name, language];
+
+				if (String.IsNullOrWhiteSpace(value))
+					return null;
+
+				return Decimal.Parse(value, ParsingExtensions.English);
 			}
 		}
 	}

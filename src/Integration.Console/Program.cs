@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using Microsoft.Owin;
@@ -11,6 +12,7 @@ using Vertica.Integration.Experiments.SignalR;
 using Vertica.Integration.Experiments.WebApi;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Model;
+using Vertica.Integration.Perfion;
 using Vertica.Integration.WebApi;
 using Vertica.Integration.WebApi.SignalR;
 
@@ -27,38 +29,38 @@ namespace Vertica.Integration.Console
 				//.UseWebApi(webApi => webApi
 				//	.WithPortal())
 				//.Advanced(advanced => advanced.Register(() => TextWriter.Null))
-				.UseWebApi(webApi => webApi
-					.AddFromAssemblyOfThis<TestController>()
-					.HttpServer(httpServer => httpServer.Configure(configurer =>
-					{
-						configurer.App.UseFileServer(new FileServerOptions
-						{
-							RequestPath = PathString.Empty,
-							FileSystem = new PhysicalFileSystem(@"..\..\..\Integration.Experiments\SignalR\Html")
-						});
+				//.UseWebApi(webApi => webApi
+				//	.AddFromAssemblyOfThis<TestController>()
+				//	.HttpServer(httpServer => httpServer.Configure(configurer =>
+				//	{
+				//		configurer.App.UseFileServer(new FileServerOptions
+				//		{
+				//			RequestPath = PathString.Empty,
+				//			FileSystem = new PhysicalFileSystem(@"..\..\..\Integration.Experiments\SignalR\Html")
+				//		});
 
-						configurer.App.UseErrorPage(new ErrorPageOptions { ShowSourceCode = false });
+				//		configurer.App.UseErrorPage(new ErrorPageOptions { ShowSourceCode = false });
 
-						configurer.App.Use((ctx, next) =>
-						{
-							if (ctx.Request.Path.Value == "/fail")
-								throw new Exception("Failed");
-							if (ctx.Request.Path.Value == "/write")
-								return ctx.Response.WriteAsync("Yo!");
+				//		configurer.App.Use((ctx, next) =>
+				//		{
+				//			if (ctx.Request.Path.Value == "/fail")
+				//				throw new Exception("Failed");
+				//			if (ctx.Request.Path.Value == "/write")
+				//				return ctx.Response.WriteAsync("Yo!");
 
-							return next.Invoke();
-						});
-					}))
-					.WithSignalR(signalR => signalR
-						//.SkipTraceConfiguration()
-						//.TraceLevel(SourceLevels.All)
-						.AddFromAssemblyOfThis<ChatHub>())
-				)
+				//			return next.Invoke();
+				//		});
+				//	}))
+				//	.WithSignalR(signalR => signalR
+				//		//.SkipTraceConfiguration()
+				//		//.TraceLevel(SourceLevels.All)
+				//		.AddFromAssemblyOfThis<ChatHub>())
+				//)
 				//.Logging(logging => logging.Disable())
 				//.Logging(logging => logging.TextWriter())
-				.AddCustomInstaller(Install.Service<ChatHub.RandomChatter>())
+				//.AddCustomInstaller(Install.Service<ChatHub.RandomChatter>())
                 //.UseIIS()
-				//.Fast()
+				.Fast()
 				//.TestAzure()
 				//.RegisterTasks()
 				//.RegisterMigrations()
@@ -73,6 +75,10 @@ namespace Vertica.Integration.Console
 				//.TestRebus(args)
 				//.TestRavenDb()
 				//.TestBizTalkTracker()
+				.Tasks(tasks => tasks.Task<FtpTesterTask>().Task<SomeTask>())
+				.UsePerfion(perfion => perfion
+					.ServiceClient(serviceClient => serviceClient
+						.Change(x => x.SendTimeout = TimeSpan.MaxValue)))
                 .Void()))
 			{
                 context.Execute(args);

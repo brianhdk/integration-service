@@ -10,7 +10,7 @@ using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Tests.Domain.Monitoring
 {
-    [TestFixture(Category = "Integration,Slow", Ignore = true)]
+    [TestFixture(Category = "Integration,Slow", Ignore = "Requires Internet connection")]
     public class PingUrlsStepIntegrationTester
     {
         [Test]

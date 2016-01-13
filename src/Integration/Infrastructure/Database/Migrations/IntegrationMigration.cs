@@ -101,7 +101,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
 		protected void RunTask(ITask task, Arguments arguments = null)
 		{
-			Resolve<ITaskRunner>().Execute(task, arguments);
+			Resolve<ITaskRunner>().Execute(task, arguments ?? new Arguments());
 		}
 
 		protected ITask GetTask(string name)

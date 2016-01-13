@@ -2,7 +2,7 @@
 
 namespace Vertica.Integration.Perfion
 {
-	public static class RavenDbExtensions
+	public static class PerfionExtensions
 	{
 		public static ApplicationConfiguration UsePerfion(this ApplicationConfiguration application, Action<PerfionConfiguration> perfion = null)
 		{

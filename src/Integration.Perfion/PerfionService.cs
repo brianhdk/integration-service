@@ -11,19 +11,13 @@ namespace Vertica.Integration.Perfion
 {
 	public class PerfionService : IPerfionService
 	{
-		private readonly IPerfionConfiguration _configuration;
+		private readonly PerfionConfiguration _configuration;
 		private readonly IArchiveService _archive;
 
-		private readonly ArchiveOptions _archiveOptions;
-		private readonly Uri _baseUri;
-
-		public PerfionService(IPerfionConfiguration configuration, IArchiveService archive)
+		public PerfionService(PerfionConfiguration configuration, IArchiveService archive)
 		{
 			_configuration = configuration;
 			_archive = archive;
-
-			_baseUri = ParseBaseUri(configuration.ConnectionString);
-			_archiveOptions = configuration.ArchiveOptions;
 		}
 
 		public PerfionXml Query(string query)
@@ -34,22 +28,27 @@ namespace Vertica.Integration.Perfion
 
 				ArchiveCreated archive = null;
 
-				if (_archiveOptions != null)
-				{
-					archive = _archive.Archive(_archiveOptions.Name, newArchive =>
-					{
-						newArchive.Options.GroupedBy(_archiveOptions.GroupName);
+				ArchiveOptions archiveOptions = _configuration.ArchiveOptions;
 
-						if (_archiveOptions.Expires.HasValue)
-							newArchive.Options.ExpiresOn(_archiveOptions.Expires.Value);
+				if (archiveOptions != null)
+				{
+					archive = _archive.Archive(archiveOptions.Name, newArchive =>
+					{
+						newArchive.Options.GroupedBy(archiveOptions.GroupName);
+
+						if (archiveOptions.Expires.HasValue)
+							newArchive.Options.ExpiresOn(archiveOptions.Expires.Value);
 
 						newArchive
-							.IncludeContent("Query.txt", query)
-							.IncludeContent("Data.txt", xml);
+							.IncludeContent("Query.xml", query)
+							.IncludeContent("Data.xml", xml);
 					});
 				}
 
-				return new PerfionXml(this, XDocument.Parse(xml), archive);
+				return new PerfionXml(this, XDocument.Parse(xml))
+				{
+					Archive = archive
+				};
 			});
 		}
 
@@ -68,7 +67,7 @@ namespace Vertica.Integration.Perfion
 			using (var webClient = new WebClient())
 			{
 				string url = String.Format("{0}{1}.aspx?id={2}{3}",
-					_baseUri,
+					ParseBaseUri(),
 					path,
 					id,
 					options != null
@@ -79,8 +78,10 @@ namespace Vertica.Integration.Perfion
 			}
 		}
 
-		private static Uri ParseBaseUri(string webServiceUri)
+		private Uri ParseBaseUri()
 		{
+			string webServiceUri = _configuration.ConnectionStringInternal;
+
 			Uri uri;
 			if (!Uri.TryCreate(webServiceUri, UriKind.Absolute, out uri))
 				throw new ArgumentException(String.Format("'{0}' is not a valid absolute uri.", webServiceUri));
@@ -97,11 +98,18 @@ namespace Vertica.Integration.Perfion
 		{
 			if (client == null) throw new ArgumentNullException("client");
 
-			var proxy = new GetDataSoapClient(new BasicHttpBinding
+			var binding = new BasicHttpBinding
 			{
 				Name = "PerfionService",
-				MaxReceivedMessageSize = Int32.MaxValue
-			}, new EndpointAddress(_configuration.ConnectionString));
+				MaxReceivedMessageSize = _configuration.ServiceClientInternal.MaxReceivedMessageSize,
+				ReceiveTimeout = _configuration.ServiceClientInternal.ReceiveTimeout,
+				SendTimeout = _configuration.ServiceClientInternal.SendTimeout
+			};
+
+			if (_configuration.ServiceClientInternal.Binding != null)
+				_configuration.ServiceClientInternal.Binding(binding);
+
+			var proxy = new GetDataSoapClient(binding, new EndpointAddress(_configuration.ConnectionStringInternal));
 
 			try
 			{

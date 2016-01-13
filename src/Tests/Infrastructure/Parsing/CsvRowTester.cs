@@ -34,9 +34,9 @@ Jane Doe;31"));
             ArgumentException exception =
                 Assert.Throws<ArgumentException>(() => builder.Add("Jane Doe", "31", "New column"));
 
-            Assert.That(exception.Message, Is.StringContaining("Row #2"));
-            Assert.That(exception.Message, Is.StringContaining("has 3 columns"));
-            Assert.That(exception.Message, Is.StringContaining("expected 2 columns"));
+            Assert.That(exception.Message, Does.Contain("Row #2"));
+            Assert.That(exception.Message, Does.Contain("has 3 columns"));
+            Assert.That(exception.Message, Does.Contain("expected 2 columns"));
         }
 
         [Test]
@@ -151,7 +151,7 @@ Jane"));
             KeyNotFoundException exception =
                 Assert.Throws<KeyNotFoundException>(() => csv.AddUsingMapper(x => x.Map("Age", "30")));
 
-            Assert.That(exception.Message, Is.StringContaining("Age"));
+            Assert.That(exception.Message, Does.Contain("Age"));
         }
 
         [Test]
