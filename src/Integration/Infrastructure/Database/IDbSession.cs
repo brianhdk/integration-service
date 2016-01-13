@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using Dapper;
 
 namespace Vertica.Integration.Infrastructure.Database
 {
@@ -17,6 +18,8 @@ namespace Vertica.Integration.Infrastructure.Database
 		IEnumerable<TReturn> Query<TFirst, TSecond, TReturn>(string sql, Func<TFirst, TSecond, TReturn> map, object param = null, string splitOn = "Id");
 		IEnumerable<TReturn> Query<TFirst, TSecond, TThird, TReturn>(string sql, Func<TFirst, TSecond, TThird, TReturn> map, object param = null, string splitOn = "Id");
 		IEnumerable<TReturn> Query<TFirst, TSecond, TThird, TFourth, TReturn>(string sql, Func<TFirst, TSecond, TThird, TFourth, TReturn> map, object param = null, string splitOn = "Id");
+
+		SqlMapper.GridReader QueryMultiple(string sql, dynamic param = null);
 
         IDbConnection Connection { get; }
         IDbTransaction CurrentTransaction { get; }

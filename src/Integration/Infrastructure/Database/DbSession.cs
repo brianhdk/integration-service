@@ -66,6 +66,11 @@ namespace Vertica.Integration.Infrastructure.Database
 			return _connection.Query(sql, map, param, CurrentTransaction, splitOn: splitOn);
 		}
 
+	    public SqlMapper.GridReader QueryMultiple(string sql, dynamic param = null)
+	    {
+			return SqlMapper.QueryMultiple(_connection, sql, param, CurrentTransaction);
+	    }
+
 	    public IDbConnection Connection
         {
             get { return _connection; }
