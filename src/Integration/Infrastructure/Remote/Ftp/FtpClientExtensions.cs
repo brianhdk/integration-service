@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 
 namespace Vertica.Integration.Infrastructure.Remote.Ftp
 {
@@ -59,12 +60,12 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
             }
         }
 
-        public static string UploadFromString(this IFtpClient client, string name, string content)
+        public static string UploadFromString(this IFtpClient client, string name, string content, Encoding encoding = null)
         {
             if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
 
             using (var stream = new MemoryStream())
-            using (var writer = new StreamWriter(stream))
+            using (var writer = encoding == null ? new StreamWriter(stream) : new StreamWriter(stream, encoding))
             {
                 writer.Write(content ?? String.Empty);
                 writer.Flush();
