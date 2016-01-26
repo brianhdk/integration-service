@@ -126,7 +126,6 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 		
 		public override void Down()
 		{
-			string s = "";
 		}
 
 		private IKernel Kernel
