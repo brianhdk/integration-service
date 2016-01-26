@@ -8,10 +8,12 @@ namespace Vertica.Integration.Experiments.Migrations.CustomDb
     {
         public override void Up()
         {
+	        string s = "";
         }
 
         public override void Down()
         {
+	        string s = "";
         }
     }
 }

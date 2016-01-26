@@ -36,7 +36,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 	        {
 		        string connectionString = EnsureIntegrationDb(db(), dbs.CheckExistsAndCreateIntegrationDbIfNotFound, out _databaseCreated);
 
-		        var integrationDb = new MigrationDb(
+		        var integrationDb = new IntegrationMigrationDb(
 			        dbs.IntegrationDbDatabaseServer,
 			        ConnectionString.FromText(connectionString),
 			        typeof (M1_Baseline).Assembly,
@@ -49,12 +49,10 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 		        if (!runner.VersionLoader.VersionInfo.HasAppliedMigration(FindLatestMigration()))
 			        _loggingDisabler = logger.Disable();
 
-		        _dbs = dbs.WithIntegrationDb(integrationDb).ToArray();
+		        dbs = dbs.WithIntegrationDb(integrationDb);
 	        }
-	        else
-	        {
-		        _dbs = dbs.ToArray();
-	        }
+
+	        _dbs = dbs.ToArray();
         }
 
         private static long FindLatestMigration()
@@ -85,12 +83,41 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
         {
             bool enableLogger = _loggingDisabler != null;
 
-            foreach (MigrationDb destination in _dbs)
+	        MigrationDb[] destinations = _dbs;
+
+			string[] names = (context.Arguments["Names"] ?? String.Empty)
+				.Split(new[] { ",", ";" }, StringSplitOptions.RemoveEmptyEntries);
+
+	        if (names.Length > 0)
+	        {
+		        ILookup<string, MigrationDb> migrationsByName = 
+					_dbs.ToLookup(db => db.IdentifyingName, db => db, StringComparer.OrdinalIgnoreCase);
+
+				destinations = names
+					.SelectMany(x => migrationsByName[x])
+					.ToArray();
+	        }
+
+	        string action = (context.Arguments["Action"] ?? String.Empty).ToLowerInvariant();
+
+			foreach (MigrationDb destination in destinations)
             {
                 StringBuilder output;
                 MigrationRunner runner = CreateRunner(destination, out output);
 
-                runner.MigrateUp(useAutomaticTransactionManagement: true);
+	            switch (action)
+	            {
+					case "list":
+			            destination.List(runner);
+			            break;
+					case "rollback":
+			            destination.Rollback(runner);
+			            break;
+		            default:
+			            destination.MigrateUp(runner);
+			            break;
+	            }
+                
 				runner.Processor.Dispose();
 				
                 if (output.Length > 0)
@@ -113,7 +140,10 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
                     "Created new database (using Simple Recovery) and applied migrations to this. Make sure to configure this new database (auto growth, backup etc).");
             }
 
-	        foreach (string taskName in context.Arguments.Select(x => x.Key))
+	        string[] taskNames = (context.Arguments["Tasks"] ?? String.Empty)
+				.Split(new[] {",", ";"}, StringSplitOptions.RemoveEmptyEntries);
+
+	        foreach (string taskName in taskNames)
 	        {
 		        ITask task;
 		        if (_taskFactory.TryGet(taskName, out task))

@@ -1,33 +1,30 @@
 using System;
 using System.Reflection;
+using FluentMigrator.Runner;
+using Vertica.Utilities_v4.Extensions.StringExt;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
 	public class MigrationDb : IEquatable<MigrationDb>
 	{
-        public MigrationDb(DatabaseServer databaseServer, ConnectionString connectionString, Assembly assembly, string namespaceContainingMigrations)
+		public MigrationDb(DatabaseServer databaseServer, ConnectionString connectionString, Assembly assembly, string namespaceContainingMigrations, string identifyingName = null)
         {
             if (connectionString == null) throw new ArgumentNullException("connectionString");
             if (assembly == null) throw new ArgumentNullException("assembly");
-            if (String.IsNullOrWhiteSpace(namespaceContainingMigrations)) throw new ArgumentException(@"Value cannot be null or empty.", "namespaceContainingMigrations");
+			if (String.IsNullOrWhiteSpace(namespaceContainingMigrations)) throw new ArgumentException(@"Value cannot be null or empty.", "namespaceContainingMigrations");
 
-            DatabaseServer = databaseServer;
+			DatabaseServer = databaseServer;
             ConnectionString = connectionString;
             Assembly = assembly;
             NamespaceContainingMigrations = namespaceContainingMigrations;
+			IdentifyingName = identifyingName.NullIfEmpty() ?? namespaceContainingMigrations;
         }
 
         public DatabaseServer DatabaseServer { get; private set; }
         public ConnectionString ConnectionString { get; private set; }
         public Assembly Assembly { get; private set; }
         public string NamespaceContainingMigrations { get; private set; }
-
-		public MigrationDb CopyTo(Type type)
-		{
-			if (type == null) throw new ArgumentNullException("type");
-
-			return new MigrationDb(DatabaseServer, ConnectionString, type.Assembly, type.Namespace);
-		}
+		public string IdentifyingName { get; private set; }
 
 		public bool Equals(MigrationDb other)
 		{
@@ -57,5 +54,29 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 				return hashCode;
 			}
 		}
-    }
+
+		public virtual void Rollback(MigrationRunner runner)
+		{
+			if (runner == null) throw new ArgumentNullException("runner");
+
+			if (runner.RunnerContext.Steps == 0)
+				runner.RunnerContext.Steps = 1;
+
+			runner.Rollback(runner.RunnerContext.Steps);
+		}
+
+		public virtual void List(MigrationRunner runner)
+		{
+			if (runner == null) throw new ArgumentNullException("runner");
+
+			runner.ListMigrations();
+		}
+
+		public virtual void MigrateUp(MigrationRunner runner)
+		{
+			if (runner == null) throw new ArgumentNullException("runner");
+
+			runner.MigrateUp();
+		}
+	}
 }

@@ -33,31 +33,40 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
         /// Makes it possible to execute custom migrations where the VersionInfo table will be stored in the IntegrationDb.
         /// Tip: Inherit from <see cref="IntegrationMigration"/> to have access to all services from the Integration Service.
         /// </summary>
-        public MigrationConfiguration AddFromNamespaceOfThis<T>()
+        public MigrationConfiguration AddFromNamespaceOfThis<T>(string identifyingName = null)
             where T : Migration
         {
-	        _dbs.Add(typeof (T));
+	        _dbs.Add(typeof (T), identifyingName);
 	        return this;
         }
 
-        /// <summary>
-        /// Makes it possible to execute custom migrations against any database.
-        /// </summary>
-        /// <param name="db">Specifies the version of the database where the migrations are executed against.</param>
-        /// <param name="connectionString">Specifies the ConnectionString to the database.</param>
-        public MigrationConfiguration AddFromNamespaceOfThis<T>(DatabaseServer db, ConnectionString connectionString)
+	    /// <summary>
+	    /// Makes it possible to execute custom migrations against any database.
+	    /// </summary>
+	    /// <param name="db">Specifies the version of the database where the migrations are executed against.</param>
+	    /// <param name="connectionString">Specifies the ConnectionString to the database.</param>
+	    /// <param name="identifyingName">Specifies a name you can use to identify this specific migration.</param>
+	    public MigrationConfiguration AddFromNamespaceOfThis<T>(DatabaseServer db, ConnectionString connectionString, string identifyingName = null)
             where T : Migration
         {
             if (connectionString == null) throw new ArgumentNullException("connectionString");
 
-			_dbs.Add(new MigrationDb(
+			return Add(new MigrationDb(
 				db,
 				connectionString,
 				typeof(T).Assembly,
-				typeof(T).Namespace));
-
-            return this;
+				typeof(T).Namespace,
+				identifyingName));
         }
+
+	    public MigrationConfiguration Add(MigrationDb migrationDb)
+	    {
+		    if (migrationDb == null) throw new ArgumentNullException("migrationDb");
+
+		    _dbs.Add(migrationDb);
+
+			return this;		    
+	    }
 
         public MigrationConfiguration DisableCheckExistsAndCreateIntegrationDbIfNotFound()
         {
@@ -75,12 +84,12 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 	    private class MigrationDbs : IMigrationDbs
 	    {
 		    private readonly List<MigrationDb> _dbs;
-		    private readonly List<Type> _types;
+		    private readonly List<Tuple<Type, string>> _types;
 
 		    public MigrationDbs()
 		    {
 			    _dbs = new List<MigrationDb>();
-			    _types = new List<Type>();
+			    _types = new List<Tuple<Type, string>>();
 
 			    IntegrationDbDatabaseServer = DatabaseServer.SqlServer2014;
 			    CheckExistsAndCreateIntegrationDbIfNotFound = true;
@@ -103,18 +112,18 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 			    _dbs.Add(migrationDb);
 		    }
 
-			public void Add(Type migration)
+			public void Add(Type migration, string identifyingName)
 			{
 				if (migration == null) throw new ArgumentNullException("migration");
 
-				_types.Add(migration);
+				_types.Add(Tuple.Create(migration, identifyingName));
 			}
 
 			public bool IntegrationDbDisabled { get; set; }
 		    public DatabaseServer IntegrationDbDatabaseServer { get; set; }
 		    public bool CheckExistsAndCreateIntegrationDbIfNotFound { get; set; }
 
-		    public IMigrationDbs WithIntegrationDb(MigrationDb integrationDb)
+		    public IMigrationDbs WithIntegrationDb(IntegrationMigrationDb integrationDb)
 		    {
 			    if (integrationDb == null) throw new ArgumentNullException("integrationDb");
 
@@ -123,8 +132,8 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
 			    _dbs.Insert(0, integrationDb);
 
-			    foreach (Type migration in _types)
-				    _dbs.Insert(1, integrationDb.CopyTo(migration));
+			    foreach (Tuple<Type, string> migration in _types)
+				    _dbs.Insert(1, integrationDb.CopyTo(migration.Item1, migration.Item2));
 
 			    return this;
 		    }

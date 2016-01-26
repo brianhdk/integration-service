@@ -8,6 +8,6 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 		DatabaseServer IntegrationDbDatabaseServer { get; }
 		bool CheckExistsAndCreateIntegrationDbIfNotFound { get; }
 
-		IMigrationDbs WithIntegrationDb(MigrationDb integrationDb);
+		IMigrationDbs WithIntegrationDb(IntegrationMigrationDb integrationDb);
 	}
 }

@@ -8,8 +8,11 @@ using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
 using Owin;
 using Vertica.Integration.Experiments;
+using Vertica.Integration.Experiments.Migrations.CustomDb;
 using Vertica.Integration.Experiments.SignalR;
 using Vertica.Integration.Experiments.WebApi;
+using Vertica.Integration.Infrastructure;
+using Vertica.Integration.Infrastructure.Database.Migrations;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Model;
 using Vertica.Integration.Perfion;
@@ -75,6 +78,8 @@ namespace Vertica.Integration.Console
 				//.TestRebus(args)
 				//.TestRavenDb()
 				//.TestBizTalkTracker()
+				//.Migration(migration => migration
+				//	.AddFromNamespaceOfThis<M1431659519_CustomDbVoid>("CustomDb"))
 				.Tasks(tasks => tasks.Task<FtpTesterTask>().Task<SomeTask>())
 				.UsePerfion(perfion => perfion
 					.ServiceClient(serviceClient => serviceClient
