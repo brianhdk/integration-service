@@ -1,6 +1,8 @@
 using System;
 using System.Reflection;
+using Castle.MicroKernel;
 using FluentMigrator.Runner;
+using Vertica.Integration.Model;
 using Vertica.Utilities_v4.Extensions.StringExt;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
@@ -55,28 +57,34 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 			}
 		}
 
-		public virtual void Rollback(MigrationRunner runner)
+		public virtual void MigrateUp(MigrationRunner runner, ITaskExecutionContext context, IKernel kernel)
 		{
 			if (runner == null) throw new ArgumentNullException("runner");
+			if (context == null) throw new ArgumentNullException("context");
+			if (kernel == null) throw new ArgumentNullException("kernel");
+
+			runner.MigrateUp();
+		}
+
+		public virtual void List(MigrationRunner runner, ITaskExecutionContext context, IKernel kernel)
+		{
+			if (runner == null) throw new ArgumentNullException("runner");
+			if (context == null) throw new ArgumentNullException("context");
+			if (kernel == null) throw new ArgumentNullException("kernel");
+
+			runner.ListMigrations();
+		}
+
+		public virtual void Rollback(MigrationRunner runner, ITaskExecutionContext context, IKernel kernel)
+		{
+			if (runner == null) throw new ArgumentNullException("runner");
+			if (context == null) throw new ArgumentNullException("context");
+			if (kernel == null) throw new ArgumentNullException("kernel");
 
 			if (runner.RunnerContext.Steps == 0)
 				runner.RunnerContext.Steps = 1;
 
 			runner.Rollback(runner.RunnerContext.Steps);
-		}
-
-		public virtual void List(MigrationRunner runner)
-		{
-			if (runner == null) throw new ArgumentNullException("runner");
-
-			runner.ListMigrations();
-		}
-
-		public virtual void MigrateUp(MigrationRunner runner)
-		{
-			if (runner == null) throw new ArgumentNullException("runner");
-
-			runner.MigrateUp();
 		}
 	}
 }

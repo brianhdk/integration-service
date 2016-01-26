@@ -108,13 +108,13 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 	            switch (action)
 	            {
 					case "list":
-			            destination.List(runner);
+			            destination.List(runner, context, _kernel);
 			            break;
 					case "rollback":
-			            destination.Rollback(runner);
+			            destination.Rollback(runner, context, _kernel);
 			            break;
 		            default:
-			            destination.MigrateUp(runner);
+			            destination.MigrateUp(runner, context, _kernel);
 			            break;
 	            }
                 
