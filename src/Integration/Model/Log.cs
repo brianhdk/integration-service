@@ -15,20 +15,26 @@ namespace Vertica.Integration.Model
 
             _message = message;
             _logger = logger;
-
-            //Func<ITarget, string, ErrorLog> logWarning = (target, message) => ;
-            //Func<ITarget, string, ErrorLog> logError = (target, message) => _logger.LogError(target, message);
-            //Func<Exception, ITarget, ErrorLog> logException = (exception, target) => _logger.LogError(exception, target);
         }
 
         public void Message(string format, params object[] args)
 		{
-			_message(String.Format(format, args));
+			if (args != null && args.Length > 0)
+			{
+				_message(String.Format(format, args));
+			}
+			else
+			{
+				_message(format);
+			}
 		}
 
 	    public ErrorLog Warning(ITarget target, string format, params object[] args)
 	    {
-	        string message = String.Format(format, args);
+	        string message = format;
+
+		    if (args != null && args.Length > 0)
+				message = String.Format(message, args);
 
 	        _message(String.Format("[WARNING] {0}", message));
 	        return _logger.LogWarning(target, message);
@@ -36,7 +42,10 @@ namespace Vertica.Integration.Model
 
 	    public ErrorLog Error(ITarget target, string format, params object[] args)
 	    {
-            string message = String.Format(format, args);
+			string message = format;
+
+			if (args != null && args.Length > 0)
+				message = String.Format(message, args);
 
             _message(String.Format("[ERROR] {0}", message));
 	        return _logger.LogError(target, message);
