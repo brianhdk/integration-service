@@ -75,6 +75,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Perfion", "src\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".smoketests", ".smoketests", "{960ECE29-BE4A-4CB8-A7FA-91F696811BA5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Hangfire", "src\Integration.Hangfire\Integration.Hangfire.csproj", "{7158B2C5-5725-4B55-B9ED-C58169712051}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Experiments.Hangfire", "src\Integration.Experiments.Hangfire\Integration.Experiments.Hangfire.csproj", "{9337C682-E764-4B2B-8561-4556FEE013E1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -165,6 +169,14 @@ Global
 		{218A773A-C382-42F7-9882-CB6D51B2EDF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{218A773A-C382-42F7-9882-CB6D51B2EDF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{218A773A-C382-42F7-9882-CB6D51B2EDF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7158B2C5-5725-4B55-B9ED-C58169712051}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7158B2C5-5725-4B55-B9ED-C58169712051}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7158B2C5-5725-4B55-B9ED-C58169712051}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7158B2C5-5725-4B55-B9ED-C58169712051}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9337C682-E764-4B2B-8561-4556FEE013E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9337C682-E764-4B2B-8561-4556FEE013E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9337C682-E764-4B2B-8561-4556FEE013E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9337C682-E764-4B2B-8561-4556FEE013E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -177,5 +189,7 @@ Global
 		{4273E246-5F7D-4385-8451-AFA8E2680441} = {94C4BD7C-68E5-43C7-BBEC-F1A49115C616}
 		{BDED0B7F-0987-40B5-BEF8-88A25FF3AD3A} = {94C4BD7C-68E5-43C7-BBEC-F1A49115C616}
 		{4A9DF835-EBBC-4DFB-B528-B64338FEFF50} = {94C4BD7C-68E5-43C7-BBEC-F1A49115C616}
+		{7158B2C5-5725-4B55-B9ED-C58169712051} = {94C4BD7C-68E5-43C7-BBEC-F1A49115C616}
+		{9337C682-E764-4B2B-8561-4556FEE013E1} = {960ECE29-BE4A-4CB8-A7FA-91F696811BA5}
 	EndGlobalSection
 EndGlobal
