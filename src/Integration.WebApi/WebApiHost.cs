@@ -64,7 +64,13 @@ namespace Vertica.Integration.WebApi
 
 		private bool InstallOrRunAsWindowsService(HostArguments args, string url)
 		{
-			return _windowsService.Handle(args, new HandleAsWindowsService(this.Name(), this.Name(), String.Format("[URL: {0}] {1}", url, Description), () => _factory.Create(url)));
+			return _windowsService.Handle(
+				args, 
+				new HandleAsWindowsService(
+					this.Name(), 
+					this.Name(), 
+					String.Format("[URL: {0}] {1}", url, Description), 
+					() => _factory.Create(url)));
 		}
 
 	    public string Description

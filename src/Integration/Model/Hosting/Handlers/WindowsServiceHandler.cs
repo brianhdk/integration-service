@@ -109,13 +109,13 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 
 		private static string ServiceArgs(HostArguments args)
 		{
-			var serviceArgs = new Arguments(args.CommandArgs
+			Arguments arguments = new Arguments(args.CommandArgs
 				.Where(x => !ReservedCommandArgs.Contains(x.Key, StringComparer.OrdinalIgnoreCase))
-				.Append(new KeyValuePair<string, string>("service", String.Empty))
+				.Append(new KeyValuePair<string, string>("-service", String.Empty))
 				.Append(args.Args.ToArray())
 				.ToArray());
 
-			return serviceArgs.ToString();
+			return String.Format("{0} {1}", args.Command, arguments);
 		}
 
 		private static IEnumerable<string> ReservedCommandArgs

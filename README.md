@@ -496,6 +496,9 @@ TBD.
 Install-Package Vertica.Integration.WebApi
 ```
 
+.exe WebApiHost url:http://localhost:8123 -service:install
+.exe WebApiHost url:http://+:8080/ -service:install
+
 [Back to Table of Contents](#table-of-contents)
 
 ## Logging and Exceptions

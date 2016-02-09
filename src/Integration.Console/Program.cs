@@ -16,6 +16,7 @@ using Vertica.Integration.Infrastructure.Database.Migrations;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Model;
 using Vertica.Integration.Perfion;
+using Vertica.Integration.Portal;
 using Vertica.Integration.WebApi;
 using Vertica.Integration.WebApi.SignalR;
 
@@ -80,10 +81,11 @@ namespace Vertica.Integration.Console
 				//.TestBizTalkTracker()
 				//.Migration(migration => migration
 				//	.AddFromNamespaceOfThis<M1431659519_CustomDbVoid>("CustomDb"))
-				.Tasks(tasks => tasks.Task<FtpTesterTask>().Task<SomeTask>())
-				.UsePerfion(perfion => perfion
-					.ServiceClient(serviceClient => serviceClient
-						.Change(x => x.SendTimeout = TimeSpan.MaxValue)))
+				//.Tasks(tasks => tasks.Task<FtpTesterTask>().Task<SomeTask>())
+				//.UsePerfion(perfion => perfion
+				//	.ServiceClient(serviceClient => serviceClient
+				//		.Change(x => x.SendTimeout = TimeSpan.MaxValue)))
+				.UseWebApi(webApi => webApi.WithPortal())
                 .Void()))
 			{
                 context.Execute(args);
