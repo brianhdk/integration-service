@@ -37,12 +37,41 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
 	    private IEnumerable<string[]> Read(Stream stream, CsvConfiguration configuration)
 		{
+			string[] previousLine = null;
+			int? numberOfColumns = null;
+
 			using (var parser = new TextFieldParser(stream, configuration.Encoding))
 			{
 				parser.SetDelimiters(configuration.Delimiter);
 
 				while (!parser.EndOfData)
-					yield return parser.ReadFields() ?? new string[0];
+				{
+					string[] currentLine = parser.ReadFields() ?? new string[0];
+
+					if (!numberOfColumns.HasValue)
+						numberOfColumns = currentLine.Length;
+
+					if (previousLine != null)
+					{
+						// Concat the last column previousLine with text from the first column in current line
+						previousLine[previousLine.Length - 1] = String.Format("{0}{1}{2}", 
+							previousLine[previousLine.Length - 1], 
+							Environment.NewLine, 
+							currentLine[0]);
+
+						currentLine = previousLine.Concat(currentLine.Skip(1)).ToArray();
+					}
+
+					if (currentLine.Length != numberOfColumns.Value)
+					{
+						previousLine = currentLine;
+					}
+					else
+					{
+						previousLine = null;
+						yield return currentLine;
+					}
+				}
 			}
 		}
 	}
