@@ -39,8 +39,8 @@ namespace Vertica.Integration.Infrastructure.Parsing
             return this;
         }
 
-		public bool FirstLineIsHeader { get; private set; }
-        public Encoding Encoding { get; private set; }
-        public string Delimiter { get; private set; }
+	    internal bool FirstLineIsHeader { get; private set; }
+	    internal Encoding Encoding { get; private set; }
+	    internal string Delimiter { get; private set; }
     }
 }
