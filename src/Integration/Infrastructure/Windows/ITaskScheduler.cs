@@ -1,6 +1,6 @@
 namespace Vertica.Integration.Infrastructure.Windows
 {
-	public interface IScheduledTasks
+	public interface ITaskScheduler
 	{
 		void InstallOrUpdate(ScheduledTaskConfiguration scheduledTask);
 		void Uninstall(string name, string folder);

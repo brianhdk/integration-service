@@ -3,6 +3,6 @@
 	public interface IWindowsFactory
 	{
 		IWindowsServices WindowsServices(string machineName = null);
-		IScheduledTasks ScheduledTasks(string machineName = null);
+		ITaskScheduler TaskScheduler(string machineName = null);
 	}
 }

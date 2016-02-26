@@ -7,7 +7,7 @@ namespace Vertica.Integration.Experiments
 {
     public static class ConfigurationExtensions
     {
-        public static ApplicationConfiguration NoDb(this ApplicationConfiguration configuration)
+        public static ApplicationConfiguration NoDatabase(this ApplicationConfiguration configuration)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 

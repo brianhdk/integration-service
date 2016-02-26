@@ -13,10 +13,10 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 	{
 		private const string Command = "service";
 
-		internal const string ServiceStartMode = "startmode";
-		internal const string ServiceAccountCommand = "account";
-		internal const string ServiceAccountUsernameCommand = "username";
-		internal const string ServiceAccountPasswordCommand = "password";
+		private const string ServiceStartMode = "startmode";
+		private const string ServiceAccountCommand = "account";
+		private const string ServiceAccountUsernameCommand = "username";
+		private const string ServiceAccountPasswordCommand = "password";
 
 	    private readonly IRuntimeSettings _runtimeSettings;
 		private readonly IWindowsServices _windowsServices;
@@ -43,7 +43,7 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 
 			if (actionIs(InstallCommand))
 			{
-				var configuration = new WindowsServiceConfiguration(GetServiceName(service), ExePath, ServiceArgs(args))
+				var configuration = new WindowsServiceConfiguration(GetServiceName(service), ExePath, ExeArgs(args))
 					.DisplayName(Prefix(service.DisplayName))
 					.Description(service.Description);
 
@@ -55,20 +55,23 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 					configuration.StartMode(serviceStartMode);
 
 				string account;
-				args.CommandArgs.TryGetValue(ServiceAccountCommand, out account);
+				if (args.CommandArgs.TryGetValue(ServiceAccountCommand, out account))
+				{
+					ServiceAccount serviceAccount;
+					if (Enum.TryParse(account, true, out serviceAccount))
+						configuration.RunAs(serviceAccount);
+				}
+				else
+				{
+					string username;
+					args.CommandArgs.TryGetValue(ServiceAccountUsernameCommand, out username);
 
-				ServiceAccount serviceAccount;
-				if (Enum.TryParse(account, true, out serviceAccount))
-					configuration.WithAccount(serviceAccount);
+					string password;
+					args.CommandArgs.TryGetValue(ServiceAccountPasswordCommand, out password);
 
-				string username;
-				args.CommandArgs.TryGetValue(ServiceAccountUsernameCommand, out username);
-
-				string password;
-				args.CommandArgs.TryGetValue(ServiceAccountPasswordCommand, out password);
-
-				if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password))
-					configuration.WithCredentials(username, password);
+					if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password))
+						configuration.RunAsUser(username, password);
+				}
 
 				_windowsServices.Install(configuration);
 			}
@@ -84,8 +87,6 @@ namespace Vertica.Integration.Model.Hosting.Handlers
             return true;
         }
 
-		private static string ExePath => Assembly.GetEntryAssembly().Location;
-
 		private string GetServiceName(HandleAsWindowsService service)
 		{
 			if (service == null) throw new ArgumentNullException(nameof(service));
@@ -100,7 +101,9 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 			return $"Integration Service{(environment != null ? $" [{environment}]" : string.Empty)}: {value}";
 		}
 
-		private static string ServiceArgs(HostArguments args)
+		private static string ExePath => Assembly.GetEntryAssembly().Location;
+
+		private static string ExeArgs(HostArguments args)
 		{
 			Arguments arguments = new Arguments(args.CommandArgs
 				.Where(x => !ReservedCommandArgs.Contains(x.Key, StringComparer.OrdinalIgnoreCase))
@@ -124,7 +127,6 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 		}
 
 		public static KeyValuePair<string, string> InstallCommand => new KeyValuePair<string, string>(Command, "install");
-
 		public static KeyValuePair<string, string> UninstallCommand => new KeyValuePair<string, string>(Command, "uninstall");
 	}
 }

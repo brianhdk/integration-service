@@ -4,13 +4,13 @@ using TaskScheduler;
 
 namespace Vertica.Integration.Infrastructure.Windows
 {
-	internal class ScheduledTasks : IScheduledTasks
+	internal class TaskScheduler : ITaskScheduler
 	{
 		private readonly ITaskService _taskService;
 
-		public ScheduledTasks(string machineName = null)
+		public TaskScheduler(string machineName = null)
 		{
-			_taskService = new TaskScheduler.TaskScheduler();
+			_taskService = new global::TaskScheduler.TaskScheduler();
 
 			if (string.IsNullOrWhiteSpace(machineName))
 			{
@@ -26,16 +26,12 @@ namespace Vertica.Integration.Infrastructure.Windows
 		{
 			if (scheduledTask == null) throw new ArgumentNullException(nameof(scheduledTask));
 
-			ITaskDefinition taskDefinition = _taskService.NewTask(0);
-			scheduledTask.Initialize(taskDefinition);
-			InstallOrUpdate(taskDefinition, scheduledTask);
-		}
+			ITaskFolder folder = GetOrCreateFolder(scheduledTask.Folder);
+			IRegisteredTask existingTask = folder.GetTask(scheduledTask.Name);
+			ITaskDefinition task = existingTask != null ? existingTask.Definition : _taskService.NewTask(0);
 
-		public void Uninstall(ScheduledTaskConfiguration scheduledTask)
-		{
-			if (scheduledTask == null) throw new ArgumentNullException(nameof(scheduledTask));
-
-			Uninstall(scheduledTask.Name, scheduledTask.Folder);
+			scheduledTask.Initialize(task);
+			InstallOrUpdate(folder, task, scheduledTask);
 		}
 
 		public void Uninstall(string name, string folder)
@@ -47,20 +43,15 @@ namespace Vertica.Integration.Infrastructure.Windows
 			actualFolder.DeleteTask(name, 0);
 		}
 
-		private void InstallOrUpdate(ITaskDefinition taskDefinition, ScheduledTaskConfiguration scheduledTask)
+		private void InstallOrUpdate(ITaskFolder folder, ITaskDefinition task, ScheduledTaskConfiguration configuration)
 		{
-			if (scheduledTask.Credentials == null)
-				throw new InvalidOperationException("No Credentials defined.");
-
-			ITaskFolder folder = GetOrCreateFolder(scheduledTask.Folder);
-
 			folder.RegisterTaskDefinition(
-				Path: scheduledTask.Name, 
-				pDefinition: taskDefinition, 
+				Path: configuration.Name, 
+				pDefinition: task, 
 				flags: Convert.ToInt32(_TASK_CREATION.TASK_CREATE_OR_UPDATE), 
-				UserId: scheduledTask.Credentials.Username, 
-				password: scheduledTask.Credentials.Password,
-				LogonType: scheduledTask.GetLogonType());
+				UserId: configuration.Credentials.Username, 
+				password: configuration.Credentials.Password,
+				LogonType: configuration.GetLogonType());
 		}
 
 		private ITaskFolder GetOrCreateFolder(string folder)
@@ -74,7 +65,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 
 			while (subfolders.MoveNext() && !folderExists)
 			{
-				actualFolder = ((ITaskFolder)subfolders.Current);
+				actualFolder = (ITaskFolder)subfolders.Current;
 				folderExists = actualFolder.Name.Equals(folder, StringComparison.OrdinalIgnoreCase);
 			}
 

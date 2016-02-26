@@ -230,11 +230,11 @@
     <Compile Include="Infrastructure\Windows\ScheduledTaskAction.cs" />
     <Compile Include="Infrastructure\Windows\Credentials.cs" />
     <Compile Include="Model\Hosting\Handlers\IScheduledTaskHandler.cs" />
-    <Compile Include="Infrastructure\Windows\IScheduledTasks.cs" />
+    <Compile Include="Infrastructure\Windows\ITaskScheduler.cs" />
     <Compile Include="Model\Hosting\Handlers\IWindowsServiceHandler.cs" />
     <Compile Include="Infrastructure\Windows\ScheduledTaskConfiguration.cs" />
     <Compile Include="Model\Hosting\Handlers\ScheduledTaskHandler.cs" />
-    <Compile Include="Infrastructure\Windows\ScheduledTasks.cs" />
+    <Compile Include="Infrastructure\Windows\TaskScheduler.cs" />
     <Compile Include="Infrastructure\Windows\ScheduledTaskTrigger.cs" />
     <Compile Include="Model\Hosting\Handlers\HandleAsWindowsService.cs" />
     <Compile Include="Model\Hosting\Handlers\WindowsServiceHandler.cs" />

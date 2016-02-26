@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.ServiceProcess;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Windows;
+using Vertica.Utilities_v4.Extensions.EnumerableExt;
 
 namespace Vertica.Integration.Model.Hosting.Handlers
 {
@@ -15,10 +18,12 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 		internal const string ServiceAccountPasswordCommand = "password";
 
 		private readonly IRuntimeSettings _runtimeSettings;
+		private readonly ITaskScheduler _taskScheduler;
 
-		public ScheduledTaskHandler(IRuntimeSettings runtimeSettings)
+		public ScheduledTaskHandler(IRuntimeSettings runtimeSettings, IWindowsFactory windows)
 		{
 			_runtimeSettings = runtimeSettings;
+			_taskScheduler = windows.TaskScheduler();
 		}
 
 		public bool Handle(HostArguments args, ITask task)
@@ -30,37 +35,38 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 			if (!args.CommandArgs.TryGetValue(Command, out action))
 				return false;
 
-			var configuration = new ScheduledTaskConfiguration(task.Name(), Folder(), ExePath, args.Args.ToString())
+			var configuration = new ScheduledTaskConfiguration(task.Name(), Folder(), ExePath, ExeArgs(args))
 				.Description(task.Description);
 
-			Func<string, bool> actionIs = arg =>
-				string.Equals(arg, action, StringComparison.OrdinalIgnoreCase);
+			Func<KeyValuePair<string, string>, bool> actionIs = command =>
+				string.Equals(command.Value, action, StringComparison.OrdinalIgnoreCase);
 
-			var installer = new ScheduledTasks();
-
-			if (actionIs("install"))
+			if (actionIs(InstallCommand))
 			{
 				string account;
-				args.CommandArgs.TryGetValue(ServiceAccountCommand, out account);
+				if (args.CommandArgs.TryGetValue(ServiceAccountCommand, out account))
+				{
+					ServiceAccount serviceAccount;
+					if (Enum.TryParse(account, out serviceAccount))
+						configuration.RunAs(serviceAccount);
+				}
+				else
+				{
+					string username;
+					args.CommandArgs.TryGetValue(ServiceAccountUsernameCommand, out username);
 
-				ServiceAccount serviceAccount;
-				if (Enum.TryParse(account, out serviceAccount))
-					configuration.WithAccount(serviceAccount);
+					string password;
+					args.CommandArgs.TryGetValue(ServiceAccountPasswordCommand, out password);
 
-				string username;
-				args.CommandArgs.TryGetValue(ServiceAccountUsernameCommand, out username);
+					if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password))
+						configuration.RunAsUser(username, password);
+				}
 
-				string password;
-				args.CommandArgs.TryGetValue(ServiceAccountPasswordCommand, out password);
-
-				if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password))
-					configuration.WithCredentials(username, password);
-
-				installer.InstallOrUpdate(configuration);
+				_taskScheduler.InstallOrUpdate(configuration);
 			}
-			else if (actionIs("uninstall"))
+			else if (actionIs(UninstallCommand))
 			{
-				installer.Uninstall(configuration);
+				_taskScheduler.Uninstall(configuration.Name, configuration.Folder);
 			}
 
 			return true;
@@ -74,5 +80,30 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 		}
 
 		private static string ExePath => Assembly.GetEntryAssembly().Location;
+
+		private static string ExeArgs(HostArguments args)
+		{
+			Arguments arguments = new Arguments(args.CommandArgs
+				.Where(x => !ReservedCommandArgs.Contains(x.Key, StringComparer.OrdinalIgnoreCase))
+				.Append(args.Args.ToArray())
+				.ToArray());
+
+			return $"{args.Command} {arguments}";
+		}
+
+
+		private static IEnumerable<string> ReservedCommandArgs
+		{
+			get
+			{
+				yield return Command;
+				yield return ServiceAccountCommand;
+				yield return ServiceAccountUsernameCommand;
+				yield return ServiceAccountPasswordCommand;
+			}
+		}
+
+		public static KeyValuePair<string, string> InstallCommand => new KeyValuePair<string, string>(Command, "install");
+		public static KeyValuePair<string, string> UninstallCommand => new KeyValuePair<string, string>(Command, "uninstall");
 	}
 }

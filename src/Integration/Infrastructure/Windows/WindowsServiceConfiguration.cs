@@ -21,7 +21,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 			_serviceName = serviceName;
 			ExePath = exePath;
 			Args = args;
-			WithAccount(ServiceAccount.LocalSystem);
+			RunAs(ServiceAccount.LocalSystem);
 			StartMode(ServiceStartMode.Manual);
 		}
 
@@ -48,27 +48,16 @@ namespace Vertica.Integration.Infrastructure.Windows
 			return this;
 		}
 
-		public WindowsServiceConfiguration WithCredentials(string username, string password)
+		public WindowsServiceConfiguration RunAsUser(string username, string password)
 		{
-			if (string.IsNullOrWhiteSpace(username)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(username));
-			if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(password));
-
-			_credentials = new Credentials
-			{
-				Account = ServiceAccount.User,
-				Username = username,
-				Password = password
-			};
+			_credentials = new Credentials(username, password);
 
 			return this;
 		}
 
-		public WindowsServiceConfiguration WithAccount(ServiceAccount account)
+		public WindowsServiceConfiguration RunAs(ServiceAccount account)
 		{
-			_credentials = new Credentials
-			{
-				Account = account
-			};
+			_credentials = new Credentials(account);
 
 			return this;
 		}

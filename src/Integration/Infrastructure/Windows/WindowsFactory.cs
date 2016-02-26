@@ -7,9 +7,9 @@
 			return new WindowsServices(machineName);
 		}
 
-		public IScheduledTasks ScheduledTasks(string machineName = null)
+		public ITaskScheduler TaskScheduler(string machineName = null)
 		{
-			return new ScheduledTasks(machineName);
+			return new TaskScheduler(machineName);
 		}
 	}
 }

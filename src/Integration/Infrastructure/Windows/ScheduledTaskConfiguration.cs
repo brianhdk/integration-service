@@ -11,7 +11,6 @@ namespace Vertica.Integration.Infrastructure.Windows
 		private readonly List<ScheduledTaskAction> _actions;
 		private readonly List<ScheduledTaskTrigger> _triggers;
 
-		private _TASK_LOGON_TYPE _logonType;
 		private string _description;
 
 		public ScheduledTaskConfiguration(string name, string folder, string exePath, string args)
@@ -22,7 +21,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 			Name = name;
 			Folder = folder;
 
-			WithAccount(ServiceAccount.LocalSystem);
+			RunAs(ServiceAccount.LocalService);
 
 			_actions = new List<ScheduledTaskAction>();
 			_triggers = new List<ScheduledTaskTrigger>();
@@ -49,7 +48,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 		public string Name { get; private set; }
 		public string Folder { get; private set; }
 
-		internal Credentials Credentials { get; private set; }
+		public Credentials Credentials { get; private set; }
 
 		public ScheduledTaskConfiguration Description(string description)
 		{
@@ -57,38 +56,27 @@ namespace Vertica.Integration.Infrastructure.Windows
 			return this;
 		}
 
-		public ScheduledTaskConfiguration WithCredentials(string username, string password)
+		public ScheduledTaskConfiguration RunAsUser(string username, string password)
 		{
-			if (string.IsNullOrWhiteSpace(username)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(username));
-			if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(password));
-
-			Credentials = new Credentials
-			{
-				Account = ServiceAccount.User,
-				Username = username,
-				Password = password
-			};
-
-			_logonType = _TASK_LOGON_TYPE.TASK_LOGON_PASSWORD;
+			Credentials = new Credentials(username, password);
 
 			return this;
 		}
 
-		public ScheduledTaskConfiguration WithAccount(ServiceAccount account)
+		public ScheduledTaskConfiguration RunAs(ServiceAccount account)
 		{
-			Credentials = new Credentials
-			{
-				Account = account
-			};
-
-			_logonType = _TASK_LOGON_TYPE.TASK_LOGON_SERVICE_ACCOUNT;
+			Credentials = new Credentials(account);
 
 			return this;
 		}
 		
 		internal void Initialize(ITaskDefinition task)
 		{
+			if (task == null) throw new ArgumentNullException(nameof(task));
+
 			task.Settings.MultipleInstances = _TASK_INSTANCES_POLICY.TASK_INSTANCES_IGNORE_NEW;
+			task.Settings.StopIfGoingOnBatteries = false;
+			task.Settings.IdleSettings.StopOnIdleEnd = false;
 			task.RegistrationInfo.Description = _description;
 			task.Settings.Hidden = false;
 
@@ -109,7 +97,17 @@ namespace Vertica.Integration.Infrastructure.Windows
 
 		internal _TASK_LOGON_TYPE GetLogonType()
 		{
-			return _logonType;
+			switch (Credentials.Account)
+			{
+				case ServiceAccount.LocalService:
+				case ServiceAccount.NetworkService:
+				case ServiceAccount.LocalSystem:
+					return _TASK_LOGON_TYPE.TASK_LOGON_SERVICE_ACCOUNT;
+				case ServiceAccount.User:
+					return _TASK_LOGON_TYPE.TASK_LOGON_PASSWORD;
+				default:
+					return _TASK_LOGON_TYPE.TASK_LOGON_NONE;
+			}
 		}
 	}
 }
