@@ -1,5 +1,4 @@
-﻿using System;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using Vertica.Integration.Domain.Core;
 using Vertica.Integration.Infrastructure;
@@ -7,7 +6,7 @@ using Vertica.Integration.Model;
 using Vertica.Integration.MongoDB;
 using Vertica.Integration.MongoDB.Infrastructure;
 
-namespace Vertica.Integration.Experiments
+namespace Vertica.Integration.Experiments.MongoDb
 {
     public static class MongoDbExtensions
     {

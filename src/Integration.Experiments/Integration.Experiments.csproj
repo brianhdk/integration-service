@@ -168,45 +168,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArchiveTesterTask.cs" />
     <Compile Include="Azure\AzureTester.cs" />
-    <Compile Include="BizTalkTracker\BizTalkTrackerTester.cs" />
     <Compile Include="ConfigurationExtensions.cs" />
-    <Compile Include="CustomDb.cs" />
-    <Compile Include="CustomDbTask.cs" />
-    <Compile Include="Migrations\IntegrationDb\M1442845190_UpdateConfiguration.cs" />
-    <Compile Include="Migrations\IntegrationDb\M1438174532_Void.cs" />
     <Compile Include="Migrations\IntegrationDb\M1436190505_SetupMonitorConfiguration_MonitorFoldersStep_Ultimate.cs" />
-    <Compile Include="MongoDbTask.cs" />
+    <Compile Include="MongoDb\MongoDbTask.cs" />
     <Compile Include="Monitoring\MonitorDataStep.cs" />
     <Compile Include="MaintenanceTaskTester.cs" />
-    <Compile Include="MonitorTaskTester.cs" />
-    <Compile Include="PaymentServiceTester.cs" />
-    <Compile Include="MakeDeploymentTask.cs" />
-    <Compile Include="Migrations\CustomDb\M1431659519_CustomDbVoid.cs" />
-    <Compile Include="Migrations\IntegrationDb\M1431659629_Void.cs" />
-    <Compile Include="Migrations\IntegrationDb\M1431659529_Void.cs" />
+    <Compile Include="Monitoring\MonitorTaskTester.cs" />
     <Compile Include="Migrations\IntegrationDb\M1431659508_RunTask.cs" />
     <Compile Include="Migrations\IntegrationDb\M1431459508_MergeMaintenanceConfiguration.cs" />
     <Compile Include="Migrations\IntegrationDb\M1427839041_SetupMonitorConfiguration.cs" />
-    <Compile Include="FileSystemTesterTask.cs" />
-    <Compile Include="FtpTesterTask.cs" />
-    <Compile Include="MissingTargetTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RavenDBTester.cs" />
-    <Compile Include="RebusTester.cs" />
+    <Compile Include="Rebus\RebusTester.cs" />
     <Compile Include="RunAllTasks.cs" />
     <Compile Include="SignalR\ChatHub.cs" />
-    <Compile Include="Step.cs" />
-    <Compile Include="TaskExecutingTask.cs" />
     <Compile Include="HelloTask.cs" />
-    <Compile Include="TaskWithSteps.cs" />
-    <Compile Include="TaskWorkItem.cs" />
-    <Compile Include="EventLoggerTesterTask.cs" />
-    <Compile Include="TestIISTask.cs" />
-    <Compile Include="TextFileLoggerTesterTask.cs" />
     <Compile Include="WebApi\TestController.cs" />
-    <Compile Include="XssTestingStep.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="SignalR\Html\jquery.signalR-2.2.0.js" />

@@ -6,7 +6,7 @@ using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Logging.Elmah;
 using Vertica.Integration.Model;
 
-namespace Vertica.Integration.Experiments
+namespace Vertica.Integration.Experiments.Monitoring
 {
     public static class MonitorTaskTester
     {

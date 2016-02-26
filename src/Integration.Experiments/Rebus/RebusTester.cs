@@ -11,7 +11,7 @@ using Vertica.Integration.Model;
 using Vertica.Integration.Rebus;
 using Task = System.Threading.Tasks.Task;
 
-namespace Vertica.Integration.Experiments
+namespace Vertica.Integration.Experiments.Rebus
 {
 	public static class RebusTester
 	{

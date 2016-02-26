@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ServiceProcess;
 using TaskScheduler;
+using Vertica.Utilities_v4.Extensions.StringExt;
 
 namespace Vertica.Integration.Infrastructure.Windows
 {
@@ -52,9 +53,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 
 		public ScheduledTaskConfiguration Description(string description)
 		{
-			if (String.IsNullOrWhiteSpace(description)) throw new ArgumentException(@"Value cannot be null or empty.", "description");
-
-			_description = description;
+			_description = description.NullIfEmpty();
 			return this;
 		}
 

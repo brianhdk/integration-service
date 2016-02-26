@@ -7,7 +7,7 @@ namespace Vertica.Integration.Experiments
 {
     public static class ConfigurationExtensions
     {
-        public static ApplicationConfiguration Fast(this ApplicationConfiguration configuration)
+        public static ApplicationConfiguration NoDb(this ApplicationConfiguration configuration)
         {
             if (configuration == null) throw new ArgumentNullException("configuration");
 
@@ -28,7 +28,7 @@ namespace Vertica.Integration.Experiments
             if (configuration == null) throw new ArgumentNullException("configuration");
 
             return configuration.Tasks(tasks => tasks
-                .AddFromAssemblyOfThis<ArchiveTesterTask>()
+                .AddFromAssemblyOfThis<HelloTask>()
                 .MonitorTask()
                 .MaintenanceTask());
         }

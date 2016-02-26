@@ -16,7 +16,7 @@ namespace Vertica.Integration.Experiments
 
         public override void StartTask(ITaskExecutionContext context)
         {
-            foreach (ITask task in _factory.GetAll().Except(new[] {this}))
+            foreach (ITask task in _factory.GetAll().Except(new[] { this }))
                 _runner.Execute(task);
         }
 

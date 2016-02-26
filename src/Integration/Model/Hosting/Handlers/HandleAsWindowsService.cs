@@ -1,5 +1,6 @@
 using System;
 using Vertica.Utilities_v4;
+using Vertica.Utilities_v4.Extensions.StringExt;
 
 namespace Vertica.Integration.Model.Hosting.Handlers
 {
@@ -9,11 +10,10 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 		{
 			if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
 			if (String.IsNullOrWhiteSpace(displayName)) throw new ArgumentException(@"Value cannot be null or empty.", "displayName");
-			if (String.IsNullOrWhiteSpace(description)) throw new ArgumentException(@"Value cannot be null or empty.", "description");
 
 			Name = name;
 			DisplayName = displayName;
-			Description = description;
+			Description = description.NullIfEmpty();
 			OnStartFactory = onStartFactory ?? (() => new DisposableAction(() => { }));
 		}
 

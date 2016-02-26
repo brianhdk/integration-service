@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration.Install;
 using System.ServiceProcess;
+using Vertica.Utilities_v4.Extensions.StringExt;
 
 namespace Vertica.Integration.Infrastructure.Windows
 {
@@ -37,9 +38,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 
 		public WindowsServiceConfiguration Description(string description)
 		{
-			if (String.IsNullOrWhiteSpace(description)) throw new ArgumentException(@"Value cannot be null or empty.", "description");
-
-			_description = description;
+			_description = description.NullIfEmpty();
 			return this;
 		}
 

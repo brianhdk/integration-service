@@ -128,7 +128,6 @@ namespace Vertica.Integration.Experiments.Azure
 			if (!manager.QueueExists(queueName))
 				manager.CreateQueue(queueName);
 
-
 			System.Threading.Tasks.Task sender = System.Threading.Tasks.Task.Run(() =>
 			{
 				QueueClient queueClient = _serviceBusClientFactory.CreateQueueClient(queueName);

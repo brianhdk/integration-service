@@ -1,7 +1,6 @@
 ﻿using System;
 using Vertica.Integration.Domain.Core;
 using Vertica.Integration.Infrastructure.Configuration;
-using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Experiments

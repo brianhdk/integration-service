@@ -36,7 +36,10 @@ namespace Vertica.Integration.Domain.Core
             foreach (ITask task in _taskFactory.GetAll())
             {
                 sb.AppendLine(task.Name());
-                sb.AppendLine(indent(task.Description, 3));
+
+				if (!String.IsNullOrWhiteSpace(task.Description))
+					sb.AppendLine(indent(task.Description, 3));
+
                 sb.AppendLine();
 
                 foreach (IStep step in task.Steps)

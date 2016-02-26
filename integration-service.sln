@@ -26,7 +26,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Portal", "src\I
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".deployment", ".deployment", "{C078BD86-3790-4F2C-9A1F-957625D89178}"
 	ProjectSection(SolutionItems) = preProject
-		.gitignore = .gitignore
 		deployment\Package-Manager.ps1 = deployment\Package-Manager.ps1
 	EndProjectSection
 EndProject
