@@ -41,9 +41,9 @@ namespace Vertica.Integration.Infrastructure.Windows
 
 		public void Install(WindowsServiceConfiguration windowsService)
 		{
-			if (windowsService == null) throw new ArgumentNullException("windowsService");
+			if (windowsService == null) throw new ArgumentNullException(nameof(windowsService));
 
-			if (!String.IsNullOrWhiteSpace(_machineName))
+			if (!string.IsNullOrWhiteSpace(_machineName))
 				throw new InvalidOperationException("Not supported on remote machines.");
 
 			using (var process = new ServiceProcessInstaller())
@@ -76,7 +76,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 				using (var process = new ServiceProcessInstaller())
 				using (var installer = new ServiceInstaller())
 				{
-					installer.Context = new InstallContext(String.Empty, new string[0]);
+					installer.Context = new InstallContext(string.Empty, new string[0]);
 					installer.ServiceName = service.ServiceName;
 					installer.Parent = process;
 
@@ -91,7 +91,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 
 		public void Run(string serviceName, Func<IDisposable> onStartFactory)
 		{
-			if (String.IsNullOrWhiteSpace(serviceName)) throw new ArgumentException(@"Value cannot be null or empty.", "serviceName");
+			if (string.IsNullOrWhiteSpace(serviceName)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(serviceName));
 
 			using (var runner = new WindowsServiceRunner(serviceName, onStartFactory))
 			{
@@ -125,20 +125,18 @@ namespace Vertica.Integration.Infrastructure.Windows
 
 		private TResult WithService<TResult>(string serviceName, Func<ServiceController, TResult> service, bool throwIfNotFound = true)
 		{
-			if (String.IsNullOrWhiteSpace(serviceName)) throw new ArgumentException(@"Value cannot be null or empty.", "serviceName");
+			if (string.IsNullOrWhiteSpace(serviceName)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(serviceName));
 
 			TResult result = default(TResult);
 
 			using (GetServices(services =>
 			{
 				ServiceController actualService = services.SingleOrDefault(x =>
-					String.Equals(x.ServiceName, serviceName, StringComparison.OrdinalIgnoreCase));
+					string.Equals(x.ServiceName, serviceName, StringComparison.OrdinalIgnoreCase));
 
 				if (actualService == null && throwIfNotFound)
 					throw new InvalidOperationException(
-						String.Format("Service with name '{0}' does not exist.{1}",
-							serviceName,
-							!String.IsNullOrWhiteSpace(_machineName) ? String.Format(" Machine: {0}", _machineName) : String.Empty));
+						$"Service with name '{serviceName}' does not exist.{(!string.IsNullOrWhiteSpace(_machineName) ? $" Machine: {_machineName}" : string.Empty)}");
 
 				result = service(actualService);
 			}))
@@ -157,7 +155,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 
 		private ServiceController[] GetServices()
 		{
-			if (String.IsNullOrWhiteSpace(_machineName))
+			if (string.IsNullOrWhiteSpace(_machineName))
 				return ServiceController.GetServices();
 
 			return ServiceController.GetServices(_machineName);
@@ -168,7 +166,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 			public static void SetServiceArguments(ServiceController serviceController, string exePath, string args)
 			{
 				exePath = Path.GetFullPath(exePath.Trim(' ', '\'', '"'));
-				exePath = String.Format("\"{0}\" {1}", exePath, args).TrimEnd();
+				exePath = $"\"{exePath}\" {args}".TrimEnd();
 
 				if (!ChangeConfiguration(serviceController, exePath))
 					throw new Win32Exception();

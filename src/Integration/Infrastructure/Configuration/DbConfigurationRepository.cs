@@ -29,7 +29,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
 
 		public Configuration Get(string id)
 		{
-			if (String.IsNullOrWhiteSpace(id)) throw new ArgumentException(@"Value cannot be null or empty.", "id");
+			if (string.IsNullOrWhiteSpace(id)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(id));
 
 			using (IDbSession session = OpenSession())
 			{
@@ -44,7 +44,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
 
 		public Configuration Save(Configuration configuration)
 		{
-			if (configuration == null) throw new ArgumentNullException("configuration");
+			if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
 			configuration.Name = configuration.Name.MaxLength(50);
 			configuration.Description = configuration.Description.MaxLength(255);
@@ -80,7 +80,7 @@ ELSE
 
 		public void Delete(string id)
 		{
-			if (String.IsNullOrWhiteSpace(id)) throw new ArgumentException(@"Value cannot be null or empty.");
+			if (string.IsNullOrWhiteSpace(id)) throw new ArgumentException(@"Value cannot be null or empty.");
 
 			using (IDbSession session = OpenSession())
 			using (IDbTransaction transaction = session.BeginTransaction())

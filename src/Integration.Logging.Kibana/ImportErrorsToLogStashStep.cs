@@ -14,9 +14,6 @@ namespace Vertica.Integration.Logging.Kibana
             }
         }
 
-        public override string Description
-        {
-            get { return "Imports errors to Kibana through LogStash."; }
-        }
+        public override string Description => "Imports errors to Kibana through LogStash.";
     }
 }

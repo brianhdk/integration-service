@@ -6,12 +6,9 @@ namespace Vertica.Integration.Experiments.Monitoring
 {
     public class MonitorDataStep : Step<MonitorWorkItem>
     {
-        public override string Description
-        {
-            get { return "Monitors data end-points"; }
-        }
+        public override string Description => "Monitors data end-points";
 
-        public override void Execute(MonitorWorkItem workItem, ITaskExecutionContext context)
+	    public override void Execute(MonitorWorkItem workItem, ITaskExecutionContext context)
         {
             throw new NotImplementedException();
 

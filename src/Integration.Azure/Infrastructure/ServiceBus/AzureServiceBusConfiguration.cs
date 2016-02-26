@@ -14,7 +14,7 @@ namespace Vertica.Integration.Azure.Infrastructure.ServiceBus
 
 		internal AzureServiceBusConfiguration(ApplicationConfiguration application)
         {
-            if (application == null) throw new ArgumentNullException("application");
+            if (application == null) throw new ArgumentNullException(nameof(application));
 
 			Application = application;
 
@@ -25,7 +25,7 @@ namespace Vertica.Integration.Azure.Infrastructure.ServiceBus
 
 		public AzureServiceBusConfiguration DefaultConnection(ConnectionString connectionString)
 		{
-			if (connectionString == null) throw new ArgumentNullException("connectionString");
+			if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
 
 			_defaultConnection = new AzureServiceBusInstaller(new DefaultConnection(connectionString));
 
@@ -34,7 +34,7 @@ namespace Vertica.Integration.Azure.Infrastructure.ServiceBus
 
 		public AzureServiceBusConfiguration DefaultConnection(Connection connection)
 		{
-			if (connection == null) throw new ArgumentNullException("connection");
+			if (connection == null) throw new ArgumentNullException(nameof(connection));
 
 			_defaultConnection = new AzureServiceBusInstaller(new DefaultConnection(connection));
 
@@ -44,7 +44,7 @@ namespace Vertica.Integration.Azure.Infrastructure.ServiceBus
 		public AzureServiceBusConfiguration AddConnection<TConnection>(TConnection connection)
 			where TConnection : Connection
 		{
-			if (connection == null) throw new ArgumentNullException("connection");
+			if (connection == null) throw new ArgumentNullException(nameof(connection));
 
 			_installers.Add(new AzureServiceBusInstaller<TConnection>(connection));
 

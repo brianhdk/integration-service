@@ -9,12 +9,9 @@ namespace Vertica.Integration.Infrastructure.Templating.AttributeParsing
     {
         private long _combinedHash64 = 0x1505L;
 
-        public int CombinedHash
-        {
-            get { return _combinedHash64.GetHashCode(); }
-        }
+        public int CombinedHash => _combinedHash64.GetHashCode();
 
-        public HashCodeCombiner Add(IEnumerable e)
+	    public HashCodeCombiner Add(IEnumerable e)
         {
             if (e == null)
             {

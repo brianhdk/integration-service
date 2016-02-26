@@ -6,8 +6,8 @@ namespace Vertica.Integration.Rebus
     {
         public static ApplicationConfiguration UseRebus(this ApplicationConfiguration application, Action<RebusConfiguration> rebus)
         {
-            if (application == null) throw new ArgumentNullException("application");
-	        if (rebus == null) throw new ArgumentNullException("rebus");
+            if (application == null) throw new ArgumentNullException(nameof(application));
+	        if (rebus == null) throw new ArgumentNullException(nameof(rebus));
 
 	        return application.Extensibility(extensibility =>
 	        {

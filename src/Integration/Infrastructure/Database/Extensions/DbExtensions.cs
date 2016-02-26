@@ -13,8 +13,8 @@ namespace Vertica.Integration.Infrastructure.Database.Extensions
         /// </summary>
         internal static T Wrap<T>(this IDbSession session, Func<IDbSession, T> action)
         {
-            if (session == null) throw new ArgumentNullException("session");
-            if (action == null) throw new ArgumentNullException("action");
+            if (session == null) throw new ArgumentNullException(nameof(session));
+            if (action == null) throw new ArgumentNullException(nameof(action));
 
             try
             {
@@ -28,8 +28,8 @@ namespace Vertica.Integration.Infrastructure.Database.Extensions
 
         public static string QueryToCsv(this IDbSession session, string sql, dynamic param = null, Action<CsvRow.ICsvRowBuilderConfiguration> configuration = null)
         {
-            if (session == null) throw new ArgumentNullException("session");
-            if (String.IsNullOrWhiteSpace(sql)) throw new ArgumentException(@"Value cannot be null or empty.", "sql");
+            if (session == null) throw new ArgumentNullException(nameof(session));
+            if (string.IsNullOrWhiteSpace(sql)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(sql));
 
             IEnumerable<dynamic> query = session.Query(sql, param);
 

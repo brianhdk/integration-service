@@ -16,8 +16,8 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage.Archiving
 
         public AzureBlobStorageArchiveService(IAzureBlobStorageClientFactory<ArchiveConnection> factory, string containerName)
         {
-            if (factory == null) throw new ArgumentNullException("factory");
-            if (String.IsNullOrWhiteSpace(containerName)) throw new ArgumentException(@"Value cannot be null or empty.", "containerName");
+            if (factory == null) throw new ArgumentNullException(nameof(factory));
+            if (string.IsNullOrWhiteSpace(containerName)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(containerName));
 
             _factory = factory;
             _containerName = containerName;
@@ -40,13 +40,13 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage.Archiving
                 if (options.Expires.HasValue)
                     blockBlob.Metadata["Expires"] = options.Expires.Value.ToString("yyyy/MM/dd HH:mm:ss (zzz)", CultureInfo.InvariantCulture);
 
-                if (!String.IsNullOrWhiteSpace(options.GroupName))
-                    blockBlob.Metadata["GroupName"] = options.GroupName ?? String.Empty;
+                if (!string.IsNullOrWhiteSpace(options.GroupName))
+                    blockBlob.Metadata["GroupName"] = options.GroupName ?? string.Empty;
 
                 blockBlob.UploadFromStream(stream);
 
                 if (onCreated != null)
-                    onCreated(new ArchiveCreated(id, String.Format("Download from {0}", blockBlob.Uri)));
+                    onCreated(new ArchiveCreated(id, $"Download from {blockBlob.Uri}"));
             });
         }
 
@@ -161,7 +161,7 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage.Archiving
 
         private static CloudBlockBlob LoadBlob(CloudBlobContainer container, string id)
         {
-            return container.GetBlockBlobReference(String.Format("{0}.zip", id));
+            return container.GetBlockBlobReference($"{id}.zip");
         }
 
         private static DateTimeOffset? ParseDateTimeOffset(CloudBlockBlob item, string name)

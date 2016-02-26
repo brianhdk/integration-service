@@ -34,7 +34,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
 				Directory.CreateDirectory(_baseDirectory);
 
-				FileInfo filePath = new FileInfo(Path.Combine(_baseDirectory, String.Format("{0}.zip", archiveId)));
+				FileInfo filePath = new FileInfo(Path.Combine(_baseDirectory, $"{archiveId}.zip"));
 
 				File.WriteAllBytes(filePath.FullName, stream.ToArray());
 				File.WriteAllText(MetaFilePath(filePath).FullName, new MetaFile(options).ToString());
@@ -51,7 +51,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
 		public byte[] Get(string id)
 		{
-			string filePath = Path.Combine(_baseDirectory, String.Format("{0}.zip", id));
+			string filePath = Path.Combine(_baseDirectory, $"{id}.zip");
 
 			if (!File.Exists(filePath))
 				return null;
@@ -130,7 +130,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
 			string text = File.ReadAllText(filePath.FullName);
 
-			if (String.IsNullOrWhiteSpace(text))
+			if (string.IsNullOrWhiteSpace(text))
 				return null;
 
 			return MetaFile.FromJson(text, _logger);
@@ -138,7 +138,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
 		private static FileInfo MetaFilePath(FileInfo archiveFile)
 		{
-			return new FileInfo(Path.Combine(String.Format("{0}.meta", archiveFile.FullName)));
+			return new FileInfo(Path.Combine($"{archiveFile.FullName}.meta"));
 		}
 
 		private class MetaFile
@@ -164,8 +164,8 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
 			public static MetaFile FromJson(string json, ILogger logger)
 			{
-				if (String.IsNullOrWhiteSpace(json)) throw new ArgumentException(@"Value cannot be null or empty.", "json");
-				if (logger == null) throw new ArgumentNullException("logger");
+				if (string.IsNullOrWhiteSpace(json)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(json));
+				if (logger == null) throw new ArgumentNullException(nameof(logger));
 
 				try
 				{

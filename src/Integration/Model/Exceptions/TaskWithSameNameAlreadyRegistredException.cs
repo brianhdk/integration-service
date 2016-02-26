@@ -28,10 +28,11 @@ namespace Vertica.Integration.Model.Exceptions
 
         private static string BuildMessage(Type task)
         {
-	        if (task == null) throw new ArgumentNullException("task");
+	        if (task == null) throw new ArgumentNullException(nameof(task));
 
-	        return String.Format(@"Unable to register Task '{0}'. A task with the same name '{1}' is already registred. 
-Consider running the ""WriteDocumentationTask"" to get a text-output of available tasks.", task.FullName, task.TaskName());
+	        return
+		        $@"Unable to register Task '{task.FullName}'. A task with the same name '{task.TaskName()}' is already registred. 
+Consider running the ""WriteDocumentationTask"" to get a text-output of available tasks.";
         }
     }
 }

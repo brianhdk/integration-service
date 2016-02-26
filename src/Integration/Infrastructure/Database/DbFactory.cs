@@ -13,8 +13,8 @@ namespace Vertica.Integration.Infrastructure.Database
 
 		public DbFactory(TConnection connection, IKernel kernel)
 	    {
-		    if (connection == null) throw new ArgumentNullException("connection");
-			if (kernel == null) throw new ArgumentNullException("kernel");
+		    if (connection == null) throw new ArgumentNullException(nameof(connection));
+			if (kernel == null) throw new ArgumentNullException(nameof(kernel));
 
 			_connection = connection;
 			_kernel = kernel;
@@ -37,7 +37,7 @@ namespace Vertica.Integration.Infrastructure.Database
 
         public DbFactory(IDbFactory<DefaultConnection> decoree)
         {
-	        if (decoree == null) throw new ArgumentNullException("decoree");
+	        if (decoree == null) throw new ArgumentNullException(nameof(decoree));
 
 	        _decoree = decoree;
         }

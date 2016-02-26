@@ -20,9 +20,6 @@ namespace Vertica.Integration.Infrastructure.Archiving
                 context.Log.Message("Deleted {0} expired archive(s).", count);
         }
 
-        public override string Description
-        {
-            get { return "Deletes expired archives."; }
-        }
+        public override string Description => "Deletes expired archives.";
     }
 }

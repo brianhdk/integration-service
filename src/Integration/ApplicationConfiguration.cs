@@ -70,7 +70,7 @@ namespace Vertica.Integration
 
         public ApplicationConfiguration RegisterDependency<T>(T singletonInstance) where T : class
         {
-            if (singletonInstance == null) throw new ArgumentNullException("singletonInstance");
+            if (singletonInstance == null) throw new ArgumentNullException(nameof(singletonInstance));
 
             return AddCustomInstaller(new InstanceInstaller<T>(singletonInstance));
         }
@@ -140,7 +140,7 @@ namespace Vertica.Integration
 		public ApplicationConfiguration RuntimeSettings<T>(T instance)
 			where T : IRuntimeSettings
 		{
-			if (instance == null) throw new ArgumentNullException("instance");
+			if (instance == null) throw new ArgumentNullException(nameof(instance));
 
 			return Advanced(advanced => advanced.Register<IRuntimeSettings>(() => instance));
 		}

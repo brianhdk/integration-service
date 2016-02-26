@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -38,7 +37,7 @@ namespace Vertica.Integration.Infrastructure
 
 		public override string ToString()
 		{
-			return String.Format("{0} time{1}", _times, _times == 1 ? String.Empty : "s");
+			return $"{_times} time{(_times == 1 ? string.Empty : "s")}";
 		}
 	}
 }

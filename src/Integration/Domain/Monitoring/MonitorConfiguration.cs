@@ -39,7 +39,7 @@ namespace Vertica.Integration.Domain.Monitoring
 
         public MonitorTarget EnsureMonitorTarget(ITarget target)
         {
-            if (target == null) throw new ArgumentNullException("target");
+            if (target == null) throw new ArgumentNullException(nameof(target));
 
             var existingTargets = Targets ?? new MonitorTarget[0];
 
@@ -71,7 +71,7 @@ namespace Vertica.Integration.Domain.Monitoring
 
             if (service == null)
                 throw new InvalidOperationException(
-                    String.Format("Missing required target '{0}' for MonitorConfiguration.", Target.Service));
+	                $"Missing required target '{Target.Service}' for MonitorConfiguration.");
         }
 
         public class MonitorFoldersConfiguration
@@ -103,7 +103,7 @@ namespace Vertica.Integration.Domain.Monitoring
             public Folder[] GetEnabledFolders()
             {
                 EnsureFolders();
-                return Folders.Where(x => Enabled && x.Enabled && !String.IsNullOrWhiteSpace(x.Path) && x.Criteria != null).ToArray();
+                return Folders.Where(x => Enabled && x.Enabled && !string.IsNullOrWhiteSpace(x.Path) && x.Criteria != null).ToArray();
             }
 
             public class Folder
@@ -139,7 +139,7 @@ namespace Vertica.Integration.Domain.Monitoring
 
             public void Add(Func<Folder, FileCriterias, FileCriteria> folder)
             {
-                if (folder == null) throw new ArgumentNullException("folder");
+                if (folder == null) throw new ArgumentNullException(nameof(folder));
 
                 var local = new Folder();
                 local.Criteria = folder(local, new FileCriterias());
@@ -150,7 +150,7 @@ namespace Vertica.Integration.Domain.Monitoring
 
             public void Remove(Folder folder)
             {
-                if (folder == null) throw new ArgumentNullException("folder");
+                if (folder == null) throw new ArgumentNullException(nameof(folder));
 
                 EnsureFolders();
                 Folders = Folders.Except(new[] { folder }).ToArray();
@@ -194,7 +194,7 @@ namespace Vertica.Integration.Domain.Monitoring
 
                 public override string ToString()
                 {
-                    return String.Format("Files older than {0} second(s).", Seconds);
+                    return $"Files older than {Seconds} second(s).";
                 }
             }
         }
@@ -211,10 +211,7 @@ namespace Vertica.Integration.Domain.Monitoring
             public uint MaximumWaitTimeSeconds { get; set; }
             public string[] Urls { get; set; }
 
-            internal bool ShouldExecute
-            {
-                get { return Enabled && Urls != null && Urls.Length > 0; }
-            }
+            internal bool ShouldExecute => Enabled && Urls != null && Urls.Length > 0;
         }
     }
 }

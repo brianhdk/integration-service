@@ -34,7 +34,7 @@ namespace Vertica.Integration.Azure.Infrastructure.Castle.Windsor
 
         public AzureBlobStorageInstaller(TConnection connection)
         {
-            if (connection == null) throw new ArgumentNullException("connection");
+            if (connection == null) throw new ArgumentNullException(nameof(connection));
 
             _connection = connection;
         }

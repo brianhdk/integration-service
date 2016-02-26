@@ -9,7 +9,7 @@ namespace Vertica.Integration.Infrastructure.Database
 	{
 	    protected Connection(ConnectionString connectionString)
 		{
-	        if (connectionString == null) throw new ArgumentNullException("connectionString");
+	        if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
 
 	        ConnectionString = connectionString;
 		}
@@ -18,7 +18,7 @@ namespace Vertica.Integration.Infrastructure.Database
 
 		protected internal virtual IDbConnection GetConnection(IKernel kernel)
 		{
-			if (kernel == null) throw new ArgumentNullException("kernel");
+			if (kernel == null) throw new ArgumentNullException(nameof(kernel));
 
 			return new SqlConnection(ConnectionString);
 		}

@@ -13,7 +13,7 @@ namespace Vertica.Integration.Experiments.SignalR
 
 		public ChatHub(RandomChatter chatter)
 		{
-			if (chatter == null) throw new ArgumentNullException("chatter");
+			if (chatter == null) throw new ArgumentNullException(nameof(chatter));
 
 			_chatter = chatter;
 		}
@@ -27,19 +27,19 @@ namespace Vertica.Integration.Experiments.SignalR
 
 		public void Send(string name, string message)
 		{
-			if (String.Equals(message, "invalid", StringComparison.OrdinalIgnoreCase))
+			if (string.Equals(message, "invalid", StringComparison.OrdinalIgnoreCase))
 				throw new InvalidOperationException("asdf");
 
-			if (String.Equals(message, "argument", StringComparison.OrdinalIgnoreCase))
-				throw new ArgumentException(@"Invalid name", "name");
+			if (string.Equals(message, "argument", StringComparison.OrdinalIgnoreCase))
+				throw new ArgumentException(@"Invalid name", nameof(name));
 
-			if (String.Equals(message, "httpexception", StringComparison.OrdinalIgnoreCase))
+			if (string.Equals(message, "httpexception", StringComparison.OrdinalIgnoreCase))
 				throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-			if (String.Equals(message, "start"))
+			if (string.Equals(message, "start"))
 				_chatter.StartIfNotStarted();
 
-			if (String.Equals(message, "stop"))
+			if (string.Equals(message, "stop"))
 				_chatter.Stop();
 
 			// Call the broadcastMessage method to update clients.

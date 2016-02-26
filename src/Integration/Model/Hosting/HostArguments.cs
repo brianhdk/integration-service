@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace Vertica.Integration.Model.Hosting
@@ -10,7 +9,7 @@ namespace Vertica.Integration.Model.Hosting
             Command = command;
 
             CommandArgs = new Arguments("-", commandArgs);
-            Args = new Arguments(String.Empty, args);
+            Args = new Arguments(string.Empty, args);
         }
 
         public string Command { get; private set; }
@@ -19,7 +18,7 @@ namespace Vertica.Integration.Model.Hosting
 
 	    public override string ToString()
 	    {
-		    return String.Format("{0} [CommandArgs = {1}] [Args = {2}]", Command, CommandArgs, Args);
+		    return $"{Command} [CommandArgs = {CommandArgs}] [Args = {Args}]";
 	    }
     }
 }

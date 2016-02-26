@@ -11,9 +11,9 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 	{
 		public MigrationDb(DatabaseServer databaseServer, ConnectionString connectionString, Assembly assembly, string namespaceContainingMigrations, string identifyingName = null)
         {
-            if (connectionString == null) throw new ArgumentNullException("connectionString");
-            if (assembly == null) throw new ArgumentNullException("assembly");
-			if (String.IsNullOrWhiteSpace(namespaceContainingMigrations)) throw new ArgumentException(@"Value cannot be null or empty.", "namespaceContainingMigrations");
+            if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
+            if (assembly == null) throw new ArgumentNullException(nameof(assembly));
+			if (string.IsNullOrWhiteSpace(namespaceContainingMigrations)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(namespaceContainingMigrations));
 
 			DatabaseServer = databaseServer;
             ConnectionString = connectionString;
@@ -33,8 +33,8 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
 			return 
-				Equals(Assembly, other.Assembly) && 
-				String.Equals(NamespaceContainingMigrations, other.NamespaceContainingMigrations) && 
+				Equals(Assembly, other.Assembly) &&
+				string.Equals(NamespaceContainingMigrations, other.NamespaceContainingMigrations) && 
 				Equals(ConnectionString, other.ConnectionString);
 		}
 
@@ -59,27 +59,27 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
 		public virtual void MigrateUp(MigrationRunner runner, ITaskExecutionContext context, IKernel kernel)
 		{
-			if (runner == null) throw new ArgumentNullException("runner");
-			if (context == null) throw new ArgumentNullException("context");
-			if (kernel == null) throw new ArgumentNullException("kernel");
+			if (runner == null) throw new ArgumentNullException(nameof(runner));
+			if (context == null) throw new ArgumentNullException(nameof(context));
+			if (kernel == null) throw new ArgumentNullException(nameof(kernel));
 
 			runner.MigrateUp();
 		}
 
 		public virtual void List(MigrationRunner runner, ITaskExecutionContext context, IKernel kernel)
 		{
-			if (runner == null) throw new ArgumentNullException("runner");
-			if (context == null) throw new ArgumentNullException("context");
-			if (kernel == null) throw new ArgumentNullException("kernel");
+			if (runner == null) throw new ArgumentNullException(nameof(runner));
+			if (context == null) throw new ArgumentNullException(nameof(context));
+			if (kernel == null) throw new ArgumentNullException(nameof(kernel));
 
 			runner.ListMigrations();
 		}
 
 		public virtual void Rollback(MigrationRunner runner, ITaskExecutionContext context, IKernel kernel)
 		{
-			if (runner == null) throw new ArgumentNullException("runner");
-			if (context == null) throw new ArgumentNullException("context");
-			if (kernel == null) throw new ArgumentNullException("kernel");
+			if (runner == null) throw new ArgumentNullException(nameof(runner));
+			if (context == null) throw new ArgumentNullException(nameof(context));
+			if (kernel == null) throw new ArgumentNullException(nameof(kernel));
 
 			if (runner.RunnerContext.Steps == 0)
 				runner.RunnerContext.Steps = 1;

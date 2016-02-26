@@ -7,7 +7,7 @@ namespace Vertica.Integration.Domain.Monitoring
     {
         public static TasksConfiguration MonitorTask(this TasksConfiguration configuration, Action<TaskConfiguration<MonitorWorkItem>> task = null)
         {
-            if (configuration == null) throw new ArgumentNullException("configuration");
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
             TaskConfiguration<MonitorWorkItem> localConfiguration = null;
 

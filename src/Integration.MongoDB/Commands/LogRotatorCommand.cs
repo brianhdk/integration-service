@@ -9,7 +9,7 @@ namespace Vertica.Integration.MongoDB.Commands
     {
         public void Execute(IMongoClient client)
         {
-            if (client == null) throw new ArgumentNullException("client");
+            if (client == null) throw new ArgumentNullException(nameof(client));
 
             Execute(client.GetDatabase("admin")).Wait();
         }

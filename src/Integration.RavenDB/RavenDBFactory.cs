@@ -12,7 +12,7 @@ namespace Vertica.Integration.RavenDB
 
 		public RavenDbFactory(TConnection connection, IKernel kernel)
 		{
-			if (connection == null) throw new ArgumentNullException("connection");
+			if (connection == null) throw new ArgumentNullException(nameof(connection));
 			
 			_documentStore = new Lazy<IDocumentStore>(() =>
 			{
@@ -23,10 +23,7 @@ namespace Vertica.Integration.RavenDB
 			});
 		}
 
-		public IDocumentStore DocumentStore
-		{
-			get { return _documentStore.Value; }
-		}
+		public IDocumentStore DocumentStore => _documentStore.Value;
 
 		public void Dispose()
 		{
@@ -41,14 +38,11 @@ namespace Vertica.Integration.RavenDB
 
 		public RavenDbFactory(IRavenDbFactory<DefaultConnection> decoree)
 		{
-			if (decoree == null) throw new ArgumentNullException("decoree");
+			if (decoree == null) throw new ArgumentNullException(nameof(decoree));
 
 			_decoree = decoree;
 		}
 
-		public IDocumentStore DocumentStore
-		{
-			get { return _decoree.DocumentStore; }
-		}
+		public IDocumentStore DocumentStore => _decoree.DocumentStore;
 	}
 }

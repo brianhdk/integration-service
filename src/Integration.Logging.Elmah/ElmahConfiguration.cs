@@ -20,7 +20,7 @@ namespace Vertica.Integration.Logging.Elmah
 
         public ConnectionString ToConnectionString()
         {
-            if (String.IsNullOrWhiteSpace(ConnectionStringName))
+            if (string.IsNullOrWhiteSpace(ConnectionStringName))
                 return null;
 
             return ConnectionString.FromName(ConnectionStringName);

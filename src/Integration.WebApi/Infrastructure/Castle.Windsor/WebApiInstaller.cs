@@ -21,10 +21,10 @@ namespace Vertica.Integration.WebApi.Infrastructure.Castle.Windsor
 
 	    public WebApiInstaller(Assembly[] scanAssemblies, Type[] addControllers, Type[] removeControllers, HttpServerConfiguration httpServerConfiguration)
         {
-		    if (scanAssemblies == null) throw new ArgumentNullException("scanAssemblies");
-		    if (addControllers == null) throw new ArgumentNullException("addControllers");
-		    if (removeControllers == null) throw new ArgumentNullException("removeControllers");
-		    if (httpServerConfiguration == null) throw new ArgumentNullException("httpServerConfiguration");
+		    if (scanAssemblies == null) throw new ArgumentNullException(nameof(scanAssemblies));
+		    if (addControllers == null) throw new ArgumentNullException(nameof(addControllers));
+		    if (removeControllers == null) throw new ArgumentNullException(nameof(removeControllers));
+		    if (httpServerConfiguration == null) throw new ArgumentNullException(nameof(httpServerConfiguration));
 
 		    _scanAssemblies = scanAssemblies;
 		    _addControllers = addControllers;
@@ -93,10 +93,7 @@ namespace Vertica.Integration.WebApi.Infrastructure.Castle.Windsor
                 _types = types;
             }
 
-            public Type[] Controllers
-            {
-                get { return _types; }
-            }
+            public Type[] Controllers => _types;
         }
 	}
 }

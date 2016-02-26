@@ -36,7 +36,7 @@ namespace Vertica.Integration.Tests.Domain.Monitoring
 
             subject.Execute(workItem, Substitute.For<ITaskExecutionContext>());
 
-            string messages = String.Join(Environment.NewLine,
+            string messages = string.Join(Environment.NewLine,
                 workItem.GetEntries(Target.Service).Select(x => x.Message));
 
             Assert.IsEmpty(messages);

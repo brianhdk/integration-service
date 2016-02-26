@@ -18,7 +18,7 @@ namespace Vertica.Integration.RavenDB.Extensions
 
         public static string Id<T>(this IDocumentStore store, string id)
         {
-            if (id == null) throw new ArgumentNullException("id");
+            if (id == null) throw new ArgumentNullException(nameof(id));
 
             return store.Conventions.DefaultFindFullDocumentKeyFromNonStringIdentifier(id, typeof(T), false);
         }
@@ -41,8 +41,8 @@ namespace Vertica.Integration.RavenDB.Extensions
 
         public static IRavenQueryable<T> If<T>(this IRavenQueryable<T> source, bool condition, Func<IRavenQueryable<T>, IRavenQueryable<T>> action)
         {
-            if (source == null) throw new ArgumentNullException("source");
-            if (action == null) throw new ArgumentNullException("action");
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (action == null) throw new ArgumentNullException(nameof(action));
 
             return condition ? action(source) : source;
         }
@@ -59,7 +59,7 @@ namespace Vertica.Integration.RavenDB.Extensions
 
 	    public static string Term(this string searchTerm)
 	    {
-	        return String.Concat("[[", TermReplacer.Replace(searchTerm ?? String.Empty, String.Empty), "]]");
+	        return string.Concat("[[", TermReplacer.Replace(searchTerm ?? string.Empty, string.Empty), "]]");
 	    }
 
         public static string Wildcard(this string searchTerm)
@@ -72,10 +72,10 @@ namespace Vertica.Integration.RavenDB.Extensions
 
         public static string Fuzzy(this string term, decimal tolerance)
         {
-            if (String.IsNullOrWhiteSpace(term))
+            if (string.IsNullOrWhiteSpace(term))
                 return term;
 
-            return String.Concat(term, "~", tolerance.ToString(CultureInfo.InvariantCulture));
+            return string.Concat(term, "~", tolerance.ToString(CultureInfo.InvariantCulture));
         }
 
         public static void DeleteAll<TIndexCreator>(this IDocumentSession session, string query = null) where TIndexCreator : AbstractIndexCreationTask, new()

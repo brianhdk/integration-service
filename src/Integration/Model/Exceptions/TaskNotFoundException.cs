@@ -11,9 +11,11 @@ namespace Vertica.Integration.Model.Exceptions
         }
 
 	    internal TaskNotFoundException(string taskName)
-            : base(String.Format(@"Task with name '{0}' not found. 
+            : base(
+	            $@"Task with name '{taskName}' not found. 
 Consider running the ""WriteDocumentationTask"" to get a text-output of available tasks.
-If your task is not listed then you probably forgot to register it. Use Tasks(tasks => tasks.Task<YourTask>)", taskName))
+If your task is not listed then you probably forgot to register it. Use Tasks(tasks => tasks.Task<YourTask>)"
+	            )
         {
         }
 

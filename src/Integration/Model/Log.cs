@@ -10,8 +10,8 @@ namespace Vertica.Integration.Model
 
         internal Log(Action<string> message, ILogger logger)
         {
-            if (message == null) throw new ArgumentNullException("message");
-            if (logger == null) throw new ArgumentNullException("logger");
+            if (message == null) throw new ArgumentNullException(nameof(message));
+            if (logger == null) throw new ArgumentNullException(nameof(logger));
 
             _message = message;
             _logger = logger;
@@ -21,7 +21,7 @@ namespace Vertica.Integration.Model
 		{
 			if (args != null && args.Length > 0)
 			{
-				_message(String.Format(format, args));
+				_message(string.Format(format, args));
 			}
 			else
 			{
@@ -34,9 +34,9 @@ namespace Vertica.Integration.Model
 	        string message = format;
 
 		    if (args != null && args.Length > 0)
-				message = String.Format(message, args);
+				message = string.Format(message, args);
 
-	        _message(String.Format("[WARNING] {0}", message));
+	        _message($"[WARNING] {message}");
 	        return _logger.LogWarning(target, message);
 	    }
 
@@ -45,17 +45,17 @@ namespace Vertica.Integration.Model
 			string message = format;
 
 			if (args != null && args.Length > 0)
-				message = String.Format(message, args);
+				message = string.Format(message, args);
 
-            _message(String.Format("[ERROR] {0}", message));
+            _message($"[ERROR] {message}");
 	        return _logger.LogError(target, message);
 	    }
 
         public ErrorLog Exception(Exception exception, ITarget target = null)
         {
-            if (exception == null) throw new ArgumentNullException("exception");
+            if (exception == null) throw new ArgumentNullException(nameof(exception));
 
-            _message(String.Format("[ERROR] {0}", exception.Message));
+            _message($"[ERROR] {exception.Message}");
             return _logger.LogError(exception, target);
         }
 	}

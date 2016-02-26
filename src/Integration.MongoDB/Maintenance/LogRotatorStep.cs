@@ -28,12 +28,9 @@ application
             _command = command;
         }
 
-        public override string Description
-        {
-            get { return "Performs a logRotate command against the MongoDB server."; }
-        }
+        public override string Description => "Performs a logRotate command against the MongoDB server.";
 
-        public override void Execute(MaintenanceWorkItem workItem, ITaskExecutionContext context)
+	    public override void Execute(MaintenanceWorkItem workItem, ITaskExecutionContext context)
         {
             _command.Execute(_db.Client);
         }

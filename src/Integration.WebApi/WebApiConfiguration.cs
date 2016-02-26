@@ -17,7 +17,7 @@ namespace Vertica.Integration.WebApi
 
         internal WebApiConfiguration(ApplicationConfiguration application)
         {
-            if (application == null) throw new ArgumentNullException("application");
+            if (application == null) throw new ArgumentNullException(nameof(application));
 
 			Application = application.Hosts(hosts => hosts.Host<WebApiHost>());
 
@@ -82,7 +82,7 @@ namespace Vertica.Integration.WebApi
 
 	    public WebApiConfiguration HttpServer(Action<HttpServerConfiguration> httpServer)
 	    {
-		    if (httpServer == null) throw new ArgumentNullException("httpServer");
+		    if (httpServer == null) throw new ArgumentNullException(nameof(httpServer));
 
 		    httpServer(_httpServerConfiguration);
 

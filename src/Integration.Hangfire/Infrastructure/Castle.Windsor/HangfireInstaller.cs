@@ -16,9 +16,9 @@ namespace Integration.Hangfire.Infrastructure.Castle.Windsor
 
 	    public HangfireInstaller(Assembly[] scanAssemblies, Type[] addProcesses, Type[] removeProcesses)
         {
-		    if (scanAssemblies == null) throw new ArgumentNullException("scanAssemblies");
-		    if (addProcesses == null) throw new ArgumentNullException("addProcesses");
-		    if (removeProcesses == null) throw new ArgumentNullException("removeProcesses");
+		    if (scanAssemblies == null) throw new ArgumentNullException(nameof(scanAssemblies));
+		    if (addProcesses == null) throw new ArgumentNullException(nameof(addProcesses));
+		    if (removeProcesses == null) throw new ArgumentNullException(nameof(removeProcesses));
 
 		    _scanAssemblies = scanAssemblies;
 		    _addProcesses = addProcesses;

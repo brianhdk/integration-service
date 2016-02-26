@@ -21,7 +21,7 @@ namespace Integration.Hangfire
 
         internal HangfireConfiguration(ApplicationConfiguration application)
         {
-            if (application == null) throw new ArgumentNullException("application");
+            if (application == null) throw new ArgumentNullException(nameof(application));
 
 			Application = application
 				.Hosts(hosts => hosts.Host<HangfireHost>())

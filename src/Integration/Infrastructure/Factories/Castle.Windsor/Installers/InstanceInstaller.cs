@@ -11,7 +11,7 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 
         public InstanceInstaller(T instance)
         {
-            if (instance == null) throw new ArgumentNullException("instance");
+            if (instance == null) throw new ArgumentNullException(nameof(instance));
 
             _instance = instance;
         }

@@ -20,9 +20,6 @@ namespace Vertica.Integration.Experiments
                 _runner.Execute(task);
         }
 
-        public override string Description
-        {
-            get { return "Runs all tasks."; }
-        }
+        public override string Description => "Runs all tasks.";
     }
 }

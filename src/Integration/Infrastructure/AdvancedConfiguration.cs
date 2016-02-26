@@ -18,7 +18,7 @@ namespace Vertica.Integration.Infrastructure
 
 	    internal AdvancedConfiguration(ApplicationConfiguration application)
         {
-            if (application == null) throw new ArgumentNullException("application");
+            if (application == null) throw new ArgumentNullException(nameof(application));
 
 			Application = application;
 
@@ -65,8 +65,8 @@ namespace Vertica.Integration.Infrastructure
 	    public AdvancedConfiguration Register<TService>(Func<TService> integrationDbEnabledInstance, Func<TService> integrationDbDisabledInstance)
 			where TService : class
 		{
-		    if (integrationDbEnabledInstance == null) throw new ArgumentNullException("integrationDbEnabledInstance");
-		    if (integrationDbDisabledInstance == null) throw new ArgumentNullException("integrationDbDisabledInstance");
+		    if (integrationDbEnabledInstance == null) throw new ArgumentNullException(nameof(integrationDbEnabledInstance));
+		    if (integrationDbDisabledInstance == null) throw new ArgumentNullException(nameof(integrationDbDisabledInstance));
 
 			_instances[typeof(TService)] = Tuple.Create<Func<object>, Func<object>>(
 				integrationDbEnabledInstance, 

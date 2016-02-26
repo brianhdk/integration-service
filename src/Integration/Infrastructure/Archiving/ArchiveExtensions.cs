@@ -7,8 +7,8 @@ namespace Vertica.Integration.Infrastructure.Archiving
     {
         public static ArchiveCreated ArchiveFile(this IArchiveService service, FileInfo file, Action<ArchiveOptions> options = null)
         {
-            if (service == null) throw new ArgumentNullException("service");
-            if (file == null) throw new ArgumentNullException("file");
+            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (file == null) throw new ArgumentNullException(nameof(file));
 
             ArchiveCreated created = null;
 
@@ -25,8 +25,8 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
         public static ArchiveCreated ArchiveFolder(this IArchiveService service, DirectoryInfo folder, Action<ArchiveOptions> options = null)
         {
-            if (service == null) throw new ArgumentNullException("service");
-            if (folder == null) throw new ArgumentNullException("folder");
+            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (folder == null) throw new ArgumentNullException(nameof(folder));
 
             ArchiveCreated created = null;
 
@@ -43,7 +43,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
         public static ArchiveCreated ArchiveText(this IArchiveService service, string name, string content, Action<ArchiveOptions> options = null)
         {
-            if (service == null) throw new ArgumentNullException("service");
+            if (service == null) throw new ArgumentNullException(nameof(service));
 
             ArchiveCreated created = null;
 
@@ -60,8 +60,8 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
         public static ArchiveCreated ArchiveObjectAsJson(this IArchiveService service, object obj, string name, Action<ArchiveOptions> options = null)
         {
-            if (service == null) throw new ArgumentNullException("service");
-            if (obj == null) throw new ArgumentNullException("obj");
+            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
 
             ArchiveCreated created = null;
 
@@ -78,7 +78,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
         public static ArchiveCreated Archive(this IArchiveService service, string name, Action<BeginArchive> archive)
         {
-            if (archive == null) throw new ArgumentNullException("service");
+            if (archive == null) throw new ArgumentNullException(nameof(service));
 
             ArchiveCreated created = null;
 

@@ -15,8 +15,8 @@ namespace Vertica.Integration.Infrastructure.Windows
 
 		public WindowsServiceConfiguration(string serviceName, string exePath, string args = null)
 		{
-			if (String.IsNullOrWhiteSpace(serviceName)) throw new ArgumentException(@"Value cannot be null or empty.", "serviceName");
-			if (String.IsNullOrWhiteSpace(exePath)) throw new ArgumentException(@"Value cannot be null or empty.", "exePath");
+			if (string.IsNullOrWhiteSpace(serviceName)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(serviceName));
+			if (string.IsNullOrWhiteSpace(exePath)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(exePath));
 
 			_serviceName = serviceName;
 			ExePath = exePath;
@@ -30,7 +30,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 
 		public WindowsServiceConfiguration DisplayName(string displayName)
 		{
-			if (String.IsNullOrWhiteSpace(displayName)) throw new ArgumentException(@"Value cannot be null or empty.", "displayName");
+			if (string.IsNullOrWhiteSpace(displayName)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(displayName));
 
 			_displayName = displayName;
 			return this;
@@ -50,8 +50,8 @@ namespace Vertica.Integration.Infrastructure.Windows
 
 		public WindowsServiceConfiguration WithCredentials(string username, string password)
 		{
-			if (String.IsNullOrWhiteSpace(username)) throw new ArgumentException(@"Value cannot be null or empty.", "username");
-			if (String.IsNullOrWhiteSpace(password)) throw new ArgumentException(@"Value cannot be null or empty.", "password");
+			if (string.IsNullOrWhiteSpace(username)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(username));
+			if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(password));
 
 			_credentials = new Credentials
 			{
@@ -75,7 +75,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 
 		internal ServiceInstaller CreateInstaller(ServiceProcessInstaller parent)
 		{
-			if (parent == null) throw new ArgumentNullException("parent");
+			if (parent == null) throw new ArgumentNullException(nameof(parent));
 
 			if (_credentials != null)
 			{
@@ -86,7 +86,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 
 			return new ServiceInstaller
 			{
-				Context = new InstallContext(String.Empty, new[] {String.Format("/assemblypath={0}", ExePath)}),
+				Context = new InstallContext(string.Empty, new[] {$"/assemblypath={ExePath}"}),
 				ServiceName = _serviceName,
 				DisplayName = _displayName ?? _serviceName,
 				Description = _description ?? _displayName ?? _serviceName,

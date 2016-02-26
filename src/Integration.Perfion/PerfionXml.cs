@@ -17,54 +17,42 @@ namespace Vertica.Integration.Perfion
 
 		public PerfionXml(IPerfionService service, XDocument document)
 		{
-			if (service == null) throw new ArgumentNullException("service");
-			if (document == null) throw new ArgumentNullException("document");
+			if (service == null) throw new ArgumentNullException(nameof(service));
+			if (document == null) throw new ArgumentNullException(nameof(document));
 			if (document.Root == null) throw new ArgumentException(@"Document is missing required root element.");
 
 			_service = service;
 			_document = document;
 		}
 
-		public IPerfionService Service
-		{
-			get { return _service; }
-		}
+		public IPerfionService Service => _service;
 
-		public XDocument Document
-		{
-			get { return _document; }
-		}
+		public XDocument Document => _document;
 
 		public ArchiveCreated Archive { get; internal set; }
 
-		public XElement Root
-		{
-			get { return _document.Root; }
-		}
+		public XElement Root => _document.Root;
 
-		public int Length
-		{
-			get { return _document.ToString().Length; }
-		}
+		public int Length => _document.ToString().Length;
 
 		public IEnumerable<Component> Components(XName name)
 		{
-			if (name == null) throw new ArgumentNullException("name");
+			if (name == null) throw new ArgumentNullException(nameof(name));
 
 			return Root.Elements(name).Select(x => new Component(this, x));
 		}
 
 		public Tree<Component, int> Tree(XName name)
 		{
-			if (name == null) throw new ArgumentNullException("name");
+			if (name == null) throw new ArgumentNullException(nameof(name));
 
 			return Components(name).ToTree(x => x.Id, (x, p) => x.ParentId.HasValue ? p.Value(x.ParentId.Value) : p.None);
 		}
 
 		public Tree<Component, TModel, int> Tree<TModel>(XName name, Func<Component, TModel> projection)
 		{
-			if (name == null) throw new ArgumentNullException("name");
-			if (projection == null) throw new ArgumentNullException("projection");
+			if (name == null) throw new ArgumentNullException(nameof(name));
+			if (projection == null) throw new ArgumentNullException(nameof(projection));
 
 			return Components(name).ToTree(x => x.Id, (x, p) => x.ParentId.HasValue ? p.Value(x.ParentId.Value) : p.None, projection);
 		}
@@ -81,37 +69,22 @@ namespace Vertica.Integration.Perfion
 
 			public File(PerfionXml xml, XElement element)
 			{
-				if (xml == null) throw new ArgumentNullException("xml");
-				if (element == null) throw new ArgumentNullException("element");
+				if (xml == null) throw new ArgumentNullException(nameof(xml));
+				if (element == null) throw new ArgumentNullException(nameof(element));
 
 				_element = element;
 				_xml = xml;
 			}
 
-			public XElement Element
-			{
-				get { return _element; }
-			}
+			public XElement Element => _element;
 
-			public Guid Id
-			{
-				get { return _element.AsGuid(); }
-			}
+			public Guid Id => _element.AsGuid();
 
-			public string Name
-			{
-				get { return _element.AttributeOrThrow("string").Value; }
-			}
+			public string Name => _element.AttributeOrThrow("string").Value;
 
-			public DateTime LastModified
-			{
-				get { return _element.LastModified(); }
-			}
+			public DateTime LastModified => _element.LastModified();
 
-			public DateTime FileLastModified
-			{
-				get { return _element.AttributeOrThrow("fileModifiedDate").AsDateTime(); }
-			}
+			public DateTime FileLastModified => _element.AttributeOrThrow("fileModifiedDate").AsDateTime();
 
 			public byte[] Download()
 			{
@@ -131,7 +104,7 @@ namespace Vertica.Integration.Perfion
 
 			public byte[] Download(NameValueCollection options)
 			{
-				if (options == null) throw new ArgumentNullException("options");
+				if (options == null) throw new ArgumentNullException(nameof(options));
 
 				return _xml.Service.DownloadImage(Id, options);
 			}
@@ -144,27 +117,18 @@ namespace Vertica.Integration.Perfion
 
 			public Component(PerfionXml xml, XElement element)
 			{
-				if (xml == null) throw new ArgumentNullException("xml");
-				if (element == null) throw new ArgumentNullException("element");
+				if (xml == null) throw new ArgumentNullException(nameof(xml));
+				if (element == null) throw new ArgumentNullException(nameof(element));
 
 				_xml = xml;
 				_element = element;
 			}
 
-			public XElement Element
-			{
-				get { return _element; }
-			}
+			public XElement Element => _element;
 
-			public int Id
-			{
-				get { return _element.Id(); }
-			}
+			public int Id => _element.Id();
 
-			public int? ParentId
-			{
-				get { return _element.ParentId(); }
-			}
+			public int? ParentId => _element.ParentId();
 
 			public string Name(string language = null)
 			{
@@ -175,7 +139,7 @@ namespace Vertica.Integration.Perfion
 			{
 				get
 				{
-					if (name == null) throw new ArgumentNullException("name");
+					if (name == null) throw new ArgumentNullException(nameof(name));
 
 					XElement element = _element.Element(name, language);
 
@@ -185,7 +149,7 @@ namespace Vertica.Integration.Perfion
 
 			public string[] ValuesFor(XName name, string language = null)
 			{
-				if (name == null) throw new ArgumentNullException("name");
+				if (name == null) throw new ArgumentNullException(nameof(name));
 
 				return _element.Elements(name, language).Select(x => x.Value).ToArray();
 			}
@@ -203,14 +167,11 @@ namespace Vertica.Integration.Perfion
 				}
 			}
 
-			public DateTime LastModified
-			{
-				get { return _element.LastModified(); }
-			}
+			public DateTime LastModified => _element.LastModified();
 
 			public int? IdOf(XName relatedComponent, string language = null)
 			{
-				if (relatedComponent == null) throw new ArgumentNullException("relatedComponent");
+				if (relatedComponent == null) throw new ArgumentNullException(nameof(relatedComponent));
 
 				XElement element = _element.Element(relatedComponent, language);
 
@@ -222,7 +183,7 @@ namespace Vertica.Integration.Perfion
 
 			public Component FindRelation(XName relatedComponent, string language = null)
 			{
-				if (relatedComponent == null) throw new ArgumentNullException("relatedComponent");
+				if (relatedComponent == null) throw new ArgumentNullException(nameof(relatedComponent));
 
 				int? id = IdOf(relatedComponent, language);
 
@@ -234,7 +195,7 @@ namespace Vertica.Integration.Perfion
 
 			public File[] GetFiles(XName name)
 			{
-				if (name == null) throw new ArgumentNullException("name");
+				if (name == null) throw new ArgumentNullException(nameof(name));
 
 				return _element
 					.Elements(name)
@@ -245,7 +206,7 @@ namespace Vertica.Integration.Perfion
 
 			public Image[] GetImages(XName name)
 			{
-				if (name == null) throw new ArgumentNullException("name");
+				if (name == null) throw new ArgumentNullException(nameof(name));
 
 				return _element
 					.Elements(name)
@@ -257,11 +218,11 @@ namespace Vertica.Integration.Perfion
 
 			public int? AsInt32(XName name, string language = null)
 			{
-				if (name == null) throw new ArgumentNullException("name");
+				if (name == null) throw new ArgumentNullException(nameof(name));
 
 				string value = this[name, language];
 
-				if (String.IsNullOrWhiteSpace(value))
+				if (string.IsNullOrWhiteSpace(value))
 					return null;
 
 				return Int32.Parse(value);
@@ -269,11 +230,11 @@ namespace Vertica.Integration.Perfion
 
 			public DateTime? AsDateTime(XName name, string language = null)
 			{
-				if (name == null) throw new ArgumentNullException("name");
+				if (name == null) throw new ArgumentNullException(nameof(name));
 
 				string value = this[name, language];
 
-				if (String.IsNullOrWhiteSpace(value))
+				if (string.IsNullOrWhiteSpace(value))
 					return null;
 
 				return DateTime.Parse(value, ParsingExtensions.English);
@@ -281,11 +242,11 @@ namespace Vertica.Integration.Perfion
 
 			public double? AsDouble(XName name, string language = null)
 			{
-				if (name == null) throw new ArgumentNullException("name");
+				if (name == null) throw new ArgumentNullException(nameof(name));
 
 				string value = this[name, language];
 
-				if (String.IsNullOrWhiteSpace(value))
+				if (string.IsNullOrWhiteSpace(value))
 					return null;
 
 				return Double.Parse(value, ParsingExtensions.English);
@@ -293,11 +254,11 @@ namespace Vertica.Integration.Perfion
 
 			public decimal? AsDecimal(XName name, string language = null)
 			{
-				if (name == null) throw new ArgumentNullException("name");
+				if (name == null) throw new ArgumentNullException(nameof(name));
 
 				string value = this[name, language];
 
-				if (String.IsNullOrWhiteSpace(value))
+				if (string.IsNullOrWhiteSpace(value))
 					return null;
 
 				return Decimal.Parse(value, ParsingExtensions.English);

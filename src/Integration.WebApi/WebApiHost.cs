@@ -34,14 +34,14 @@ namespace Vertica.Integration.WebApi
 
 	    public bool CanHandle(HostArguments args)
         {
-            if (args == null) throw new ArgumentNullException("args");
+            if (args == null) throw new ArgumentNullException(nameof(args));
 
-			return String.Equals(args.Command, Command, StringComparison.OrdinalIgnoreCase);
+			return string.Equals(args.Command, Command, StringComparison.OrdinalIgnoreCase);
         }
 
         public void Handle(HostArguments args)
         {
-            if (args == null) throw new ArgumentNullException("args");
+            if (args == null) throw new ArgumentNullException(nameof(args));
 
 	        string url = ParseUrl(args);
 
@@ -68,23 +68,16 @@ namespace Vertica.Integration.WebApi
 				args, 
 				new HandleAsWindowsService(
 					this.Name(), 
-					this.Name(), 
-					String.Format("[URL: {0}] {1}", url, Description), 
+					this.Name(),
+					$"[URL: {url}] {Description}", 
 					() => _factory.Create(url)));
 		}
 
-	    public string Description
-	    {
-		    get
-		    {
-			    return
-@"WebApiHost is used to host and expose all WebApi ApiControllers registred part of the initial configuration. To start this Host, use the following command: ""WebApiHost url:http://localhost:8080"" (you can choose any valid URL).";
-		    }
-	    }
+	    public string Description => @"WebApiHost is used to host and expose all WebApi ApiControllers registred part of the initial configuration. To start this Host, use the following command: ""WebApiHost url:http://localhost:8080"" (you can choose any valid URL).";
 
 	    private static string EnsureUrl(string url, IRuntimeSettings settings)
 	    {
-			if (String.IsNullOrWhiteSpace(url))
+			if (string.IsNullOrWhiteSpace(url))
 				url = GetOrGenerateUrl(settings);
 
 		    return url;
@@ -98,7 +91,7 @@ namespace Vertica.Integration.WebApi
 
 	    private string ParseUrl(HostArguments args)
 		{
-			if (args == null) throw new ArgumentNullException("args");
+			if (args == null) throw new ArgumentNullException(nameof(args));
 
 			string url;
 			args.Args.TryGetValue(Url, out url);
@@ -112,22 +105,22 @@ namespace Vertica.Integration.WebApi
 			if (Uri.TryCreate(url, UriKind.Absolute, out dummy))
 				return;
 
-			if (Regex.IsMatch(url ?? String.Empty, @"^http(?:s)?://\+(?:\:\d+)?/?$", RegexOptions.IgnoreCase))
+			if (Regex.IsMatch(url ?? string.Empty, @"^http(?:s)?://\+(?:\:\d+)?/?$", RegexOptions.IgnoreCase))
 				return;
 
-			throw new InvalidOperationException(String.Format("'{0}' is not a valid absolute url.", url));
+			throw new InvalidOperationException($"'{url}' is not a valid absolute url.");
 		}
 
 	    private static string GetOrGenerateUrl(IRuntimeSettings settings)
 	    {
 			string url = settings["WebApiHost.DefaultUrl"];
 
-		    if (String.IsNullOrWhiteSpace(url))
+		    if (string.IsNullOrWhiteSpace(url))
 		    {
 				var listener = new TcpListener(IPAddress.Loopback, 0);
 				listener.Start();
 
-				url = String.Format("http://{0}", listener.LocalEndpoint);
+				url = $"http://{listener.LocalEndpoint}";
 
 				listener.Stop();
 		    }

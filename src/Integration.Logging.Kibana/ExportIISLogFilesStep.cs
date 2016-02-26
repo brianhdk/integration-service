@@ -8,12 +8,9 @@ namespace Vertica.Integration.Logging.Kibana
 {
     public class ExportIisLogFilesStep : Step<ExportLogsToLogStashWorkItem>
     {
-        public override string Description
-        {
-            get { return "Exports Log files from IIS"; }
-        }
+        public override string Description => "Exports Log files from IIS";
 
-        public override void Execute(ExportLogsToLogStashWorkItem workItem, ITaskExecutionContext context)
+	    public override void Execute(ExportLogsToLogStashWorkItem workItem, ITaskExecutionContext context)
         {
             // konfiguration af tidspunkt
             var within = new Range<DateTimeOffset>(DateTimeOffset.UtcNow.AddYears(-2), DateTimeOffset.UtcNow);

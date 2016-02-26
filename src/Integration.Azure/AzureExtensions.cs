@@ -6,7 +6,7 @@ namespace Vertica.Integration.Azure
     {
         public static ApplicationConfiguration UseAzure(this ApplicationConfiguration application, Action<AzureConfiguration> azure = null)
         {
-            if (application == null) throw new ArgumentNullException("application");
+            if (application == null) throw new ArgumentNullException(nameof(application));
 
 			return application.Extensibility(extensibility =>
 			{

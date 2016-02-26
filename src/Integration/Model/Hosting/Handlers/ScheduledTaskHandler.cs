@@ -23,8 +23,8 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 
 		public bool Handle(HostArguments args, ITask task)
 		{
-			if (args == null) throw new ArgumentNullException("args");
-			if (task == null) throw new ArgumentNullException("task");
+			if (args == null) throw new ArgumentNullException(nameof(args));
+			if (task == null) throw new ArgumentNullException(nameof(task));
 
 			string action;
 			if (!args.CommandArgs.TryGetValue(Command, out action))
@@ -34,7 +34,7 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 				.Description(task.Description);
 
 			Func<string, bool> actionIs = arg =>
-				String.Equals(arg, action, StringComparison.OrdinalIgnoreCase);
+				string.Equals(arg, action, StringComparison.OrdinalIgnoreCase);
 
 			var installer = new ScheduledTasks();
 
@@ -53,7 +53,7 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 				string password;
 				args.CommandArgs.TryGetValue(ServiceAccountPasswordCommand, out password);
 
-				if (!String.IsNullOrWhiteSpace(username) && !String.IsNullOrWhiteSpace(password))
+				if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password))
 					configuration.WithCredentials(username, password);
 
 				installer.InstallOrUpdate(configuration);
@@ -70,15 +70,9 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 		{
 			ApplicationEnvironment environment = _runtimeSettings.Environment;
 
-			return String.Format("Integration Service{0}",
-				environment != null
-					? String.Format(" [{0}]", environment)
-					: String.Empty);
+			return $"Integration Service{(environment != null ? $" [{environment}]" : string.Empty)}";
 		}
 
-		private static string ExePath
-		{
-			get { return Assembly.GetEntryAssembly().Location; }
-		}
+		private static string ExePath => Assembly.GetEntryAssembly().Location;
 	}
 }

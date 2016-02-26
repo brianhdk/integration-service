@@ -12,7 +12,7 @@ namespace Vertica.Integration.Portal.Controllers
     public class AssetsController : ApiController
     {
         private static readonly Lazy<EntityTagHeaderValue> ETag = new Lazy<EntityTagHeaderValue>(() => 
-            EntityTagHeaderValue.Parse(String.Concat("\"", PortalConfiguration.Version, "\"")));
+            EntityTagHeaderValue.Parse(string.Concat("\"", PortalConfiguration.Version, "\"")));
 
         [Route("assets/{*path}")]
         public HttpResponseMessage Get(string path)
@@ -22,8 +22,8 @@ namespace Vertica.Integration.Portal.Controllers
 
         internal static HttpResponseMessage ServeFile(HttpRequestMessage request, string relativePathToFile)
         {
-            if (request == null) throw new ArgumentNullException("request");
-            if (String.IsNullOrWhiteSpace(relativePathToFile)) throw new ArgumentException(@"Value cannot be null or empty.", "relativePathToFile");
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (string.IsNullOrWhiteSpace(relativePathToFile)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(relativePathToFile));
 
             var file = new FileInfo(Path.Combine(PortalConfiguration.Folder, relativePathToFile));
 

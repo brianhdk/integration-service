@@ -59,7 +59,7 @@ namespace Vertica.Integration.Domain.Core
             public Folder[] GetEnabledFolders()
             {
                 EnsureFolders();
-                return Folders.Where(x => Enabled && x.Enabled && !String.IsNullOrWhiteSpace(x.Path) && x.Handler != null).ToArray();
+                return Folders.Where(x => Enabled && x.Enabled && !string.IsNullOrWhiteSpace(x.Path) && x.Handler != null).ToArray();
             }
 
             public class Folder
@@ -102,7 +102,7 @@ namespace Vertica.Integration.Domain.Core
 
             public void Add(Func<Folder, FolderHandlers, FolderHandler> folder)
             {
-                if (folder == null) throw new ArgumentNullException("folder");
+                if (folder == null) throw new ArgumentNullException(nameof(folder));
 
                 var local = new Folder();
                 local.Handler = folder(local, new FolderHandlers());
@@ -113,7 +113,7 @@ namespace Vertica.Integration.Domain.Core
 
             public void Remove(Folder folder)
             {
-                if (folder == null) throw new ArgumentNullException("folder");
+                if (folder == null) throw new ArgumentNullException(nameof(folder));
 
                 EnsureFolders();
                 Folders = Folders.Except(new[] { folder }).ToArray();
@@ -191,9 +191,8 @@ namespace Vertica.Integration.Domain.Core
 
                 public override string ToString()
                 {
-                    return String.Format("Files older than {0} second(s){1}{2}.", Seconds,
-                        SearchPattern != null ? String.Format(" (Search Pattern = {0}", SearchPattern) : String.Empty,
-                        IncludeSubDirectories ? " (All directories)" : String.Empty);
+                    return
+	                    $"Files older than {Seconds} second(s){(SearchPattern != null ? $" (Search Pattern = {SearchPattern}" : string.Empty)}{(IncludeSubDirectories ? " (All directories)" : string.Empty)}.";
                 }
             }
         }

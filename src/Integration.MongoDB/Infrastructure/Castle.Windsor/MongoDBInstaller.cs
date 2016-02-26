@@ -33,7 +33,7 @@ namespace Vertica.Integration.MongoDB.Infrastructure.Castle.Windsor
 
         public MongoDbInstaller(TConnection connection)
         {
-            if (connection == null) throw new ArgumentNullException("connection");
+            if (connection == null) throw new ArgumentNullException(nameof(connection));
 
             _connection = connection;
         }

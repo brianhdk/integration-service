@@ -60,7 +60,7 @@ namespace Vertica.Integration.Experiments.Rebus
 
 		public Task Handle(string[] message)
 		{
-			return _outputter.WriteLineAsync(String.Join(", ", message));
+			return _outputter.WriteLineAsync(string.Join(", ", message));
 		}
 	}
 
@@ -83,9 +83,6 @@ namespace Vertica.Integration.Experiments.Rebus
 			});
 		}
 
-		public override string Description
-		{
-			get { return "Writes messages to Rebus"; }
-		}
+		public override string Description => "Writes messages to Rebus";
 	}
 }

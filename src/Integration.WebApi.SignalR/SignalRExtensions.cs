@@ -6,8 +6,8 @@ namespace Vertica.Integration.WebApi.SignalR
 	{
 		public static WebApiConfiguration WithSignalR(this WebApiConfiguration webApi, Action<SignalRConfiguration> signalR)
 		{
-			if (webApi == null) throw new ArgumentNullException("webApi");
-			if (signalR == null) throw new ArgumentNullException("signalR");
+			if (webApi == null) throw new ArgumentNullException(nameof(webApi));
+			if (signalR == null) throw new ArgumentNullException(nameof(signalR));
 
 			webApi.Application.Extensibility(extensibility =>
 			{

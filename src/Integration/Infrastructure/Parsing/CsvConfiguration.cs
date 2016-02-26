@@ -23,7 +23,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
         public CsvConfiguration ChangeEncoding(Encoding encoding)
         {
-            if (encoding == null) throw new ArgumentNullException("encoding");
+            if (encoding == null) throw new ArgumentNullException(nameof(encoding));
 
             Encoding = encoding;
 
@@ -32,7 +32,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
         public CsvConfiguration ChangeDelimiter(string delimiter)
         {
-            if (String.IsNullOrWhiteSpace(delimiter)) throw new ArgumentException(@"Value cannot be null or empty.", "delimiter");
+            if (string.IsNullOrWhiteSpace(delimiter)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(delimiter));
 
             Delimiter = delimiter;
 

@@ -15,8 +15,8 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
 
 	    public EventLogger(EventLoggerConfiguration configuration, IRuntimeSettings runtimeSettings)
 	    {
-		    if (configuration == null) throw new ArgumentNullException("configuration");
-		    if (runtimeSettings == null) throw new ArgumentNullException("runtimeSettings");
+		    if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+		    if (runtimeSettings == null) throw new ArgumentNullException(nameof(runtimeSettings));
 
 		    _sourceName = configuration.SourceName ?? IntegrationService(runtimeSettings);
 	    }
@@ -25,8 +25,8 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
 		{
 			ApplicationEnvironment environment = runtimeSettings.Environment;
 
-			return String.Concat("Integration Service",
-				environment != null ? String.Format(" [{0}]", environment) : String.Empty);
+			return string.Concat("Integration Service",
+				environment != null ? $" [{environment}]" : string.Empty);
 		}
 
 		protected override string Insert(TaskLog log)
@@ -48,18 +48,18 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
         {
             int id = GenerateEventId();
 
-            string message = String.Join(Environment.NewLine,
+            string message = string.Join(Environment.NewLine,
                 log.MachineName,
                 log.IdentityName,
                 log.CommandLine,
                 log.Severity,
                 log.Target,
                 log.TimeStamp,
-                String.Empty,
+				string.Empty,
                 "---- BEGIN LOG",
-                String.Empty,
+				string.Empty,
                 log.Message,
-                String.Empty,
+				string.Empty,
                 log.FormattedMessage);
 
             EventLog.WriteEntry(
@@ -75,11 +75,11 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
         {
             var sb = new StringBuilder();
 
-            sb.AppendLine(String.Join(Environment.NewLine,
+            sb.AppendLine(string.Join(Environment.NewLine,
                 log.MachineName,
                 log.IdentityName,
                 log.CommandLine,
-                String.Empty,
+				string.Empty,
                 "---- BEGIN LOG"));
 
             IEnumerable<LogEntry> entries = new LogEntry[] { log }
@@ -137,20 +137,21 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
 
         private string Line(LogEntry log, string text = null, params object[] args)
         {
-            if (!String.IsNullOrWhiteSpace(text))
-                text = String.Concat(" ", String.Format(text, args));
+            if (!string.IsNullOrWhiteSpace(text))
+                text = string.Concat(" ", string.Format(text, args));
 
-            return Line(log.TimeStamp, String.Format("[{0}]{1}", log, text));
+            return Line(log.TimeStamp, $"[{log}]{text}");
         }
 
         private string Line(DateTimeOffset timestamp, string text, params object[] args)
         {
-            return String.Concat(Environment.NewLine, String.Format("[{0:HH:mm:ss}] {1}", timestamp.LocalDateTime, String.Format(text, args)));
+            return string.Concat(Environment.NewLine,
+	            $"[{timestamp.LocalDateTime:HH:mm:ss}] {string.Format(text, args)}");
         }
 
         private string ExecutionTime(LogEntry log)
         {
-            return String.Format("(Execution time: {0} second(s))", log.ExecutionTimeSeconds.GetValueOrDefault().ToString(English));
+            return $"(Execution time: {log.ExecutionTimeSeconds.GetValueOrDefault().ToString(English)} second(s))";
         }
 
         private string ErrorLine(ErrorLog error, string name)

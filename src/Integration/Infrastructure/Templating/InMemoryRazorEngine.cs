@@ -26,7 +26,7 @@ namespace Vertica.Integration.Infrastructure.Templating
         public static string Execute<TModel>(string razorTemplate, TModel model, dynamic viewBag = null, params Assembly[] referenceAssemblies)
         {
             // removes the @model part of the razorTemplate
-            razorTemplate = ModelTypeFinder.Replace(razorTemplate, String.Empty, 1);
+            razorTemplate = ModelTypeFinder.Replace(razorTemplate, string.Empty, 1);
 
             var host = new RazorEngineHost(new CSharpRazorCodeLanguage())
             {
@@ -61,10 +61,7 @@ namespace Vertica.Integration.Infrastructure.Templating
                     foreach (CompilerError compileError in compilerResult.Errors)
                     {
                         compileErrors.Append(
-                            String.Format("Line: {0}\t Col: {1}\t Error: {2}\r\n",
-                                compileError.Line,
-                                compileError.Column,
-                                compileError.ErrorText));
+	                        $"Line: {compileError.Line}\t Col: {compileError.Column}\t Error: {compileError.ErrorText}\r\n");
                     }
 
                     throw new InvalidOperationException(compileErrors.ToString());

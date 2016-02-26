@@ -34,7 +34,7 @@ namespace Vertica.Integration.Azure.Infrastructure.ServiceBus
 
 		public AzureServiceBusClientFactory(IAzureServiceBusClientFactory<DefaultConnection> decoree)
 		{
-			if (decoree == null) throw new ArgumentNullException("decoree");
+			if (decoree == null) throw new ArgumentNullException(nameof(decoree));
 
 			_decoree = decoree;
 		}

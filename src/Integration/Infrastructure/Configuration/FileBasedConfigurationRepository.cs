@@ -34,7 +34,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
 
 		public Configuration Get(string id)
 		{
-			if (String.IsNullOrWhiteSpace(id)) throw new ArgumentException(@"Value cannot be null or empty.", "id");
+			if (string.IsNullOrWhiteSpace(id)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(id));
 
 			FileInfo configurationFile = ConfigurationFilePath(id);
 
@@ -46,7 +46,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
 
 		public Configuration Save(Configuration configuration)
 		{
-			if (configuration == null) throw new ArgumentNullException("configuration");
+			if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
 			FileInfo configurationFile = ConfigurationFilePath(configuration.Id);
 
@@ -58,7 +58,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
 
 		public void Delete(string id)
 		{
-			if (String.IsNullOrWhiteSpace(id)) throw new ArgumentException(@"Value cannot be null or empty.", "id");
+			if (string.IsNullOrWhiteSpace(id)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(id));
 
 			FileInfo configurationFile = ConfigurationFilePath(id);
 
@@ -75,7 +75,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
 
 		private FileInfo ConfigurationFilePath(string id)
 		{
-			return new FileInfo(Path.Combine(_baseDirectory, String.Format("{0}.json", id)));
+			return new FileInfo(Path.Combine(_baseDirectory, $"{id}.json"));
 		}
 
 		private Configuration Map(FileInfo configurationFile)
@@ -103,7 +103,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
 
 			string text = File.ReadAllText(filePath.FullName);
 
-			if (String.IsNullOrWhiteSpace(text))
+			if (string.IsNullOrWhiteSpace(text))
 				return null;
 
 			return MetaFile.FromJson(text, _logger);
@@ -111,7 +111,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
 
 		private static FileInfo MetaFilePath(FileInfo archiveFile)
 		{
-			return new FileInfo(Path.Combine(String.Format("{0}.meta", archiveFile.FullName)));
+			return new FileInfo(Path.Combine($"{archiveFile.FullName}.meta"));
 		}
 
 		private class MetaFile
@@ -137,8 +137,8 @@ namespace Vertica.Integration.Infrastructure.Configuration
 
 			public static MetaFile FromJson(string json, ILogger logger)
 			{
-				if (String.IsNullOrWhiteSpace(json)) throw new ArgumentException(@"Value cannot be null or empty.", "json");
-				if (logger == null) throw new ArgumentNullException("logger");
+				if (string.IsNullOrWhiteSpace(json)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(json));
+				if (logger == null) throw new ArgumentNullException(nameof(logger));
 
 				try
 				{

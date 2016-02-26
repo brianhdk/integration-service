@@ -17,7 +17,7 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage
 		internal DefaultConnection(Connection connection)
 			: base(connection.ConnectionString)
 		{
-			if (connection == null) throw new ArgumentNullException("connection");
+			if (connection == null) throw new ArgumentNullException(nameof(connection));
 
 			_connection = connection;
 		}

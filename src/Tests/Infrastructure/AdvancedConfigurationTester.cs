@@ -95,18 +95,12 @@ namespace Vertica.Integration.Tests.Infrastructure
 				Assert.That(_configurationRepository, Is.InstanceOf<TExpectedConfigurationRepositoryStub>());
 			}
 
-			public string Description
-			{
-				get { return "TBD"; }
-			}
+			public string Description => "TBD";
 		}
 
 		public class TextWriterStub : TextWriter
 		{
-			public override Encoding Encoding
-			{
-				get { return Encoding.Default; }
-			}
+			public override Encoding Encoding => Encoding.Default;
 		}
 
 		public class ArchiveServiceStub : IArchiveService

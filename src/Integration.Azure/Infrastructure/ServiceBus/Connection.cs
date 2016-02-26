@@ -10,7 +10,7 @@ namespace Vertica.Integration.Azure.Infrastructure.ServiceBus
 	{
         protected Connection(ConnectionString connectionString)
 		{
-            if (connectionString == null) throw new ArgumentNullException("connectionString");
+            if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
 
 			ConnectionString = connectionString;
 		}
@@ -19,16 +19,16 @@ namespace Vertica.Integration.Azure.Infrastructure.ServiceBus
 
 		protected internal virtual NamespaceManager CreateNamespaceManager(IKernel kernel)
 		{
-			if (kernel == null) throw new ArgumentNullException("kernel");
+			if (kernel == null) throw new ArgumentNullException(nameof(kernel));
 
 			return NamespaceManager.CreateFromConnectionString(ConnectionString);
 		}
 
 		protected internal virtual QueueClient CreateQueueClient(IKernel kernel, string queueName = null)
 		{
-			if (kernel == null) throw new ArgumentNullException("kernel");
+			if (kernel == null) throw new ArgumentNullException(nameof(kernel));
 
-			if (!String.IsNullOrWhiteSpace(queueName))
+			if (!string.IsNullOrWhiteSpace(queueName))
 				return QueueClient.CreateFromConnectionString(ConnectionString, queueName);
 
 			return QueueClient.CreateFromConnectionString(ConnectionString);

@@ -22,7 +22,7 @@ namespace Vertica.Integration.Logging.Elmah
         {
             ElmahConfiguration configuration = _configuration.GetElmahConfiguration();
 
-            if (String.IsNullOrWhiteSpace(configuration.ConnectionStringName))
+            if (string.IsNullOrWhiteSpace(configuration.ConnectionStringName))
                 return Execution.StepOver;
 
             workItem.Context(ConfigurationName, configuration);
@@ -52,13 +52,8 @@ namespace Vertica.Integration.Logging.Elmah
             }
         }
 
-        public override string Description
-        {
-            get
-            {
-                return String.Format("Deletes Elmah entries older than {0} days",
-                    _configuration.GetElmahConfiguration().CleanUpEntriesOlderThan.TotalDays);
-            }
-        }
+        public override string Description =>
+	        $"Deletes Elmah entries older than {_configuration.GetElmahConfiguration().CleanUpEntriesOlderThan.TotalDays} days"
+	        ;
     }
 }

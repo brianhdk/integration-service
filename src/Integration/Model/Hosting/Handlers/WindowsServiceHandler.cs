@@ -23,7 +23,7 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 	    
 	    public WindowsServiceHandler(IRuntimeSettings runtimeSettings, IWindowsFactory windows)
 	    {
-		    if (runtimeSettings == null) throw new ArgumentNullException("runtimeSettings");
+		    if (runtimeSettings == null) throw new ArgumentNullException(nameof(runtimeSettings));
 
 		    _runtimeSettings = runtimeSettings;
 			_windowsServices = windows.WindowsServices();
@@ -31,15 +31,15 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 
         public bool Handle(HostArguments args, HandleAsWindowsService service)
         {
-            if (args == null) throw new ArgumentNullException("args");
-	        if (service == null) throw new ArgumentNullException("service");
+            if (args == null) throw new ArgumentNullException(nameof(args));
+	        if (service == null) throw new ArgumentNullException(nameof(service));
 
 	        string action;
 			if (!args.CommandArgs.TryGetValue(Command, out action))
                 return false;
 
 	        Func<KeyValuePair<string, string>, bool> actionIs = command =>
-		        String.Equals(command.Value, action, StringComparison.OrdinalIgnoreCase);
+				string.Equals(command.Value, action, StringComparison.OrdinalIgnoreCase);
 
 			if (actionIs(InstallCommand))
 			{
@@ -67,7 +67,7 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 				string password;
 				args.CommandArgs.TryGetValue(ServiceAccountPasswordCommand, out password);
 
-				if (!String.IsNullOrWhiteSpace(username) && !String.IsNullOrWhiteSpace(password))
+				if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password))
 					configuration.WithCredentials(username, password);
 
 				_windowsServices.Install(configuration);
@@ -84,38 +84,31 @@ namespace Vertica.Integration.Model.Hosting.Handlers
             return true;
         }
 
-		private static string ExePath
-		{
-			get { return Assembly.GetEntryAssembly().Location; }
-		}
+		private static string ExePath => Assembly.GetEntryAssembly().Location;
 
 		private string GetServiceName(HandleAsWindowsService service)
 		{
-			if (service == null) throw new ArgumentNullException("service");
+			if (service == null) throw new ArgumentNullException(nameof(service));
 
-			return Regex.Replace(Prefix(service.Name), @"\W", String.Empty);
+			return Regex.Replace(Prefix(service.Name), @"\W", string.Empty);
 		}
 
 		private string Prefix(string value)
 		{
 			ApplicationEnvironment environment = _runtimeSettings.Environment;
 
-			return String.Format("Integration Service{0}: {1}",
-				environment != null
-					? String.Format(" [{0}]", environment)
-					: String.Empty,
-				value);
+			return $"Integration Service{(environment != null ? $" [{environment}]" : string.Empty)}: {value}";
 		}
 
 		private static string ServiceArgs(HostArguments args)
 		{
 			Arguments arguments = new Arguments(args.CommandArgs
 				.Where(x => !ReservedCommandArgs.Contains(x.Key, StringComparer.OrdinalIgnoreCase))
-				.Append(new KeyValuePair<string, string>("-service", String.Empty))
+				.Append(new KeyValuePair<string, string>("-service", string.Empty))
 				.Append(args.Args.ToArray())
 				.ToArray());
 
-			return String.Format("{0} {1}", args.Command, arguments);
+			return $"{args.Command} {arguments}";
 		}
 
 		private static IEnumerable<string> ReservedCommandArgs
@@ -130,14 +123,8 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 			}
 		}
 
-		public static KeyValuePair<string, string> InstallCommand
-		{
-			get { return new KeyValuePair<string, string>(Command, "install"); }
-		}
+		public static KeyValuePair<string, string> InstallCommand => new KeyValuePair<string, string>(Command, "install");
 
-		public static KeyValuePair<string, string> UninstallCommand
-		{
-			get { return new KeyValuePair<string, string>(Command, "uninstall"); }
-		}
-    }
+		public static KeyValuePair<string, string> UninstallCommand => new KeyValuePair<string, string>(Command, "uninstall");
+	}
 }

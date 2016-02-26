@@ -14,23 +14,20 @@ namespace Vertica.Integration
 
 		public InMemoryRuntimeSettings Set(string name, string value)
 		{
-			if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
+			if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
 
 			_values[name] = value;
 
 			return this;
 		}
 
-		public ApplicationEnvironment Environment
-		{
-			get { return this["Environment"]; }
-		}
+		public ApplicationEnvironment Environment => this["Environment"];
 
 		public string this[string name]
 		{
 			get
 			{
-				if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
+				if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
 
 				string value;
 				_values.TryGetValue(name, out value);

@@ -33,7 +33,7 @@ namespace Vertica.Integration.RavenDB.Infrastructure.Castle.Windsor
 
 		public RavenDbInstaller(TConnection connection)
 		{
-			if (connection == null) throw new ArgumentNullException("connection");
+			if (connection == null) throw new ArgumentNullException(nameof(connection));
 
 			_connection = connection;
 		}

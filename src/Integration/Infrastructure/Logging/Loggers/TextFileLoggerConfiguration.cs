@@ -24,14 +24,14 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
 
 		internal FileInfo GetFilePath(TaskLog log, string baseDirectory)
         {
-            if (log == null) throw new ArgumentNullException("log");
+            if (log == null) throw new ArgumentNullException(nameof(log));
 
             return Combine(baseDirectory, log.TimeStamp, "{0}", log.Name);
         }
 
 		internal FileInfo GetFilePath(ErrorLog log, string baseDirectory)
         {
-            if (log == null) throw new ArgumentNullException("log");
+            if (log == null) throw new ArgumentNullException(nameof(log));
 
             return Combine(baseDirectory, log.TimeStamp, "{0}-{1}", log.Severity, log.Target);
         }
@@ -41,24 +41,22 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
             // Sleep because we use timestamp part of our filename.
             Thread.Sleep(1);
 
-            string fileName = String.Format("{0:yyyyMMddHHmmss-fff}-{1}.txt",
-                timestamp.LocalDateTime,
-                String.Format(postFixFormat, args));
+            string fileName = $"{timestamp.LocalDateTime:yyyyMMddHHmmss-fff}-{string.Format(postFixFormat, args)}.txt";
 
             string subdirectory = _organizer != null ? _organizer.SubdirectoryName(timestamp) : null;
 
-            return new FileInfo(Path.Combine(baseDirectory, subdirectory ?? String.Empty, fileName));
+            return new FileInfo(Path.Combine(baseDirectory, subdirectory ?? string.Empty, fileName));
         }
 
         public class BasedOn
         {
-            public Organizer Daily { get { return new DailyOrganizer(); } }
-            public Organizer Weekly { get { return new WeeklyOrganizer(); } }
-            public Organizer Monthly { get { return new MonthlyOrganizer(); } }
+            public Organizer Daily => new DailyOrganizer();
+	        public Organizer Weekly => new WeeklyOrganizer();
+	        public Organizer Monthly => new MonthlyOrganizer();
 
-            public Organizer Custom(Organizer organizer)
+	        public Organizer Custom(Organizer organizer)
             {
-                if (organizer == null) throw new ArgumentNullException("organizer");
+                if (organizer == null) throw new ArgumentNullException(nameof(organizer));
 
                 return organizer;
             }
@@ -86,7 +84,7 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
                     CalendarWeekRule.FirstFourDayWeek,
                     DayOfWeek.Monday);
 
-                return String.Format("{0:yyyy}-{1:00}", date.LocalDateTime, weekNumber);
+                return $"{date.LocalDateTime:yyyy}-{weekNumber:00}";
             }
         }
 

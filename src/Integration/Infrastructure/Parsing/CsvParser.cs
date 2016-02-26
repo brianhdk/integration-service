@@ -10,7 +10,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
 	{
         public IEnumerable<CsvRow> Parse(Stream stream, Action<CsvConfiguration> csv = null)
 		{
-	        if (stream == null) throw new ArgumentNullException("stream");
+	        if (stream == null) throw new ArgumentNullException(nameof(stream));
 
 			var configuration = new CsvConfiguration();
 
@@ -54,10 +54,8 @@ namespace Vertica.Integration.Infrastructure.Parsing
 					if (previousLine != null)
 					{
 						// Concat the last column previousLine with text from the first column in current line
-						previousLine[previousLine.Length - 1] = String.Format("{0}{1}{2}", 
-							previousLine[previousLine.Length - 1], 
-							Environment.NewLine, 
-							currentLine[0]);
+						previousLine[previousLine.Length - 1] =
+							$"{previousLine[previousLine.Length - 1]}{Environment.NewLine}{currentLine[0]}";
 
 						currentLine = previousLine.Concat(currentLine.Skip(1)).ToArray();
 					}

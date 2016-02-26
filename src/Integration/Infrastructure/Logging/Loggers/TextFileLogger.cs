@@ -23,11 +23,11 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
         {
             FileInfo filePath = EnsureFilePath(log);
 
-            File.WriteAllText(filePath.FullName, String.Join(Environment.NewLine,
+            File.WriteAllText(filePath.FullName, string.Join(Environment.NewLine,
                 log.MachineName,
                 log.IdentityName,
                 log.CommandLine,
-                String.Empty,
+				string.Empty,
                 "---- BEGIN LOG",
                 Line(log)));
 
@@ -56,18 +56,18 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
         {
             FileInfo filePath = EnsureFilePath(log);
 
-            File.WriteAllText(filePath.FullName, String.Join(Environment.NewLine,
+            File.WriteAllText(filePath.FullName, string.Join(Environment.NewLine,
                 log.MachineName,
                 log.IdentityName,
                 log.CommandLine,
                 log.Severity,
                 log.Target,
                 log.TimeStamp,
-                String.Empty,
+				string.Empty,
                 "---- BEGIN LOG",
-                String.Empty,
+				string.Empty,
                 log.Message,
-                String.Empty,
+				string.Empty,
                 log.FormattedMessage));
 
             return filePath.Name;
@@ -113,13 +113,13 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
 
         private FileInfo EnsureFilePath(FileInfo filePath)
         {
-            if (filePath == null) throw new ArgumentNullException("filePath");
+            if (filePath == null) throw new ArgumentNullException(nameof(filePath));
 
             DirectoryInfo directory = filePath.Directory;
 
             if (directory == null)
                 throw new InvalidOperationException(
-                    String.Format("No directory specified for path '{0}'.", filePath.FullName));
+	                $"No directory specified for path '{filePath.FullName}'.");
 
             if (!directory.Exists)
                 directory.Create();
@@ -129,15 +129,16 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
 
         private string Line(LogEntry log, string text = null, params object[] args)
         {
-            if (!String.IsNullOrWhiteSpace(text))
-                text = String.Concat(" ", String.Format(text, args));
+            if (!string.IsNullOrWhiteSpace(text))
+                text = string.Concat(" ", string.Format(text, args));
 
-            return Line(log.TimeStamp, String.Format("[{0}]{1}", log, text));
+            return Line(log.TimeStamp, $"[{log}]{text}");
         }
 
         private string Line(DateTimeOffset timestamp, string text, params object[] args)
         {
-            return String.Concat(Environment.NewLine, String.Format("[{0:HH:mm:ss}] {1}", timestamp.LocalDateTime, String.Format(text, args)));
+            return string.Concat(Environment.NewLine,
+	            $"[{timestamp.LocalDateTime:HH:mm:ss}] {string.Format(text, args)}");
         }
 
         private string EndLine(LogEntry log)

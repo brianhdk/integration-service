@@ -98,10 +98,7 @@ namespace Vertica.Integration.Tests.Model
 
 	        public bool EndCalled { get; set; }
 
-	        public override string Description
-	        {
-	            get { return String.Empty; }
-	        }
+	        public override string Description => string.Empty;
 	    }
 
 	    public class SomeWorkItem

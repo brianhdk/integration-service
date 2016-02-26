@@ -16,7 +16,7 @@ namespace Vertica.Integration.Model
 
         internal TasksConfiguration(ApplicationConfiguration application)
         {
-            if (application == null) throw new ArgumentNullException("application");
+            if (application == null) throw new ArgumentNullException(nameof(application));
 
 			Application = application;
 
@@ -61,8 +61,7 @@ namespace Vertica.Integration.Model
 
             if (_complexTasks.Contains(configuration))
                 throw new InvalidOperationException(
-                    String.Format(@"Task '{0}' has already been added.", 
-                        configuration.Task.FullName));
+	                $@"Task '{configuration.Task.FullName}' has already been added.");
 
             _complexTasks.Add(configuration);
 

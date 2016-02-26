@@ -16,7 +16,7 @@ namespace Vertica.Integration.Model
         {
             get
             {
-                if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
+                if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
 
                 object value;
                 _context.TryGetValue(name, out value);
@@ -24,7 +24,7 @@ namespace Vertica.Integration.Model
             }
             set
             {
-                if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
+                if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
 
                 _context[name] = value;
             }

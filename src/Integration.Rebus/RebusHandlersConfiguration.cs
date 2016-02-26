@@ -15,7 +15,7 @@ namespace Vertica.Integration.Rebus
 
 		internal RebusHandlersConfiguration(ApplicationConfiguration application)
 		{
-			if (application == null) throw new ArgumentNullException("application");
+			if (application == null) throw new ArgumentNullException(nameof(application));
 
 			Application = application;
 

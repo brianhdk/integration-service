@@ -38,7 +38,7 @@ namespace Vertica.Integration.Infrastructure.Extensions
 
             int[] indents = { 0 };
 
-            Func<string, string> makeIndent = msg => String.Concat(new string('-', indents[0] * 3), " ", msg).Trim();
+            Func<string, string> makeIndent = msg => string.Concat(new string('-', indents[0] * 3), " ", msg).Trim();
 
             while (exception != null)
             {

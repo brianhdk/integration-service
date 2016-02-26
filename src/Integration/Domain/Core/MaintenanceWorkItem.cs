@@ -7,7 +7,7 @@ namespace Vertica.Integration.Domain.Core
 	{
 	    public MaintenanceWorkItem(MaintenanceConfiguration configuration)
 	    {
-	        if (configuration == null) throw new ArgumentNullException("configuration");
+	        if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
 	        Configuration = configuration;
 	    }

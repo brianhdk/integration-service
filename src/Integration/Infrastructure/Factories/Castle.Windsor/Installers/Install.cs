@@ -5,10 +5,7 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 {
 	public static class Install
 	{
-		public static ConventionInstaller ByConvention
-		{
-			get { return new ConventionInstaller(); }
-		}
+		public static ConventionInstaller ByConvention => new ConventionInstaller();
 
 		public static CollectionInstaller<TService> Collection<TService>()
 		{

@@ -24,7 +24,7 @@ namespace Vertica.Integration.Logging.Elmah
         {
             ElmahConfiguration configuration = _configuration.GetElmahConfiguration();
 
-            if (String.IsNullOrWhiteSpace(configuration.ConnectionStringName))
+            if (string.IsNullOrWhiteSpace(configuration.ConnectionStringName))
                 return Execution.StepOver;
 
             workItem.Context(ConfigurationName, configuration);
@@ -78,8 +78,8 @@ FOR XML AUTO";
 
                             workItem.Add(
                                 error.Created,
-                                String.Join(", ", new[] {configuration.LogName, error.Source}
-                                    .Where(x => !String.IsNullOrWhiteSpace(x))),
+								string.Join(", ", new[] {configuration.LogName, error.Source}
+                                    .Where(x => !string.IsNullOrWhiteSpace(x))),
                                 error.ToString());
                         }
 
@@ -90,7 +90,8 @@ FOR XML AUTO";
                     }
                     catch (SqlException ex)
                     {
-                        throw new InvalidOperationException(String.Format(@"{0}
+                        throw new InvalidOperationException(
+	                        $@"{ex.Message}
 
 ---
 You need to locate the row causing this error. The easiest way is to query those rows that were part of the initial selection. 
@@ -99,13 +100,15 @@ Find out where errors like that are being generated and make sure to encode thes
 
 CommandText was: 
 
-{1}", ex.Message, command.CommandText), ex);                        
+{command
+		                        .CommandText}", ex);                        
                     }
                     catch (XmlException ex)
                     {
-                        throw new InvalidOperationException(String.Format(@"Unable to parse XML. Error:
+                        throw new InvalidOperationException(
+	                        $@"Unable to parse XML. Error:
 
-{0}
+{ex.Message}
 
 ---
 You need to locate the row causing this error. The easiest way is to query those rows that were part of the initial selection. 
@@ -114,15 +117,13 @@ Find out where errors like that are being generated and make sure to encode thes
 
 CommandText was: 
 
-{1}", ex.Message, command.CommandText), ex);
+{command
+		                        .CommandText}", ex);
                     }
                 }
             }
         }
 
-        public override string Description
-        {
-            get { return "Exports errors from Elmah log."; }
-        }
+        public override string Description => "Exports errors from Elmah log.";
     }
 }

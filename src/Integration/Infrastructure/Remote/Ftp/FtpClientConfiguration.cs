@@ -31,7 +31,7 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
 
         private void AssertPath()
         {
-            _request(String.Empty);
+            _request(string.Empty);
         }
 
         public FtpClientConfiguration Credentials(string username, string password)
@@ -53,7 +53,7 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
 
         private static string BuildPath(string basePath, string appendPath)
         {
-            return String.Concat(basePath, appendPath);
+            return string.Concat(basePath, appendPath);
         }
     }
 }

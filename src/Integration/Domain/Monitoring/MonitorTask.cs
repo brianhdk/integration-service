@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Vertica.Integration.Infrastructure.Configuration;
@@ -23,12 +22,9 @@ namespace Vertica.Integration.Domain.Monitoring
 		    _runtimeSettings = runtimeSettings;
 		}
 
-		public override string Description
-		{
-			get { return "Monitors the solution and sends out e-mails if there is any errors."; }
-		}
+		public override string Description => "Monitors the solution and sends out e-mails if there is any errors.";
 
-        public override MonitorWorkItem Start(ITaskExecutionContext context)
+	    public override MonitorWorkItem Start(ITaskExecutionContext context)
 		{
 		    MonitorConfiguration configuration = _configuration.Get<MonitorConfiguration>();
 		    configuration.Assert();
@@ -43,7 +39,7 @@ namespace Vertica.Integration.Domain.Monitoring
 		{
             Target[] unconfiguredTargets;
             if (workItem.HasEntriesForUnconfiguredTargets(out unconfiguredTargets))
-                context.Log.Error(Target.Service, "Create missing configuration for the following targets: [{0}].", String.Join(", ", unconfiguredTargets.Select(x => x.Name)));
+                context.Log.Error(Target.Service, "Create missing configuration for the following targets: [{0}].", string.Join(", ", unconfiguredTargets.Select(x => x.Name)));
 
 		    foreach (MonitorTarget target in workItem.Configuration.Targets ?? new MonitorTarget[0])
 		        SendTo(target, workItem, context.Log, workItem.Configuration.SubjectPrefix);
@@ -73,7 +69,7 @@ namespace Vertica.Integration.Domain.Monitoring
 		        if (environment != null)
 			        subject.AppendFormat("[{0}] ", environment);
 
-	            if (!String.IsNullOrWhiteSpace(subjectPrefix))
+	            if (!string.IsNullOrWhiteSpace(subjectPrefix))
 	                subject.AppendFormat("{0}: ", subjectPrefix);
 
 	            subject.AppendFormat("Monitoring ({0})", workItem.CheckRange);

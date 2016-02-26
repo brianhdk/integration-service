@@ -14,7 +14,7 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage
 
 		internal AzureBlobStorageConfiguration(ApplicationConfiguration application)
         {
-            if (application == null) throw new ArgumentNullException("application");
+            if (application == null) throw new ArgumentNullException(nameof(application));
 
 			Application = application;
 
@@ -25,7 +25,7 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage
 
 		public AzureBlobStorageConfiguration DefaultConnection(ConnectionString connectionString)
 		{
-			if (connectionString == null) throw new ArgumentNullException("connectionString");
+			if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
 
 			_defaultConnection = new AzureBlobStorageInstaller(new DefaultConnection(connectionString));
 
@@ -34,7 +34,7 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage
 
 		public AzureBlobStorageConfiguration DefaultConnection(Connection connection)
 		{
-			if (connection == null) throw new ArgumentNullException("connection");
+			if (connection == null) throw new ArgumentNullException(nameof(connection));
 
 			_defaultConnection = new AzureBlobStorageInstaller(new DefaultConnection(connection));
 
@@ -44,7 +44,7 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage
 		public AzureBlobStorageConfiguration AddConnection<TConnection>(TConnection connection)
 			where TConnection : Connection
 		{
-			if (connection == null) throw new ArgumentNullException("connection");
+			if (connection == null) throw new ArgumentNullException(nameof(connection));
 
 			_installers.Add(new AzureBlobStorageInstaller<TConnection>(connection));
 
@@ -53,8 +53,8 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage
 
 		public AzureBlobStorageConfiguration ReplaceArchiver(ConnectionString connectionString, string containerName = "archives")
         {
-            if (connectionString == null) throw new ArgumentNullException("connectionString");
-            if (String.IsNullOrWhiteSpace(containerName)) throw new ArgumentException(@"Value cannot be null or empty.", "containerName");
+            if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
+            if (string.IsNullOrWhiteSpace(containerName)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(containerName));
 
             _installers.Add(new AzureArchiveInstaller(connectionString, containerName));
 
@@ -64,8 +64,8 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage
 		// TODO: Implement this
 		internal AzureBlobStorageConfiguration ReplaceFileSystem(ConnectionString connectionString, string containerName = "filesystem")
         {
-            if (connectionString == null) throw new ArgumentNullException("connectionString");
-            if (String.IsNullOrWhiteSpace(containerName)) throw new ArgumentException(@"Value cannot be null or empty.", "containerName");
+            if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
+            if (string.IsNullOrWhiteSpace(containerName)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(containerName));
 
             _installers.Add(new AzureFileSystemInstaller(connectionString, containerName));
 

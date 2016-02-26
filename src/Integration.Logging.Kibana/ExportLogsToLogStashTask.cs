@@ -18,12 +18,9 @@ namespace Vertica.Integration.Logging.Kibana
             _factory = factory;
         }
 
-        public override string Description
-        {
-            get { return "Exports log files to LogStash."; }
-        }
+        public override string Description => "Exports log files to LogStash.";
 
-        public override ExportLogsToLogStashWorkItem Start(ITaskExecutionContext context)
+	    public override ExportLogsToLogStashWorkItem Start(ITaskExecutionContext context)
         {
             CloudBlobClient client = _factory.Create();
 

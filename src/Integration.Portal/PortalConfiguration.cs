@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
 
 namespace Vertica.Integration.Portal
@@ -16,7 +15,7 @@ namespace Vertica.Integration.Portal
 
         private static string GetBinFolder()
         {
-            return new FileInfo(typeof(PortalConfiguration).Assembly.Location).DirectoryName ?? String.Empty;
+            return new FileInfo(typeof(PortalConfiguration).Assembly.Location).DirectoryName ?? string.Empty;
         }
 
         private static string GetVersion()
@@ -28,7 +27,7 @@ namespace Vertica.Integration.Portal
 
         private static string FindFolder()
         {
-            string folder = Path.Combine(BinFolder, String.Format("{0}-{1}", Name, Version));
+            string folder = Path.Combine(BinFolder, $"{Name}-{Version}");
 
 #if DEBUG
             string developmentFolder = Path.Combine(folder, @"..\..\..\..\Integration.Portal");
@@ -42,7 +41,7 @@ namespace Vertica.Integration.Portal
 
         private static string GetZipFile()
         {
-            return Path.Combine(BinFolder, String.Format("{0}.zip", Name));
+            return Path.Combine(BinFolder, $"{Name}.zip");
         }
     }
 }

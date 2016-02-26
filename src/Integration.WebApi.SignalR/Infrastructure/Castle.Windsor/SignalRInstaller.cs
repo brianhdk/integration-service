@@ -64,10 +64,7 @@ namespace Vertica.Integration.WebApi.SignalR.Infrastructure.Castle.Windsor
 				_hubs = hubs;
 			}
 
-			public Type[] Hubs
-			{
-				get { return _hubs; }
-			}
+			public Type[] Hubs => _hubs;
 		}
 	}
 }

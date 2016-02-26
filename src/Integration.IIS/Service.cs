@@ -8,7 +8,7 @@ namespace Vertica.Integration.IIS
     {
         public static ApplicationConfiguration UseIIS(this ApplicationConfiguration builder)
         {
-            if (builder == null) throw new ArgumentNullException("builder");
+            if (builder == null) throw new ArgumentNullException(nameof(builder));
 
 			// undone - should introduce an IISConfiguration object and use same strategy as other extensions.
             builder.AddCustomInstallers(Install.ByConvention.AddFromAssemblyOfThis<IServerManagerFactory>());

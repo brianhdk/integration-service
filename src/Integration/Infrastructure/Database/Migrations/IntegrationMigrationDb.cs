@@ -15,7 +15,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
 		public MigrationDb CopyTo(Type type, string identifyingName)
 		{
-			if (type == null) throw new ArgumentNullException("type");
+			if (type == null) throw new ArgumentNullException(nameof(type));
 
 			return new MigrationDb(DatabaseServer, ConnectionString, type.Assembly, type.Namespace, identifyingName);
 		}

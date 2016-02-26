@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using Vertica.Integration.Infrastructure.Archiving;
-using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Domain.Core
@@ -66,7 +64,7 @@ namespace Vertica.Integration.Domain.Core
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception(String.Format("Unable to delete file '{0}'.", fileToDelete.FullName), ex);
+                        throw new Exception($"Unable to delete file '{fileToDelete.FullName}'.", ex);
                     }
                 }
 
@@ -78,15 +76,12 @@ namespace Vertica.Integration.Domain.Core
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception(String.Format("Unable to delete folder '{0}'.", folderToDelete.FullName), ex);
+                        throw new Exception($"Unable to delete folder '{folderToDelete.FullName}'.", ex);
                     }
                 }
             }
         }
 
-        public override string Description
-        {
-            get { return "Archives files/folders based on configuration (MaintenanceConfiguration)"; }
-        }
+        public override string Description => "Archives files/folders based on configuration (MaintenanceConfiguration)";
     }
 }

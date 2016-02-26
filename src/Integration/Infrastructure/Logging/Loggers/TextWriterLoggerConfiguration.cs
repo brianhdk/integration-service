@@ -21,8 +21,8 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
 
 	    internal void Write(TextWriter textWriter, ErrorLog log)
 	    {
-		    if (textWriter == null) throw new ArgumentNullException("textWriter");
-		    if (log == null) throw new ArgumentNullException("log");
+		    if (textWriter == null) throw new ArgumentNullException(nameof(textWriter));
+		    if (log == null) throw new ArgumentNullException(nameof(log));
 
 		    if (!_detailed)
 		    {
@@ -30,18 +30,18 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
 			    return;
 		    }
 
-		    textWriter.WriteLine(String.Join(Environment.NewLine,
+		    textWriter.WriteLine(string.Join(Environment.NewLine,
 				log.MachineName,
 				log.IdentityName,
 				log.CommandLine,
 				log.Severity,
 				log.Target,
 				log.TimeStamp,
-				String.Empty,
+				string.Empty,
 				"---- BEGIN LOG",
-				String.Empty,
+				string.Empty,
 				log.Message,
-				String.Empty,
+				string.Empty,
 				log.FormattedMessage));
 	    }
 

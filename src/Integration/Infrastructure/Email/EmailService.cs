@@ -7,8 +7,8 @@ namespace Vertica.Integration.Infrastructure.Email
 	{
 		public void Send(EmailTemplate template, params string[] recipients)
 		{
-			if (template == null) throw new ArgumentNullException("template");
-		    if (recipients == null) throw new ArgumentNullException("recipients");
+			if (template == null) throw new ArgumentNullException(nameof(template));
+		    if (recipients == null) throw new ArgumentNullException(nameof(recipients));
 
 		    using (var message = new MailMessage())
 			using (var smtpClient = new SmtpClient())
@@ -22,7 +22,7 @@ namespace Vertica.Integration.Infrastructure.Email
 
 				foreach (string recipient in recipients)
 				{
-					if (!String.IsNullOrWhiteSpace(recipient))
+					if (!string.IsNullOrWhiteSpace(recipient))
 						message.To.Add(recipient.Trim());
 				}
 

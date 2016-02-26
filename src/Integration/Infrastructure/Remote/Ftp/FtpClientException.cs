@@ -11,7 +11,8 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
         }
 
         public FtpClientException(string method, string currentPath, Exception inner)
-            : this(String.Format("Method '{0}' failed. Path: '{1}'. Message: {2}. See inner exception for more details.", method, currentPath, inner.Message), inner)
+            : this(
+	            $"Method '{method}' failed. Path: '{currentPath}'. Message: {inner.Message}. See inner exception for more details.", inner)
         {
         }
 

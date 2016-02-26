@@ -21,7 +21,7 @@ namespace Vertica.Integration.Infrastructure
 
         private async void Repeat(Action action)
         {
-            if (action == null) throw new ArgumentNullException("action");
+            if (action == null) throw new ArgumentNullException(nameof(action));
 
             int iterations = 0;
 

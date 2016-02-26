@@ -15,7 +15,7 @@ namespace Vertica.Integration
 
 		public T Register<T>(Func<T> factory) where T : class
 		{
-			if (factory == null) throw new ArgumentNullException("factory");
+			if (factory == null) throw new ArgumentNullException(nameof(factory));
 
 			T value;
 			object cached;

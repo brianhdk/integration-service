@@ -21,7 +21,7 @@ namespace Vertica.Integration.SQLite
 
 		public static ConnectionString FromCurrentDirectory(string filePath)
 		{
-			if (String.IsNullOrWhiteSpace(filePath)) throw new ArgumentException(@"Value cannot be null or empty.", "filePath");
+			if (string.IsNullOrWhiteSpace(filePath)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(filePath));
 
 			filePath = Path.Combine(Environment.CurrentDirectory, filePath);
 
@@ -30,7 +30,7 @@ namespace Vertica.Integration.SQLite
 			if (directoryInfo != null && !directoryInfo.Exists)
 				directoryInfo.Create();
 
-			return ConnectionString.FromText(String.Format("Data Source={0}", filePath));
+			return ConnectionString.FromText($"Data Source={filePath}");
 		}
 	}
 }

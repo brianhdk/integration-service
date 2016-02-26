@@ -8,8 +8,8 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 	{
 		public HandleAsWindowsService(string name, string displayName, string description, Func<IDisposable> onStartFactory = null)
 		{
-			if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
-			if (String.IsNullOrWhiteSpace(displayName)) throw new ArgumentException(@"Value cannot be null or empty.", "displayName");
+			if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
+			if (string.IsNullOrWhiteSpace(displayName)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(displayName));
 
 			Name = name;
 			DisplayName = displayName;

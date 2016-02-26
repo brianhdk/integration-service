@@ -20,7 +20,7 @@ namespace Vertica.Integration.Model
 
 		public TaskExecutionResult Execute(ITask task, Arguments arguments = null)
 		{
-			if (task == null) throw new ArgumentNullException("task");
+			if (task == null) throw new ArgumentNullException(nameof(task));
 
 			// latebound because we don't know the exact generic type at compile time
 			return ExecuteInternal((dynamic) task, arguments ?? Arguments.Empty);
@@ -28,14 +28,14 @@ namespace Vertica.Integration.Model
 
 		private TaskExecutionResult ExecuteInternal<TWorkItem>(ITask<TWorkItem> task, Arguments arguments)
 		{
-			if (task == null) throw new ArgumentNullException("task");
-			if (arguments == null) throw new ArgumentNullException("arguments");
+			if (task == null) throw new ArgumentNullException(nameof(task));
+			if (arguments == null) throw new ArgumentNullException(nameof(arguments));
 
 			var output = new List<string>();
 
 			Action<string> outputter = message =>
 			{
-				message = String.Format("[{0:HH:mm:ss}] {1}", Time.Now, message);
+				message = $"[{Time.Now:HH:mm:ss}] {message}";
 
 				_outputter.WriteLine(message);
 				output.Add(message);
@@ -80,7 +80,7 @@ namespace Vertica.Integration.Model
 							taskLog.ErrorLog = errorLog;
 							stepLog.ErrorLog = errorLog;
 
-							throw new TaskExecutionFailedException(String.Format("Step '{0}' failed.", stepLog.Name), ex);
+							throw new TaskExecutionFailedException($"Step '{stepLog.Name}' failed.", ex);
 						}
 					}
 				}

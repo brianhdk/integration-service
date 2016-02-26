@@ -9,7 +9,7 @@ namespace Vertica.Integration.Model
     {
         protected TaskConfiguration(Type task)
         {
-            if (task == null) throw new ArgumentNullException("task");
+            if (task == null) throw new ArgumentNullException(nameof(task));
 
             Task = task;
             Steps = new List<Type>();

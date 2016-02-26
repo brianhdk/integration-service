@@ -19,8 +19,9 @@ namespace Vertica.Integration.Portal.Controllers
 
         public HttpResponseMessage Get(int count)
         {
-            string sql = string.Format(@"
-SELECT TOP {0}
+            string sql =
+	            $@"
+SELECT TOP {count}
 	[Id],
 	[TaskName],
 	[StepName],
@@ -28,7 +29,7 @@ SELECT TOP {0}
 	[TimeStamp]
 FROM [TaskLog]
 WHERE Type = 'T'
-ORDER BY timestamp DESC", count);
+ORDER BY timestamp DESC";
 
             IEnumerable<TaskLogModel> tasks;
 

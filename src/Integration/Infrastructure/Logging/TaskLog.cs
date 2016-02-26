@@ -19,8 +19,8 @@ namespace Vertica.Integration.Infrastructure.Logging
 
 	    internal TaskLog(ITask task, Action<LogEntry> persist, Output output)
 		{
-		    if (persist == null) throw new ArgumentNullException("persist");
-		    if (output == null) throw new ArgumentNullException("output");
+		    if (persist == null) throw new ArgumentNullException(nameof(persist));
+		    if (output == null) throw new ArgumentNullException(nameof(output));
 
 		    _persist = persist;
             _output = output;
@@ -44,21 +44,15 @@ namespace Vertica.Integration.Infrastructure.Logging
         public string IdentityName { get; private set; }
         public string CommandLine { get; private set; }
 
-		public ReadOnlyCollection<StepLog> Steps
-		{
-			get { return _steps.EmptyIfNull().Any() ? new ReadOnlyCollection<StepLog>(_steps): new ReadOnlyCollection<StepLog>(new List<StepLog>()); }
-		}
+		public ReadOnlyCollection<StepLog> Steps => _steps.EmptyIfNull().Any() ? new ReadOnlyCollection<StepLog>(_steps): new ReadOnlyCollection<StepLog>(new List<StepLog>());
 
-		public ReadOnlyCollection<MessageLog> Messages
-		{
-			get { return _messages.EmptyIfNull().Any() ? new ReadOnlyCollection<MessageLog>(_messages) : new ReadOnlyCollection<MessageLog>(new List<MessageLog>()); }
-		}
+	    public ReadOnlyCollection<MessageLog> Messages => _messages.EmptyIfNull().Any() ? new ReadOnlyCollection<MessageLog>(_messages) : new ReadOnlyCollection<MessageLog>(new List<MessageLog>());
 
-		public ErrorLog ErrorLog { get; internal set; }
+	    public ErrorLog ErrorLog { get; internal set; }
 
 		public StepLog LogStep(IStep step)
 		{
-		    if (step == null) throw new ArgumentNullException("step");
+		    if (step == null) throw new ArgumentNullException(nameof(step));
 
 		    var log = new StepLog(this, step, _output);
 
@@ -77,7 +71,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 
 		internal protected void Persist(LogEntry logEntry)
 		{
-			if (logEntry == null) throw new ArgumentNullException("logEntry");
+			if (logEntry == null) throw new ArgumentNullException(nameof(logEntry));
 
 			_persist(logEntry);
 		}

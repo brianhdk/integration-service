@@ -17,7 +17,7 @@ namespace Vertica.Integration.Experiments.Azure
 	{
 		public static ApplicationConfiguration TestAzure(this ApplicationConfiguration application)
 		{
-			if (application == null) throw new ArgumentNullException("application");
+			if (application == null) throw new ArgumentNullException(nameof(application));
 
 			application
 				.Tasks(tasks => tasks
@@ -67,10 +67,7 @@ namespace Vertica.Integration.Experiments.Azure
 			}
 		}
 
-		public override string Description
-		{
-			get { return "TBD"; }
-		}
+		public override string Description => "TBD";
 	}
 
 	public class AzureServiceBusTesterTask : Task
@@ -95,10 +92,7 @@ namespace Vertica.Integration.Experiments.Azure
 			client.Send(new BrokeredMessage(new[] { "Test", "Test2", "Test3"}) { ReplyTo = "MyQueue" });
 		}
 
-		public override string Description
-		{
-			get { return "TBD"; }
-		}
+		public override string Description => "TBD";
 	}
 
 	public class AzureServiceBusHost : IHost
@@ -114,7 +108,7 @@ namespace Vertica.Integration.Experiments.Azure
 
 		public bool CanHandle(HostArguments args)
 		{
-			return String.Equals(this.Name(), args.Command, StringComparison.OrdinalIgnoreCase);
+			return string.Equals(this.Name(), args.Command, StringComparison.OrdinalIgnoreCase);
 		}
 
 		public void Handle(HostArguments args)
@@ -172,9 +166,6 @@ namespace Vertica.Integration.Experiments.Azure
 			System.Threading.Tasks.Task.WaitAll(sender, receiver);
 		}
 
-		public string Description
-		{
-			get { return "TBD"; }
-		}
+		public string Description => "TBD";
 	}
 }

@@ -9,9 +9,9 @@ namespace Vertica.Integration.Infrastructure.Extensions
 	{
 		public static string ReadLine(this TextWriter outputter, string message = "Enter value: ")
 		{
-			if (outputter == null) throw new ArgumentNullException("outputter");
+			if (outputter == null) throw new ArgumentNullException(nameof(outputter));
 
-			if (!String.IsNullOrWhiteSpace(message))
+			if (!string.IsNullOrWhiteSpace(message))
 				outputter.Write(message);
 
 			if (!Environment.UserInteractive)
@@ -29,9 +29,9 @@ namespace Vertica.Integration.Infrastructure.Extensions
 		/// <returns>the string the user typed in </returns>
 		public static string ReadPassword(this TextWriter outputter, string message = "Enter password: ", char mask = '*')
 		{
-			if (outputter == null) throw new ArgumentNullException("outputter");
+			if (outputter == null) throw new ArgumentNullException(nameof(outputter));
 
-			if (!String.IsNullOrWhiteSpace(message))
+			if (!string.IsNullOrWhiteSpace(message))
 				outputter.Write(message);
 
 			if (!Environment.UserInteractive)
@@ -77,8 +77,8 @@ namespace Vertica.Integration.Infrastructure.Extensions
 
 		public static void RepeatUntilEscapeKeyIsHit(this TextWriter outputter, Action repeat)
 		{
-			if (outputter == null) throw new ArgumentNullException("outputter");
-			if (repeat == null) throw new ArgumentNullException("repeat");
+			if (outputter == null) throw new ArgumentNullException(nameof(outputter));
+			if (repeat == null) throw new ArgumentNullException(nameof(repeat));
 
 			do
 			{
@@ -92,11 +92,11 @@ namespace Vertica.Integration.Infrastructure.Extensions
 
 		public static void WaitUntilEscapeKeyIsHit(this TextWriter outputter, string message = "Press ESCAPE to continue...")
 		{
-			if (outputter == null) throw new ArgumentNullException("outputter");
+			if (outputter == null) throw new ArgumentNullException(nameof(outputter));
 
 			do
 			{
-				if (!String.IsNullOrWhiteSpace(message))
+				if (!string.IsNullOrWhiteSpace(message))
 				{
 					outputter.WriteLine(message);
 					outputter.WriteLine();					

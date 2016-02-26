@@ -8,7 +8,7 @@ namespace Vertica.Integration.Domain.Core
     {
         public static TasksConfiguration MaintenanceTask(this TasksConfiguration configuration, Action<TaskConfiguration<MaintenanceWorkItem>> task = null)
         {
-            if (configuration == null) throw new ArgumentNullException("configuration");
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
             TaskConfiguration<MaintenanceWorkItem> taskConfiguration = null;
 

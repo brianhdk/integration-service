@@ -10,7 +10,7 @@ namespace Vertica.Integration.Infrastructure.Database
 
         internal DatabaseConfiguration(ApplicationConfiguration application)
         {
-            if (application == null) throw new ArgumentNullException("application");
+            if (application == null) throw new ArgumentNullException(nameof(application));
 
 	        Application = application;
         }
@@ -27,7 +27,7 @@ namespace Vertica.Integration.Infrastructure.Database
 
 	    public DatabaseConfiguration IntegrationDb(ConnectionString connectionString)
 	    {
-		    if (connectionString == null) throw new ArgumentNullException("connectionString");
+		    if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
 
 		    _defaultConnection = new DefaultConnection(connectionString);
 
@@ -36,7 +36,7 @@ namespace Vertica.Integration.Infrastructure.Database
 
 	    public DatabaseConfiguration IntegrationDb(Connection connection)
 	    {
-		    if (connection == null) throw new ArgumentNullException("connection");
+		    if (connection == null) throw new ArgumentNullException(nameof(connection));
 
 		    _defaultConnection = new DefaultConnection(connection);
 

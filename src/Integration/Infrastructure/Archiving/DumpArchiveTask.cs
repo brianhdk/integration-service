@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
@@ -15,12 +14,9 @@ namespace Vertica.Integration.Infrastructure.Archiving
             _archive = archive;
         }
 
-        public override string Description
-        {
-            get { return "Dumps a specified archive to the file system."; }
-        }
+        public override string Description => "Dumps a specified archive to the file system.";
 
-        public override void StartTask(ITaskExecutionContext context)
+	    public override void StartTask(ITaskExecutionContext context)
         {
             foreach (string id in context.Arguments.Select(x => x.Key))
             {
@@ -30,7 +26,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
                 {
                     DirectoryInfo directory = Directory.CreateDirectory("Archive-Dumps");
 
-                    string file = Path.Combine(directory.FullName, String.Format("{0}.zip", id));
+                    string file = Path.Combine(directory.FullName, $"{id}.zip");
 
                     File.WriteAllBytes(file, archive);
 

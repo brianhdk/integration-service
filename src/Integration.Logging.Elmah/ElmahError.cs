@@ -25,7 +25,7 @@ namespace Vertica.Integration.Logging.Elmah
 
         public ElmahError(XmlReader reader)
         {
-            if (reader == null) throw new ArgumentNullException("reader");
+            if (reader == null) throw new ArgumentNullException(nameof(reader));
 
             if (!reader.IsStartElement("error"))
                 throw new InvalidOperationException("The error XML is not in the expected format.");
@@ -38,58 +38,52 @@ namespace Vertica.Integration.Logging.Elmah
             _error.ServerVariables["HTTP_REFERER"] = reader.GetAttribute("http_referer");
         }
 
-        public DateTimeOffset Created
-        {
-            get { return _error.Time.ToUniversalTime(); }
-        }
+        public DateTimeOffset Created => _error.Time.ToUniversalTime();
 
-        public string Source
-        {
-            get { return _error.Source; }
-        }
+	    public string Source => _error.Source;
 
-        public override string ToString()
+	    public override string ToString()
         {
-            return String.Join(Environment.NewLine, new[]
+            return string.Join(Environment.NewLine, new[]
             {
                 _error.Type,
                 _error.Message,
-                String.Empty
-            }.Concat(Data.Select(x => 
-                String.Format("{0}: {1}", x.Item1, x.Item2))));
+				string.Empty
+            }.Concat(Data.Select(x =>
+	            $"{x.Item1}: {x.Item2}")));
         }
 
         private IEnumerable<Tuple<string, string>> Data
         {
             get
             {
-                if (!String.IsNullOrWhiteSpace(_error.User))
+                if (!string.IsNullOrWhiteSpace(_error.User))
                     yield return Tuple.Create("User", _error.User);
 
-                if (!String.IsNullOrWhiteSpace(_error.HostName))
+                if (!string.IsNullOrWhiteSpace(_error.HostName))
                     yield return Tuple.Create("Host", _error.HostName);
 
                 string url = GetUrl();
 
-                if (!String.IsNullOrWhiteSpace(url))
+                if (!string.IsNullOrWhiteSpace(url))
                     yield return Tuple.Create("URL", url);
 
                 string referer = _error.ServerVariables["HTTP_REFERER"];
 
-                if (!String.IsNullOrWhiteSpace(referer))
+                if (!string.IsNullOrWhiteSpace(referer))
                     yield return Tuple.Create("HTTP Referer", referer);
 
-                yield return Tuple.Create("Details", String.Format("/elmah.axd/detail?id={0}", _id));
+                yield return Tuple.Create("Details", $"/elmah.axd/detail?id={_id}");
             }
         }
 
         private string GetUrl()
         {
-            string url = _error.ServerVariables["URL"] ?? String.Empty;
+            string url = _error.ServerVariables["URL"] ?? string.Empty;
             string queryString = _error.ServerVariables["QUERY_STRING"];
 
-            if (!String.IsNullOrWhiteSpace(queryString))
-                return String.Format("{0}?{1}", url, queryString);
+            if (!string.IsNullOrWhiteSpace(queryString))
+                return $"{url}?{queryString}";
 
             return url;
         }

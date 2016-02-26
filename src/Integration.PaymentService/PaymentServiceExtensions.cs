@@ -8,7 +8,7 @@ namespace Vertica.Integration.PaymentService
     {
         public static ApplicationConfiguration UsePaymentService(this ApplicationConfiguration application)
         {
-            if (application == null) throw new ArgumentNullException("application");
+            if (application == null) throw new ArgumentNullException(nameof(application));
 
             application.AddCustomInstaller(Install.ByConvention
                 .AddFromAssemblyOfThis<ITransactionStatusService>());

@@ -66,13 +66,8 @@ namespace Vertica.Integration.Perfion
 		{
 			using (var webClient = new WebClient())
 			{
-				string url = String.Format("{0}{1}.aspx?id={2}{3}",
-					ParseBaseUri(),
-					path,
-					id,
-					options != null
-						? String.Join(String.Empty, options.AllKeys.Select(x => String.Format("&{0}={1}", x, options[x])))
-						: String.Empty);
+				string url =
+					$"{ParseBaseUri()}{path}.aspx?id={id}{(options != null ? string.Join(string.Empty, options.AllKeys.Select(x => $"&{x}={options[x]}")) : string.Empty)}";
 
 				return webClient.DownloadData(url);
 			}
@@ -84,11 +79,11 @@ namespace Vertica.Integration.Perfion
 
 			Uri uri;
 			if (!Uri.TryCreate(webServiceUri, UriKind.Absolute, out uri))
-				throw new ArgumentException(String.Format("'{0}' is not a valid absolute uri.", webServiceUri));
+				throw new ArgumentException($"'{webServiceUri}' is not a valid absolute uri.");
 
 			var builder = new UriBuilder(uri)
 			{
-				Path = String.Join(String.Empty, uri.Segments.Take(uri.Segments.Length - 1))
+				Path = string.Join(string.Empty, uri.Segments.Take(uri.Segments.Length - 1))
 			};
 
 			return builder.Uri;
@@ -96,7 +91,7 @@ namespace Vertica.Integration.Perfion
 
 		private T Client<T>(Func<GetDataSoapClient, T> client)
 		{
-			if (client == null) throw new ArgumentNullException("client");
+			if (client == null) throw new ArgumentNullException(nameof(client));
 
 			var binding = new BasicHttpBinding
 			{

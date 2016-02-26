@@ -17,25 +17,13 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 			return Kernel.Resolve<T>();
 		}
 
-		protected IConfigurationService ConfigurationService
-		{
-			get { return Resolve<IConfigurationService>(); }
-		}
+		protected IConfigurationService ConfigurationService => Resolve<IConfigurationService>();
 
-		protected IConfigurationRepository ConfigurationRepository
-		{
-			get { return Resolve<IConfigurationRepository>(); }
-		}
+		protected IConfigurationRepository ConfigurationRepository => Resolve<IConfigurationRepository>();
 
-		protected IRuntimeSettings RuntimeSettings
-		{
-			get { return Resolve<IRuntimeSettings>(); }
-		}
+		protected IRuntimeSettings RuntimeSettings => Resolve<IRuntimeSettings>();
 
-		protected NameValueCollection AppSettings
-		{
-			get { return ConfigurationManager.AppSettings; }
-		}
+		protected NameValueCollection AppSettings => ConfigurationManager.AppSettings;
 
 		protected Configuration.Configuration GetRawConfiguration(string id)
 		{
@@ -49,14 +37,14 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
 		protected void SaveRawConfiguration(Configuration.Configuration rawConfiguration)
 		{
-			if (rawConfiguration == null) throw new ArgumentNullException("rawConfiguration");
+			if (rawConfiguration == null) throw new ArgumentNullException(nameof(rawConfiguration));
 
 			ConfigurationService.Save(rawConfiguration, "Migration", createArchiveBackup: true);
 		}
 
 		protected void SaveConfiguration<T>(T configuration) where T : class, new()
 		{
-			if (configuration == null) throw new ArgumentNullException("configuration");
+			if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
 			ConfigurationService.Save(configuration, "Migration", createArchiveBackup: true);
 		}
@@ -128,9 +116,6 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 		{
 		}
 
-		private IKernel Kernel
-		{
-			get { return ApplicationContext as IKernel; }
-		}
+		private IKernel Kernel => ApplicationContext as IKernel;
 	}
 }

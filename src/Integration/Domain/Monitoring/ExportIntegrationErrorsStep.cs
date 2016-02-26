@@ -24,12 +24,9 @@ namespace Vertica.Integration.Domain.Monitoring
             _taskFactory = taskFactory;
         }
 
-        public override string Description
-        {
-            get { return "Exports errors from integration error log."; }
-        }
+        public override string Description => "Exports errors from integration error log.";
 
-        public override void Execute(MonitorWorkItem workItem, ITaskExecutionContext context)
+	    public override void Execute(MonitorWorkItem workItem, ITaskExecutionContext context)
         {
             workItem.AddMessageGroupingPatterns(MessageGroupingPattern);
 
@@ -74,7 +71,7 @@ ORDER BY ErrorLog.Id DESC",
 
                         ITask task = null;
 
-                        if (!String.IsNullOrWhiteSpace(taskName) && !tasksByName.TryGetValue(taskName, out task))
+                        if (!string.IsNullOrWhiteSpace(taskName) && !tasksByName.TryGetValue(taskName, out task))
                         {
                             try
                             {
@@ -93,7 +90,7 @@ ORDER BY ErrorLog.Id DESC",
                             IStep step =
                                 task.Steps.EmptyIfNull()
                                     .SingleOrDefault(x =>
-                                        String.Equals(x.Name(), error.StepName,
+										string.Equals(x.Name(), error.StepName,
                                             StringComparison.OrdinalIgnoreCase));
 
                             if (step != null)
@@ -120,7 +117,7 @@ ORDER BY ErrorLog.Id DESC",
 
             public string SafeTaskName()
             {
-                return TaskName ?? String.Empty;
+                return TaskName ?? string.Empty;
             }
 
             public string CombineMessage()
@@ -132,22 +129,22 @@ ORDER BY ErrorLog.Id DESC",
 
                 var taskName = SafeTaskName();
 
-                if (!String.IsNullOrWhiteSpace(taskName))
+                if (!string.IsNullOrWhiteSpace(taskName))
                 {
                     sb.AppendLine();
                     sb.AppendFormat("Task '{0}'", taskName);
 
-                    if (!String.IsNullOrWhiteSpace(TaskDescription))
+                    if (!string.IsNullOrWhiteSpace(TaskDescription))
                     {
                         sb.AppendFormat(": {0}", TaskDescription);
                         sb.AppendLine();
                     }
 
-                    if (!String.IsNullOrWhiteSpace(StepName))
+                    if (!string.IsNullOrWhiteSpace(StepName))
                     {
                         sb.AppendFormat("Step '{0}'", StepName);
 
-                        if (!String.IsNullOrWhiteSpace(StepDescription))
+                        if (!string.IsNullOrWhiteSpace(StepDescription))
                             sb.AppendFormat(": {0}", StepDescription);
                     }
 

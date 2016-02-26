@@ -36,7 +36,7 @@ namespace Vertica.Integration.Portal.Controllers
 
         public HttpResponseMessage Put(Configuration configuration)
         {
-            if (configuration == null) throw new ArgumentNullException("configuration");
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
             // TODO: Validate JSON before submitting
 

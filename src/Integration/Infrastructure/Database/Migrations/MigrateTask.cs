@@ -74,18 +74,15 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
             return latestMigration;
         }
 
-        public override string Description
-        {
-            get { return "Runs migrations against all configured databases. Will also execute any custom task if provided by Arguments."; }
-        }
+        public override string Description => "Runs migrations against all configured databases. Will also execute any custom task if provided by Arguments.";
 
-        public override void StartTask(ITaskExecutionContext context)
+	    public override void StartTask(ITaskExecutionContext context)
         {
             bool enableLogger = _loggingDisabler != null;
 
 	        MigrationDb[] destinations = _dbs;
 
-			string[] names = (context.Arguments["Names"] ?? String.Empty)
+			string[] names = (context.Arguments["Names"] ?? string.Empty)
 				.Split(new[] { ",", ";" }, StringSplitOptions.RemoveEmptyEntries);
 
 	        if (names.Length > 0)
@@ -98,7 +95,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 					.ToArray();
 	        }
 
-	        string action = (context.Arguments["Action"] ?? String.Empty).ToLowerInvariant();
+	        string action = (context.Arguments["Action"] ?? string.Empty).ToLowerInvariant();
 
 			foreach (MigrationDb destination in destinations)
             {
@@ -140,7 +137,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
                     "Created new database (using Simple Recovery) and applied migrations to this. Make sure to configure this new database (auto growth, backup etc).");
             }
 
-	        string[] taskNames = (context.Arguments["Tasks"] ?? String.Empty)
+	        string[] taskNames = (context.Arguments["Tasks"] ?? string.Empty)
 				.Split(new[] {",", ";"}, StringSplitOptions.RemoveEmptyEntries);
 
 	        foreach (string taskName in taskNames)
@@ -248,7 +245,7 @@ ELSE
 				case DatabaseServer.Sqlite:
 					return new SQLiteProcessorFactory();
                 default:
-                    throw new ArgumentOutOfRangeException("databaseServer");
+                    throw new ArgumentOutOfRangeException(nameof(databaseServer));
             }
         }
 

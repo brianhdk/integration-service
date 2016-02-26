@@ -7,8 +7,8 @@ namespace Vertica.Integration.SQLite
 	{
 		public static DatabaseConfiguration SQLite(this DatabaseConfiguration database, Action<SQLiteConfiguration> sqlite)
 		{
-			if (database == null) throw new ArgumentNullException("database");
-			if (sqlite == null) throw new ArgumentNullException("sqlite");
+			if (database == null) throw new ArgumentNullException(nameof(database));
+			if (sqlite == null) throw new ArgumentNullException(nameof(sqlite));
 
 			database.Application.Extensibility(extensibility =>
 			{

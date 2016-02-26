@@ -12,7 +12,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 		{
 			_taskService = new TaskScheduler.TaskScheduler();
 
-			if (String.IsNullOrWhiteSpace(machineName))
+			if (string.IsNullOrWhiteSpace(machineName))
 			{
 				_taskService.Connect();
 			}
@@ -24,7 +24,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 
 		public void InstallOrUpdate(ScheduledTaskConfiguration scheduledTask)
 		{
-			if (scheduledTask == null) throw new ArgumentNullException("scheduledTask");
+			if (scheduledTask == null) throw new ArgumentNullException(nameof(scheduledTask));
 
 			ITaskDefinition taskDefinition = _taskService.NewTask(0);
 			scheduledTask.Initialize(taskDefinition);
@@ -33,15 +33,15 @@ namespace Vertica.Integration.Infrastructure.Windows
 
 		public void Uninstall(ScheduledTaskConfiguration scheduledTask)
 		{
-			if (scheduledTask == null) throw new ArgumentNullException("scheduledTask");
+			if (scheduledTask == null) throw new ArgumentNullException(nameof(scheduledTask));
 
 			Uninstall(scheduledTask.Name, scheduledTask.Folder);
 		}
 
 		public void Uninstall(string name, string folder)
 		{
-			if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
-			if (String.IsNullOrWhiteSpace(folder)) throw new ArgumentException(@"Value cannot be null or empty.", "folder");
+			if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
+			if (string.IsNullOrWhiteSpace(folder)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(folder));
 
 			ITaskFolder actualFolder = _taskService.GetFolder(folder);
 			actualFolder.DeleteTask(name, 0);
@@ -65,7 +65,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 
 		private ITaskFolder GetOrCreateFolder(string folder)
 		{
-			if (folder == null) throw new ArgumentNullException("folder");
+			if (folder == null) throw new ArgumentNullException(nameof(folder));
 
 			ITaskFolder rootFolder = _taskService.GetFolder(@"\");
 			IEnumerator subfolders = rootFolder.GetFolders(0).GetEnumerator();

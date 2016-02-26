@@ -65,15 +65,9 @@ namespace Vertica.Integration.Domain.Monitoring
             }
         }
 
-        public override string Description
-        {
-            get
-            {
-                return "Pings a number of configurable urls by issuing a simple GET-request to every configured address expecting a http status code OK/200.";
-            }
-        }
+        public override string Description => "Pings a number of configurable urls by issuing a simple GET-request to every configured address expecting a http status code OK/200.";
 
-        private static Uri[] ParseUrls(string[] urls, ILog log)
+	    private static Uri[] ParseUrls(string[] urls, ILog log)
         {
             var result = new List<Uri>();
 
@@ -108,9 +102,9 @@ namespace Vertica.Integration.Domain.Monitoring
 
         private void AddException(PingException exception, MonitorWorkItem workItem)
         {
-            string message = String.Format(@"{0}
+            string message = $@"{exception.Message}
 
-{1}", exception.Message, exception.InnerException.AggregateMessages());
+{exception.InnerException.AggregateMessages()}";
 
             workItem.Add(Time.UtcNow, this.Name(), message);
         }
@@ -127,7 +121,8 @@ namespace Vertica.Integration.Domain.Monitoring
 
         private class PingException : Exception
         {
-            public PingException(Uri uri, Stopwatch watch, Exception inner) : base(String.Format("Ping failed for URL {0} (running for {1} seconds).", uri, Math.Round(watch.Elapsed.TotalSeconds, 3)), inner)
+            public PingException(Uri uri, Stopwatch watch, Exception inner) : base(
+	            $"Ping failed for URL {uri} (running for {Math.Round(watch.Elapsed.TotalSeconds, 3)} seconds).", inner)
             {
             }
         }

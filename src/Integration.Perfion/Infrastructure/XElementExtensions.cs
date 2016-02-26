@@ -7,29 +7,29 @@ namespace Vertica.Integration.Perfion.Infrastructure
 	{
 		public static XElement ElementOrEmpty(this XElement current, XName name)
 		{
-			if (current == null) throw new ArgumentNullException("current");
-			if (name == null) throw new ArgumentNullException("name");
+			if (current == null) throw new ArgumentNullException(nameof(current));
+			if (name == null) throw new ArgumentNullException(nameof(name));
 
 			return current.Element(name) ?? new XElement(name);
 		}
 
 		public static XAttribute AttributeOrEmpty(this XElement current, XName name)
 		{
-			if (current == null) throw new ArgumentNullException("current");
-			if (name == null) throw new ArgumentNullException("name");
+			if (current == null) throw new ArgumentNullException(nameof(current));
+			if (name == null) throw new ArgumentNullException(nameof(name));
 
-			return current.Attribute(name) ?? new XAttribute(name, String.Empty);
+			return current.Attribute(name) ?? new XAttribute(name, string.Empty);
 		}
 
 		public static XAttribute AttributeOrThrow(this XElement current, XName name)
 		{
-			if (current == null) throw new ArgumentNullException("current");
+			if (current == null) throw new ArgumentNullException(nameof(current));
 
 			XAttribute attribute = current.Attribute(name);
 
 			if (attribute == null)
 				throw new InvalidOperationException(
-					String.Format("Element is missing expected attribute '{0}'. '{1}'", name, current));
+					$"Element is missing expected attribute '{name}'. '{current}'");
 
 			return attribute;
 		}

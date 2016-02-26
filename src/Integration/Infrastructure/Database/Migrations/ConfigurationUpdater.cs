@@ -10,8 +10,8 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
         internal ConfigurationUpdater(T configuration, Action<T> save)
         {
-            if (configuration == null) throw new ArgumentNullException("configuration");
-            if (save == null) throw new ArgumentNullException("save");
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+            if (save == null) throw new ArgumentNullException(nameof(save));
 
             Configuration = configuration;
             _save = save;

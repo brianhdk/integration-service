@@ -10,7 +10,7 @@ namespace Vertica.Integration.Infrastructure.Database
 		private readonly Connection _connection;
 
 		private DefaultConnection()
-			: base(ConnectionString.FromText(String.Empty))
+			: base(ConnectionString.FromText(string.Empty))
 		{
 			_isDisabled = true;
 		}
@@ -23,7 +23,7 @@ namespace Vertica.Integration.Infrastructure.Database
 		internal DefaultConnection(Connection connection)
 			: base(connection.ConnectionString)
 		{
-			if (connection == null) throw new ArgumentNullException("connection");
+			if (connection == null) throw new ArgumentNullException(nameof(connection));
 
 			_connection = connection;
 		}
@@ -36,14 +36,8 @@ namespace Vertica.Integration.Infrastructure.Database
 			return base.GetConnection(kernel);
 		}
 
-		internal bool IsDisabled
-		{
-			get { return _isDisabled; }
-		}
+		internal bool IsDisabled => _isDisabled;
 
-		public static DefaultConnection Disabled
-		{
-			get { return new DefaultConnection(); }
-		}
+		public static DefaultConnection Disabled => new DefaultConnection();
 	}
 }

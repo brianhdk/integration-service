@@ -9,8 +9,8 @@ namespace Vertica.Integration.MongoDB
     {
         public static ApplicationConfiguration UseMongoDb(this ApplicationConfiguration application, Action<MongoDbConfiguration> mongoDb)
         {
-            if (application == null) throw new ArgumentNullException("application");
-            if (mongoDb == null) throw new ArgumentNullException("mongoDb");
+            if (application == null) throw new ArgumentNullException(nameof(application));
+            if (mongoDb == null) throw new ArgumentNullException(nameof(mongoDb));
 
 			return application.Extensibility(extensibility =>
 			{
@@ -22,7 +22,7 @@ namespace Vertica.Integration.MongoDB
 
         public static TaskConfiguration<MaintenanceWorkItem> IncludeLogRotator(this TaskConfiguration<MaintenanceWorkItem> task)
         {
-            if (task == null) throw new ArgumentNullException("task");
+            if (task == null) throw new ArgumentNullException(nameof(task));
 
             return task.Step<LogRotatorStep>();
         }

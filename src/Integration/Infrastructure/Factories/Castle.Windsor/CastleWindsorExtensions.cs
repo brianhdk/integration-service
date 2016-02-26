@@ -7,8 +7,8 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor
     {
         public static BasedOnDescriptor Expose(this BasedOnDescriptor descriptor, Action<Type> expose)
         {
-            if (descriptor == null) throw new ArgumentNullException("descriptor");
-            if (expose == null) throw new ArgumentNullException("expose");
+            if (descriptor == null) throw new ArgumentNullException(nameof(descriptor));
+            if (expose == null) throw new ArgumentNullException(nameof(expose));
 
             return descriptor.If(x =>
             {

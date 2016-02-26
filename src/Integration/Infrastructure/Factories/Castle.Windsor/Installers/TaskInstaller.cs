@@ -72,8 +72,8 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 
         public TaskInstaller(Type task, IEnumerable<Type> steps)
         {
-            if (task == null) throw new ArgumentNullException("task");
-            if (steps == null) throw new ArgumentNullException("steps");
+            if (task == null) throw new ArgumentNullException(nameof(task));
+            if (steps == null) throw new ArgumentNullException(nameof(steps));
 
             _task = task;
             _steps = steps;
@@ -97,7 +97,7 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 
             foreach (Type step in _steps)
             {
-                string name = String.Format("{0}.{1}.{2}", _task.TaskName(), step.StepName(), Guid.NewGuid().ToString("N"));
+                string name = $"{_task.TaskName()}.{step.StepName()}.{Guid.NewGuid().ToString("N")}";
 
                 container.Register(
                     Component.For<IStep<TWorkItem>>()
@@ -118,8 +118,8 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 
             public TaskStepsResolver(IKernel kernel, Type task, string[] stepNames)
             {
-                if (kernel == null) throw new ArgumentNullException("kernel");
-                if (stepNames == null) throw new ArgumentNullException("stepNames");
+                if (kernel == null) throw new ArgumentNullException(nameof(kernel));
+                if (stepNames == null) throw new ArgumentNullException(nameof(stepNames));
 
                 _kernel = kernel;
                 _task = task;

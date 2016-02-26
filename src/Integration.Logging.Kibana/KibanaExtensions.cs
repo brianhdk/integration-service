@@ -8,7 +8,7 @@ namespace Vertica.Integration.Logging.Kibana
     {
         public static ApplicationConfiguration UseKibana(this ApplicationConfiguration builder, Action<KibanaConfiguration> kibana = null)
         {
-            if (builder == null) throw new ArgumentNullException("builder");
+            if (builder == null) throw new ArgumentNullException(nameof(builder));
 
             var configuration = new KibanaConfiguration();
 

@@ -15,16 +15,13 @@ namespace Vertica.Integration
 			_configuration = configuration;
 		}
 
-		public ApplicationEnvironment Environment
-		{
-			get { return this[RuntimeSettings.Environment]; }
-		}
+		public ApplicationEnvironment Environment => this[RuntimeSettings.Environment];
 
 		public string this[string name]
 		{
 			get
 			{
-				if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
+				if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
 
 				var configuration = _configuration.Get<RuntimeSettings>();
 
@@ -44,7 +41,7 @@ namespace Vertica.Integration
 			public RuntimeSettings()
 			{
 				Values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-				Values[Environment] = String.Empty;
+				Values[Environment] = string.Empty;
 			}
 
 			public Dictionary<string,string> Values { get; set; }

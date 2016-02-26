@@ -26,9 +26,6 @@ ALTER INDEX [IX_uCommerce_PurchaseOrder_BasketId] ON [dbo].[uCommerce_PurchaseOr
             }
         }
 
-        public override string Description
-        {
-            get { return "Performs index maintenance on certain uCommerce tables."; }
-        }
+        public override string Description => "Performs index maintenance on certain uCommerce tables.";
     }
 }

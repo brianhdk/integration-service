@@ -12,14 +12,16 @@ namespace Vertica.Integration.Model.Exceptions
         }
 
 	    internal NoHostFoundException(HostArguments args)
-            : base(String.Format(@"None of the configured {0} are able to handle arguments: 
-{1}
+            : base(
+	            $@"None of the configured {typeof (IHost).FullName} are able to handle arguments: 
+{args}
 
 If you are trying to execute a Task, make sure that you are spelling the name of the Task correctly.
 
 Consider running the ""WriteDocumentationTask"" to get a text-output of available tasks and hosts.
 
-To configure Hosts in general, use the .Hosts(hosts => hosts.Host<YourHost>) method part of the initial configuration.", typeof(IHost).FullName, args))
+To configure Hosts in general, use the .Hosts(hosts => hosts.Host<YourHost>) method part of the initial configuration."
+	            )
         {
         }
 

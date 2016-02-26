@@ -13,9 +13,9 @@ namespace Vertica.Integration.Infrastructure.Logging
 
 		internal StepLog(TaskLog taskLog, IStep step, Output output)
 		{
-			if (taskLog == null) throw new ArgumentNullException("taskLog");
-		    if (step == null) throw new ArgumentNullException("step");
-		    if (output == null) throw new ArgumentNullException("output");
+			if (taskLog == null) throw new ArgumentNullException(nameof(taskLog));
+		    if (step == null) throw new ArgumentNullException(nameof(step));
+		    if (output == null) throw new ArgumentNullException(nameof(output));
 
 		    _output = output;
 			_messages = new List<MessageLog>();
@@ -32,10 +32,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 
 		public ErrorLog ErrorLog { get; internal set; }
 
-		public ReadOnlyCollection<MessageLog> Messages
-		{
-			get { return new ReadOnlyCollection<MessageLog>(_messages); }
-		}
+		public ReadOnlyCollection<MessageLog> Messages => new ReadOnlyCollection<MessageLog>(_messages);
 
 		public void LogMessage(string message)
 		{

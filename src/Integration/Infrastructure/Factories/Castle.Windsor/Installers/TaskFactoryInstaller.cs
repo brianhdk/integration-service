@@ -30,7 +30,7 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 
             public bool Exists(string name)
             {
-                if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
+                if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
 
                 IHandler handler = _kernel.GetHandler(name);
 
@@ -47,7 +47,7 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 
             public ITask Get(string name)
             {
-                if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", name);
+                if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", name);
 
                 if (!Exists(name))
                     throw new TaskNotFoundException(name);

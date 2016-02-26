@@ -65,10 +65,7 @@ namespace Vertica.Integration.Experiments.MongoDb
 	        //_runner.Execute(_factory.Get<MaintenanceTask>());
         }
 		
-        public override string Description
-        {
-            get { return "Test"; }
-        }
+        public override string Description => "Test";
     }
 
 	public class TestDto

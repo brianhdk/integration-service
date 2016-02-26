@@ -19,7 +19,7 @@ namespace Vertica.Integration.Perfion
 
 		public ServiceClientConfiguration Advanced(Action<BasicHttpBinding> binding)
 		{
-			if (binding == null) throw new ArgumentNullException("binding");
+			if (binding == null) throw new ArgumentNullException(nameof(binding));
 
 			Binding = binding;
 			return this;

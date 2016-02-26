@@ -77,9 +77,6 @@ namespace Vertica.Integration.Experiments
             _runner.Execute(_factory.Get<MaintenanceTask>());
         }
 
-        public override string Description
-        {
-            get { return "test"; }
-        }
+        public override string Description => "test";
     }
 }

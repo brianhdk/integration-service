@@ -1,7 +1,4 @@
 ﻿using Vertica.Integration.Experiments;
-using Vertica.Integration.Model;
-using Vertica.Integration.Portal;
-using Vertica.Integration.WebApi;
 
 namespace Vertica.Integration.Console
 {

@@ -40,7 +40,7 @@ namespace Vertica.Integration.Portal.Controllers
 
             response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
             {
-                FileName = string.Format("Archive-{0}.zip", id)
+                FileName = $"Archive-{id}.zip"
             };
 
             return response;

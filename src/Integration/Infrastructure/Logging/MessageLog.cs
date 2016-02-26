@@ -9,7 +9,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 	    private MessageLog(TaskLog taskLog, string message) 
             : base(measureExecutionTime: false)
 	    {
-	        if (taskLog == null) throw new ArgumentNullException("taskLog");
+	        if (taskLog == null) throw new ArgumentNullException(nameof(taskLog));
 
 	        TaskLog = taskLog;
             Message = message.MaxLength(4000);
@@ -18,7 +18,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 	    internal MessageLog(TaskLog taskLog, string message, Output output)
             : this(taskLog, message)
         {
-            if (output == null) throw new ArgumentNullException("output");
+            if (output == null) throw new ArgumentNullException(nameof(output));
 
             output.Message("{0}: {1}", taskLog.Name, message);
         }
@@ -26,7 +26,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 		internal MessageLog(StepLog stepLog, string message, Output output)
             : this(stepLog.TaskLog, message)
         {
-		    if (output == null) throw new ArgumentNullException("output");
+		    if (output == null) throw new ArgumentNullException(nameof(output));
 
             StepLog = stepLog;
 

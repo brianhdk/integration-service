@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using FluentMigrator;
 using Vertica.Integration.Domain.Monitoring;
 using Vertica.Integration.Infrastructure.Database.Migrations;
@@ -15,7 +14,7 @@ namespace Vertica.Integration.Experiments.Migrations.IntegrationDb
             MonitorConfiguration configuration = GetConfiguration<MonitorConfiguration>();
 
             configuration.Targets.Single(x => x.Equals(Target.Service)).Recipients = new[] { "bhk@vertica.dk" };
-            configuration.SubjectPrefix = String.Format("{0} Integration Service", AppSettings["Environment"]);
+            configuration.SubjectPrefix = $"{AppSettings["Environment"]} Integration Service";
 
             SaveConfiguration(configuration);
         }

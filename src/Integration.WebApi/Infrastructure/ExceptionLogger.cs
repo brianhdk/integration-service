@@ -10,7 +10,7 @@ namespace Vertica.Integration.WebApi.Infrastructure
 
 		public ExceptionLogger(ILogger logger)
 		{
-			if (logger == null) throw new ArgumentNullException("logger");
+			if (logger == null) throw new ArgumentNullException(nameof(logger));
 
 			_logger = logger;
 		}

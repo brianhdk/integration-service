@@ -5,10 +5,7 @@ namespace Integration.Experiments.Hangfire
 {
 	public class HangfireTask : Task
 	{
-		public override string Description
-		{
-			get { return "Test Hangfire"; }
-		}
+		public override string Description => "Test Hangfire";
 
 		public override void StartTask(ITaskExecutionContext context)
 		{

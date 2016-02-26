@@ -13,8 +13,8 @@ namespace Vertica.Integration.MongoDB
 
 		public MongoDBClientFactory(TConnection connection, IKernel kernel)
         {
-            if (connection == null) throw new ArgumentNullException("connection");
-			if (kernel == null) throw new ArgumentNullException("kernel");
+            if (connection == null) throw new ArgumentNullException(nameof(connection));
+			if (kernel == null) throw new ArgumentNullException(nameof(kernel));
 
 			_client = new Lazy<IMongoClient>(() =>
             {
@@ -31,22 +31,16 @@ namespace Vertica.Integration.MongoDB
 	            if (mongoUrl == null)
 		            return null;
 
-                if (String.IsNullOrWhiteSpace(mongoUrl.DatabaseName))
+                if (string.IsNullOrWhiteSpace(mongoUrl.DatabaseName))
                     return null;
 
                 return Client.GetDatabase(mongoUrl.DatabaseName);
             });
         }
 
-        public IMongoClient Client
-        {
-            get { return _client.Value; }
-        }
+        public IMongoClient Client => _client.Value;
 
-        public IMongoDatabase Database
-        {
-            get { return _database.Value; }
-        }
+	    public IMongoDatabase Database => _database.Value;
     }
 
     internal class MongoDbClientFactory : IMongoDbClientFactory
@@ -55,19 +49,13 @@ namespace Vertica.Integration.MongoDB
 
         public MongoDbClientFactory(IMongoDbClientFactory<DefaultConnection> decoree)
         {
-            if (decoree == null) throw new ArgumentNullException("decoree");
+            if (decoree == null) throw new ArgumentNullException(nameof(decoree));
 
             _decoree = decoree;
         }
 
-        public IMongoClient Client
-        {
-            get { return _decoree.Client; }
-        }
+        public IMongoClient Client => _decoree.Client;
 
-        public IMongoDatabase Database
-        {
-            get { return _decoree.Database; }
-        }
+	    public IMongoDatabase Database => _decoree.Database;
     }
 }

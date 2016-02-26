@@ -25,9 +25,9 @@ namespace Vertica.Integration.WebApi.Infrastructure
 
 		public HttpServer(string url, IKernel kernel, Action<IOwinConfiguration> configuration)
         {
-	        if (String.IsNullOrWhiteSpace(url)) throw new ArgumentException(@"Value cannot be null or empty.", "url");
-	        if (kernel == null) throw new ArgumentNullException("kernel");
-			if (configuration == null) throw new ArgumentNullException("configuration");
+	        if (string.IsNullOrWhiteSpace(url)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(url));
+	        if (kernel == null) throw new ArgumentNullException(nameof(kernel));
+			if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
 	        _kernel = kernel;
 	        _outputter = kernel.Resolve<TextWriter>();
@@ -76,7 +76,7 @@ namespace Vertica.Integration.WebApi.Infrastructure
 
         private void MapRoutes(HttpConfiguration configuration)
         {
-            if (configuration == null) throw new ArgumentNullException("configuration");
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
             configuration.MapHttpAttributeRoutes();
 
@@ -113,9 +113,9 @@ namespace Vertica.Integration.WebApi.Infrastructure
 		{
 			internal OwinConfiguration(IAppBuilder app, HttpConfiguration httpConfiguration, IKernel kernel)
 			{
-				if (app == null) throw new ArgumentNullException("app");
-				if (httpConfiguration == null) throw new ArgumentNullException("httpConfiguration");
-				if (kernel == null) throw new ArgumentNullException("kernel");
+				if (app == null) throw new ArgumentNullException(nameof(app));
+				if (httpConfiguration == null) throw new ArgumentNullException(nameof(httpConfiguration));
+				if (kernel == null) throw new ArgumentNullException(nameof(kernel));
 
 				App = app;
 				Http = httpConfiguration;
@@ -134,8 +134,8 @@ namespace Vertica.Integration.WebApi.Infrastructure
 
             public CustomResolver(Func<ICollection<Type>> controllerTypes, Func<HttpRequestMessage, Type, IHttpController> createController)
             {
-                if (controllerTypes == null) throw new ArgumentNullException("controllerTypes");
-                if (createController == null) throw new ArgumentNullException("createController");
+                if (controllerTypes == null) throw new ArgumentNullException(nameof(controllerTypes));
+                if (createController == null) throw new ArgumentNullException(nameof(createController));
 
                 _controllerTypes = controllerTypes;
                 _createController = createController;

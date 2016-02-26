@@ -6,7 +6,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 	{
 		public ScheduledTaskAction(string exePath, string args)
 		{
-			if (String.IsNullOrWhiteSpace(exePath)) throw new ArgumentException(@"Value cannot be null or empty.", "exePath");
+			if (string.IsNullOrWhiteSpace(exePath)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(exePath));
 
 			ExePath = exePath;
 			Args = args;

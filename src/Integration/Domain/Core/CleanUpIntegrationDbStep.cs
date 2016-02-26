@@ -6,7 +6,6 @@ using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Database.Extensions;
 using Vertica.Integration.Model;
 using Vertica.Utilities_v4;
-using Vertica.Utilities_v4.Extensions.TimeExt;
 
 namespace Vertica.Integration.Domain.Core
 {
@@ -42,8 +41,8 @@ namespace Vertica.Integration.Domain.Core
 			        {
 			            a.Options.GroupedBy("Backup").ExpiresAfterMonths(12);
 
-			            a.IncludeContent(String.Format("TaskLog_{0:yyyyMMdd}.csv", tasksLowerBound), taskLog.Item2);
-			            a.IncludeContent(String.Format("ErrorLog_{0:yyyyMMdd}.csv", errorsLowerBound), errorLog.Item2);
+			            a.IncludeContent($"TaskLog_{tasksLowerBound:yyyyMMdd}.csv", taskLog.Item2);
+			            a.IncludeContent($"ErrorLog_{errorsLowerBound:yyyyMMdd}.csv", errorLog.Item2);
 			        });
 
 			        context.Log.Message(@"Deleted {0} task entries older than '{1}'. 
@@ -62,10 +61,10 @@ Archive: {4}",
 	    {
 	        return session.Wrap(s =>
 	        {
-	            string query = String.Format(" FROM [{0}] WHERE [TimeStamp] <= @lowerbound", tableName);
+	            string query = $" FROM [{tableName}] WHERE [TimeStamp] <= @lowerbound";
 
-	            string csv = s.QueryToCsv(String.Concat("SELECT *", query), new { lowerBound });
-                int count = s.Execute(String.Concat("DELETE", query), new { lowerBound });
+	            string csv = s.QueryToCsv(string.Concat("SELECT *", query), new { lowerBound });
+                int count = s.Execute(string.Concat("DELETE", query), new { lowerBound });
 
 	            return Tuple.Create(count, csv);
 	        });
@@ -78,10 +77,7 @@ Archive: {4}",
                 MaintenanceConfiguration configuration = _configuration.Get<MaintenanceConfiguration>();
 
 			    return
-			        String.Format(
-			            "Deletes TaskLog entries older than {0} days and ErrorLog entries older than {1} days from IntegrationDb.",
-			            configuration.CleanUpTaskLogEntriesOlderThan.TotalDays,
-			            configuration.CleanUpErrorLogEntriesOlderThan.TotalDays);
+				    $"Deletes TaskLog entries older than {configuration.CleanUpTaskLogEntriesOlderThan.TotalDays} days and ErrorLog entries older than {configuration.CleanUpErrorLogEntriesOlderThan.TotalDays} days from IntegrationDb.";
 			}
 		}
 	}

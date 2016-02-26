@@ -48,9 +48,9 @@ namespace Vertica.Integration.Infrastructure.Configuration
         public TConfiguration Save<TConfiguration>(TConfiguration configuration, string updatedBy, bool createArchiveBackup = false) 
             where TConfiguration : class, new()
         {
-            if (configuration == null) throw new ArgumentNullException("configuration");
-            if (String.IsNullOrWhiteSpace(updatedBy)) throw new ArgumentException(@"Value cannot be null or empty.", "updatedBy");
-            if (configuration is Configuration) throw new ArgumentException(@"Use the specific Save method when saving this Configuration instance.", "configuration");
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+            if (string.IsNullOrWhiteSpace(updatedBy)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(updatedBy));
+            if (configuration is Configuration) throw new ArgumentException(@"Use the specific Save method when saving this Configuration instance.", nameof(configuration));
 
 			string id = GetId<TConfiguration>(warnIfMissingGuid: true);
 
@@ -73,7 +73,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
 
 		public ArchiveCreated Backup(string id)
 		{
-			if (String.IsNullOrWhiteSpace(id)) throw new ArgumentException(@"Value cannot be null or empty.", "id");
+			if (string.IsNullOrWhiteSpace(id)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(id));
 
 			Configuration current = _repository.Get(id);
 
@@ -87,7 +87,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
 					.ExpiresAfterMonths(1);
 
 				archive.IncludeContent("data", current.JsonData, ".json");
-				archive.IncludeContent("meta", String.Join(Environment.NewLine,
+				archive.IncludeContent("meta", string.Join(Environment.NewLine,
 					current.Id,
 					current.Name,
 					current.Description,
@@ -116,7 +116,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
 
             Type type = typeof (TConfiguration);
 
-            id = String.Join(", ", type.FullName, type.Assembly.GetName().Name);
+            id = string.Join(", ", type.FullName, type.Assembly.GetName().Name);
 
             if (warnIfMissingGuid)
             {

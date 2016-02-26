@@ -10,7 +10,7 @@ namespace Vertica.Integration.SQLite
     {
         internal SQLiteConfiguration(DatabaseConfiguration database)
         {
-            if (database == null) throw new ArgumentNullException("database");
+            if (database == null) throw new ArgumentNullException(nameof(database));
 
 			Database = database;
         }
@@ -24,7 +24,7 @@ namespace Vertica.Integration.SQLite
 
 	    public SQLiteConfiguration UseForIntegrationDb(SQLiteConnection connection)
 		{
-			if (connection == null) throw new ArgumentNullException("connection");
+			if (connection == null) throw new ArgumentNullException(nameof(connection));
 
 		    Database.IntegrationDb(connection);
 

@@ -14,14 +14,17 @@ namespace Vertica.Integration.Model.Exceptions
         }
 
 	    internal MultipleHostsFoundException(HostArguments args, IHost[] hosts)
-            : base(String.Format(@"Multiple hosts was found to handle arguments: 
-{0}
+            : base(
+	            $@"Multiple hosts was found to handle arguments: 
+{args}
 
 The hosts are:
 
-{1}
+{string.Join(", ",
+		            hosts.Select(x => x.Name()))}
 
-To fix this problem you need to inspect the ""CanHandle""-method of the hosts to find out why the criteria is met.", args, String.Join(", ", hosts.Select(x => x.Name()))))
+To fix this problem you need to inspect the ""CanHandle""-method of the hosts to find out why the criteria is met."
+	            )
         {
         }
 

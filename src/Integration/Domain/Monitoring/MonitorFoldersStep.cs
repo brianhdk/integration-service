@@ -24,9 +24,9 @@ namespace Vertica.Integration.Domain.Monitoring
                 workItem.Configuration.MonitorFolders.GetEnabledFolders();
 
             context.Log.Message(@"Folder(s) monitored:
-{0}", 
-                String.Join(Environment.NewLine, 
-                    folders.Select(x => String.Concat(" - ", x.ToString()))));
+{0}",
+				string.Join(Environment.NewLine, 
+                    folders.Select(x => string.Concat(" - ", x.ToString()))));
 
             foreach (MonitorConfiguration.MonitorFoldersConfiguration.Folder folder in folders)
             {
@@ -45,9 +45,9 @@ namespace Vertica.Integration.Domain.Monitoring
 
                     const int limit = 10;
 
-                    message.AppendLine(String.Join(Environment.NewLine, files
+                    message.AppendLine(string.Join(Environment.NewLine, files
                         .Take(limit)
-                        .Select(x => String.Format(" - {0}", x))));
+                        .Select(x => $" - {x}")));
 
                     if (files.Length > limit)
                         message.AppendLine("...");
@@ -57,9 +57,6 @@ namespace Vertica.Integration.Domain.Monitoring
             }
         }
 
-        public override string Description
-        {
-            get { return "Monitors a set of configured folders (MonitorConfiguration)."; }
-        }
+        public override string Description => "Monitors a set of configured folders (MonitorConfiguration).";
     }
 }

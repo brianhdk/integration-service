@@ -8,14 +8,14 @@ namespace Vertica.Integration.Model
 
         public Output(Action<string> message)
         {
-            if (message == null) throw new ArgumentNullException("message");
+            if (message == null) throw new ArgumentNullException(nameof(message));
 
             _message = message;
         }
 
         public void Message(string format, params object[] args)
         {
-            _message(String.Format(format, args));
+            _message(string.Format(format, args));
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Vertica.Integration.Logging.Elmah
     {
         public static ElmahConfiguration GetElmahConfiguration(this IConfigurationService service)
         {
-            if (service == null) throw new ArgumentNullException("service");
+            if (service == null) throw new ArgumentNullException(nameof(service));
 
             return service.Get<ElmahConfiguration>();
         }

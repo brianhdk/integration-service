@@ -34,7 +34,7 @@ namespace Vertica.Integration.Tests.Infrastructure.Configuration
 
 					var configuration2 = new Integration.Infrastructure.Configuration.Configuration
 					{
-						Id = String.Join(", ", typeof(FileBasedConfigurationRepositoryTester).FullName, typeof(FileBasedConfigurationRepositoryTester).Assembly.GetName().Name),
+						Id = string.Join(", ", typeof(FileBasedConfigurationRepositoryTester).FullName, typeof(FileBasedConfigurationRepositoryTester).Assembly.GetName().Name),
 						Name = "Configuration2",
 						Description = "Description2",
 						JsonData = "{ json2 }",

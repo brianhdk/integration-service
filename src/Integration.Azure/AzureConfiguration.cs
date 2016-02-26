@@ -11,7 +11,7 @@ namespace Vertica.Integration.Azure
 
         internal AzureConfiguration(ApplicationConfiguration application)
         {
-            if (application == null) throw new ArgumentNullException("application");
+            if (application == null) throw new ArgumentNullException(nameof(application));
 
 			Application = application.Extensibility(extensibility =>
 			{
@@ -24,7 +24,7 @@ namespace Vertica.Integration.Azure
 		
         public AzureConfiguration BlobStorage(Action<AzureBlobStorageConfiguration> blobStorage)
         {
-	        if (blobStorage == null) throw new ArgumentNullException("blobStorage");
+	        if (blobStorage == null) throw new ArgumentNullException(nameof(blobStorage));
 
 	        blobStorage(_blobStorage);
 
@@ -33,7 +33,7 @@ namespace Vertica.Integration.Azure
 
 		public AzureConfiguration ServiceBus(Action<AzureServiceBusConfiguration> serviceBus)
 		{
-			if (serviceBus == null) throw new ArgumentNullException("serviceBus");
+			if (serviceBus == null) throw new ArgumentNullException(nameof(serviceBus));
 
 			serviceBus(_serviceBus);
 

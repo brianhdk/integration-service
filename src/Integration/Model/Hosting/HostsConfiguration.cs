@@ -12,7 +12,7 @@ namespace Vertica.Integration.Model.Hosting
 
         internal HostsConfiguration(ApplicationConfiguration application)
         {
-            if (application == null) throw new ArgumentNullException("application");
+            if (application == null) throw new ArgumentNullException(nameof(application));
 
 			Application = application;
 

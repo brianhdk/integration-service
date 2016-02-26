@@ -6,8 +6,8 @@ namespace Vertica.Integration.RavenDB
     {
         public static ApplicationConfiguration UseRavenDb(this ApplicationConfiguration application, Action<RavenDbConfiguration> ravenDb)
         {
-            if (application == null) throw new ArgumentNullException("application");
-            if (ravenDb == null) throw new ArgumentNullException("ravenDb");
+            if (application == null) throw new ArgumentNullException(nameof(application));
+            if (ravenDb == null) throw new ArgumentNullException(nameof(ravenDb));
 
 			return application.Extensibility(extensibility =>
 			{

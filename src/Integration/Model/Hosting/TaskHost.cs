@@ -24,14 +24,14 @@ namespace Vertica.Integration.Model.Hosting
 
 		public bool CanHandle(HostArguments args)
 		{
-			if (args == null) throw new ArgumentNullException("args");
+			if (args == null) throw new ArgumentNullException(nameof(args));
 
-			return !String.IsNullOrWhiteSpace(args.Command) && _factory.Exists(args.Command);
+			return !string.IsNullOrWhiteSpace(args.Command) && _factory.Exists(args.Command);
 		}
 
 		public void Handle(HostArguments args)
 		{
-			if (args == null) throw new ArgumentNullException("args");
+			if (args == null) throw new ArgumentNullException(nameof(args));
 
 			ITask task = _factory.Get(args.Command);
 
@@ -66,9 +66,6 @@ namespace Vertica.Integration.Model.Hosting
 			return _scheduledTask.Handle(args, task);
 		}
 
-		public string Description
-		{
-			get { return "Handles execution of Tasks."; }
-		}
+		public string Description => "Handles execution of Tasks.";
 	}
 }

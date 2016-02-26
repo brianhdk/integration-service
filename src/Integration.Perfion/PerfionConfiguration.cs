@@ -10,7 +10,7 @@ namespace Vertica.Integration.Perfion
 	{
 		internal PerfionConfiguration(ApplicationConfiguration application)
 		{
-			if (application == null) throw new ArgumentNullException("application");
+			if (application == null) throw new ArgumentNullException(nameof(application));
 
 			Application = application
 				.AddCustomInstaller(Install.ByConvention
@@ -26,7 +26,7 @@ namespace Vertica.Integration.Perfion
 
 		public PerfionConfiguration ConnectionString(ConnectionString connectionString)
 		{
-			if (connectionString == null) throw new ArgumentNullException("connectionString");
+			if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
 
 			ConnectionStringInternal = connectionString;
 
@@ -35,7 +35,7 @@ namespace Vertica.Integration.Perfion
 
 		public PerfionConfiguration ServiceClient(Action<ServiceClientConfiguration> serviceClient)
 		{
-			if (serviceClient == null) throw new ArgumentNullException("serviceClient");
+			if (serviceClient == null) throw new ArgumentNullException(nameof(serviceClient));
 
 			serviceClient(ServiceClientInternal);
 

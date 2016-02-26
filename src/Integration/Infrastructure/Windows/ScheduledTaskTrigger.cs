@@ -13,8 +13,8 @@ namespace Vertica.Integration.Infrastructure.Windows
 
 		protected ScheduledTaskTrigger(DateTimeOffset startDate, _TASK_TRIGGER_TYPE2 type, TimeSpan? interval = null)
 		{
-			if (interval.HasValue && interval.Value.TotalDays > 31) throw new ArgumentOutOfRangeException("interval", @"Maximum interval is 31 days");
-			if (interval.HasValue && interval.Value.TotalSeconds < 60) throw new ArgumentOutOfRangeException("interval", @"Minimum interval is 1 minute");
+			if (interval.HasValue && interval.Value.TotalDays > 31) throw new ArgumentOutOfRangeException(nameof(interval), @"Maximum interval is 31 days");
+			if (interval.HasValue && interval.Value.TotalSeconds < 60) throw new ArgumentOutOfRangeException(nameof(interval), @"Minimum interval is 1 minute");
 
 			_startDate = startDate;
 			_type = type;
@@ -31,11 +31,8 @@ namespace Vertica.Integration.Infrastructure.Windows
 
 			if (_interval.HasValue)
 			{
-				trigger.Repetition.Interval = String.Format("P{0}DT{1}H{2}M{3}S",
-					_interval.Value.Days, 
-					_interval.Value.Hours, 
-					_interval.Value.Minutes, 
-					_interval.Value.Seconds);
+				trigger.Repetition.Interval =
+					$"P{_interval.Value.Days}DT{_interval.Value.Hours}H{_interval.Value.Minutes}M{_interval.Value.Seconds}S";
 			}
 
 			return (T)trigger;

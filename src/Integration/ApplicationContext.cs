@@ -52,14 +52,14 @@ namespace Vertica.Integration
 
 	    public void Execute(params string[] args)
         {
-            if (args == null) throw new ArgumentNullException("args");
+            if (args == null) throw new ArgumentNullException(nameof(args));
 
             Execute(_parser.Parse(args));
         }
 
         public void Execute(HostArguments args)
         {
-            if (args == null) throw new ArgumentNullException("args");
+            if (args == null) throw new ArgumentNullException(nameof(args));
 
             IHost[] hosts = _hosts.Where(x => x.CanHandle(args)).ToArray();
 
@@ -110,7 +110,7 @@ namespace Vertica.Integration
 
         private void LogException(Exception exception)
         {
-            if (exception == null) throw new ArgumentNullException("exception");
+            if (exception == null) throw new ArgumentNullException(nameof(exception));
 
             if (exception is TaskExecutionFailedException)
                 return;

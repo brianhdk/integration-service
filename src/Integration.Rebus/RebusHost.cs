@@ -22,14 +22,14 @@ namespace Vertica.Integration.Rebus
 
 	    public bool CanHandle(HostArguments args)
         {
-            if (args == null) throw new ArgumentNullException("args");
+            if (args == null) throw new ArgumentNullException(nameof(args));
 
-            return String.Equals(args.Command, this.Name(), StringComparison.OrdinalIgnoreCase);
+            return string.Equals(args.Command, this.Name(), StringComparison.OrdinalIgnoreCase);
         }
 
         public void Handle(HostArguments args)
         {
-            if (args == null) throw new ArgumentNullException("args");
+            if (args == null) throw new ArgumentNullException(nameof(args));
 
 			// Initialize Rebus
 			_bus();
@@ -40,9 +40,6 @@ namespace Vertica.Integration.Rebus
 				_outputter.WaitUntilEscapeKeyIsHit(@"Press ESCAPE to stop Rebus...");
         }
 
-		public string Description
-        {
-            get { return "Hosts Rebus"; }
-        }
+		public string Description => "Hosts Rebus";
     }
 }

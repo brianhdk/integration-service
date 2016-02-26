@@ -47,13 +47,14 @@ namespace Vertica.Integration.Portal.Controllers
 
         public HttpResponseMessage Get(string name, int count)
         {
-            string sql = string.Format(@"
-SELECT TOP {0}
+            string sql =
+	            $@"
+SELECT TOP {count}
 	[TimeStamp]
 FROM [TaskLog]
-WHERE [TaskName] = '{1}' AND [Type] = 'T'
+WHERE [TaskName] = '{name}' AND [Type] = 'T'
 ORDER BY [TimeStamp] DESC
-", count, name);
+";
 
             IEnumerable<DateTimeOffset> lastRun;
 

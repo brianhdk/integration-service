@@ -16,7 +16,7 @@ namespace Vertica.Integration.MongoDB
 
         internal MongoDbConfiguration(ApplicationConfiguration application)
         {
-            if (application == null) throw new ArgumentNullException("application");
+            if (application == null) throw new ArgumentNullException(nameof(application));
 
 			Application = application;
 
@@ -27,7 +27,7 @@ namespace Vertica.Integration.MongoDB
 
 		public MongoDbConfiguration DefaultConnection(ConnectionString connectionString)
 		{
-			if (connectionString == null) throw new ArgumentNullException("connectionString");
+			if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
 
 			_defaultConnection = new MongoDbInstaller(new DefaultConnection(connectionString));
 
@@ -36,7 +36,7 @@ namespace Vertica.Integration.MongoDB
 
 		public MongoDbConfiguration DefaultConnection(Connection connection)
         {
-			if (connection == null) throw new ArgumentNullException("connection");
+			if (connection == null) throw new ArgumentNullException(nameof(connection));
 
 			_defaultConnection = new MongoDbInstaller(new DefaultConnection(connection));
 
@@ -46,7 +46,7 @@ namespace Vertica.Integration.MongoDB
 		public MongoDbConfiguration AddConnection<TConnection>(TConnection connection)
             where TConnection : Connection
         {
-            if (connection == null) throw new ArgumentNullException("connection");
+            if (connection == null) throw new ArgumentNullException(nameof(connection));
 
 			_connections.Add(new MongoDbInstaller<TConnection>(connection));
 

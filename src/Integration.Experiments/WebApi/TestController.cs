@@ -9,22 +9,22 @@ namespace Vertica.Integration.Experiments.WebApi
 	{
 		public HttpResponseMessage Get(string name = null)
 		{
-			if (String.Equals(name, "invalid", StringComparison.OrdinalIgnoreCase))
+			if (string.Equals(name, "invalid", StringComparison.OrdinalIgnoreCase))
 				throw new InvalidOperationException("asdf");
 
-			if (String.Equals(name, "argument", StringComparison.OrdinalIgnoreCase))
-				throw new ArgumentException(@"Invalid name", "name");
+			if (string.Equals(name, "argument", StringComparison.OrdinalIgnoreCase))
+				throw new ArgumentException(@"Invalid name", nameof(name));
 
-			if (String.Equals(name, "httpexception", StringComparison.OrdinalIgnoreCase))
+			if (string.Equals(name, "httpexception", StringComparison.OrdinalIgnoreCase))
 				throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "BadRequest"));
 
-			if (String.Equals(name, "httpexception2", StringComparison.OrdinalIgnoreCase))
+			if (string.Equals(name, "httpexception2", StringComparison.OrdinalIgnoreCase))
 				throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-			if (String.Equals(name, "badrequest", StringComparison.OrdinalIgnoreCase))
+			if (string.Equals(name, "badrequest", StringComparison.OrdinalIgnoreCase))
 				return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Bad request");
 
-			return Request.CreateResponse(String.Format("Hello {0}", name ?? "N/A"));
+			return Request.CreateResponse($"Hello {name ?? "N/A"}");
 		}
 	}
 }

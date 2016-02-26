@@ -9,7 +9,7 @@ namespace Vertica.Integration.Experiments
     {
         public static ApplicationConfiguration NoDb(this ApplicationConfiguration configuration)
         {
-            if (configuration == null) throw new ArgumentNullException("configuration");
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
 	        return configuration
 		        .Database(database => database.DisableIntegrationDb());
@@ -17,7 +17,7 @@ namespace Vertica.Integration.Experiments
 
         public static ApplicationConfiguration RegisterMigrations(this ApplicationConfiguration configuration)
         {
-            if (configuration == null) throw new ArgumentNullException("configuration");
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
             return configuration
                 .Migration(migration => migration.AddFromNamespaceOfThis<M1427839041_SetupMonitorConfiguration>());
@@ -25,7 +25,7 @@ namespace Vertica.Integration.Experiments
 
         public static ApplicationConfiguration RegisterTasks(this ApplicationConfiguration configuration)
         {
-            if (configuration == null) throw new ArgumentNullException("configuration");
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
             return configuration.Tasks(tasks => tasks
                 .AddFromAssemblyOfThis<HelloTask>()

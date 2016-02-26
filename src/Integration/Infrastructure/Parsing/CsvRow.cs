@@ -16,15 +16,11 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
         public CsvRow(string[] data, string delimiter = CsvConfiguration.DefaultDelimiter, IDictionary<string, int> headers = null, uint? lineNumber = null)
         {
-            if (data == null) throw new ArgumentNullException("data");
+            if (data == null) throw new ArgumentNullException(nameof(data));
 
             if (headers != null && headers.Count > 0 && data.Length != headers.Count)
                 throw new ArgumentException(
-                    String.Format(
-                        "Row{0} has {1} columns but we expected {2} columns (equal to number of header columns).",
-                        lineNumber.HasValue ? String.Concat(" #", lineNumber.Value) : String.Empty,
-                        data.Length,
-                        headers.Count));
+	                $"Row{(lineNumber.HasValue ? string.Concat(" #", lineNumber.Value) : string.Empty)} has {data.Length} columns but we expected {headers.Count} columns (equal to number of header columns).");
 
             _data = data;
             _headers = headers;
@@ -55,17 +51,11 @@ namespace Vertica.Integration.Infrastructure.Parsing
             }
         }
 
-        public int Length
-        {
-            get { return _data.Length; }
-        }
+        public int Length => _data.Length;
 
-        public bool IsEmpty
-        {
-            get { return _data.All(String.IsNullOrEmpty); }
-        }
+	    public bool IsEmpty => _data.All(string.IsNullOrEmpty);
 
-        public CsvRowMetadata Meta { get; private set; }
+	    public CsvRowMetadata Meta { get; private set; }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
@@ -81,19 +71,19 @@ namespace Vertica.Integration.Infrastructure.Parsing
         {
             if (_headers == null)
                 throw new InvalidOperationException(
-                    String.Format("Row was not initialized with headers."));
+					string.Format("Row was not initialized with headers."));
 
             int index;
             if (!_headers.TryGetValue(name, out index))
                 throw new ArgumentException(
-                    String.Format("Could not find any header named '{0}'.", name));
+	                $"Could not find any header named '{name}'.");
 
             return index;
         }
 
         public override string ToString()
         {
-            return String.Join(Meta.Delimiter, this);
+            return string.Join(Meta.Delimiter, this);
         }
 
         internal string Escape(string data)
@@ -109,7 +99,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
             if (data.IndexOf(Meta.Delimiter, StringComparison.OrdinalIgnoreCase) >= 0 || data.Contains('"') || data.Contains(Environment.NewLine))
             {
-                data = String.Format("\"{0}\"", data);
+                data = $"\"{data}\"";
             }
 
             return data;
@@ -131,7 +121,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
         public static CsvRow[] From<T>(IEnumerable<T> elements, Action<ICsvRowBuilderConfiguration> configure = null)
         {
-            if (elements == null) throw new ArgumentNullException("elements");
+            if (elements == null) throw new ArgumentNullException(nameof(elements));
 
             var headers = typeof (T).GetProperties(BindingFlags.Instance | BindingFlags.Public)
                 .Where(x => x.CanRead)
@@ -164,14 +154,14 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
             internal CsvRowMetadata(CsvRow row, string delimiter, uint? lineNumber = null)
             {
-                if (row == null) throw new ArgumentNullException("row");
+                if (row == null) throw new ArgumentNullException(nameof(row));
 
                 _row = row;
 
                 if (_row._headers != null)
                     Headers = new CsvRowHeaders(this);
 
-                Delimiter = delimiter ?? String.Empty;
+                Delimiter = delimiter ?? string.Empty;
                 LineNumber = lineNumber;
             }
 
@@ -185,18 +175,15 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
                 internal CsvRowHeaders(CsvRowMetadata metadata)
                 {
-                    if (metadata == null) throw new ArgumentNullException("metadata");
-                    if (metadata._row._headers == null) throw new ArgumentException(@"No headers present.", "metadata");
+                    if (metadata == null) throw new ArgumentNullException(nameof(metadata));
+                    if (metadata._row._headers == null) throw new ArgumentException(@"No headers present.", nameof(metadata));
 
                     _metadata = metadata;
                 }
 
-                public int Length
-                {
-                    get { return _metadata._row._headers.Count; }
-                }
+                public int Length => _metadata._row._headers.Count;
 
-                IEnumerator IEnumerable.GetEnumerator()
+	            IEnumerator IEnumerable.GetEnumerator()
                 {
                     return GetEnumerator();
                 }
@@ -208,12 +195,12 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
                 public override string ToString()
                 {
-                    return String.Join(_metadata.Delimiter, this);
+                    return string.Join(_metadata.Delimiter, this);
                 }
 
                 public static implicit operator string[](CsvRowHeaders headers)
                 {
-                    if (headers == null) throw new ArgumentNullException("headers");
+                    if (headers == null) throw new ArgumentNullException(nameof(headers));
 
                     return headers._metadata._row._headers.Keys.ToArray();
                 }
@@ -259,7 +246,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
             public ICsvRowBuilderFinisher Add(params string[] data)
             {
-                if (data == null) throw new ArgumentNullException("data");
+                if (data == null) throw new ArgumentNullException(nameof(data));
 
                 var lineNumber = _rows.Count + 1 + (_returnHeaderAsRow ? 1 : 0);
 
@@ -270,7 +257,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
             public ICsvRowBuilderFinisher AddUsingMapper(Action<ICsvRowMapper> mapper)
             {
-                if (mapper == null) throw new ArgumentNullException("mapper");
+                if (mapper == null) throw new ArgumentNullException(nameof(mapper));
                 if (_headers == null) throw new InvalidOperationException(@"No headers were passed so this method is not allowed.");
 
                 var internalMapper = new CsvRowMapper(_headers);
@@ -284,8 +271,8 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
             public ICsvRowBuilderFinisher From<T>(IEnumerable<T> elements, Func<T, string[]> createData)
             {
-                if (elements == null) throw new ArgumentNullException("elements");
-                if (createData == null) throw new ArgumentNullException("createData");
+                if (elements == null) throw new ArgumentNullException(nameof(elements));
+                if (createData == null) throw new ArgumentNullException(nameof(createData));
 
                 elements.ForEach(x => Add(createData(x)));
 
@@ -294,8 +281,8 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
             public ICsvRowBuilderFinisher FromUsingMapper<T>(IEnumerable<T> elements, Action<ICsvRowMapper, T> mapper)
             {
-                if (elements == null) throw new ArgumentNullException("elements");
-                if (mapper == null) throw new ArgumentNullException("mapper");
+                if (elements == null) throw new ArgumentNullException(nameof(elements));
+                if (mapper == null) throw new ArgumentNullException(nameof(mapper));
                 if (_headers == null) throw new InvalidOperationException(@"No headers were passed so this method is not allowed.");
 
                 elements.ForEach(x =>
@@ -334,7 +321,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
             public ICsvRowBuilderConfiguration ChangeDelimiter(string delimiter)
             {
-                _delimiter = delimiter ?? String.Empty;
+                _delimiter = delimiter ?? string.Empty;
 
                 return this;
             }
@@ -352,12 +339,12 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
             public override string ToString()
             {
-                return String.Join(Environment.NewLine, ToRows().Select(x => x.ToString()));
+                return string.Join(Environment.NewLine, ToRows().Select(x => x.ToString()));
             }
 
             public static implicit operator CsvRow[](CsvRowBuilder builder)
             {
-                if (builder == null) throw new ArgumentNullException("builder");
+                if (builder == null) throw new ArgumentNullException(nameof(builder));
 
                 return builder.ToRows();
             }
@@ -397,19 +384,19 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
             public CsvRowMapper(IDictionary<string, int> headers)
             {
-                if (headers == null) throw new ArgumentNullException("headers");
+                if (headers == null) throw new ArgumentNullException(nameof(headers));
 
                 _headers = headers;
                 _data = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
                 foreach (var keys in _headers.Keys)
-                    _data[keys] = String.Empty;
+                    _data[keys] = string.Empty;
             }
 
             public ICsvRowMapper Map(string name, string value)
             {
                 if (!_data.ContainsKey(name))
-                    throw new KeyNotFoundException(String.Format(@"Could not find any header named '{0}'.", name));
+                    throw new KeyNotFoundException($@"Could not find any header named '{name}'.");
 
                 _data[name] = value;
 

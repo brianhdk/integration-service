@@ -37,7 +37,7 @@ namespace Vertica.Integration.WebApi.Infrastructure
 		/// </summary>
 		public HttpServerConfiguration Configure(Action<IOwinConfiguration> configurer)
 		{
-			if (configurer == null) throw new ArgumentNullException("configurer");
+			if (configurer == null) throw new ArgumentNullException(nameof(configurer));
 
 			_configurers.Add(configurer);
 
@@ -46,7 +46,7 @@ namespace Vertica.Integration.WebApi.Infrastructure
 
 		internal void Apply(IOwinConfiguration configuration)
 		{
-			if (configuration == null) throw new ArgumentNullException("configuration");
+			if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
 			Configure(configurer =>
 			{

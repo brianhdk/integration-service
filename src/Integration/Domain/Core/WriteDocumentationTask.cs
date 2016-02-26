@@ -24,7 +24,7 @@ namespace Vertica.Integration.Domain.Core
             sb.AppendLine();
 
             Func<string, int, string> indent = (msg, count) =>
-                String.Concat(new string(' ', count), msg);
+				string.Concat(new string(' ', count), msg);
 
             foreach (IHost host in _hostFactory.GetAll())
             {
@@ -37,7 +37,7 @@ namespace Vertica.Integration.Domain.Core
             {
                 sb.AppendLine(task.Name());
 
-				if (!String.IsNullOrWhiteSpace(task.Description))
+				if (!string.IsNullOrWhiteSpace(task.Description))
 					sb.AppendLine(indent(task.Description, 3));
 
                 sb.AppendLine();
@@ -67,12 +67,6 @@ namespace Vertica.Integration.Domain.Core
             }
         }
 
-        public override string Description
-        {
-            get
-            {
-                return @"Outputs all integration tasks and related steps. Use argument ""ToFile"" to generate a text-file with this documentation.";
-            }
-        }
+        public override string Description => @"Outputs all integration tasks and related steps. Use argument ""ToFile"" to generate a text-file with this documentation.";
     }
 }

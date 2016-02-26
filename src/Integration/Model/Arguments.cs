@@ -12,6 +12,11 @@ namespace Vertica.Integration.Model
 	    private readonly KeyValuePair<string, string>[] _pairs; 
         private readonly Dictionary<string, string> _dictionary;
 
+	    public Arguments()
+			: this(new string[0])
+	    {
+	    }
+
         public Arguments(params string[] values)
             : this((values ?? new string[0]).Select(x => new KeyValuePair<string, string>(x, x)).ToArray())
         {
@@ -24,10 +29,10 @@ namespace Vertica.Integration.Model
 
 	    internal Arguments(string prefix, params KeyValuePair<string, string>[] pairs)
         {
-		    _prefix = prefix ?? String.Empty;
+		    _prefix = prefix ?? string.Empty;
 
 		    var uniqueKeys = Eq<KeyValuePair<string, string>>.By(
-                (x, y) => String.Equals(x.Key, y.Key, StringComparison.OrdinalIgnoreCase),
+                (x, y) => string.Equals(x.Key, y.Key, StringComparison.OrdinalIgnoreCase),
                 x => x.Key.ToLowerInvariant().GetHashCode());
 
             _pairs = (pairs ?? new KeyValuePair<string, string>[0]).Distinct(uniqueKeys).ToArray();
@@ -36,17 +41,14 @@ namespace Vertica.Integration.Model
 
         public bool Contains(string key)
         {
-            if (String.IsNullOrWhiteSpace(key)) throw new ArgumentException(@"Value cannot be null or empty.", "key");
+            if (string.IsNullOrWhiteSpace(key)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(key));
 
             return _dictionary.ContainsKey(key);
         }
 
-        public string this[int index]
-        {
-            get { return _pairs[index].Key; }
-        }
+        public string this[int index] => _pairs[index].Key;
 
-        public string this[string key]
+	    public string this[string key]
         {
 	        get
 	        {
@@ -57,14 +59,11 @@ namespace Vertica.Integration.Model
 	        }
         }
 
-	    public int Length
-	    {
-			get { return _pairs.Length; }
-	    }
+	    public int Length => _pairs.Length;
 
-        public bool TryGetValue(string key, out string value)
+	    public bool TryGetValue(string key, out string value)
         {
-            if (String.IsNullOrWhiteSpace(key)) throw new ArgumentException(@"Value cannot be null or empty.", "key");
+            if (string.IsNullOrWhiteSpace(key)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(key));
 
             return _dictionary.TryGetValue(key, out value);
         }
@@ -81,19 +80,9 @@ namespace Vertica.Integration.Model
 
 	    public override string ToString()
 	    {
-			return String.Join(" ", _pairs
-				.Select(x =>
-					String.Format("{0}{1}{2}",
-						_prefix,
-						x.Key,
-						String.IsNullOrWhiteSpace(x.Value) || String.Equals(x.Key, x.Value)
-							? String.Empty
-							: String.Concat(":", x.Value))));
+			return string.Join(" ", _pairs.Select(x => $"{_prefix}{x.Key}{(string.IsNullOrWhiteSpace(x.Value) || string.Equals(x.Key, x.Value) ? string.Empty : string.Concat(":", x.Value))}"));
 	    }
 
-	    public static Arguments Empty
-        {
-            get { return new Arguments(new string[0]); }
-        }
+	    public static Arguments Empty => new Arguments(new string[0]);
     }
 }

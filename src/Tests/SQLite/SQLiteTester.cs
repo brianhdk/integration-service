@@ -18,7 +18,7 @@ namespace Vertica.Integration.Tests.SQLite
 		[SetUp]
 		public void Initialize()
 		{
-			_fileName = String.Format("Data\\{0:N}.sqlite", Guid.NewGuid());
+			_fileName = $"Data\\{Guid.NewGuid():N}.sqlite";
 
 			var connection = new TestSqliteConnection(_fileName);
 
@@ -69,10 +69,7 @@ SELECT last_insert_rowid();", new { Name = "Test" });
 				}
 			}
 
-			public override string Description
-			{
-				get { return "Some description"; }
-			}
+			public override string Description => "Some description";
 		}
 
 		public class TestSqliteConnection : SQLiteConnection

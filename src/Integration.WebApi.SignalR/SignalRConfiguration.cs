@@ -32,7 +32,7 @@ namespace Vertica.Integration.WebApi.SignalR
 
 	    internal SignalRConfiguration(ApplicationConfiguration application)
         {
-            if (application == null) throw new ArgumentNullException("application");
+            if (application == null) throw new ArgumentNullException(nameof(application));
 
 			Application = application;
 
@@ -118,7 +118,7 @@ namespace Vertica.Integration.WebApi.SignalR
 
 	    private void Configure(IOwinConfiguration owin)
 	    {
-		    if (owin == null) throw new ArgumentNullException("owin");
+		    if (owin == null) throw new ArgumentNullException(nameof(owin));
 
 		    owin.Http.Routes.IgnoreRoute("signalR", "signalr/{*pathInfo}");
 
@@ -203,8 +203,8 @@ namespace Vertica.Integration.WebApi.SignalR
 
 			public CustomResolver(IDependencyResolver defaultResolver, IKernel kernel)
 			{
-				if (defaultResolver == null) throw new ArgumentNullException("defaultResolver");
-				if (kernel == null) throw new ArgumentNullException("kernel");
+				if (defaultResolver == null) throw new ArgumentNullException(nameof(defaultResolver));
+				if (kernel == null) throw new ArgumentNullException(nameof(kernel));
 
 				_defaultResolver = defaultResolver;
 				_kernel = kernel;
@@ -262,14 +262,14 @@ namespace Vertica.Integration.WebApi.SignalR
 
 			public CustomHubActivator(IDependencyResolver resolver)
 			{
-				if (resolver == null) throw new ArgumentNullException("resolver");
+				if (resolver == null) throw new ArgumentNullException(nameof(resolver));
 
 				_resolver = resolver;
 			}
 
 			public IHub Create(HubDescriptor descriptor)
 			{
-				if (descriptor == null) throw new ArgumentNullException("descriptor");
+				if (descriptor == null) throw new ArgumentNullException(nameof(descriptor));
 
 				if (descriptor.HubType == null)
 					return null;

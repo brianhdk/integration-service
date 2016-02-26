@@ -9,7 +9,7 @@ namespace Vertica.Integration.MongoDB.Infrastructure
 	{
 		protected Connection(ConnectionString connectionString)
 		{
-			if (connectionString == null) throw new ArgumentNullException("connectionString");
+			if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
 
 			ConnectionString = connectionString;
 		}
@@ -18,14 +18,14 @@ namespace Vertica.Integration.MongoDB.Infrastructure
 
 		protected internal virtual MongoUrl CreateMongoUrl(IKernel kernel)
 		{
-			if (kernel == null) throw new ArgumentNullException("kernel");
+			if (kernel == null) throw new ArgumentNullException(nameof(kernel));
 
 			return new MongoUrl(ConnectionString);
 		}
 
 		protected internal virtual IMongoClient Create(IKernel kernel)
 	    {
-		    if (kernel == null) throw new ArgumentNullException("kernel");
+		    if (kernel == null) throw new ArgumentNullException(nameof(kernel));
 
 			return new MongoClient(CreateMongoUrl(kernel));
 	    }

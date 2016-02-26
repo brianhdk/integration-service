@@ -114,9 +114,8 @@ namespace Vertica.Integration.Tests.Model
                     .GroupBy(x => x, StringComparer.OrdinalIgnoreCase)
                     .Any(x => x.Count() > 1);
 
-                Assert.That(duplicates, Is.False, 
-                    String.Format("One or more tasks are duplicated: {0}.", 
-                        String.Join(", ", tasks)));
+                Assert.That(duplicates, Is.False,
+	                $"One or more tasks are duplicated: {string.Join(", ", tasks)}.");
             }
         }
 
@@ -152,12 +151,9 @@ namespace Vertica.Integration.Tests.Model
                 _id = Guid.NewGuid();
             }
 
-            public override string Description
-            {
-                get { return String.Format("TestTask-{0:D}", _id); }
-            }
+            public override string Description => $"TestTask-{_id:D}";
 
-            public override string ToString()
+	        public override string ToString()
             {
                 return Description;
             }
@@ -194,10 +190,7 @@ namespace Vertica.Integration.Tests.Model
             {
             }
 
-            public override string Description
-            {
-                get { return String.Empty; }
-            }
+            public override string Description => string.Empty;
         }
 
         public class TaskWithStepsTask : Task<TaskWithStepsWorkItem>
@@ -206,12 +199,9 @@ namespace Vertica.Integration.Tests.Model
             {
             }
 
-            public override string Description
-            {
-                get { return String.Empty; }
-            }
+            public override string Description => string.Empty;
 
-            public override TaskWithStepsWorkItem Start(ITaskExecutionContext context)
+	        public override TaskWithStepsWorkItem Start(ITaskExecutionContext context)
             {
                 return new TaskWithStepsWorkItem();
             }
@@ -219,24 +209,18 @@ namespace Vertica.Integration.Tests.Model
 
         public class Step1 : Step<TaskWithStepsWorkItem>
         {
-            public override string Description
-            {
-                get { return String.Empty; }
-            }
+            public override string Description => string.Empty;
 
-            public override void Execute(TaskWithStepsWorkItem workItem, ITaskExecutionContext context)
+	        public override void Execute(TaskWithStepsWorkItem workItem, ITaskExecutionContext context)
             {
             }
         }
 
         public class Step2 : Step<TaskWithStepsWorkItem>
         {
-            public override string Description
-            {
-                get { return String.Empty; }
-            }
+            public override string Description => string.Empty;
 
-            public override void Execute(TaskWithStepsWorkItem workItem, ITaskExecutionContext context)
+	        public override void Execute(TaskWithStepsWorkItem workItem, ITaskExecutionContext context)
             {
             }
         }

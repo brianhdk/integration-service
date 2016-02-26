@@ -31,14 +31,14 @@ namespace Integration.Hangfire
 
 		public bool CanHandle(HostArguments args)
 		{
-			if (args == null) throw new ArgumentNullException("args");
+			if (args == null) throw new ArgumentNullException(nameof(args));
 
-			return String.Equals(args.Command, Command, StringComparison.OrdinalIgnoreCase);
+			return string.Equals(args.Command, Command, StringComparison.OrdinalIgnoreCase);
 		}
 
 		public void Handle(HostArguments args)
 		{
-			if (args == null) throw new ArgumentNullException("args");
+			if (args == null) throw new ArgumentNullException(nameof(args));
 
 			JobActivator.Current = new WindsorJobActivator(_kernel);
 
@@ -81,7 +81,7 @@ namespace Integration.Hangfire
 
 			public CompositeDisposable Add(IDisposable disposable)
 			{
-				if (disposable == null) throw new ArgumentNullException("disposable");
+				if (disposable == null) throw new ArgumentNullException(nameof(disposable));
 
 				_disposables.Add(disposable);
 
@@ -129,9 +129,6 @@ namespace Integration.Hangfire
 			return _windowsService.Handle(args, new HandleAsWindowsService(this.Name(), this.Name(), Description, factory));
 		}
 
-		public string Description
-		{
-			get { return "Hangfire host."; }
-		}
+		public string Description => "Hangfire host.";
 	}
 }

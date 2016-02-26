@@ -7,7 +7,7 @@ namespace Vertica.Integration.Infrastructure.Logging
     {
         internal LoggingConfiguration(ApplicationConfiguration application)
         {
-            if (application == null) throw new ArgumentNullException("application");
+            if (application == null) throw new ArgumentNullException(nameof(application));
 
 			Application = application;
 

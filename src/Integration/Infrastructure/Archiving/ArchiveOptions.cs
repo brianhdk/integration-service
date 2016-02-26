@@ -22,7 +22,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
         public ArchiveOptions Named(string name)
         {
-            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
 
             Name = name;
             return this;

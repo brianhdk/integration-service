@@ -14,7 +14,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
         internal MigrationConfiguration(ApplicationConfiguration application)
         {
-            if (application == null) throw new ArgumentNullException("application");
+            if (application == null) throw new ArgumentNullException(nameof(application));
 
 			Application = application;
 
@@ -49,7 +49,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 	    public MigrationConfiguration AddFromNamespaceOfThis<T>(DatabaseServer db, ConnectionString connectionString, string identifyingName = null)
             where T : Migration
         {
-            if (connectionString == null) throw new ArgumentNullException("connectionString");
+            if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
 
 			return Add(new MigrationDb(
 				db,
@@ -61,7 +61,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
 	    public MigrationConfiguration Add(MigrationDb migrationDb)
 	    {
-		    if (migrationDb == null) throw new ArgumentNullException("migrationDb");
+		    if (migrationDb == null) throw new ArgumentNullException(nameof(migrationDb));
 
 		    _dbs.Add(migrationDb);
 
@@ -107,14 +107,14 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
 		    public void Add(MigrationDb migrationDb)
 		    {
-			    if (migrationDb == null) throw new ArgumentNullException("migrationDb");
+			    if (migrationDb == null) throw new ArgumentNullException(nameof(migrationDb));
 
 			    _dbs.Add(migrationDb);
 		    }
 
 			public void Add(Type migration, string identifyingName)
 			{
-				if (migration == null) throw new ArgumentNullException("migration");
+				if (migration == null) throw new ArgumentNullException(nameof(migration));
 
 				_types.Add(Tuple.Create(migration, identifyingName));
 			}
@@ -125,7 +125,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
 		    public IMigrationDbs WithIntegrationDb(IntegrationMigrationDb integrationDb)
 		    {
-			    if (integrationDb == null) throw new ArgumentNullException("integrationDb");
+			    if (integrationDb == null) throw new ArgumentNullException(nameof(integrationDb));
 
 			    if (IntegrationDbDisabled)
 				    throw new InvalidOperationException(@"IntegrationDb is disabled.");

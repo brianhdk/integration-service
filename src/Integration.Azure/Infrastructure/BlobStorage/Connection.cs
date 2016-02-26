@@ -10,7 +10,7 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage
 	{
         protected Connection(ConnectionString connectionString)
 		{
-            if (connectionString == null) throw new ArgumentNullException("connectionString");
+            if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
 
 			ConnectionString = connectionString;
 		}
@@ -19,7 +19,7 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage
 
 		protected internal virtual CloudBlobClient Create(IKernel kernel)
 		{
-			if (kernel == null) throw new ArgumentNullException("kernel");
+			if (kernel == null) throw new ArgumentNullException(nameof(kernel));
 
 			CloudStorageAccount account = CloudStorageAccount.Parse(ConnectionString);
 			CloudBlobClient client = account.CreateCloudBlobClient();

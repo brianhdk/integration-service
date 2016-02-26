@@ -22,7 +22,7 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
 
         public string NavigateTo(string path)
         {
-            if (String.IsNullOrWhiteSpace(path)) throw new ArgumentException(@"Value cannot be null or empty.", "path");
+            if (string.IsNullOrWhiteSpace(path)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(path));
 
             path = path.TrimStart('/');
 
@@ -48,7 +48,7 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
 
         public string NavigateDown(string name)
         {
-            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
 
             name = name.TrimStart('/');
 
@@ -60,12 +60,9 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
             return CurrentPath;
         }
 
-        public string CurrentPath
-        {
-            get { return String.Concat("/", _paths.Count > 0 ? String.Join("/", _paths.Peek().Reverse().ToArray()) : String.Empty); }
-        }
+        public string CurrentPath => string.Concat("/", _paths.Count > 0 ? string.Join("/", _paths.Peek().Reverse().ToArray()) : string.Empty);
 
-        public string[] ListDirectory(Func<string, bool> predicate = null)
+	    public string[] ListDirectory(Func<string, bool> predicate = null)
         {
             return WithExceptionHandling(() =>
             {
@@ -80,7 +77,7 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
                 {
                     while (!reader.EndOfStream)
                     {
-                        string line = reader.ReadLine() ?? String.Empty;
+                        string line = reader.ReadLine() ?? string.Empty;
 
                         if (predicate == null || predicate(line))
                             result.Add(line);
@@ -93,7 +90,7 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
 
         public string CreateDirectory(string name)
         {
-            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
 
             using (Enter(name))
             {
@@ -118,8 +115,8 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
 
         public string Upload(string name, Stream data, bool binary = true)
         {
-            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
-            if (data == null) throw new ArgumentNullException("data");
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
+            if (data == null) throw new ArgumentNullException(nameof(data));
 
             using (Enter(name))
             {
@@ -141,8 +138,8 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
 
         public string Download(string name, Action<Stream> data)
         {
-            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
-            if (data == null) throw new ArgumentNullException("data");
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
+            if (data == null) throw new ArgumentNullException(nameof(data));
 
             NavigateDown(name);
 
@@ -165,7 +162,7 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
 
         public string DeleteFile(string name)
         {
-            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
 
             using (Enter(name))
             {
@@ -185,7 +182,7 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
 
         public string DeleteDirectory(string name)
         {
-            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
 
             using (Enter(name))
             {
@@ -205,7 +202,7 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
 
         public long GetFileSize(string name)
         {
-            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
 
             using (Enter(name))
             {
@@ -224,7 +221,7 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
 
         public DateTime GetFileLastModified(string name)
         {
-            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
 
             using (Enter(name))
             {
@@ -250,7 +247,7 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
             catch (Exception ex)
             {
                 MethodBase method = new StackFrame(1).GetMethod();
-                string caller = String.Format("{0}.{1}", method.DeclaringType != null ? method.DeclaringType.Name : "n/a", method.Name);
+                string caller = $"{(method.DeclaringType != null ? method.DeclaringType.Name : "n/a")}.{method.Name}";
 
                 throw new FtpClientException(caller, CurrentPath, ex);
             }

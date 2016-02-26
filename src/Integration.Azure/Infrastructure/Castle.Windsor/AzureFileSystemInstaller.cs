@@ -16,8 +16,8 @@ namespace Vertica.Integration.Azure.Infrastructure.Castle.Windsor
 
         public AzureFileSystemInstaller(ConnectionString connectionString, string containerName)
         {
-            if (connectionString == null) throw new ArgumentNullException("connectionString");
-            if (String.IsNullOrWhiteSpace(containerName)) throw new ArgumentException(@"Value cannot be null or empty.", "containerName");
+            if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
+            if (string.IsNullOrWhiteSpace(containerName)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(containerName));
 
             _connectionString = connectionString;
             _containerName = containerName;

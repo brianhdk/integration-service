@@ -10,7 +10,7 @@ namespace Vertica.Integration.RavenDB.Infrastructure
 	{
 		protected Connection(ConnectionString connectionString)
 		{
-			if (connectionString == null) throw new ArgumentNullException("connectionString");
+			if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
 
 			ConnectionString = connectionString;
 		}
@@ -19,15 +19,15 @@ namespace Vertica.Integration.RavenDB.Infrastructure
 
 		protected internal virtual void Initialize(IDocumentStore documentStore, IKernel kernel)
 		{
-			if (documentStore == null) throw new ArgumentNullException("documentStore");
-			if (kernel == null) throw new ArgumentNullException("kernel");
+			if (documentStore == null) throw new ArgumentNullException(nameof(documentStore));
+			if (kernel == null) throw new ArgumentNullException(nameof(kernel));
 
 			documentStore.Initialize();
 		}
 
 		protected internal virtual IDocumentStore Create(IKernel kernel)
 		{
-			if (kernel == null) throw new ArgumentNullException("kernel");
+			if (kernel == null) throw new ArgumentNullException(nameof(kernel));
 
 			var documentStore = new DocumentStore();
 			documentStore.ParseConnectionString(ConnectionString);

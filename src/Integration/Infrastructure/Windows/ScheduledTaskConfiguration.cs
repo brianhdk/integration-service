@@ -16,8 +16,8 @@ namespace Vertica.Integration.Infrastructure.Windows
 
 		public ScheduledTaskConfiguration(string name, string folder, string exePath, string args)
 		{
-			if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
-			if (String.IsNullOrWhiteSpace(folder)) throw new ArgumentException(@"Value cannot be null or empty.", "folder");
+			if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
+			if (string.IsNullOrWhiteSpace(folder)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(folder));
 
 			Name = name;
 			Folder = folder;
@@ -39,7 +39,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 
 		public ScheduledTaskConfiguration AddTrigger(ScheduledTaskTrigger trigger)
 		{
-			if (trigger == null) throw new ArgumentNullException("trigger");
+			if (trigger == null) throw new ArgumentNullException(nameof(trigger));
 
 			_triggers.Add(trigger);
 
@@ -59,8 +59,8 @@ namespace Vertica.Integration.Infrastructure.Windows
 
 		public ScheduledTaskConfiguration WithCredentials(string username, string password)
 		{
-			if (string.IsNullOrWhiteSpace(username)) throw new ArgumentException(@"Value cannot be null or empty.", "username");
-			if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException(@"Value cannot be null or empty.", "password");
+			if (string.IsNullOrWhiteSpace(username)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(username));
+			if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(password));
 
 			Credentials = new Credentials
 			{

@@ -23,7 +23,7 @@ namespace Vertica.Integration.Domain.Monitoring
 
 	    public MonitorWorkItem(MonitorConfiguration configuration)
         {
-	        if (configuration == null) throw new ArgumentNullException("configuration");
+	        if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
 	        DateTimeOffset upperBound = Time.UtcNow;
 
@@ -39,16 +39,13 @@ namespace Vertica.Integration.Domain.Monitoring
 	        Configuration = configuration;
         }
 
-        public Range<DateTimeOffset> CheckRange
-		{
-			get { return _checkRange; }
-		}
+        public Range<DateTimeOffset> CheckRange => _checkRange;
 
-        public MonitorConfiguration Configuration { get; private set; }
+	    public MonitorConfiguration Configuration { get; private set; }
 
         public MonitorWorkItem AddIgnoreFilter(ISpecification<MonitorEntry> filter)
         {
-            if (filter == null) throw new ArgumentNullException("filter");
+            if (filter == null) throw new ArgumentNullException(nameof(filter));
 
             _ignore.Add(filter);
 
@@ -57,7 +54,7 @@ namespace Vertica.Integration.Domain.Monitoring
 
         public MonitorWorkItem AddTargetRedirect(IChainOfResponsibilityLink<MonitorEntry, Target[]> redirect)
         {
-            if (redirect == null) throw new ArgumentNullException("redirect");
+            if (redirect == null) throw new ArgumentNullException(nameof(redirect));
 
             _redirects.Chain(redirect);
 
@@ -74,7 +71,7 @@ namespace Vertica.Integration.Domain.Monitoring
 
         public MonitorWorkItem Add(MonitorEntry entry, params Target[] targets)
         {
-            if (entry == null) throw new ArgumentNullException("entry");
+            if (entry == null) throw new ArgumentNullException(nameof(entry));
 
             if (!_ignore.Any(x => x.IsSatisfiedBy(entry)))
             {
@@ -128,7 +125,7 @@ namespace Vertica.Integration.Domain.Monitoring
 
             sb.AppendLine(entries[0].Message);
             sb.AppendLine();
-            sb.AppendLine(String.Format("--- Additional similar entries (Total: {0}) ---", entries.Length));
+            sb.AppendLine($"--- Additional similar entries (Total: {entries.Length}) ---");
             sb.AppendLine();
 
             foreach (MonitorEntry entry in entries.Skip(1))
@@ -141,7 +138,7 @@ namespace Vertica.Integration.Domain.Monitoring
                         sb.AppendFormat("{0} ", match.Value);
                 }
 
-                sb.AppendLine(String.Format("({0})", entry.DateTime.ToString(English)));
+                sb.AppendLine($"({entry.DateTime.ToString(English)})");
             }
 
             return new MonitorEntry(entries[0].DateTime, entries[0].Source, sb.ToString().Trim());
@@ -158,7 +155,7 @@ namespace Vertica.Integration.Domain.Monitoring
 
             public bool Equals(MonitorEntry x, MonitorEntry y)
             {
-                if (!String.Equals(x.Source, y.Source))
+                if (!string.Equals(x.Source, y.Source))
                     return false;
 
                 string xMessage = x.Message;
@@ -166,11 +163,11 @@ namespace Vertica.Integration.Domain.Monitoring
 
                 foreach (var grouping in _groupings)
                 {
-                    xMessage = grouping.Replace(xMessage, String.Empty);
-                    yMessage = grouping.Replace(yMessage, String.Empty);
+                    xMessage = grouping.Replace(xMessage, string.Empty);
+                    yMessage = grouping.Replace(yMessage, string.Empty);
                 }
 
-                return String.Equals(xMessage, yMessage);
+                return string.Equals(xMessage, yMessage);
             }
 
             public int GetHashCode(MonitorEntry obj)

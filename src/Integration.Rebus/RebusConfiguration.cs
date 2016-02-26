@@ -12,7 +12,7 @@ namespace Vertica.Integration.Rebus
     {
 	    internal RebusConfiguration(ApplicationConfiguration application)
 	    {
-		    if (application == null) throw new ArgumentNullException("application");
+		    if (application == null) throw new ArgumentNullException(nameof(application));
 
 		    Application = application.Extensibility(extensibility =>
 		    {
@@ -26,7 +26,7 @@ namespace Vertica.Integration.Rebus
 
 	    public RebusConfiguration Bus(Func<RebusConfigurer, RebusConfigurer> bus)
 	    {
-		    if (bus == null) throw new ArgumentNullException("bus");
+		    if (bus == null) throw new ArgumentNullException(nameof(bus));
 
 		    BusConfiguration = bus;
 
@@ -35,7 +35,7 @@ namespace Vertica.Integration.Rebus
 
 	    public RebusConfiguration Handlers(Action<RebusHandlersConfiguration> handlers)
 	    {
-		    if (handlers == null) throw new ArgumentNullException("handlers");
+		    if (handlers == null) throw new ArgumentNullException(nameof(handlers));
 
 		    handlers(HandlersConfiguration);
 

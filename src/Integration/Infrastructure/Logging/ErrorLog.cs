@@ -28,7 +28,7 @@ namespace Vertica.Integration.Infrastructure.Logging
         public ErrorLog(Exception exception, ITarget target = null)
             : this(Severity.Error, target)
         {
-            if (exception == null) throw new ArgumentNullException("exception");
+            if (exception == null) throw new ArgumentNullException(nameof(exception));
 
             Message = exception.Message.MaxLength(4000);
             FormattedMessage = exception.GetFullStacktrace();

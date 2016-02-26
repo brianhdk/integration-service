@@ -9,12 +9,9 @@ namespace Vertica.Integration.Infrastructure.Email
 		protected internal abstract bool IsHtml { get; }
 	    protected internal abstract string GetBody();
 
-		protected internal virtual MailPriority? MailPriority
-	    {
-	        get { return null; }
-	    }
+		protected internal virtual MailPriority? MailPriority => null;
 
-	    protected internal virtual IEnumerable<Attachment> Attachments
+		protected internal virtual IEnumerable<Attachment> Attachments
 	    {
 	        get { yield break; }
 	    }

@@ -9,17 +9,17 @@ namespace Vertica.Integration.Model.Hosting
     {
         public HostArguments Parse(string[] arguments)
         {
-            if (arguments == null) throw new ArgumentNullException("arguments");
+            if (arguments == null) throw new ArgumentNullException(nameof(arguments));
 
-	        string command = arguments.FirstOrDefault() ?? String.Empty;
+	        string command = arguments.FirstOrDefault() ?? string.Empty;
 
 	        if (command.TrimStart().StartsWith("-"))
-		        command = String.Empty;
+		        command = string.Empty;
 
             var commandArgs = new List<KeyValuePair<string, string>>();
             var args = new List<KeyValuePair<string, string>>();
 
-            var remaining = new Queue<string>(arguments.Skip(String.IsNullOrWhiteSpace(command) ? 0 : 1));
+            var remaining = new Queue<string>(arguments.Skip(string.IsNullOrWhiteSpace(command) ? 0 : 1));
 
             while (remaining.Count > 0)
             {
@@ -50,7 +50,7 @@ namespace Vertica.Integration.Model.Hosting
                 value = key.Substring(indexOfDelimiter + 1);
                 key = key.Substring(0, indexOfDelimiter);
             }
-            else if (remaining.SafePeek(String.Empty).StartsWith(":"))
+            else if (remaining.SafePeek(string.Empty).StartsWith(":"))
             {
                 value = remaining.Dequeue().Substring(1);
             }

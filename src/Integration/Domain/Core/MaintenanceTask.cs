@@ -14,12 +14,9 @@ namespace Vertica.Integration.Domain.Core
 		    _service = service;
 		}
 
-	    public override string Description
-		{
-			get { return "Performs a number of steps to clean up the solution."; }
-		}
+	    public override string Description => "Performs a number of steps to clean up the solution.";
 
-        public override MaintenanceWorkItem Start(ITaskExecutionContext context)
+		public override MaintenanceWorkItem Start(ITaskExecutionContext context)
 		{
 			return new MaintenanceWorkItem(_service.Get<MaintenanceConfiguration>());
 		}

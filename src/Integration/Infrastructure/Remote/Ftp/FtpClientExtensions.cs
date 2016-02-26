@@ -8,8 +8,8 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
     {
 	    public static string DownloadToMemoryStream(this IFtpClient client, string name, MemoryStream memoryStream)
 	    {
-		    if (client == null) throw new ArgumentNullException("client");
-		    if (memoryStream == null) throw new ArgumentNullException("memoryStream");
+		    if (client == null) throw new ArgumentNullException(nameof(client));
+		    if (memoryStream == null) throw new ArgumentNullException(nameof(memoryStream));
 
 		    return client.Download(name, stream =>
 		    {
@@ -20,8 +20,8 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
 
 	    public static string DownloadToLocal(this IFtpClient client, string name, DirectoryInfo localDirectory)
         {
-            if (client == null) throw new ArgumentNullException("client");
-            if (localDirectory == null) throw new ArgumentNullException("localDirectory");
+            if (client == null) throw new ArgumentNullException(nameof(client));
+            if (localDirectory == null) throw new ArgumentNullException(nameof(localDirectory));
 
             return client.Download(name, stream =>
             {
@@ -34,7 +34,7 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
 
         public static string DownloadToString(this IFtpClient client, string name)
         {
-            if (client == null) throw new ArgumentNullException("client");
+            if (client == null) throw new ArgumentNullException(nameof(client));
 
             string content = null;
 
@@ -51,8 +51,8 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
 
         public static string UploadFromLocal(this IFtpClient client, FileInfo localFile)
         {
-            if (client == null) throw new ArgumentNullException("client");
-            if (localFile == null) throw new ArgumentNullException("localFile");
+            if (client == null) throw new ArgumentNullException(nameof(client));
+            if (localFile == null) throw new ArgumentNullException(nameof(localFile));
 
             using (FileStream stream = localFile.OpenRead())
             {
@@ -62,12 +62,12 @@ namespace Vertica.Integration.Infrastructure.Remote.Ftp
 
         public static string UploadFromString(this IFtpClient client, string name, string content, Encoding encoding = null)
         {
-            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
 
             using (var stream = new MemoryStream())
             using (var writer = encoding == null ? new StreamWriter(stream) : new StreamWriter(stream, encoding))
             {
-                writer.Write(content ?? String.Empty);
+                writer.Write(content ?? string.Empty);
                 writer.Flush();
                 stream.Position = 0;
 

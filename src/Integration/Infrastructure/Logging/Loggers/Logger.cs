@@ -23,7 +23,7 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
 
         public ErrorLog LogError(ITarget target, string message, params object[] args)
         {
-            return LogError(new ErrorLog(Severity.Error, String.Format(message, args), target));
+            return LogError(new ErrorLog(Severity.Error, string.Format(message, args), target));
         }
 
         public ErrorLog LogError(Exception exception, ITarget target = null)
@@ -33,7 +33,7 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
 
         public ErrorLog LogWarning(ITarget target, string message, params object[] args)
         {
-            return LogError(new ErrorLog(Severity.Warning, String.Format(message, args), target));
+            return LogError(new ErrorLog(Severity.Warning, string.Format(message, args), target));
         }
 
         private ErrorLog LogError(ErrorLog errorLog)
@@ -48,7 +48,7 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
 
         public void LogEntry(LogEntry entry)
         {
-            if (entry == null) throw new ArgumentNullException("entry");
+            if (entry == null) throw new ArgumentNullException(nameof(entry));
 
             if (LoggingDisabled)
                 return;
@@ -71,12 +71,9 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
             return new Disabler(() => _disablers.Pop());
         }
 
-        private bool LoggingDisabled
-        {
-            get { return _disablers.Count > 0; }
-        }
+        private bool LoggingDisabled => _disablers.Count > 0;
 
-        private class Disabler : IDisposable
+	    private class Disabler : IDisposable
         {
             private readonly Action _disposed;
             private bool _wasDisposed;
@@ -104,7 +101,7 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
 
             public LogEntryLink(Func<TLogEntry, string> insert, Action<TLogEntry> update = null)
             {
-                if (insert == null) throw new ArgumentNullException("insert");
+                if (insert == null) throw new ArgumentNullException(nameof(insert));
 
                 _insert = insert;
                 _update = update;
@@ -125,7 +122,7 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
                 {
                     if (_update == null)
                         throw new NotSupportedException(
-                            String.Format("Update for '{0}' is not supported.", typeof(TLogEntry).Name));                        
+	                        $"Update for '{typeof (TLogEntry).Name}' is not supported.");                        
                     
                     _update(context as TLogEntry);
                 }

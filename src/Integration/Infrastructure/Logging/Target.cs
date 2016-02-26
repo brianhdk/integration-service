@@ -6,7 +6,7 @@ namespace Vertica.Integration.Infrastructure.Logging
     {
         protected Target(string name)
         {
-            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
 
             Name = name;
         }
@@ -28,7 +28,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 
         public static implicit operator Target(string name)
         {
-            if (String.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
                 return null;
 
             return Custom(name);
@@ -38,7 +38,7 @@ namespace Vertica.Integration.Infrastructure.Logging
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return String.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
+            return string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
         }
 
         public override bool Equals(object obj)

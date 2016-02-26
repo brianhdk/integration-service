@@ -34,7 +34,7 @@ namespace Vertica.Integration.Infrastructure.Database.Castle.Windsor
 
 		public DbInstaller(TConnection connection, bool isDisabled = false)
 		{
-			if (connection == null) throw new ArgumentNullException("connection");
+			if (connection == null) throw new ArgumentNullException(nameof(connection));
 
 			_connection = connection;
 			_isDisabled = isDisabled;
@@ -43,7 +43,7 @@ namespace Vertica.Integration.Infrastructure.Database.Castle.Windsor
 		public virtual void Install(IWindsorContainer container, IConfigurationStore store)
 		{
 			if (container.Kernel.HasComponent(typeof(IDbFactory<TConnection>)))
-				throw new InvalidOperationException(String.Format("Only one {0} can be installed.", typeof(TConnection).FullName));
+				throw new InvalidOperationException($"Only one {typeof (TConnection).FullName} can be installed.");
 
 		    if (_isDisabled)
 		    {

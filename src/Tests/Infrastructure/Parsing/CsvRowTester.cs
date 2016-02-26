@@ -18,7 +18,7 @@ namespace Vertica.Integration.Tests.Infrastructure.Parsing
                 .Add("Jane Doe", "31")
                 .ToRows();
 
-            var csv = String.Join(Environment.NewLine, rows.Select(x => x.ToString()));
+            var csv = string.Join(Environment.NewLine, rows.Select(x => x.ToString()));
 
             Assert.That(csv, Is.EqualTo(@"John Doe;30
 Jane Doe;31"));
@@ -54,7 +54,7 @@ Jane Doe;31"));
             Assert.That(rows[1].Meta.LineNumber, Is.EqualTo(2));
             Assert.That(rows[2].Meta.LineNumber, Is.EqualTo(3));
 
-            var csv = String.Join(Environment.NewLine, rows.Select(x => x.ToString()));
+            var csv = string.Join(Environment.NewLine, rows.Select(x => x.ToString()));
 
             Assert.That(csv, Is.EqualTo(@"Name;Age
 John Doe;30
@@ -111,7 +111,7 @@ Jane Doe;"));
                 .From(new[] { "John", "Jane" }, x => new[] { x })
                 .ToRows();
 
-            var csv = String.Join(Environment.NewLine, rows.Select(x => x.ToString()));
+            var csv = string.Join(Environment.NewLine, rows.Select(x => x.ToString()));
 
             Assert.That(csv, Is.EqualTo(@"John
 Jane"));
@@ -137,7 +137,7 @@ Jane Doe;31"));
                 .FromUsingMapper(new[] { "John", "Jane" }, (m, x) => m.Map("Name", x))
                 .ToRows();
 
-            var csv = String.Join(Environment.NewLine, rows.Select(x => x.ToString()));
+            var csv = string.Join(Environment.NewLine, rows.Select(x => x.ToString()));
 
             Assert.That(csv, Is.EqualTo(@"John
 Jane"));

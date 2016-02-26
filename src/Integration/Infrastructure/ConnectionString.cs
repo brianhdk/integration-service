@@ -14,7 +14,7 @@ namespace Vertica.Integration.Infrastructure
 
         public static ConnectionString FromName(string name)
         {
-            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", "name");
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
 
             return new ConnectionString(() =>
             {
@@ -23,7 +23,7 @@ namespace Vertica.Integration.Infrastructure
 
                 if (connectionString == null)
                     throw new ArgumentException(
-                        String.Format("No ConnectionString found with name '{0}'. Please add this to the <connectionString> element.", name));
+	                    $"No ConnectionString found with name '{name}'. Please add this to the <connectionString> element.");
 
                 return connectionString.ConnectionString;
             });
@@ -34,14 +34,11 @@ namespace Vertica.Integration.Infrastructure
             return new ConnectionString(() => text);
         }
 
-	    public static ConnectionString Empty
-	    {
-			get { return FromText(String.Empty); }
-	    }
+	    public static ConnectionString Empty => FromText(string.Empty);
 
-        public override string ToString()
+	    public override string ToString()
         {
-            return _value.Value ?? String.Empty;
+            return _value.Value ?? string.Empty;
         }
 
 		public bool Equals(ConnectionString other)
@@ -65,7 +62,7 @@ namespace Vertica.Integration.Infrastructure
 
         public static implicit operator string(ConnectionString connectionString)
         {
-            if (connectionString == null) throw new ArgumentNullException("connectionString");
+            if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
 
             return connectionString.ToString();
         }

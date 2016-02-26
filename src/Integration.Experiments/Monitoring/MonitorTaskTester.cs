@@ -55,9 +55,6 @@ namespace Vertica.Integration.Experiments.Monitoring
             _runner.Execute(_factory.Get<MonitorTask>());
         }
 
-        public override string Description
-        {
-            get { return "test"; }
-        }
+        public override string Description => "test";
     }
 }

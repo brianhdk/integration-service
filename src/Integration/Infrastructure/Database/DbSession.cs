@@ -12,7 +12,7 @@ namespace Vertica.Integration.Infrastructure.Database
 
         public DbSession(IDbConnection connection)
         {
-            if (connection == null) throw new ArgumentNullException("connection");
+            if (connection == null) throw new ArgumentNullException(nameof(connection));
 
             _connection = connection;
             _connection.Open();
@@ -71,25 +71,16 @@ namespace Vertica.Integration.Infrastructure.Database
 			return SqlMapper.QueryMultiple(_connection, sql, param, CurrentTransaction);
 	    }
 
-	    public IDbConnection Connection
-        {
-            get { return _connection; }
-        }
+	    public IDbConnection Connection => _connection;
 
-        public virtual void Dispose()
+	    public virtual void Dispose()
         {
             _connection.Dispose();
         }
 
-        public IDbTransaction CurrentTransaction
-        {
-            get
-            {
-                return _transactions.Count > 0 ? _transactions.Peek() : null;
-            }
-        }
+        public IDbTransaction CurrentTransaction => _transactions.Count > 0 ? _transactions.Peek() : null;
 
-        private class TransactionScope : IDbTransaction
+	    private class TransactionScope : IDbTransaction
         {
             private readonly IDbTransaction _transaction;
             private readonly Action _beforeDispose;
@@ -116,15 +107,9 @@ namespace Vertica.Integration.Infrastructure.Database
                 _transaction.Rollback();
             }
 
-            public IDbConnection Connection
-            {
-                get { return _transaction.Connection; }
-            }
+            public IDbConnection Connection => _transaction.Connection;
 
-            public IsolationLevel IsolationLevel
-            {
-                get { return _transaction.IsolationLevel; }
-            }
+	        public IsolationLevel IsolationLevel => _transaction.IsolationLevel;
         }
     }
 }

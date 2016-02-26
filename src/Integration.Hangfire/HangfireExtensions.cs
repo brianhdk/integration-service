@@ -7,8 +7,8 @@ namespace Integration.Hangfire
     {
         public static ApplicationConfiguration UseHangfire(this ApplicationConfiguration application, Action<HangfireConfiguration> hangfire)
         {
-            if (application == null) throw new ArgumentNullException("application");
-	        if (hangfire == null) throw new ArgumentNullException("hangfire");
+            if (application == null) throw new ArgumentNullException(nameof(application));
+	        if (hangfire == null) throw new ArgumentNullException(nameof(hangfire));
 
 	        return application.Extensibility(extensibility =>
 			{

@@ -6,7 +6,7 @@ namespace Vertica.Integration.WebApi
     {
         public static ApplicationConfiguration UseWebApi(this ApplicationConfiguration application, Action<WebApiConfiguration> webApi = null)
         {
-            if (application == null) throw new ArgumentNullException("application");
+            if (application == null) throw new ArgumentNullException(nameof(application));
 
 			return application.Extensibility(extensibility =>
 			{

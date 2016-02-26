@@ -6,8 +6,8 @@ namespace Vertica.Integration.Model
     {
         public TaskExecutionContext(ILog log, Arguments arguments)
         {
-            if (log == null) throw new ArgumentNullException("log");
-	        if (arguments == null) throw new ArgumentNullException("arguments");
+            if (log == null) throw new ArgumentNullException(nameof(log));
+	        if (arguments == null) throw new ArgumentNullException(nameof(arguments));
 
 	        Log = log;
             Arguments = arguments;
