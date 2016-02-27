@@ -7,8 +7,8 @@
     <ProjectGuid>{7158B2C5-5725-4B55-B9ED-C58169712051}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Integration.Hangfire</RootNamespace>
-    <AssemblyName>Integration.Hangfire</AssemblyName>
+    <RootNamespace>Vertica.Integration.Hangfire</RootNamespace>
+    <AssemblyName>Vertica.Integration.Hangfire</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
@@ -78,13 +78,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EventActions.cs" />
+    <Compile Include="HangfireConfiguration.cs" />
     <Compile Include="HangfireHost.cs" />
-    <Compile Include="HangfireTask.cs" />
+    <Compile Include="IInternalConfiguration.cs" />
     <Compile Include="Infrastructure\Castle.Windsor\HangfireInstaller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="HangfireConfiguration.cs" />
+    <Compile Include="InternalConfiguration.cs" />
     <Compile Include="HangfireExtensions.cs" />
-    <Compile Include="Services\TaskByNameRunner.cs" />
+    <Compile Include="ShutdownActions.cs" />
+    <Compile Include="StartupActions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

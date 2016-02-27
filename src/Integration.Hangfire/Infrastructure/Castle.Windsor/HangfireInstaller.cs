@@ -6,7 +6,7 @@ using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using Hangfire.Server;
 
-namespace Integration.Hangfire.Infrastructure.Castle.Windsor
+namespace Vertica.Integration.Hangfire.Infrastructure.Castle.Windsor
 {
 	internal class HangfireInstaller : IWindsorInstaller
 	{
@@ -32,6 +32,7 @@ namespace Integration.Hangfire.Infrastructure.Castle.Windsor
                 container.Register(
                     Classes.FromAssembly(assembly)
                         .BasedOn<IBackgroundProcess>()
+						.WithServiceFromInterface(typeof(IBackgroundProcess))
                         .Unless(x =>
                         {
                             if (_removeProcesses.Contains(x))
@@ -43,7 +44,8 @@ namespace Integration.Hangfire.Infrastructure.Castle.Windsor
 
             container.Register(
                 Classes.From(_addProcesses.Except(_removeProcesses).Distinct())
-                    .BasedOn<IBackgroundProcess>());
+                    .BasedOn<IBackgroundProcess>()
+					.WithServiceFromInterface(typeof(IBackgroundProcess)));
         }
 	}
 }

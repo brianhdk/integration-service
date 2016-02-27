@@ -1,114 +1,145 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Castle.MicroKernel;
 using Castle.Windsor;
 using Hangfire;
 using Hangfire.Server;
-using Integration.Hangfire.Infrastructure.Castle.Windsor;
-using Integration.Hangfire.Services;
-using Vertica.Integration;
+using Vertica.Integration.Hangfire.Infrastructure.Castle.Windsor;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
-using Vertica.Integration.WebApi;
-using Vertica.Integration.WebApi.Infrastructure;
 
-namespace Integration.Hangfire
+namespace Vertica.Integration.Hangfire
 {
-    public class HangfireConfiguration : IInitializable<IWindsorContainer>
-    {
-        private readonly List<Assembly> _scan;
-        private readonly List<Type> _add;
-        private readonly List<Type> _remove;
+	public class HangfireConfiguration : IInitializable<IWindsorContainer>
+	{
+		private readonly IInternalConfiguration _configuration;
 
-        internal HangfireConfiguration(ApplicationConfiguration application)
-        {
-            if (application == null) throw new ArgumentNullException(nameof(application));
+		private readonly List<Assembly> _scan;
+		private readonly List<Type> _add;
+		private readonly List<Type> _remove;
+
+		internal HangfireConfiguration(ApplicationConfiguration application)
+		{
+			if (application == null) throw new ArgumentNullException(nameof(application));
 
 			Application = application
-				.Hosts(hosts => hosts.Host<HangfireHost>())
-				.UseWebApi(webApi => webApi.HttpServer(httpServer => httpServer.Configure(HttpServerConfiguration)))
-				.AddCustomInstaller(Install.Service<TaskByNameRunner>());
+				.Hosts(hosts => hosts.Host<HangfireHost>());
 
-            _scan = new List<Assembly>();
-            _add = new List<Type>();
-            _remove = new List<Type>();
-        }
+			_configuration = new InternalConfiguration();
 
-	    private void HttpServerConfiguration(IOwinConfiguration configuration)
-	    {
-			// TODO: Combine WebApiHost WITH Hangfire
-				// WebApiHost - start BackgroundServer
-				// HangfireHost - start BackgroundServer + web-server
+			_scan = new List<Assembly>();
+			_add = new List<Type>();
+			_remove = new List<Type>();
+		}
 
-			// TODO: Configurable whether to run as web-server or directly
-		    //configuration.App.UseHangfireServer();
+		public ApplicationConfiguration Application { get; }
 
-			// issue is with the URL used for Hangfire
-
-			if (!DashboardDisabled)
-				configuration.App.UseHangfireDashboard();
-	    }
-
-		public bool DashboardDisabled { get; private set; }
-
-		public HangfireConfiguration DisableDashboard()
+		public HangfireConfiguration Configuration(Action<IGlobalConfiguration> configuration)
 		{
-			DashboardDisabled = true;
+			if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+
+			configuration(GlobalConfiguration.Configuration);
+
 			return this;
 		}
 
-	    public ApplicationConfiguration Application { get; private set; }
+		public HangfireConfiguration WithServerOptions(Action<BackgroundJobServerOptions> serverOptions)
+		{
+			if (serverOptions == null) throw new ArgumentNullException(nameof(serverOptions));
 
-        /// <summary>
+			serverOptions(_configuration.ServerOptions);
+
+			return this;
+		}
+
+		public HangfireConfiguration OnStartup(Action<StartupActions> startup)
+		{
+			if (startup == null) throw new ArgumentNullException(nameof(startup));
+
+			startup(_configuration.OnStartup);
+
+			return this;
+		}
+		
+		public HangfireConfiguration OnShutdown(Action<ShutdownActions> shutdown)
+		{
+			if (shutdown == null) throw new ArgumentNullException(nameof(shutdown));
+
+			shutdown(_configuration.OnShutdown);
+
+			return this;
+		}
+
+		/// <summary>
 		/// Scans the assembly of the defined <typeparamref name="T"></typeparamref> for public classes inheriting <see cref="IBackgroundProcess"/>.
-        /// <para />
-        /// </summary>
-        /// <typeparam name="T">The type in which its assembly will be scanned.</typeparam>
-        public HangfireConfiguration AddFromAssemblyOfThis<T>()
-        {
-            _scan.Add(typeof (T).Assembly);
+		/// <para />
+		/// </summary>
+		/// <typeparam name="T">The type in which its assembly will be scanned.</typeparam>
+		public HangfireConfiguration AddFromAssemblyOfThis<T>()
+		{
+			_scan.Add(typeof (T).Assembly);
 
-            return this;
-        }
+			return this;
+		}
 
-        /// <summary>
-        /// Adds the specified <typeparamref name="TProcess"/>.
-        /// </summary>
+		/// <summary>
+		/// Adds the specified <typeparamref name="TProcess"/>.
+		/// </summary>
 		/// <typeparam name="TProcess">Specifies the <see cref="IBackgroundProcess"/> to be added.</typeparam>
-        public HangfireConfiguration Add<TProcess>()
-            where TProcess : IBackgroundProcess
-        {
-            _add.Add(typeof(TProcess));
+		public HangfireConfiguration Add<TProcess>()
+			where TProcess : IBackgroundProcess
+		{
+			_add.Add(typeof(TProcess));
 
-            return this;
-        }
+			return this;
+		}
 
-        /// <summary>
-        /// Skips the specified <typeparamref name="TController" />.
-        /// </summary>
+		/// <summary>
+		/// Skips the specified <typeparamref name="TController" />.
+		/// </summary>
 		/// <typeparam name="TController">Specifies the <see cref="IBackgroundProcess"/> that will be skipped.</typeparam>
-        public HangfireConfiguration Remove<TController>()
+		public HangfireConfiguration Remove<TController>()
 			where TController : IBackgroundProcess
-        {
-            _remove.Add(typeof (TController));
+		{
+			_remove.Add(typeof (TController));
 
-            return this;
-        }
+			return this;
+		}
 
 		/// <summary>
 		/// Clears all registred BackgroundProcesses.
 		/// </summary>
-	    public HangfireConfiguration Clear()
-	    {
-		    _remove.Clear();
-		    _add.Clear();
+		public HangfireConfiguration Clear()
+		{
+			_remove.Clear();
+			_add.Clear();
 			_scan.Clear();
 
-		    return this;
-	    }
+			return this;
+		}
 
-	    void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
-	    {
+		void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
+		{
+			JobActivator.Current = _configuration.ServerOptions.Activator = new WindsorJobActivator(container.Kernel);
+
 			container.Install(new HangfireInstaller(_scan.ToArray(), _add.ToArray(), _remove.ToArray()));
-	    }
-    }
+			container.Install(Install.Instance(_configuration));
+		}
+
+		private class WindsorJobActivator : JobActivator
+		{
+			private readonly IKernel _kernel;
+
+			public WindsorJobActivator(IKernel kernel)
+			{
+				_kernel = kernel;
+			}
+
+			public override object ActivateJob(Type jobType)
+			{
+				return _kernel.Resolve(jobType);
+			}
+		}
+
+	}
 }

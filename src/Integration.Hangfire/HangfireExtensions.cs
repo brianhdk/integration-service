@@ -1,7 +1,6 @@
 ﻿using System;
-using Vertica.Integration;
 
-namespace Integration.Hangfire
+namespace Vertica.Integration.Hangfire
 {
     public static class HangfireExtensions
     {
