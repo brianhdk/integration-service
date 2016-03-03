@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using NSubstitute;
 using NUnit.Framework;
@@ -11,6 +12,7 @@ using Vertica.Integration.Model.Exceptions;
 namespace Vertica.Integration.Tests.Model
 {
 	[TestFixture]
+	[SuppressMessage("ReSharper", "UseNullPropagation")]
 	public class TaskRunnerTester
 	{
 		[Test]
@@ -22,7 +24,7 @@ namespace Vertica.Integration.Tests.Model
             var step1 = Substitute.For<IStep<SomeWorkItem>>();
             var step2 = Substitute.For<IStep<SomeWorkItem>>();
             var workItem = new SomeWorkItem();
-		    var task = new TaskRunnerTesterTask(new[] {step1, step2}, workItem);
+		    var task = new TaskRunnerTesterTask<SomeWorkItem>(new[] {step1, step2}, workItem);
 
 			step1.ContinueWith(workItem).Returns(Execution.Execute);
 			step2.ContinueWith(workItem).Returns(Execution.Execute);
@@ -50,7 +52,7 @@ namespace Vertica.Integration.Tests.Model
 			var step1 = Substitute.For<IStep<SomeWorkItem>>();
 			var step2 = Substitute.For<IStep<SomeWorkItem>>();
             var workItem = new SomeWorkItem();
-		    var task = new TaskRunnerTesterTask(new[] { step1, step2 }, workItem);
+		    var task = new TaskRunnerTesterTask<SomeWorkItem>(new[] { step1, step2 }, workItem);
 
 			var throwingException = new DivideByZeroException("error");
             
@@ -76,33 +78,160 @@ namespace Vertica.Integration.Tests.Model
             Assert.That(task.EndCalled, Is.False);
 		}
 
-	    public class TaskRunnerTesterTask : Task<SomeWorkItem>
-	    {
-	        private readonly SomeWorkItem _workItem;
+		[Test]
+		public void Execute_IDisposableWorkItem_TaskStartFails()
+		{
+			var logger = Substitute.For<ILogger>();
+			TextWriter outputter = TextWriter.Null;
 
-	        public TaskRunnerTesterTask(IEnumerable<IStep<SomeWorkItem>> steps, SomeWorkItem workItem)
+			int disposedCount = 0;
+			var step1 = Substitute.For<IStep<DisposableWorkItem>>();
+			var step2 = Substitute.For<IStep<DisposableWorkItem>>();
+			var workItem = new DisposableWorkItem(() => disposedCount++);
+			var exception = new InvalidOperationException();
+			var task = new TaskRunnerTesterTask<DisposableWorkItem>(new[] { step1, step2 }, workItem)
+				.OnStart(ctx => { throw exception; });
+
+			step1.ContinueWith(workItem).Returns(Execution.Execute);
+			step2.ContinueWith(workItem).Returns(Execution.Execute);
+
+			var subject = new TaskRunner(logger, outputter);
+			var thrownException = Assert.Throws<TaskExecutionFailedException>(() => subject.Execute(task));
+
+			step1.DidNotReceive().Execute(workItem, Arg.Any<ITaskExecutionContext>());
+			step1.DidNotReceive().Execute(workItem, Arg.Any<ITaskExecutionContext>());
+
+			Assert.That(task.EndCalled, Is.False);
+			Assert.That(disposedCount, Is.EqualTo(0));
+			Assert.That(thrownException.InnerException, Is.SameAs(exception));
+		}
+
+		[Test]
+		public void Execute_IDisposableWorkItem_TaskEndFails()
+		{
+			var logger = Substitute.For<ILogger>();
+			TextWriter outputter = TextWriter.Null;
+
+			int disposedCount = 0;
+			var step1 = Substitute.For<IStep<DisposableWorkItem>>();
+			var step2 = Substitute.For<IStep<DisposableWorkItem>>();
+			var workItem = new DisposableWorkItem(() => disposedCount++);
+			var exception = new InvalidOperationException();
+			var task = new TaskRunnerTesterTask<DisposableWorkItem>(new[] { step1, step2 }, workItem)
+				.OnEnd((wi, ctx) => { throw exception; });
+
+			step1.ContinueWith(workItem).Returns(Execution.Execute);
+			step2.ContinueWith(workItem).Returns(Execution.Execute);
+
+			var subject = new TaskRunner(logger, outputter);
+			var thrownException = Assert.Throws<TaskExecutionFailedException>(() => subject.Execute(task));
+
+			step1.Received().Execute(workItem, Arg.Any<ITaskExecutionContext>());
+			step2.Received().Execute(workItem, Arg.Any<ITaskExecutionContext>());
+
+			Assert.That(task.EndCalled, Is.True);
+			Assert.That(disposedCount, Is.EqualTo(1));
+			Assert.That(thrownException.InnerException, Is.SameAs(exception));
+		}
+
+
+		[Test]
+		public void Execute_IDisposableWorkItem_Step2Fails()
+		{
+			var logger = Substitute.For<ILogger>();
+			TextWriter outputter = TextWriter.Null;
+
+			int disposedCount = 0;
+			var step1 = Substitute.For<IStep<DisposableWorkItem>>();
+			var step2 = Substitute.For<IStep<DisposableWorkItem>>();
+			var workItem = new DisposableWorkItem(() => disposedCount++);
+			var exception = new InvalidOperationException();
+			var task = new TaskRunnerTesterTask<DisposableWorkItem>(new[] { step1, step2 }, workItem);
+
+			step1.ContinueWith(workItem).Returns(Execution.Execute);
+			step2.ContinueWith(workItem).Returns(Execution.Execute);
+
+			step2
+				.When(x => x.Execute(workItem, Arg.Any<ITaskExecutionContext>()))
+				.Do(x => { throw exception; });
+
+			var subject = new TaskRunner(logger, outputter);
+
+			var thrownException = Assert.Throws<TaskExecutionFailedException>(() => subject.Execute(task));
+
+			step1.Received().Execute(workItem, Arg.Any<ITaskExecutionContext>());
+			step2.Received().Execute(workItem, Arg.Any<ITaskExecutionContext>());
+
+			Assert.That(task.EndCalled, Is.False);
+			Assert.That(disposedCount, Is.EqualTo(1));
+			Assert.That(thrownException.InnerException, Is.SameAs(exception));
+		}
+
+		public class TaskRunnerTesterTask<TWorkItem> : Task<TWorkItem>
+	    {
+	        private readonly TWorkItem _workItem;
+			private Action<ITaskExecutionContext> _onStart;
+			private Action<TWorkItem, ITaskExecutionContext> _onEnd;
+
+			public TaskRunnerTesterTask(IEnumerable<IStep<TWorkItem>> steps, TWorkItem workItem)
                 : base(steps)
 	        {
 	            _workItem = workItem;
 	        }
 
-	        public override SomeWorkItem Start(ITaskExecutionContext context)
+			public TaskRunnerTesterTask<TWorkItem> OnStart(Action<ITaskExecutionContext> onStart)
+			{
+				_onStart = onStart;
+				return this;
+			}   
+
+	        public override TWorkItem Start(ITaskExecutionContext context)
 	        {
+		        if (_onStart != null)
+			        _onStart(context);
+
 	            return _workItem;
 	        }
 
-	        public override void End(SomeWorkItem workItem, ITaskExecutionContext context)
-	        {
-	            EndCalled = true;
-	        }
+			public TaskRunnerTesterTask<TWorkItem> OnEnd(Action<TWorkItem, ITaskExecutionContext> onEnd)
+			{
+				_onEnd = onEnd;
 
-	        public bool EndCalled { get; set; }
+				return this;
+			}
+
+			public override void End(TWorkItem workItem, ITaskExecutionContext context)
+			{
+	            EndCalled = true;
+
+				if (_onEnd != null)
+					_onEnd(workItem, context);
+			}
+
+			public bool EndCalled { get; set; }
 
 	        public override string Description => string.Empty;
 	    }
 
 	    public class SomeWorkItem
 		{
+		}
+
+		public class DisposableWorkItem : IDisposable
+		{
+			private readonly Action _onDisposed;
+
+			public DisposableWorkItem(Action onDisposed)
+			{
+				if (onDisposed == null) throw new ArgumentNullException(nameof(onDisposed));
+
+				_onDisposed = onDisposed;
+			}
+
+			public void Dispose()
+			{
+				_onDisposed();
+			}
 		}
 	}
 }
