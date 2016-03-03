@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 using Castle.Windsor;
@@ -9,7 +10,8 @@ using Vertica.Integration.Model.Hosting;
 
 namespace Vertica.Integration
 {
-    public sealed class ApplicationContext : IApplicationContext
+	[SuppressMessage("ReSharper", "UseNullPropagation")]
+	public sealed class ApplicationContext : IApplicationContext
     {
         private static readonly Lazy<Action> EnsureSingleton = new Lazy<Action>(() => () => { });
 
@@ -34,8 +36,8 @@ namespace Vertica.Integration
 			    ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
 
             _container = CastleWindsor.Initialize(_configuration);
-            _parser = _container.Resolve<IArgumentsParser>();
-            _hosts = _container.Resolve<IHostFactory>().GetAll();
+            _parser = Resolve<IArgumentsParser>();
+            _hosts = Resolve<IHostFactory>().GetAll();
 
             AppDomain.CurrentDomain.UnhandledException += LogException;
 		}
@@ -48,6 +50,16 @@ namespace Vertica.Integration
 	        EnsureSingleton.Value();
 
 		    return new ApplicationContext(application);
+	    }
+
+		public T Resolve<T>()
+	    {
+		    return _container.Resolve<T>();
+	    }
+
+	    public T[] ResolveAll<T>()
+	    {
+		    return _container.ResolveAll<T>();
 	    }
 
 	    public void Execute(params string[] args)
@@ -115,7 +127,7 @@ namespace Vertica.Integration
             if (exception is TaskExecutionFailedException)
                 return;
 
-            var logger = _container.Resolve<ILogger>();
+            var logger = Resolve<ILogger>();
 
             try
             {
@@ -127,8 +139,8 @@ namespace Vertica.Integration
                     throw;
 
 	            var eventLogger = new EventLogger(
-					_container.Resolve<EventLoggerConfiguration>(), 
-					_container.Resolve<IRuntimeSettings>());
+					Resolve<EventLoggerConfiguration>(), 
+					Resolve<IRuntimeSettings>());
 
 	            eventLogger.LogError(exception);
             }
