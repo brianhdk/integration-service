@@ -183,3 +183,4 @@ UpgradeLog*.htm
 FakesAssemblies/
 
 results/
+/src/Integration.Portal/Portal.Html5.zip

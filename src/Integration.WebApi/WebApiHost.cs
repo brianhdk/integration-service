@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using Vertica.Integration.Infrastructure.Extensions;
+using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Model.Hosting;
 using Vertica.Integration.Model.Hosting.Handlers;
 using Vertica.Integration.WebApi.Infrastructure;
@@ -22,14 +22,14 @@ namespace Vertica.Integration.WebApi
 	    private readonly IWindowsServiceHandler _windowsService;
 	    private readonly IHttpServerFactory _factory;
 	    private readonly IRuntimeSettings _settings;
-	    private readonly TextWriter _outputter;
+	    private readonly IProcessExitHandler _processExit;
 
-	    public WebApiHost(IWindowsServiceHandler windowsService, IHttpServerFactory factory, IRuntimeSettings settings, TextWriter outputter)
+	    public WebApiHost(IWindowsServiceHandler windowsService, IHttpServerFactory factory, IRuntimeSettings settings, IProcessExitHandler processExit)
 	    {
 		    _windowsService = windowsService;
 		    _factory = factory;
 		    _settings = settings;
-		    _outputter = outputter;
+		    _processExit = processExit;
 	    }
 
 	    public bool CanHandle(HostArguments args)
@@ -58,7 +58,7 @@ namespace Vertica.Integration.WebApi
 				if (Environment.UserInteractive && !args.CommandArgs.Contains("noBrowser"))
 					Process.Start(url);
 
-				_outputter.WaitUntilEscapeKeyIsHit(@"Press ESCAPE to stop HttpServer...");
+				_processExit.Wait();
 			}
         }
 

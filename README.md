@@ -28,6 +28,7 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
  - [Integrating MongoDB](#integrating-mongodb)
  - [Integrating SQLite](#integrating-sqlite) 
  - [Integrating Perfion PIM](#integrating-perfion-pim)  
+ - [Integrating Hangfire](#integrating-hangfire)  
  - [How to Disable IntegrationDb](#how-to-disable-integrationdb)
  - [How to Change Logger](#how-to-change-logger) 
  - [How to Register Custom dependencies/services](#how-to-register-custom-dependenciesservices)
@@ -1960,6 +1961,16 @@ namespace ConsoleApplication16
 	}
 }
 ```
+
+[Back to Table of Contents](#table-of-contents)
+
+## Integrating Hangfire
+
+To setup a Hangfire integration, start by adding the following package:
+
+  ```
+  Install-Package Vertica.Integration.Hangfire
+  ```
 
 [Back to Table of Contents](#table-of-contents)
 

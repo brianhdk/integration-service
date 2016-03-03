@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using Castle.MicroKernel;
 using Hangfire;
 using Hangfire.Server;
 using Vertica.Integration.Infrastructure.Extensions;
+using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Model.Hosting;
 using Vertica.Integration.Model.Hosting.Handlers;
 
@@ -15,14 +15,14 @@ namespace Vertica.Integration.Hangfire
 		internal static readonly string Command = typeof(HangfireHost).HostName();
 
 		private readonly IWindowsServiceHandler _windowsService;
-		private readonly TextWriter _outputter;
-		private readonly IKernel _kernel;
+		private readonly IProcessExitHandler _processExit;
 		private readonly IInternalConfiguration _configuration;
+		private readonly IKernel _kernel;
 
-		public HangfireHost(IWindowsServiceHandler windowsService, TextWriter outputter, IKernel kernel)
+		public HangfireHost(IWindowsServiceHandler windowsService, IProcessExitHandler processExit, IKernel kernel)
 		{
 			_windowsService = windowsService;
-			_outputter = outputter;
+			_processExit = processExit;
 			_kernel = kernel;
 			_configuration = kernel.Resolve<IInternalConfiguration>();
 		}
@@ -43,9 +43,7 @@ namespace Vertica.Integration.Hangfire
 
 			using (Initialize())
 			{
-				// if running in Azure - implement some mechanics to be able to wait for Azure to complete
-				// general functionality - IWaiter - that is decided at runtime (
-				_outputter.WaitUntilEscapeKeyIsHit(@"Press ESCAPE to stop Hangfire...");
+				_processExit.Wait();
 			}
 		}
 
@@ -72,7 +70,6 @@ namespace Vertica.Integration.Hangfire
 				_configuration = configuration;
 				_kernel = kernel;
 
-				// NOTE: Issue omkring hangfires eget skema... - dette skal være på plads inden, undersøg hvornår Hangfire!
 				Execute(_configuration.OnStartup);
 
 				IBackgroundProcess[] backgroundProcesses = kernel.ResolveAll<IBackgroundProcess>();

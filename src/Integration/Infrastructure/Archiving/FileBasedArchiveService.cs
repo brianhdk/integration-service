@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
@@ -141,6 +142,8 @@ namespace Vertica.Integration.Infrastructure.Archiving
 			return new FileInfo(Path.Combine($"{archiveFile.FullName}.meta"));
 		}
 
+		[SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
+		[SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Local")]
 		private class MetaFile
 		{
 			public MetaFile(ArchiveOptions options = null)
@@ -153,9 +156,9 @@ namespace Vertica.Integration.Infrastructure.Archiving
 				}
 			}
 
-			public string Name { get; }
-			public string GroupName { get; }
-			public DateTimeOffset? Expires { get; }
+			public string Name { get; set; }
+			public string GroupName { get; set; }
+			public DateTimeOffset? Expires { get; set; }
 
 			public override string ToString()
 			{
@@ -169,7 +172,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
 				try
 				{
-					return JsonConvert.DeserializeAnonymousType(json, new MetaFile());
+					return JsonConvert.DeserializeObject<MetaFile>(json);
 				}
 				catch (Exception ex)
 				{

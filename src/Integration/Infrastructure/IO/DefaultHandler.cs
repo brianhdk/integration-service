@@ -3,11 +3,11 @@ using Vertica.Integration.Infrastructure.Extensions;
 
 namespace Vertica.Integration.Infrastructure.IO
 {
-	public class InteractiveHandler : IProcessExitHandler
+	internal class DefaultHandler : IProcessExitHandler
 	{
 		private readonly TextWriter _outputter;
 
-		public InteractiveHandler(TextWriter outputter)
+		public DefaultHandler(TextWriter outputter)
 		{
 			_outputter = outputter;
 		}

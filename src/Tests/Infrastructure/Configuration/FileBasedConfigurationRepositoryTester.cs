@@ -19,9 +19,10 @@ namespace Vertica.Integration.Tests.Infrastructure.Configuration
 			{
 				var logger = Substitute.For<ILogger>();
 
-				var subject = new FileBasedConfigurationRepository(new InMemoryRuntimeSettings()
-					.Set(FileBasedConfigurationRepository.BaseDirectoryKey, baseDirectory), logger);
+				InMemoryRuntimeSettings settings = new InMemoryRuntimeSettings()
+					.Set(FileBasedConfigurationRepository.BaseDirectoryKey, baseDirectory);
 
+				var subject = new FileBasedConfigurationRepository(settings, logger);
 				{
 					var configuration1 = new Integration.Infrastructure.Configuration.Configuration
 					{
@@ -44,13 +45,15 @@ namespace Vertica.Integration.Tests.Infrastructure.Configuration
 					subject.Save(configuration1);
 					subject.Save(configuration2);
 
-					Integration.Infrastructure.Configuration.Configuration storedConfiguration1 = subject.Get(configuration1.Id);
+					Integration.Infrastructure.Configuration.Configuration storedConfiguration1 = 
+						subject.Get(configuration1.Id);
 
 					Assert.IsNotNull(storedConfiguration1);
 					Assert.That(storedConfiguration1.JsonData, Is.EqualTo(configuration1.JsonData));
 					Assert.That(storedConfiguration1.UpdatedBy, Is.EqualTo(configuration1.UpdatedBy));
 
-					Integration.Infrastructure.Configuration.Configuration storedConfiguration2 = subject.Get(configuration2.Id);
+					Integration.Infrastructure.Configuration.Configuration storedConfiguration2 = 
+						subject.Get(configuration2.Id);
 
 					Assert.IsNotNull(storedConfiguration1);
 					Assert.That(storedConfiguration2.Name, Is.EqualTo(configuration2.Name));

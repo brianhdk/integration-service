@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
@@ -114,6 +115,8 @@ namespace Vertica.Integration.Infrastructure.Configuration
 			return new FileInfo(Path.Combine($"{archiveFile.FullName}.meta"));
 		}
 
+		[SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
+		[SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Local")]
 		private class MetaFile
 		{
 			public MetaFile(Configuration configuration = null)
@@ -126,9 +129,9 @@ namespace Vertica.Integration.Infrastructure.Configuration
 				}
 			}
 
-			public string Name { get; }
-			public string Description { get; }
-			public string UpdatedBy { get; }
+			public string Name { get; set; }
+			public string Description { get; set; }
+			public string UpdatedBy { get; set; }
 
 			public override string ToString()
 			{
@@ -142,7 +145,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
 
 				try
 				{
-					return JsonConvert.DeserializeAnonymousType(json, new MetaFile());
+					return JsonConvert.DeserializeObject<MetaFile>(json);
 				}
 				catch (Exception ex)
 				{

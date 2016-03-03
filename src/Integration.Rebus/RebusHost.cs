@@ -1,7 +1,7 @@
 using System;
-using System.IO;
 using Rebus.Bus;
 using Vertica.Integration.Infrastructure.Extensions;
+using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Model.Hosting;
 using Vertica.Integration.Model.Hosting.Handlers;
 
@@ -11,12 +11,12 @@ namespace Vertica.Integration.Rebus
     {
 	    private readonly Func<IBus> _bus;
 	    private readonly IWindowsServiceHandler _windowsService;
-	    private readonly TextWriter _outputter;
+		private readonly IProcessExitHandler _processExit;
 
-	    public RebusHost(Func<IBus> bus, IWindowsServiceHandler windowsService, TextWriter outputter)
+	    public RebusHost(Func<IBus> bus, IWindowsServiceHandler windowsService, IProcessExitHandler processExit)
 	    {
 		    _windowsService = windowsService;
-		    _outputter = outputter;
+		    _processExit = processExit;
 		    _bus = bus;
 	    }
 
@@ -37,7 +37,7 @@ namespace Vertica.Integration.Rebus
 	        var windowsService = new HandleAsWindowsService(this.Name(), this.Name(), Description);
 
 	        if (!_windowsService.Handle(args, windowsService))
-				_outputter.WaitUntilEscapeKeyIsHit(@"Press ESCAPE to stop Rebus...");
+				_processExit.Wait();
         }
 
 		public string Description => "Hosts Rebus";
