@@ -140,6 +140,5 @@ namespace Vertica.Integration.Hangfire
 				return _kernel.Resolve(jobType);
 			}
 		}
-
 	}
 }
