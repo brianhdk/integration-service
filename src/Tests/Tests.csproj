@@ -92,6 +92,7 @@
     <Compile Include="Infrastructure\Archiving\FileBasedArchiveServiceTester.cs" />
     <Compile Include="Infrastructure\Configuration\FileBasedConfigurationRepositoryTester.cs" />
     <Compile Include="Infrastructure\Factories\CollectionInstallerTester.cs" />
+    <Compile Include="Infrastructure\IO\FilesChangedHandlerTester.cs" />
     <Compile Include="Infrastructure\Parsing\CsvParserTester.cs" />
     <Compile Include="Infrastructure\Parsing\CsvRowTester.cs" />
     <Compile Include="Infrastructure\RazorEngine\RazorEngineTester.cs" />

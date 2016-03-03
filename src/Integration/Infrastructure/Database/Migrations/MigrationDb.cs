@@ -23,9 +23,9 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
         }
 
         public DatabaseServer DatabaseServer { get; private set; }
-        public ConnectionString ConnectionString { get; private set; }
-        public Assembly Assembly { get; private set; }
-        public string NamespaceContainingMigrations { get; private set; }
+        public ConnectionString ConnectionString { get; }
+        public Assembly Assembly { get; }
+        public string NamespaceContainingMigrations { get; }
 		public string IdentifyingName { get; private set; }
 
 		public bool Equals(MigrationDb other)

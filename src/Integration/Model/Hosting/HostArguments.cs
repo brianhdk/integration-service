@@ -12,9 +12,9 @@ namespace Vertica.Integration.Model.Hosting
             Args = new Arguments(string.Empty, args);
         }
 
-        public string Command { get; private set; }
-        public Arguments CommandArgs { get; private set; }
-        public Arguments Args { get; private set; }
+        public string Command { get; }
+        public Arguments CommandArgs { get; }
+        public Arguments Args { get; }
 
 	    public override string ToString()
 	    {

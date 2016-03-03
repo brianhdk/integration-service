@@ -43,6 +43,10 @@
       <HintPath>..\..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="FluentMigrator, Version=1.6.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FluentMigrator.1.6.1\lib\40\FluentMigrator.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Hangfire.Core, Version=1.5.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Hangfire.Core.1.5.3\lib\net45\Hangfire.Core.dll</HintPath>
       <Private>True</Private>
@@ -99,6 +103,7 @@
   <ItemGroup>
     <Compile Include="CleanTempDirectoryProcess.cs" />
     <Compile Include="HangfireTask.cs" />
+    <Compile Include="Migrations\M1456825440_HangfireScheduledTask.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -107,6 +112,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Hangfire.Example.Shared\Hangfire.Example.Shared.csproj">
+      <Project>{1C78178D-CB2F-452D-9B39-CDF082DDD63C}</Project>
+      <Name>Hangfire.Example.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Integration.Hangfire\Integration.Hangfire.csproj">
       <Project>{7158B2C5-5725-4B55-B9ED-C58169712051}</Project>
       <Name>Integration.Hangfire</Name>

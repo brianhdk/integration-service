@@ -50,7 +50,7 @@ namespace Vertica.Integration.WebApi.SignalR
 		    Application.UseWebApi(webApi => webApi.HttpServer(httpServer => httpServer.Configure(Configure)));
         }
 
-        public ApplicationConfiguration Application { get; private set; }
+        public ApplicationConfiguration Application { get; }
 
 		public SignalRConfiguration AddFromAssemblyOfThis<T>()
         {

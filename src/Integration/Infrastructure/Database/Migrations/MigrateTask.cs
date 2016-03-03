@@ -258,9 +258,9 @@ ELSE
                 Timeout = 60;
             }
 
-            public bool PreviewOnly { get; private set; }
-            public string ProviderSwitches { get; private set; }
-            public int Timeout { get; private set; }
+            public bool PreviewOnly { get; }
+            public string ProviderSwitches { get; }
+            public int Timeout { get; }
         }
     }
 }

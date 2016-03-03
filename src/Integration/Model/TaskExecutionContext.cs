@@ -13,7 +13,7 @@ namespace Vertica.Integration.Model
             Arguments = arguments;
         }
 
-        public ILog Log { get; private set; }
-        public Arguments Arguments { get; private set; }
+        public ILog Log { get; }
+        public Arguments Arguments { get; }
     }
 }

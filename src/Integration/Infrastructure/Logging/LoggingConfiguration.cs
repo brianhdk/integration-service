@@ -15,7 +15,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 			Application.Extensibility(extensibility => extensibility.Register(() => new EventLoggerConfiguration()));
         }
 
-        public ApplicationConfiguration Application { get; private set; }
+        public ApplicationConfiguration Application { get; }
 
         public LoggingConfiguration Use<T>() where T : Logger
         {

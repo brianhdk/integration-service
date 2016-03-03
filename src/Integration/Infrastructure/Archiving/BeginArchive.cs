@@ -26,7 +26,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
             _archive = new ZipArchive(_stream, ZipArchiveMode.Create, leaveOpen: true);
         }
 
-        public ArchiveOptions Options { get; private set; }
+        public ArchiveOptions Options { get; }
 
 		public BeginArchive IncludeFile(FileInfo file)
         {

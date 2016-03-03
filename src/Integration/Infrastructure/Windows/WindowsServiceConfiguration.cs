@@ -25,7 +25,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 			StartMode(ServiceStartMode.Manual);
 		}
 
-		public string ExePath { get; private set; }
+		public string ExePath { get; }
 		public string Args { get; private set; }
 
 		public WindowsServiceConfiguration DisplayName(string displayName)

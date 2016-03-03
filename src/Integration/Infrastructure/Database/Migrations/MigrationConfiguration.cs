@@ -21,7 +21,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
             _dbs = new MigrationDbs();
         }
 
-        public ApplicationConfiguration Application { get; private set; }
+        public ApplicationConfiguration Application { get; }
 
         public MigrationConfiguration ChangeIntegrationDbDatabaseServer(DatabaseServer db)
         {

@@ -27,8 +27,8 @@ namespace Vertica.Integration.Infrastructure.Logging
             _output.Message(Name);
 		}
 
-		public TaskLog TaskLog { get; private set; }
-		public string Name { get; private set; }
+		public TaskLog TaskLog { get; }
+		public string Name { get; }
 
 		public ErrorLog ErrorLog { get; internal set; }
 

@@ -15,8 +15,8 @@ namespace Vertica.Integration.Infrastructure.Templating.AttributeParsing
             Value = value;
         }
 
-        public int Position { get; private set; }
-        public T Value { get; private set; }
+        public int Position { get; }
+        public T Value { get; }
 
         public override bool Equals(object obj)
         {

@@ -98,7 +98,7 @@ namespace Vertica.Integration.Infrastructure.Templating
 
             public dynamic ViewBag { get; set; }
 
-            public StringBuilder OutputBuilder { get; private set; }
+            public StringBuilder OutputBuilder { get; }
 
 			public HtmlHelper Html { get; private set; }
 

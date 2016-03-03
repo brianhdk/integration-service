@@ -10,6 +10,7 @@ using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Hosting;
 using Vertica.Utilities_v4.Extensions.EnumerableExt;
+// ReSharper disable UseNullPropagation
 
 namespace Vertica.Integration
 {

@@ -14,7 +14,7 @@ namespace Vertica.Integration.Infrastructure.Database
 	        ConnectionString = connectionString;
 		}
 
-		public ConnectionString ConnectionString { get; private set; }
+		public ConnectionString ConnectionString { get; }
 
 		protected internal virtual IDbConnection GetConnection(IKernel kernel)
 		{

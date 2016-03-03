@@ -17,7 +17,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
             _additionalDownloadOptions = additionalDownloadOptions ?? new string[0];
         }
 
-        public string Id { get; private set; }
+        public string Id { get; }
 
         public override string ToString()
         {

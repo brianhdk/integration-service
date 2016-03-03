@@ -122,9 +122,9 @@ namespace Vertica.Integration.WebApi.Infrastructure
 				Kernel = kernel;
 			}
 
-			public IAppBuilder App { get; private set; }
-			public HttpConfiguration Http { get; private set; }
-			public IKernel Kernel { get; private set; }
+			public IAppBuilder App { get; }
+			public HttpConfiguration Http { get; }
+			public IKernel Kernel { get; }
 		}
 
         private class CustomResolver : IAssembliesResolver, IHttpControllerTypeResolver, IHttpControllerActivator

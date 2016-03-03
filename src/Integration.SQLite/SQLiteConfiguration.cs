@@ -15,7 +15,7 @@ namespace Vertica.Integration.SQLite
 			Database = database;
         }
 
-		public DatabaseConfiguration Database { get; private set; }
+		public DatabaseConfiguration Database { get; }
 
 	    public SQLiteConfiguration UseForIntegrationDb(ConnectionString connectionString = null)
 	    {

@@ -41,7 +41,7 @@ namespace Vertica.Integration.Domain.Monitoring
 
         public Range<DateTimeOffset> CheckRange => _checkRange;
 
-	    public MonitorConfiguration Configuration { get; private set; }
+	    public MonitorConfiguration Configuration { get; }
 
         public MonitorWorkItem AddIgnoreFilter(ISpecification<MonitorEntry> filter)
         {

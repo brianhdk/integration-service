@@ -15,7 +15,7 @@ namespace Vertica.Integration.RavenDB.Infrastructure
 			ConnectionString = connectionString;
 		}
 
-		protected internal ConnectionString ConnectionString { get; private set; }
+		protected internal ConnectionString ConnectionString { get; }
 
 		protected internal virtual void Initialize(IDocumentStore documentStore, IKernel kernel)
 		{

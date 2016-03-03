@@ -15,7 +15,7 @@ namespace Vertica.Integration.Infrastructure.Database
 	        Application = application;
         }
 
-        public ApplicationConfiguration Application { get; private set; }
+        public ApplicationConfiguration Application { get; }
 
         public bool IntegrationDbDisabled { get; private set; }
 

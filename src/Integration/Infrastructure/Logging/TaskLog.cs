@@ -38,7 +38,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 	        _output.Message(Name);
 		}
 
-	    public string Name { get; private set; }
+	    public string Name { get; }
 
 		public string MachineName { get; private set; }
         public string IdentityName { get; private set; }

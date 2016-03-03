@@ -55,7 +55,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
 	    public bool IsEmpty => _data.All(string.IsNullOrEmpty);
 
-	    public CsvRowMetadata Meta { get; private set; }
+	    public CsvRowMetadata Meta { get; }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
@@ -166,7 +166,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
             }
 
             public CsvRowHeaders Headers { get; private set; }
-            public string Delimiter { get; private set; }
+            public string Delimiter { get; }
             public uint? LineNumber { get; private set; }
 
             public class CsvRowHeaders : IEnumerable<string>

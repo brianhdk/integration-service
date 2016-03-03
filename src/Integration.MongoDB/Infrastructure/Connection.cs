@@ -14,7 +14,7 @@ namespace Vertica.Integration.MongoDB.Infrastructure
 			ConnectionString = connectionString;
 		}
 
-		protected internal ConnectionString ConnectionString { get; private set; }
+		protected internal ConnectionString ConnectionString { get; }
 
 		protected internal virtual MongoUrl CreateMongoUrl(IKernel kernel)
 		{

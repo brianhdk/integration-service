@@ -179,11 +179,15 @@
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\HostFactoryInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\TaskInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ServiceInstaller.cs" />
+    <Compile Include="Infrastructure\IO\AzureWebJobsShutdownHandler.cs" />
+    <Compile Include="Infrastructure\IO\FilesChangedHandler.cs" />
     <Compile Include="Infrastructure\IO\FileSystemService.cs" />
     <Compile Include="Infrastructure\IO\IDirectory.cs" />
     <Compile Include="Infrastructure\IO\IFile.cs" />
     <Compile Include="Infrastructure\IO\IFileSystemService.cs" />
     <Compile Include="Infrastructure\AdvancedConfiguration.cs" />
+    <Compile Include="Infrastructure\IO\InteractiveHandler.cs" />
+    <Compile Include="Infrastructure\IO\IProcessExitHandler.cs" />
     <Compile Include="Infrastructure\Logging\IReferenceErrorLog.cs" />
     <Compile Include="Infrastructure\Logging\ITarget.cs" />
     <Compile Include="Infrastructure\Logging\Loggers\EventLogger.cs" />
@@ -199,6 +203,7 @@
     <Compile Include="Infrastructure\Parsing\CsvParser.cs" />
     <Compile Include="Infrastructure\Parsing\CsvRow.cs" />
     <Compile Include="Infrastructure\Parsing\ICsvParser.cs" />
+    <Compile Include="Infrastructure\ProcessExitConfiguration.cs" />
     <Compile Include="Infrastructure\Remote\Ftp\FtpClient.cs" />
     <Compile Include="Infrastructure\Remote\Ftp\FtpClientConfiguration.cs" />
     <Compile Include="Infrastructure\Remote\FtpClientFactory.cs" />

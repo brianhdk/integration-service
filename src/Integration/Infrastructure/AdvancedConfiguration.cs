@@ -16,6 +16,8 @@ namespace Vertica.Integration.Infrastructure
 	    private readonly IDictionary<Type, Tuple<Type, Type>> _types;
 	    private readonly IDictionary<Type, Tuple<Func<object>, Func<object>>> _instances;
 
+	    private ProcessExitConfiguration _processExit;
+
 	    internal AdvancedConfiguration(ApplicationConfiguration application)
         {
             if (application == null) throw new ArgumentNullException(nameof(application));
@@ -31,10 +33,18 @@ namespace Vertica.Integration.Infrastructure
 		    Register<IRuntimeSettings, AppConfigRuntimeSettings>();
 
 		    Register(() => Environment.UserInteractive ? Console.Out : TextWriter.Null);
+
+		    Application.Extensibility(extensibility => _processExit = extensibility.Register(() => new ProcessExitConfiguration(this)));
         }
 
-        public ApplicationConfiguration Application { get; private set; }
+        public ApplicationConfiguration Application { get; }
 
+		/// <summary>
+		/// Registers a particular service with a particular implementation.
+		/// </summary>
+		/// <typeparam name="TService"></typeparam>
+		/// <typeparam name="TImpl"></typeparam>
+		/// <returns></returns>
 		public AdvancedConfiguration Register<TService, TImpl>()
 			where TService : class
 			where TImpl : TService
@@ -42,6 +52,12 @@ namespace Vertica.Integration.Infrastructure
 			return Register<TService, TImpl, TImpl>();
 		}
 
+		/// <summary>
+		/// Registers a one or another service implementation depending on whether the IntegrationDb is disabled or not.
+		/// </summary>
+		/// <typeparam name="TService">The common service interface shared by the implementations.</typeparam>
+		/// <typeparam name="TIntegrationDbEnabledImpl">The service implementation to use when we have an IntegrationDb available.</typeparam>
+		/// <typeparam name="TIntegrationDbDisabledImpl">The (fallback) service implementation to use when IntegrationDb is disabled.</typeparam>
 	    public AdvancedConfiguration Register<TService, TIntegrationDbEnabledImpl, TIntegrationDbDisabledImpl>()
 			where TService : class
 			where TIntegrationDbEnabledImpl : TService
@@ -75,6 +91,15 @@ namespace Vertica.Integration.Infrastructure
 		    _types[typeof (TService)] = null;
 
 			return this;
+	    }
+
+	    public AdvancedConfiguration ProcessExit(Action<ProcessExitConfiguration> processExit)
+	    {
+		    if (processExit == null) throw new ArgumentNullException(nameof(processExit));
+
+		    processExit(_processExit);
+
+		    return this;
 	    }
 
 	    void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)

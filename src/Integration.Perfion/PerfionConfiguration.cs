@@ -22,7 +22,7 @@ namespace Vertica.Integration.Perfion
 
 		internal ConnectionString ConnectionStringInternal { get; set; }
 		internal ArchiveOptions ArchiveOptions { get; private set; }
-		internal ServiceClientConfiguration ServiceClientInternal { get; private set; }
+		internal ServiceClientConfiguration ServiceClientInternal { get; }
 
 		public PerfionConfiguration ConnectionString(ConnectionString connectionString)
 		{

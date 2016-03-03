@@ -6,7 +6,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
     {
         private readonly Action<T> _save;
 
-        public T Configuration { get; private set; }
+        public T Configuration { get; }
 
         internal ConfigurationUpdater(T configuration, Action<T> save)
         {

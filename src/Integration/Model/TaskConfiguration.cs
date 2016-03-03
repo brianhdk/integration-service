@@ -15,8 +15,8 @@ namespace Vertica.Integration.Model
             Steps = new List<Type>();
         }
 
-        internal Type Task { get; private set; }
-        protected List<Type> Steps { get; private set; }
+        internal Type Task { get; }
+        protected List<Type> Steps { get; }
 
         internal abstract IWindsorInstaller GetInstaller();
 

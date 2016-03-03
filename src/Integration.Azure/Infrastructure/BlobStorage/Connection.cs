@@ -15,7 +15,7 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage
 			ConnectionString = connectionString;
 		}
 
-        protected internal ConnectionString ConnectionString { get; private set; }
+        protected internal ConnectionString ConnectionString { get; }
 
 		protected internal virtual CloudBlobClient Create(IKernel kernel)
 		{

@@ -153,9 +153,9 @@ namespace Vertica.Integration.Infrastructure.Archiving
 				}
 			}
 
-			public string Name { get; set; }
-			public string GroupName { get; set; }
-			public DateTimeOffset? Expires { get; set; }
+			public string Name { get; }
+			public string GroupName { get; }
+			public DateTimeOffset? Expires { get; }
 
 			public override string ToString()
 			{

@@ -33,8 +33,8 @@ namespace Vertica.Integration.Infrastructure.Logging
             output.Message("{0}: {1}", stepLog.Name, message);
         }
 
-		public TaskLog TaskLog { get; private set; }
-		public StepLog StepLog { get; private set; }
+		public TaskLog TaskLog { get; }
+		public StepLog StepLog { get; }
         public string Message { get; private set; }
 
 		public override void Dispose()
