@@ -291,6 +291,8 @@ namespace ConsoleApplication16
 Steps will be executed sequentially and as previously mentioned in the exact same sequence/order as they are registered. 
 An async flavour _might_ be added later, _if_ there's a demand for it.
 
+If your _WorkItem_ implements IDisposable Integration Service will make sure to call the Dispose()-method even if methods on Steps fail or if Task.End() fails.
+
 ### Tasks Behaviour and Lifetime
 Tasks are _Singletons_. You should therefore never keep any state within the lifetime of this object. 
 To ensure a nice decoupled architecture the Integration Service provides Constructor Injection for any dependency you should need in your Tasks. 

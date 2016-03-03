@@ -166,6 +166,7 @@
     <Compile Include="Infrastructure\Extensions\ActionRepeaterExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\ExceptionExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\NameExtensions.cs" />
+    <Compile Include="Infrastructure\Extensions\ObjectExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\QueueExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\RepeatExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\StringExtensions.cs" />
