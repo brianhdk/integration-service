@@ -23,6 +23,7 @@ namespace Integration.Experiments.Hangfire
 							QueuePollInterval = TimeSpan.FromSeconds(1)
 						})
 					)
+					//.WithServerOptions(serverOptions => DynamicQueueFilter.Apply(serverOptions))
 					.OnStartup(startup => startup.RunMigrateTask())
 					.AddFromAssemblyOfThis<Program>())
 				.Migration(migration => migration.AddFromNamespaceOfThis<M1456825440_HangfireScheduledTask>())

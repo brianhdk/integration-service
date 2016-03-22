@@ -70,30 +70,28 @@ namespace Vertica.Integration.WebApi.Infrastructure.Castle.Windsor
 	    private class HttpServerFactory : IHttpServerFactory
 	    {
 		    private readonly IKernel _kernel;
-		    private readonly HttpServerConfiguration _httpServerConfiguration;
+		    private readonly HttpServerConfiguration _configuration;
 
-		    public HttpServerFactory(IKernel kernel, HttpServerConfiguration httpServerConfiguration)
+		    public HttpServerFactory(IKernel kernel, HttpServerConfiguration configuration)
 		    {
 			    _kernel = kernel;
-			    _httpServerConfiguration = httpServerConfiguration;
+			    _configuration = configuration;
 		    }
 
 			public IDisposable Create(string url)
-		    {
-			    return new HttpServer(url, _kernel, configuration => _httpServerConfiguration.Apply(configuration));
+			{
+				return _configuration.CreateHttpServer(_kernel, url);
 		    }
 	    }
 
 	    private class ControllerTypes : IWebApiControllers
         {
-            private readonly Type[] _types;
-
-            public ControllerTypes(Type[] types)
+		    public ControllerTypes(Type[] types)
             {
-                _types = types;
+                Controllers = types;
             }
 
-            public Type[] Controllers => _types;
+            public Type[] Controllers { get; }
         }
 	}
 }
