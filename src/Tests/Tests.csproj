@@ -101,6 +101,12 @@
     <Compile Include="Model\TaskFactoryTester.cs" />
     <Compile Include="Model\TaskRunnerTester.cs" />
     <Compile Include="Model\Web\ErrorsControllerTests.cs" />
+    <Compile Include="Perfion\Examples.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Examples.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Perfion\PerfionXmlTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLite\SQLiteTester.cs" />
     <Compile Include="TestableApplicationContext.cs" />
@@ -114,6 +120,10 @@
       <Project>{6D28C1CE-7EAE-44A2-8624-A879F7AF7021}</Project>
       <Name>Integration.Logging.Elmah</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Integration.Perfion\Integration.Perfion.csproj">
+      <Project>{218A773A-C382-42F7-9882-CB6D51B2EDF0}</Project>
+      <Name>Integration.Perfion</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Integration.Portal\Integration.Portal.csproj">
       <Project>{be14da0e-31c6-4417-8ec6-ed1658b51fa9}</Project>
       <Name>Integration.Portal</Name>
@@ -126,6 +136,15 @@
       <Project>{460f774f-2c89-47f4-84bd-b97653060e68}</Project>
       <Name>Integration</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Perfion\Example1.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Perfion\Examples.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Examples.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

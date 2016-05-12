@@ -12,7 +12,6 @@ namespace Vertica.Integration.Perfion
 {
 	public class PerfionXml
 	{
-		private readonly IPerfionService _service;
 		private readonly XDocument _document;
 
 		public PerfionXml(IPerfionService service, XDocument document)
@@ -21,11 +20,11 @@ namespace Vertica.Integration.Perfion
 			if (document == null) throw new ArgumentNullException(nameof(document));
 			if (document.Root == null) throw new ArgumentException(@"Document is missing required root element.");
 
-			_service = service;
+			Service = service;
 			_document = document;
 		}
 
-		public IPerfionService Service => _service;
+		public IPerfionService Service { get; }
 
 		public XDocument Document => _document;
 
@@ -34,6 +33,23 @@ namespace Vertica.Integration.Perfion
 		public XElement Root => _document.Root;
 
 		public int Length => _document.ToString().Length;
+
+		public Dictionary<string, Feature> Features()
+		{
+			var list = new Dictionary<string, Feature>(StringComparer.OrdinalIgnoreCase);
+
+			XElement features = Root.Element("Features");
+
+			if (features != null)
+			{
+				foreach (var elements in features.Elements().GroupBy(x => x.Name))
+				{
+					list.Add(elements.Key.LocalName, new Feature(elements));
+				}
+			}
+
+			return list;
+		}
 
 		public IEnumerable<Component> Components(XName name)
 		{
@@ -110,6 +126,28 @@ namespace Vertica.Integration.Perfion
 			}
 		}
 
+		public class Feature
+		{
+			private readonly IEnumerable<XElement> _elements;
+
+			public Feature(IEnumerable<XElement> elements)
+			{
+				_elements = elements;
+			}
+
+			public string Caption(string language = null)
+			{
+				return Element(language)?.Attribute("caption")?.Value;
+			}
+
+			private XElement Element(string language)
+			{
+				return string.IsNullOrWhiteSpace(language)
+					? _elements.First()
+					: _elements.FirstOrDefault(x => string.Equals(x.Language(), language, StringComparison.OrdinalIgnoreCase));
+			}
+		}
+
 		public class Component
 		{
 			private readonly PerfionXml _xml;
@@ -143,7 +181,7 @@ namespace Vertica.Integration.Perfion
 
 					XElement element = _element.Element(name, language);
 
-					return element != null ? element.Value : null;
+					return element?.Value;
 				}
 			}
 
@@ -175,10 +213,7 @@ namespace Vertica.Integration.Perfion
 
 				XElement element = _element.Element(relatedComponent, language);
 
-				if (element == null)
-					return null;
-
-				return element.Id();
+				return element?.Id();
 			}
 
 			public Component FindRelation(XName relatedComponent, string language = null)

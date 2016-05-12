@@ -1,0 +1,865 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<Data totalExecutionTime="00:00:00.1682599">
+	<Features>
+		<Category id="102" language="dan" caption="Kategori" captionAlternative="" unit="" abbr="" group="Generelt" groupOrder="0" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Complex" dataType="String" />
+		<Category id="102" language="en" caption="Category" captionAlternative="" unit="" abbr="" group="General" groupOrder="0" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Complex" dataType="String" />
+		<EPImageKey id="396" language="dan" caption="Environment Picture Nøgle" captionAlternative="" unit="" abbr="" group="BillederNøgler" groupOrder="8" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Simple" dataType="String" />
+		<EPImageKey id="396" language="en" caption="Environment Picture Key" captionAlternative="" unit="" abbr="" group="ImagesKeys" groupOrder="8" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Simple" dataType="String" />
+		<EPURL id="397" language="dan" caption="Miljø Billede URL" captionAlternative="" unit="" abbr="" group="BillederNøgler" groupOrder="8" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Simple" dataType="String" />
+		<EPURL id="397" language="en" caption="Environment Picture URL" captionAlternative="" unit="" abbr="" group="ImagesKeys" groupOrder="8" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Simple" dataType="String" />
+		<ExternalItemtext id="434" language="dan" caption="Ekstern varetekst" captionAlternative="" unit="" abbr="" group="Marketing" groupOrder="2" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Complex" dataType="String" />
+		<ExternalItemtext id="434" language="en" caption="External itemtext" captionAlternative="" unit="" abbr="" group="Marketing" groupOrder="2" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Complex" dataType="String" />
+		<HierarchyLevel id="382" language="dan" caption="Hierarki niveau" captionAlternative="" unit="" abbr="" group="Stamdata AS4" groupOrder="1" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Simple" dataType="String" />
+		<HierarchyLevel id="382" language="en" caption="HierarchyLevel" captionAlternative="" unit="" abbr="" group="Master Data AS4" groupOrder="1" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Simple" dataType="String" />
+		<ItemNumber id="101" language="dan" caption="Varenummer" captionAlternative="" unit="" abbr="" group="Generelt" groupOrder="0" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Simple" dataType="String" />
+		<ItemNumber id="101" language="en" caption="Item Number" captionAlternative="" unit="" abbr="" group="General" groupOrder="0" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Simple" dataType="String" />
+		<MarketedDrawing id="241" language="dan" caption="Stregtegning markedsført" captionAlternative="" unit="" abbr="" group="Billeder" groupOrder="12" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Simple" dataType="Image" />
+		<MarketedDrawing id="241" language="en" caption="Marketed drawing" captionAlternative="" unit="" abbr="" group="Pictures" groupOrder="12" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Simple" dataType="Image" />
+		<MDImageKey id="394" language="dan" caption="Marketed Drawing Billed Nøgle" captionAlternative="" unit="" abbr="" group="BillederNøgler" groupOrder="8" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Simple" dataType="String" />
+		<MDImageKey id="394" language="en" caption="Marketed Drawing Key" captionAlternative="" unit="" abbr="" group="ImagesKeys" groupOrder="8" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Simple" dataType="String" />
+		<MDImageURL id="395" language="dan" caption="Marketed Drawing URL" captionAlternative="" unit="" abbr="" group="BillederNøgler" groupOrder="8" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Simple" dataType="String" />
+		<MDImageURL id="395" language="en" caption="Marketed Drawing URL" captionAlternative="" unit="" abbr="" group="ImagesKeys" groupOrder="8" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Simple" dataType="String" />
+		<PerfionImportKey id="309" language="dan" caption="PerfionImportKey" captionAlternative="" unit="" abbr="" group="Stamdata AS4" groupOrder="1" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Simple" dataType="String" />
+		<PerfionImportKey id="309" language="en" caption="PerfionImportKey" captionAlternative="" unit="" abbr="" group="Master Data AS4" groupOrder="1" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Simple" dataType="String" />
+		<PLMStatus id="258" language="dan" caption="PLC Status" captionAlternative="" unit="" abbr="" group="Generelt" groupOrder="0" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Simple" dataType="String" />
+		<PLMStatus id="258" language="en" caption="PLC Status" captionAlternative="" unit="" abbr="" group="General" groupOrder="0" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Simple" dataType="String" />
+		<Product id="100" language="dan" caption="Produkt" captionAlternative="" unit="" abbr="" group="Marketing" groupOrder="2" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Complex" dataType="String" />
+		<Product id="100" language="en" caption="Product" captionAlternative="" unit="" abbr="" group="Marketing" groupOrder="2" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Complex" dataType="String" />
+		<ReorderTypeNumber id="344" language="dan" caption="Genbestillingstypenummer" captionAlternative="" unit="" abbr="" group="Produktion" groupOrder="4" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Simple" dataType="String" />
+		<ReorderTypeNumber id="344" language="en" caption="Reorder typenumber" captionAlternative="" unit="" abbr="" group="Production" groupOrder="4" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Simple" dataType="String" />
+		<Section id="104" language="dan" caption="Sektion" captionAlternative="" unit="" abbr="" group="Marketing" groupOrder="2" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Complex" dataType="String" />
+		<Section id="104" language="en" caption="Section" captionAlternative="" unit="" abbr="" group="Marketing" groupOrder="2" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Complex" dataType="String" />
+		<StyleNumber id="362" language="dan" caption="Modelnummer" captionAlternative="" unit="" abbr="" group="Stamdata AS4" groupOrder="1" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Simple" dataType="Number" />
+		<StyleNumber id="362" language="en" caption="Style number" captionAlternative="" unit="" abbr="" group="Master Data AS4" groupOrder="1" viewGroup="" viewGroupOrder="0" viewOrder="2147483647" form="Simple" dataType="Number" />
+	</Features>
+	<Product id="171454" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-03-30T09:29:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">11321</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">11321</Value>
+		<Category language="DAN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<Category language="EN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">11321</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/11321-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">11321</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">11321</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/11321</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:43.877">11321</PerfionImportKey>
+		<Section language="DAN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="11" modifiedDate="2016-02-16T11:25:20.697">VESTE</Section>
+		<Section language="EN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="11" modifiedDate="2016-02-16T11:25:20.697">WAISTCOATS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">11321</StyleNumber>
+	</Product>
+	<Product id="171458" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-05-05T13:52:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">17020</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">17020</Value>
+		<Category language="DAN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<Category language="EN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">17020</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/17020-location</EPURL>
+		<ExternalItemtext language="DAN" id="308928" parentID="0" brand="Normal" itemOrder="0" seq="1" modifiedDate="2016-03-18T10:47:08.36">Trykknapper</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="310279" parentID="0" brand="Normal" itemOrder="0" seq="3" modifiedDate="2016-05-05T13:51:42.4">Justerbar talje</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308742" parentID="0" brand="Normal" itemOrder="0" seq="4" modifiedDate="2016-05-05T13:51:42.35">2 brystlommer</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308747" parentID="0" brand="Normal" itemOrder="0" seq="5" modifiedDate="2016-05-05T13:51:42.357">2 hoftelommer med skjult trykknaplukning</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308878" parentID="0" brand="Normal" itemOrder="0" seq="6" modifiedDate="2016-05-05T13:51:42.367">Nøglestropper BEHOLD</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308758" parentID="0" brand="Normal" itemOrder="0" seq="7" modifiedDate="2016-05-05T13:51:42.377">2 slidser bagpå</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308866" parentID="0" brand="Normal" itemOrder="0" seq="8" modifiedDate="2016-05-05T13:51:42.387">Mobillomme</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308894" parentID="0" brand="Normal" itemOrder="0" seq="9" modifiedDate="2016-05-05T13:51:42.397">Separat lynlåslomme indvendig i hoftelomme </ExternalItemtext>
+		<ExternalItemtext language="EN" id="308928" parentID="0" brand="Normal" itemOrder="0" seq="1" modifiedDate="2016-03-18T10:47:08.36">Press buttons</ExternalItemtext>
+		<ExternalItemtext language="EN" id="310279" parentID="0" brand="Normal" itemOrder="0" seq="3" modifiedDate="2016-05-05T13:51:42.4">Adjustable waist</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308742" parentID="0" brand="Normal" itemOrder="0" seq="4" modifiedDate="2016-05-05T13:51:42.35">2 chest pockets</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308747" parentID="0" brand="Normal" itemOrder="0" seq="5" modifiedDate="2016-05-05T13:51:42.357">2 hip pockets with hidden press buttons</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308878" parentID="0" brand="Normal" itemOrder="0" seq="6" modifiedDate="2016-05-05T13:51:42.367">Key straps</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308758" parentID="0" brand="Normal" itemOrder="0" seq="7" modifiedDate="2016-05-05T13:51:42.377">2 slits in the back</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308866" parentID="0" brand="Normal" itemOrder="0" seq="8" modifiedDate="2016-05-05T13:51:42.387">Mobile phone pocket</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308894" parentID="0" brand="Normal" itemOrder="0" seq="9" modifiedDate="2016-05-05T13:51:42.397">Separate pocket with zipper inside the hip pocket</ExternalItemtext>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">17020</ItemNumber>
+		<MarketedDrawing seq="0" modifiedDate="2016-01-13T15:47:06.187" string="17020?dpi=300&amp;fmt=png-alpha.png" fileSize="78187" fileModifiedDate="2013-09-28T08:15:46" width="234" height="400" widthDpi="72" heightDpi="72">aaf6c1da-37a6-4538-b702-243452e46ea4</MarketedDrawing>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">17020</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/17020</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:43.88">17020</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">99914</ReorderTypeNumber>
+		<Section language="DAN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="12" modifiedDate="2016-02-16T11:25:20.697">VESTE</Section>
+		<Section language="EN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="12" modifiedDate="2016-02-16T11:25:20.697">WAISTCOATS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">17020</StyleNumber>
+	</Product>
+	<Product id="171463" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-05-05T13:53:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">17000</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">17000</Value>
+		<Category language="DAN" id="173043" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Unisex vest</Category>
+		<Category language="EN" id="173043" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Unisex vest</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">17000</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/17000-location</EPURL>
+		<ExternalItemtext language="DAN" id="308853" parentID="0" brand="Normal" itemOrder="0" seq="1" modifiedDate="2016-03-18T10:47:08.36">Lynlås</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308866" parentID="0" brand="Normal" itemOrder="0" seq="2" modifiedDate="2016-03-18T10:47:08.36">Mobillomme</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308876" parentID="0" brand="Normal" itemOrder="0" seq="3" modifiedDate="2016-03-18T10:47:08.36">Nøglestrop BEHOLD</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308855" parentID="0" brand="Normal" itemOrder="0" seq="4" modifiedDate="2016-03-18T10:47:08.36">Lynlåslomme </ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308742" parentID="0" brand="Normal" itemOrder="0" seq="5" modifiedDate="2016-03-18T10:47:08.36">2 brystlommer</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308748" parentID="0" brand="Normal" itemOrder="0" seq="6" modifiedDate="2016-03-18T10:47:08.36">2 hoftelommer med trykknapper</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308913" parentID="0" brand="Normal" itemOrder="0" seq="8" modifiedDate="2016-05-05T13:53:23.83">Slids i siderne BEHOLD</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308853" parentID="0" brand="Normal" itemOrder="0" seq="1" modifiedDate="2016-03-18T10:47:08.36">Zipper </ExternalItemtext>
+		<ExternalItemtext language="EN" id="308866" parentID="0" brand="Normal" itemOrder="0" seq="2" modifiedDate="2016-03-18T10:47:08.36">Mobile phone pocket</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308876" parentID="0" brand="Normal" itemOrder="0" seq="3" modifiedDate="2016-03-18T10:47:08.36">Key strap</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308855" parentID="0" brand="Normal" itemOrder="0" seq="4" modifiedDate="2016-03-18T10:47:08.36">Pocket with zip</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308742" parentID="0" brand="Normal" itemOrder="0" seq="5" modifiedDate="2016-03-18T10:47:08.36">2 chest pockets</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308748" parentID="0" brand="Normal" itemOrder="0" seq="6" modifiedDate="2016-03-18T10:47:08.36">2 hip pockets with press buttons</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308913" parentID="0" brand="Normal" itemOrder="0" seq="8" modifiedDate="2016-05-05T13:53:23.83">Side slits</ExternalItemtext>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">17000</ItemNumber>
+		<MarketedDrawing seq="0" modifiedDate="2016-01-13T15:47:07.297" string="17000?dpi=300&amp;fmt=png-alpha.png" fileSize="39716" fileModifiedDate="2013-09-28T08:15:46" width="400" height="274" widthDpi="72" heightDpi="72">c4892ec7-a5fd-411f-89e9-34fd64dfeb39</MarketedDrawing>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">17000</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/17000</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:43.88">17000</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">00206</ReorderTypeNumber>
+		<Section language="DAN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="6" modifiedDate="2016-02-16T11:25:02.71">VESTE</Section>
+		<Section language="EN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="6" modifiedDate="2016-02-16T11:25:02.71">WAISTCOATS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">17000</StyleNumber>
+	</Product>
+	<Product id="171469" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-05-05T13:10:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">25277</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">25277</Value>
+		<Category language="DAN" id="173039" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-02-10T16:42:44.15">Unisex funktionsskjorte</Category>
+		<Category language="EN" id="173039" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-02-10T16:42:44.15">Unisex funktionsskjorte</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">25277</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/25277-location</EPURL>
+		<ExternalItemtext language="DAN" id="308897" parentID="0" brand="Normal" itemOrder="0" seq="1" modifiedDate="2016-03-18T10:47:08.36">Skjortekrave</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308742" parentID="0" brand="Normal" itemOrder="0" seq="2" modifiedDate="2016-03-18T10:47:08.36">2 brystlommer</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308745" parentID="0" brand="Normal" itemOrder="0" seq="3" modifiedDate="2016-03-18T10:47:08.36">2 hoftelommer</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308811" parentID="0" brand="Normal" itemOrder="0" seq="4" modifiedDate="2016-05-05T13:10:29.93">Indvendig separat mobillomme i hoftelomme BEHOLD</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308809" parentID="0" brand="Normal" itemOrder="0" seq="5" modifiedDate="2016-05-05T13:10:29.943">Indvendig separat lynlåslomme</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308876" parentID="0" brand="Normal" itemOrder="0" seq="7" modifiedDate="2016-05-05T13:10:29.937">Nøglestrop BEHOLD</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308857" parentID="0" brand="Normal" itemOrder="0" seq="8" modifiedDate="2016-05-05T13:10:29.92">Læg i ryg BEHOLD</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308913" parentID="0" brand="Normal" itemOrder="0" seq="9" modifiedDate="2016-05-05T13:10:29.927">Slids i siderne BEHOLD</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308897" parentID="0" brand="Normal" itemOrder="0" seq="1" modifiedDate="2016-03-18T10:47:08.36">Label collar</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308742" parentID="0" brand="Normal" itemOrder="0" seq="2" modifiedDate="2016-03-18T10:47:08.36">2 chest pockets</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308745" parentID="0" brand="Normal" itemOrder="0" seq="3" modifiedDate="2016-03-18T10:47:08.36">2 hip pockets</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308811" parentID="0" brand="Normal" itemOrder="0" seq="4" modifiedDate="2016-05-05T13:10:29.93">Inside separate mobile phone pocket in hip pocket</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308809" parentID="0" brand="Normal" itemOrder="0" seq="5" modifiedDate="2016-05-05T13:10:29.943">Separate pocket with zip </ExternalItemtext>
+		<ExternalItemtext language="EN" id="308876" parentID="0" brand="Normal" itemOrder="0" seq="7" modifiedDate="2016-05-05T13:10:29.937">Key strap</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308857" parentID="0" brand="Normal" itemOrder="0" seq="8" modifiedDate="2016-05-05T13:10:29.92">Pleats in back</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308913" parentID="0" brand="Normal" itemOrder="0" seq="9" modifiedDate="2016-05-05T13:10:29.927">Side slits</ExternalItemtext>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">25277</ItemNumber>
+		<MarketedDrawing seq="0" modifiedDate="2016-01-13T15:47:08.563" string="25277?dpi=300&amp;fmt=png-alpha.png" fileSize="190315" fileModifiedDate="2015-02-04T08:35:14" width="318" height="400" widthDpi="72" heightDpi="72">d9a27d6a-944c-4200-a93a-65319aa6e6e8</MarketedDrawing>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">25277</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/25277</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:43.887">25277</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">00406</ReorderTypeNumber>
+		<Section language="DAN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="19" modifiedDate="2016-02-16T11:23:00.87">FUNKTIONSSKJORTER </Section>
+		<Section language="EN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="19" modifiedDate="2016-02-16T11:23:00.87">TUNIC/SHIRTS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">25277</StyleNumber>
+	</Product>
+	<Product id="171470" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">19310</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">19310</Value>
+		<Category language="DAN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<Category language="EN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">19310</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/19310-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">19310</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">19310</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/19310</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:43.887">19310</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">99918</ReorderTypeNumber>
+		<Section language="DAN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="21" modifiedDate="2016-02-16T11:25:20.697">VESTE</Section>
+		<Section language="EN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="21" modifiedDate="2016-02-16T11:25:20.697">WAISTCOATS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">19310</StyleNumber>
+	</Product>
+	<Product id="171473" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">19510</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">19510</Value>
+		<Category language="DAN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<Category language="EN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">19510</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/19510-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">19510</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">19510</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/19510</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:43.89">19510</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">99914</ReorderTypeNumber>
+		<Section language="DAN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="23" modifiedDate="2016-02-16T11:25:20.697">VESTE</Section>
+		<Section language="EN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="23" modifiedDate="2016-02-16T11:25:20.697">WAISTCOATS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">19510</StyleNumber>
+	</Product>
+	<Product id="171479" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-03-30T09:29:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">1904</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">1904</Value>
+		<Category language="DAN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<Category language="EN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">1904</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.28">http://kentaur.scene7.com/is/image/kentaur/1904-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">1904</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">1904</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.28">http://kentaur.scene7.com/is/image/kentaur/1904</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:43.893">1904</PerfionImportKey>
+		<Section language="DAN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="18" modifiedDate="2016-02-16T11:25:20.697">VESTE</Section>
+		<Section language="EN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="18" modifiedDate="2016-02-16T11:25:20.697">WAISTCOATS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">1904</StyleNumber>
+	</Product>
+	<Product id="171490" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-03-30T09:29:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">25272</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">25272</Value>
+		<Category language="DAN" id="173033" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre funktionsskjorte</Category>
+		<Category language="EN" id="173033" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre funktionsskjorte</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">25272</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/25272-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">25272</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">25272</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/25272</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:43.9">25272</PerfionImportKey>
+		<Section language="DAN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="8" modifiedDate="2016-02-16T11:22:28.747">FUNKTIONSSKJORTER </Section>
+		<Section language="EN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="8" modifiedDate="2016-02-16T11:22:28.747">TUNIC/SHIRTS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">25272</StyleNumber>
+	</Product>
+	<Product id="171491" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">25275</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">25275</Value>
+		<Category language="DAN" id="173033" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre funktionsskjorte</Category>
+		<Category language="EN" id="173033" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre funktionsskjorte</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">25275</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/25275-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">25275</ItemNumber>
+		<MarketedDrawing seq="0" modifiedDate="2016-01-13T15:47:11.26" string="25275?dpi=300&amp;fmt=png-alpha.png" fileSize="27154" fileModifiedDate="2013-09-28T08:15:49" width="400" height="220" widthDpi="72" heightDpi="72">67b06cbc-6a49-42ff-84b9-eb25571eba64</MarketedDrawing>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">25275</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/25275</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:43.9">25275</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">99914</ReorderTypeNumber>
+		<Section language="DAN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="10" modifiedDate="2016-02-16T11:22:28.747">FUNKTIONSSKJORTER </Section>
+		<Section language="EN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="10" modifiedDate="2016-02-16T11:22:28.747">TUNIC/SHIRTS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">25275</StyleNumber>
+	</Product>
+	<Product id="171497" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">27300</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">27300</Value>
+		<Category language="DAN" id="173034" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre vest</Category>
+		<Category language="EN" id="173034" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre vest</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">27300</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/27300-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">27300</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">27300</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/27300</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:43.903">27300</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">99918</ReorderTypeNumber>
+		<Section language="DAN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="3" modifiedDate="2016-02-16T11:24:45.823">VESTE</Section>
+		<Section language="EN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="3" modifiedDate="2016-02-16T11:24:45.823">WAISTCOATS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">27300</StyleNumber>
+	</Product>
+	<Product id="171536" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">25056</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">25056</Value>
+		<Category language="DAN" id="173033" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre funktionsskjorte</Category>
+		<Category language="EN" id="173033" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre funktionsskjorte</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">25056</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/25056-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">25056</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">25056</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/25056</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:43.93">25056</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">99902</ReorderTypeNumber>
+		<Section language="DAN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="5" modifiedDate="2016-02-16T11:22:28.747">FUNKTIONSSKJORTER </Section>
+		<Section language="EN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="5" modifiedDate="2016-02-16T11:22:28.747">TUNIC/SHIRTS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">25056</StyleNumber>
+	</Product>
+	<Product id="171558" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">25046</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">25046</Value>
+		<Category language="DAN" id="173033" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre funktionsskjorte</Category>
+		<Category language="EN" id="173033" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre funktionsskjorte</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">25046</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/25046-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">25046</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">25046</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/25046</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:43.947">25046</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">99906</ReorderTypeNumber>
+		<Section language="DAN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="4" modifiedDate="2016-02-16T11:22:28.747">FUNKTIONSSKJORTER </Section>
+		<Section language="EN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="4" modifiedDate="2016-02-16T11:22:28.747">TUNIC/SHIRTS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">25046</StyleNumber>
+	</Product>
+	<Product id="171582" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-03-30T09:29:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">17450</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">17450</Value>
+		<Category language="DAN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<Category language="EN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">17450</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/17450-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">17450</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">17450</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/17450</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:43.96">17450</PerfionImportKey>
+		<Section language="DAN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="16" modifiedDate="2016-02-16T11:25:20.697">VESTE</Section>
+		<Section language="EN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="16" modifiedDate="2016-02-16T11:25:20.697">WAISTCOATS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">17450</StyleNumber>
+	</Product>
+	<Product id="171650" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">17005</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">17005</Value>
+		<Category language="DAN" id="173043" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Unisex vest</Category>
+		<Category language="EN" id="173043" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Unisex vest</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">17005</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/17005-location</EPURL>
+		<ExternalItemtext language="DAN" id="308928" parentID="0" brand="Normal" itemOrder="0" seq="1" modifiedDate="2016-03-18T10:47:08.36">Trykknapper</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308735" parentID="0" brand="Normal" itemOrder="0" seq="2" modifiedDate="2016-03-18T10:47:08.36">1 brystlomme med “pencil” strop</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308748" parentID="0" brand="Normal" itemOrder="0" seq="3" modifiedDate="2016-03-18T10:47:08.36">2 hoftelommer med trykknapper</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308808" parentID="0" brand="Normal" itemOrder="0" seq="4" modifiedDate="2016-03-18T10:47:08.36">Indvendig separat lomme i hoftelommen</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308878" parentID="0" brand="Normal" itemOrder="0" seq="5" modifiedDate="2016-03-18T10:47:08.36">Nøglestropper BEHOLD</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308913" parentID="0" brand="Normal" itemOrder="0" seq="6" modifiedDate="2016-03-18T10:47:08.36">Slids i siderne BEHOLD</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308928" parentID="0" brand="Normal" itemOrder="0" seq="1" modifiedDate="2016-03-18T10:47:08.36">Press buttons</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308735" parentID="0" brand="Normal" itemOrder="0" seq="2" modifiedDate="2016-03-18T10:47:08.36">1 breast pocket with pencil strap</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308748" parentID="0" brand="Normal" itemOrder="0" seq="3" modifiedDate="2016-03-18T10:47:08.36">2 hip pockets with press buttons</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308808" parentID="0" brand="Normal" itemOrder="0" seq="4" modifiedDate="2016-03-18T10:47:08.36">Separate pocket inside the hip pocket</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308878" parentID="0" brand="Normal" itemOrder="0" seq="5" modifiedDate="2016-03-18T10:47:08.36">Key straps</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308913" parentID="0" brand="Normal" itemOrder="0" seq="6" modifiedDate="2016-03-18T10:47:08.36">Side slits</ExternalItemtext>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">17005</ItemNumber>
+		<MarketedDrawing seq="0" modifiedDate="2016-01-13T15:47:30.84" string="17005?dpi=300&amp;fmt=png-alpha.png" fileSize="54010" fileModifiedDate="2013-09-28T08:15:46" width="400" height="277" widthDpi="72" heightDpi="72">a757abfe-ba5a-452e-b2b6-4de416852169</MarketedDrawing>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">17005</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/17005</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.013">17005</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">00216</ReorderTypeNumber>
+		<Section language="DAN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="8" modifiedDate="2016-02-16T11:25:02.71">VESTE</Section>
+		<Section language="EN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="8" modifiedDate="2016-02-16T11:25:02.71">WAISTCOATS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">17005</StyleNumber>
+	</Product>
+	<Product id="171657" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">1910</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">1910</Value>
+		<Category language="DAN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<Category language="EN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">1910</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.28">http://kentaur.scene7.com/is/image/kentaur/1910-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">1910</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">1910</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.28">http://kentaur.scene7.com/is/image/kentaur/1910</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.017">1910</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">99914</ReorderTypeNumber>
+		<Section language="DAN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="19" modifiedDate="2016-02-16T11:25:20.697">VESTE</Section>
+		<Section language="EN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="19" modifiedDate="2016-02-16T11:25:20.697">WAISTCOATS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">1910</StyleNumber>
+	</Product>
+	<Product id="171675" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">17025</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">17025</Value>
+		<Category language="DAN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<Category language="EN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">17025</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/17025-location</EPURL>
+		<ExternalItemtext language="DAN" id="308928" parentID="0" brand="Normal" itemOrder="0" seq="1" modifiedDate="2016-03-18T10:47:08.36">Trykknapper</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308743" parentID="0" brand="Normal" itemOrder="0" seq="2" modifiedDate="2016-03-18T10:47:08.36">2 brystlommer med “pencil” strop</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308748" parentID="0" brand="Normal" itemOrder="0" seq="3" modifiedDate="2016-03-18T10:47:08.36">2 hoftelommer med trykknapper</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308808" parentID="0" brand="Normal" itemOrder="0" seq="4" modifiedDate="2016-03-18T10:47:08.36">Indvendig separat lomme i hoftelommen</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308832" parentID="0" brand="Normal" itemOrder="0" seq="5" modifiedDate="2016-03-18T10:47:08.36">Justerbar ryg</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308878" parentID="0" brand="Normal" itemOrder="0" seq="6" modifiedDate="2016-03-18T10:47:08.36">Nøglestropper BEHOLD</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308913" parentID="0" brand="Normal" itemOrder="0" seq="7" modifiedDate="2016-03-18T10:47:08.36">Slids i siderne BEHOLD</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308928" parentID="0" brand="Normal" itemOrder="0" seq="1" modifiedDate="2016-03-18T10:47:08.36">Press buttons</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308743" parentID="0" brand="Normal" itemOrder="0" seq="2" modifiedDate="2016-03-18T10:47:08.36">2 breast pockets with pencil strap</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308748" parentID="0" brand="Normal" itemOrder="0" seq="3" modifiedDate="2016-03-18T10:47:08.36">2 hip pockets with press buttons</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308808" parentID="0" brand="Normal" itemOrder="0" seq="4" modifiedDate="2016-03-18T10:47:08.36">Separate pocket inside the hip pocket</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308832" parentID="0" brand="Normal" itemOrder="0" seq="5" modifiedDate="2016-03-18T10:47:08.36">Adjustable back</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308878" parentID="0" brand="Normal" itemOrder="0" seq="6" modifiedDate="2016-03-18T10:47:08.36">Key straps</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308913" parentID="0" brand="Normal" itemOrder="0" seq="7" modifiedDate="2016-03-18T10:47:08.36">Side slits</ExternalItemtext>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">17025</ItemNumber>
+		<MarketedDrawing seq="0" modifiedDate="2016-01-13T15:47:35.6" string="17025?dpi=300&amp;fmt=png-alpha.png" fileSize="66837" fileModifiedDate="2013-09-28T08:15:47" width="400" height="297" widthDpi="72" heightDpi="72">71fe42be-b832-4d82-89c8-334f2761ab56</MarketedDrawing>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">17025</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/17025</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.03">17025</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">99916</ReorderTypeNumber>
+		<Section language="DAN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="13" modifiedDate="2016-02-16T11:25:20.697">VESTE</Section>
+		<Section language="EN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="13" modifiedDate="2016-02-16T11:25:20.697">WAISTCOATS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">17025</StyleNumber>
+	</Product>
+	<Product id="171717" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-03-30T09:29:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">1727</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">1727</Value>
+		<Category language="DAN" id="173043" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Unisex vest</Category>
+		<Category language="EN" id="173043" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Unisex vest</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">1727</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.28">http://kentaur.scene7.com/is/image/kentaur/1727-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">1727</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">1727</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.28">http://kentaur.scene7.com/is/image/kentaur/1727</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.057">1727</PerfionImportKey>
+		<Section language="DAN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="9" modifiedDate="2016-02-16T11:25:02.71">VESTE</Section>
+		<Section language="EN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="9" modifiedDate="2016-02-16T11:25:02.71">WAISTCOATS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">1727</StyleNumber>
+	</Product>
+	<Product id="171718" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">1750</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">1750</Value>
+		<Category language="DAN" id="173043" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Unisex vest</Category>
+		<Category language="EN" id="173043" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Unisex vest</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">1750</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.28">http://kentaur.scene7.com/is/image/kentaur/1750-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">1750</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">1750</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.28">http://kentaur.scene7.com/is/image/kentaur/1750</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.06">1750</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">99906</ReorderTypeNumber>
+		<Section language="DAN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="10" modifiedDate="2016-02-16T11:25:02.71">VESTE</Section>
+		<Section language="EN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="10" modifiedDate="2016-02-16T11:25:02.71">WAISTCOATS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">1750</StyleNumber>
+	</Product>
+	<Product id="171726" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">1902</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">1902</Value>
+		<Category language="DAN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<Category language="EN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">1902</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.28">http://kentaur.scene7.com/is/image/kentaur/1902-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">1902</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">1902</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.28">http://kentaur.scene7.com/is/image/kentaur/1902</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.063">1902</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">99914</ReorderTypeNumber>
+		<Section language="DAN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="17" modifiedDate="2016-02-16T11:25:20.697">VESTE</Section>
+		<Section language="EN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="17" modifiedDate="2016-02-16T11:25:20.697">WAISTCOATS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">1902</StyleNumber>
+	</Product>
+	<Product id="171753" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-03-30T09:29:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">25271</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">25271</Value>
+		<Category language="DAN" id="173033" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre funktionsskjorte</Category>
+		<Category language="EN" id="173033" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre funktionsskjorte</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">25271</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/25271-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">25271</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">25271</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/25271</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.08">25271</PerfionImportKey>
+		<Section language="DAN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="7" modifiedDate="2016-02-16T11:22:28.747">FUNKTIONSSKJORTER </Section>
+		<Section language="EN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="7" modifiedDate="2016-02-16T11:22:28.747">TUNIC/SHIRTS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">25271</StyleNumber>
+	</Product>
+	<Product id="171756" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">19580</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">19580</Value>
+		<Category language="DAN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<Category language="EN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">19580</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/19580-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">19580</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">19580</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/19580</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.083">19580</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">00614</ReorderTypeNumber>
+		<Section language="DAN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="25" modifiedDate="2016-02-16T11:25:20.697">VESTE</Section>
+		<Section language="EN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="25" modifiedDate="2016-02-16T11:25:20.697">WAISTCOATS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">19580</StyleNumber>
+	</Product>
+	<Product id="171757" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">19581</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">19581</Value>
+		<Category language="DAN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<Category language="EN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">19581</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/19581-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">19581</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">19581</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/19581</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.083">19581</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">00614</ReorderTypeNumber>
+		<Section language="DAN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="26" modifiedDate="2016-02-16T11:25:20.697">VESTE</Section>
+		<Section language="EN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="26" modifiedDate="2016-02-16T11:25:20.697">WAISTCOATS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">19581</StyleNumber>
+	</Product>
+	<Product id="171781" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">25285</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">25285</Value>
+		<Category language="DAN" id="173033" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre funktionsskjorte</Category>
+		<Category language="EN" id="173033" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre funktionsskjorte</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">25285</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/25285-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">25285</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">25285</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/25285</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.1">25285</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">99914</ReorderTypeNumber>
+		<Section language="DAN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="11" modifiedDate="2016-02-16T11:22:28.747">FUNKTIONSSKJORTER </Section>
+		<Section language="EN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="11" modifiedDate="2016-02-16T11:22:28.747">TUNIC/SHIRTS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">25285</StyleNumber>
+	</Product>
+	<Product id="171889" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">27500</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">27500</Value>
+		<Category language="DAN" id="173034" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre vest</Category>
+		<Category language="EN" id="173034" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre vest</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">27500</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/27500-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">27500</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">27500</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/27500</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.177">27500</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">99914</ReorderTypeNumber>
+		<Section language="DAN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="5" modifiedDate="2016-02-16T11:24:45.823">VESTE</Section>
+		<Section language="EN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="5" modifiedDate="2016-02-16T11:24:45.823">WAISTCOATS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">27500</StyleNumber>
+	</Product>
+	<Product id="171890" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-05-05T12:38:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">15340</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">15340</Value>
+		<Category language="DAN" id="173039" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-02-10T16:42:44.15">Unisex funktionsskjorte</Category>
+		<Category language="EN" id="173039" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-02-10T16:42:44.15">Unisex funktionsskjorte</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">15340</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/15340-location</EPURL>
+		<ExternalItemtext language="DAN" id="308836" parentID="0" brand="Normal" itemOrder="0" seq="1" modifiedDate="2016-03-18T10:47:08.36">Kinakrave</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308899" parentID="0" brand="Normal" itemOrder="0" seq="2" modifiedDate="2016-03-18T10:47:08.36">Skjult trykknaplukning</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308778" parentID="0" brand="Normal" itemOrder="0" seq="3" modifiedDate="2016-03-18T10:47:08.36">Ekstra trykknap ved bryst</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308815" parentID="0" brand="Normal" itemOrder="0" seq="4" modifiedDate="2016-03-18T10:47:08.36">Indvendig taljejustering i ryg</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308921" parentID="0" brand="Normal" itemOrder="0" seq="5" modifiedDate="2016-03-18T10:47:08.36">Stræk- og åndbart jersey i ryg og under ærmer</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308734" parentID="0" brand="Normal" itemOrder="0" seq="6" modifiedDate="2016-03-18T10:47:08.36">1 brystlomme</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308747" parentID="0" brand="Normal" itemOrder="0" seq="7" modifiedDate="2016-03-18T10:47:08.36">2 hoftelommer med skjult trykknaplukning</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308811" parentID="0" brand="Normal" itemOrder="0" seq="9" modifiedDate="2016-05-05T12:37:52.487">Indvendig separat mobillomme i hoftelomme BEHOLD</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308878" parentID="0" brand="Normal" itemOrder="0" seq="10" modifiedDate="2016-05-05T12:37:52.473">Nøglestropper BEHOLD</ExternalItemtext>
+		<ExternalItemtext language="DAN" id="308913" parentID="0" brand="Normal" itemOrder="0" seq="11" modifiedDate="2016-05-05T12:37:52.483">Slids i siderne BEHOLD</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308836" parentID="0" brand="Normal" itemOrder="0" seq="1" modifiedDate="2016-03-18T10:47:08.36">Stand up collar</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308899" parentID="0" brand="Normal" itemOrder="0" seq="2" modifiedDate="2016-03-18T10:47:08.36">Hidden press buttons</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308778" parentID="0" brand="Normal" itemOrder="0" seq="3" modifiedDate="2016-03-18T10:47:08.36">Extra press button on the chest</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308815" parentID="0" brand="Normal" itemOrder="0" seq="4" modifiedDate="2016-03-18T10:47:08.36">Inside adjustable waist  in back</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308921" parentID="0" brand="Normal" itemOrder="0" seq="5" modifiedDate="2016-03-18T10:47:08.36">Stretch and breathable jersey in back and under sleeves</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308734" parentID="0" brand="Normal" itemOrder="0" seq="6" modifiedDate="2016-03-18T10:47:08.36">1 chest pocket</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308747" parentID="0" brand="Normal" itemOrder="0" seq="7" modifiedDate="2016-03-18T10:47:08.36">2 hip pockets with hidden press buttons</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308811" parentID="0" brand="Normal" itemOrder="0" seq="9" modifiedDate="2016-05-05T12:37:52.487">Inside separate mobile phone pocket in hip pocket</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308878" parentID="0" brand="Normal" itemOrder="0" seq="10" modifiedDate="2016-05-05T12:37:52.473">Key straps</ExternalItemtext>
+		<ExternalItemtext language="EN" id="308913" parentID="0" brand="Normal" itemOrder="0" seq="11" modifiedDate="2016-05-05T12:37:52.483">Side slits</ExternalItemtext>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">15340</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">15340</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/15340</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.177">15340</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">00314</ReorderTypeNumber>
+		<Section language="DAN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="16" modifiedDate="2016-02-16T11:23:00.87">FUNKTIONSSKJORTER </Section>
+		<Section language="EN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="16" modifiedDate="2016-02-16T11:23:00.87">TUNIC/SHIRTS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">15340</StyleNumber>
+	</Product>
+	<Product id="171949" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">19311</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">19311</Value>
+		<Category language="DAN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<Category language="EN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">19311</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/19311-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">19311</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">19311</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/19311</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.217">19311</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">00714</ReorderTypeNumber>
+		<Section language="DAN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="22" modifiedDate="2016-02-16T11:25:20.697">VESTE</Section>
+		<Section language="EN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="22" modifiedDate="2016-02-16T11:25:20.697">WAISTCOATS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">19311</StyleNumber>
+	</Product>
+	<Product id="171954" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">22900</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">22900</Value>
+		<Category language="DAN" id="173033" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre funktionsskjorte</Category>
+		<Category language="EN" id="173033" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre funktionsskjorte</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">22900</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/22900-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">22900</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">22900</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/22900</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.22">22900</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">99906</ReorderTypeNumber>
+		<Section language="DAN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="3" modifiedDate="2016-02-16T11:22:28.747">FUNKTIONSSKJORTER </Section>
+		<Section language="EN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="3" modifiedDate="2016-02-16T11:22:28.747">TUNIC/SHIRTS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">22900</StyleNumber>
+	</Product>
+	<Product id="171980" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">25274</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">25274</Value>
+		<Category language="DAN" id="173033" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre funktionsskjorte</Category>
+		<Category language="EN" id="173033" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre funktionsskjorte</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">25274</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/25274-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">25274</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">25274</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/25274</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.237">25274</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">99914</ReorderTypeNumber>
+		<Section language="DAN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="9" modifiedDate="2016-02-16T11:22:28.747">FUNKTIONSSKJORTER </Section>
+		<Section language="EN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="9" modifiedDate="2016-02-16T11:22:28.747">TUNIC/SHIRTS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">25274</StyleNumber>
+	</Product>
+	<Product id="172039" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">17001</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">17001</Value>
+		<Category language="DAN" id="173043" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Unisex vest</Category>
+		<Category language="EN" id="173043" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Unisex vest</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">17001</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/17001-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">17001</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">17001</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/17001</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.273">17001</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">00716</ReorderTypeNumber>
+		<Section language="DAN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="7" modifiedDate="2016-02-16T11:25:02.71">VESTE</Section>
+		<Section language="EN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="7" modifiedDate="2016-02-16T11:25:02.71">WAISTCOATS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">17001</StyleNumber>
+	</Product>
+	<Product id="172105" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">25156</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">25156</Value>
+		<Category language="DAN" id="173033" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre funktionsskjorte</Category>
+		<Category language="EN" id="173033" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre funktionsskjorte</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">25156</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/25156-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">25156</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">25156</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/25156</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.32">25156</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">00714</ReorderTypeNumber>
+		<Section language="DAN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="6" modifiedDate="2016-02-16T11:22:28.747">FUNKTIONSSKJORTER </Section>
+		<Section language="EN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="6" modifiedDate="2016-02-16T11:22:28.747">TUNIC/SHIRTS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">25156</StyleNumber>
+	</Product>
+	<Product id="172240" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">27360</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">27360</Value>
+		<Category language="DAN" id="173034" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre vest</Category>
+		<Category language="EN" id="173034" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre vest</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">27360</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/27360-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">27360</ItemNumber>
+		<MarketedDrawing seq="0" modifiedDate="2016-01-13T15:48:37.293" string="27360?dpi=300&amp;fmt=png-alpha.png" fileSize="52041" fileModifiedDate="2015-03-03T13:54:20" width="400" height="302" widthDpi="72" heightDpi="72">bd1eee57-4659-4ba4-8dd3-1bd968450ec1</MarketedDrawing>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">27360</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/27360</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.413">27360</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">00499</ReorderTypeNumber>
+		<Section language="DAN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="4" modifiedDate="2016-02-16T11:24:45.823">VESTE</Section>
+		<Section language="EN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="4" modifiedDate="2016-02-16T11:24:45.823">WAISTCOATS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">27360</StyleNumber>
+	</Product>
+	<Product id="172250" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">17351</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">17351</Value>
+		<Category language="DAN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<Category language="EN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">17351</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/17351-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">17351</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">17351</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/17351</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.42">17351</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">00706</ReorderTypeNumber>
+		<Section language="DAN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="14" modifiedDate="2016-02-16T11:25:20.697">VESTE</Section>
+		<Section language="EN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="14" modifiedDate="2016-02-16T11:25:20.697">WAISTCOATS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">17351</StyleNumber>
+	</Product>
+	<Product id="172261" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">17360</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">17360</Value>
+		<Category language="DAN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<Category language="EN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">17360</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/17360-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">17360</ItemNumber>
+		<MarketedDrawing seq="0" modifiedDate="2016-01-13T15:48:39.957" string="17360?dpi=300&amp;fmt=png-alpha.png" fileSize="63145" fileModifiedDate="2015-03-03T13:54:22" width="400" height="287" widthDpi="72" heightDpi="72">6ba92d66-3746-47ce-8b3a-c16a3a511a35</MarketedDrawing>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">17360</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/17360</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.427">17360</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">00499</ReorderTypeNumber>
+		<Section language="DAN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="15" modifiedDate="2016-02-16T11:25:20.697">VESTE</Section>
+		<Section language="EN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="15" modifiedDate="2016-02-16T11:25:20.697">WAISTCOATS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">17360</StyleNumber>
+	</Product>
+	<Product id="172352" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">25361</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">25361</Value>
+		<Category language="DAN" id="173033" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre funktionsskjorte</Category>
+		<Category language="EN" id="173033" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre funktionsskjorte</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">25361</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/25361-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">25361</ItemNumber>
+		<MarketedDrawing seq="0" modifiedDate="2016-01-13T15:48:49.963" string="25361?dpi=300&amp;fmt=png-alpha.png" fileSize="51445" fileModifiedDate="2015-03-03T13:54:21" width="400" height="264" widthDpi="72" heightDpi="72">98047d0f-eb8e-4344-b304-36377937d1d7</MarketedDrawing>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">25361</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/25361</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.487">25361</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">00499</ReorderTypeNumber>
+		<Section language="DAN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="12" modifiedDate="2016-02-16T11:22:28.747">FUNKTIONSSKJORTER </Section>
+		<Section language="EN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="12" modifiedDate="2016-02-16T11:22:28.747">TUNIC/SHIRTS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">25361</StyleNumber>
+	</Product>
+	<Product id="172362" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">15381</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">15381</Value>
+		<Category language="DAN" id="173039" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Unisex funktionsskjorte</Category>
+		<Category language="EN" id="173039" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Unisex funktionsskjorte</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">15381</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/15381-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">15381</ItemNumber>
+		<MarketedDrawing seq="0" modifiedDate="2016-01-13T15:48:51.27" string="15381?dpi=300&amp;fmt=png-alpha.png" fileSize="41169" fileModifiedDate="2015-03-02T14:40:52" width="400" height="260" widthDpi="72" heightDpi="72">a260de97-db6d-40d6-8796-02870be051cb</MarketedDrawing>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">15381</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/15381</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.493">15381</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">00499</ReorderTypeNumber>
+		<Section language="DAN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="17" modifiedDate="2016-02-16T11:23:00.87">FUNKTIONSSKJORTER </Section>
+		<Section language="EN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="17" modifiedDate="2016-02-16T11:23:00.87">TUNIC/SHIRTS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">15381</StyleNumber>
+	</Product>
+	<Product id="172418" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">25380</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">25380</Value>
+		<Category language="DAN" id="173033" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre funktionsskjorte</Category>
+		<Category language="EN" id="173033" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre funktionsskjorte</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">25380</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/25380-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">25380</ItemNumber>
+		<MarketedDrawing seq="0" modifiedDate="2016-01-13T15:48:56.613" string="25380?dpi=300&amp;fmt=png-alpha.png" fileSize="43556" fileModifiedDate="2015-03-02T14:40:51" width="400" height="260" widthDpi="72" heightDpi="72">c779e099-34b2-491c-97ed-fd25baac73f3</MarketedDrawing>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">25380</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/25380</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.533">25380</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">00499</ReorderTypeNumber>
+		<Section language="DAN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="14" modifiedDate="2016-02-16T11:22:28.747">FUNKTIONSSKJORTER </Section>
+		<Section language="EN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="14" modifiedDate="2016-02-16T11:22:28.747">TUNIC/SHIRTS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">25380</StyleNumber>
+	</Product>
+	<Product id="172505" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">15322</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">15322</Value>
+		<Category language="DAN" id="173039" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Unisex funktionsskjorte</Category>
+		<Category language="EN" id="173039" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Unisex funktionsskjorte</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">15322</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/15322-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">15322</ItemNumber>
+		<MarketedDrawing seq="0" modifiedDate="2016-01-13T15:49:05.91" string="15322?dpi=300&amp;fmt=png-alpha.png" fileSize="46308" fileModifiedDate="2015-03-03T14:13:25" width="400" height="258" widthDpi="72" heightDpi="72">ed92ef61-0291-4637-aa04-040ec413e4ad</MarketedDrawing>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">15322</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/15322</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.59">15322</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">00499</ReorderTypeNumber>
+		<Section language="DAN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="15" modifiedDate="2016-02-16T11:23:00.87">FUNKTIONSSKJORTER </Section>
+		<Section language="EN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="15" modifiedDate="2016-02-16T11:23:00.87">TUNIC/SHIRTS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">15322</StyleNumber>
+	</Product>
+	<Product id="172601" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">25377</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">25377</Value>
+		<Category language="DAN" id="173033" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre funktionsskjorte</Category>
+		<Category language="EN" id="173033" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre funktionsskjorte</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">25377</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/25377-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">25377</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">25377</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/25377</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.657">25377</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">00706</ReorderTypeNumber>
+		<Section language="DAN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="13" modifiedDate="2016-02-16T11:22:28.747">FUNKTIONSSKJORTER </Section>
+		<Section language="EN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="13" modifiedDate="2016-02-16T11:22:28.747">TUNIC/SHIRTS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">25377</StyleNumber>
+	</Product>
+	<Product id="172660" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">19110</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">19110</Value>
+		<Category language="DAN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<Category language="EN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">19110</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/19110-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">19110</ItemNumber>
+		<MarketedDrawing seq="0" modifiedDate="2016-01-13T15:49:20.863" string="19110?dpi=300&amp;fmt=png-alpha.png" fileSize="66642" fileModifiedDate="2015-03-03T14:38:09" width="400" height="279" widthDpi="72" heightDpi="72">2c4cdaf0-40d4-4a5e-8876-da3b758a7dd2</MarketedDrawing>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">19110</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/19110</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.697">19110</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">00499</ReorderTypeNumber>
+		<Section language="DAN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="20" modifiedDate="2016-02-16T11:25:20.697">VESTE</Section>
+		<Section language="EN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="20" modifiedDate="2016-02-16T11:25:20.697">WAISTCOATS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">19110</StyleNumber>
+	</Product>
+	<Product id="172663" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">27100</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">27100</Value>
+		<Category language="DAN" id="173034" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre vest</Category>
+		<Category language="EN" id="173034" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Herre vest</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">27100</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/27100-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">27100</ItemNumber>
+		<MarketedDrawing seq="0" modifiedDate="2016-01-13T15:49:21.763" string="27100?dpi=300&amp;fmt=png-alpha.png" fileSize="53444" fileModifiedDate="2015-03-03T15:01:29" width="400" height="287" widthDpi="72" heightDpi="72">c9e9b688-6a20-4174-8120-7cf3bb356ec7</MarketedDrawing>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">27100</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/27100</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.697">27100</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">00499</ReorderTypeNumber>
+		<Section language="DAN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="2" modifiedDate="2016-02-16T11:24:45.823">VESTE</Section>
+		<Section language="EN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="2" modifiedDate="2016-02-16T11:24:45.823">WAISTCOATS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">27100</StyleNumber>
+	</Product>
+	<Product id="172963" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-04-11T14:20:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">25270</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">25270</Value>
+		<Category language="DAN" id="173039" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Unisex funktionsskjorte</Category>
+		<Category language="EN" id="173039" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Unisex funktionsskjorte</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">25270</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.31">http://kentaur.scene7.com/is/image/kentaur/25270-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">25270</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">25270</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/25270</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.903">25270</PerfionImportKey>
+		<ReorderTypeNumber seq="0" modifiedDate="2016-04-11T14:19:36.733">00706</ReorderTypeNumber>
+		<Section language="DAN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="18" modifiedDate="2016-02-16T11:23:00.87">FUNKTIONSSKJORTER </Section>
+		<Section language="EN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="18" modifiedDate="2016-02-16T11:23:00.87">TUNIC/SHIRTS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">25270</StyleNumber>
+	</Product>
+	<Product id="173005" parentId="0" brand="Virtual" order="0" createdDate="2016-01-12T10:32:00" modifiedDate="2016-03-30T09:29:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-12T10:32:33.433">19511</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-12T10:32:33.433">19511</Value>
+		<Category language="DAN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<Category language="EN" id="173029" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T11:03:07.15">Dame vest</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">19511</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/19511-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-12T10:32:33.433">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">19511</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">19511</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/19511</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.93">19511</PerfionImportKey>
+		<Section language="DAN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="24" modifiedDate="2016-02-16T11:25:20.697">VESTE</Section>
+		<Section language="EN" id="307974" parentID="307969" brand="Normal" itemOrder="2" seq="0" relatedOrder="24" modifiedDate="2016-02-16T11:25:20.697">WAISTCOATS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">19511</StyleNumber>
+	</Product>
+	<Product id="173082" parentId="0" brand="Virtual" order="0" createdDate="2016-01-13T12:02:00" modifiedDate="2016-03-30T09:29:00">
+		<Value language="DAN" seq="0" modifiedDate="2016-01-14T15:10:29.973">15279</Value>
+		<Value language="EN" seq="0" modifiedDate="2016-01-14T15:10:29.973">15279</Value>
+		<Category language="DAN" id="307302" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-02-10T16:43:01.03">Funktionsskjorte</Category>
+		<Category language="EN" id="307302" parentID="173024" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-02-10T16:43:01.03">Functional shirt</Category>
+		<EPImageKey seq="0" modifiedDate="2016-01-13T12:50:16.727">15279</EPImageKey>
+		<EPURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/15279-location</EPURL>
+		<HierarchyLevel id="171379" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-13T12:02:49.113">Style</HierarchyLevel>
+		<ItemNumber seq="0" modifiedDate="2016-03-30T09:29:11.537">15279</ItemNumber>
+		<MDImageKey seq="0" modifiedDate="2016-01-13T12:43:25.747">15279</MDImageKey>
+		<MDImageURL seq="0" modifiedDate="2016-01-14T11:56:56.293">http://kentaur.scene7.com/is/image/kentaur/15279</MDImageURL>
+		<PerfionImportKey seq="0" modifiedDate="2016-01-14T11:10:44.947">15279</PerfionImportKey>
+		<PLMStatus id="173603" parentID="0" brand="Normal" itemOrder="0" seq="0" modifiedDate="2016-01-14T15:10:29.973">NEW FROM ASPECT4</PLMStatus>
+		<Section language="DAN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="2" modifiedDate="2016-02-16T11:20:47.123">FUNKTIONSSKJORTER </Section>
+		<Section language="EN" id="307973" parentID="307969" brand="Normal" itemOrder="1" seq="0" relatedOrder="2" modifiedDate="2016-02-16T11:20:47.123">TUNIC/SHIRTS</Section>
+		<StyleNumber seq="0" modifiedDate="2016-01-13T12:02:49.113">15279</StyleNumber>
+	</Product>
+</Data>
