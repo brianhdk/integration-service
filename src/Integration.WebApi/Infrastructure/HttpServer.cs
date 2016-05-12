@@ -23,11 +23,10 @@ namespace Vertica.Integration.WebApi.Infrastructure
         private readonly IKernel _kernel;
 		private readonly TextWriter _outputter;
 
-		public HttpServer(string url, IKernel kernel, Func<IKernel, HttpConfiguration> httpConfigurationFactory, Action<IOwinConfiguration> configuration)
+		public HttpServer(string url, IKernel kernel, Action<IOwinConfiguration> configuration)
         {
 	        if (string.IsNullOrWhiteSpace(url)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(url));
 	        if (kernel == null) throw new ArgumentNullException(nameof(kernel));
-			if (httpConfigurationFactory == null) throw new ArgumentNullException(nameof(httpConfigurationFactory));
 			if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
 	        _kernel = kernel;
@@ -41,8 +40,7 @@ namespace Vertica.Integration.WebApi.Infrastructure
             {
 				builder.Properties["host.TraceOutput"] = _outputter;
 
-	            HttpConfiguration httpConfiguration = httpConfigurationFactory(kernel);
-
+	            HttpConfiguration httpConfiguration = new HttpConfiguration();
 				configuration(new OwinConfiguration(builder, httpConfiguration, kernel));
 
 				ConfigureJson(httpConfiguration);

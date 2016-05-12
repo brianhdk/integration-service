@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web.Http;
 using Castle.MicroKernel;
 
 namespace Vertica.Integration.WebApi.Infrastructure
 {
 	public class HttpServerConfiguration
 	{
-		private Func<IKernel, HttpConfiguration> _httpConfigurationFactory; 
 		private readonly List<Action<IOwinConfiguration>> _configurers;
 		private bool _allowCaching;
 		private bool _allowHttpFormatter;
@@ -15,20 +13,6 @@ namespace Vertica.Integration.WebApi.Infrastructure
 		internal HttpServerConfiguration()
 		{
 			_configurers = new List<Action<IOwinConfiguration>>();
-		}
-
-		/// <summary>
-		/// Use this method to control how the HttpConfiguration object gets instantiated.
-		/// </summary>
-		/// <param name="httpConfiguration"></param>
-		/// <returns></returns>
-		public HttpServerConfiguration CustomHttpConfiguration(Func<IKernel, HttpConfiguration> httpConfiguration)
-		{
-			if (httpConfiguration == null) throw new ArgumentNullException(nameof(httpConfiguration));
-
-			_httpConfigurationFactory = httpConfiguration;
-
-			return this;
 		}
 
 		/// <summary>
@@ -65,12 +49,7 @@ namespace Vertica.Integration.WebApi.Infrastructure
 		{
 			if (kernel == null) throw new ArgumentNullException(nameof(kernel));
 
-			return new HttpServer(url, kernel, HttpConfigurationFactory, Apply);
-		}
-
-		private Func<IKernel, HttpConfiguration> HttpConfigurationFactory
-		{
-			get { return _httpConfigurationFactory ?? (kernel => new HttpConfiguration());}
+			return new HttpServer(url, kernel, Apply);
 		}
 
 		private void Apply(IOwinConfiguration configuration)
