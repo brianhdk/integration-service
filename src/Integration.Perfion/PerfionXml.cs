@@ -137,7 +137,17 @@ namespace Vertica.Integration.Perfion
 
 			public string Caption(string language = null)
 			{
-				return Element(language)?.Attribute("caption")?.Value;
+				return Value("caption", language);
+			}
+
+			public string Unit(string language = null)
+			{
+				return Value("unit", language);
+			}
+
+			private string Value(XName attribute, string language)
+			{
+				return Element(language)?.Attribute(attribute)?.Value;
 			}
 
 			private XElement Element(string language)

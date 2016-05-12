@@ -22,6 +22,17 @@ namespace Vertica.Integration.Tests.Perfion
 			Assert.That(features["Section"].Caption("dummy"), Is.Null);
 		}
 
+		[Test]
+		public void Features_Unit_Localized()
+		{
+			PerfionXml xml = Parse(Examples.Example1);
+
+			Dictionary<string, PerfionXml.Feature> features = xml.Features();
+
+			Assert.That(features["Category"].Unit("dan"), Is.EqualTo("UnitDAN"));
+			Assert.That(features["Category"].Unit("en"), Is.EqualTo("UnitEN"));
+		}
+
 		private static PerfionXml Parse(string xml)
 		{
 			var service = Substitute.For<IPerfionService>();
