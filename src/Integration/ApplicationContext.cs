@@ -52,6 +52,20 @@ namespace Vertica.Integration
 		    return new ApplicationContext(application);
 	    }
 
+		public object Resolve(Type service)
+		{
+			if (service == null) throw new ArgumentNullException(nameof(service));
+
+			return _container.Resolve(service);
+		}
+
+		public Array ResolveAll(Type service)
+		{
+			if (service == null) throw new ArgumentNullException(nameof(service));
+
+			return _container.ResolveAll(service);
+		}
+
 		public T Resolve<T>()
 	    {
 		    return _container.Resolve<T>();

@@ -6,12 +6,22 @@ namespace Vertica.Integration
     public interface IApplicationContext : IDisposable
     {
 		/// <summary>
+		/// Returns a component instance by the service
+		/// </summary>
+		/// <param name="service">The service to match</param>
+		/// <returns></returns>
+		object Resolve(Type service);
+
+		/// <summary>
+		/// Resolve all valid components that match this service
+		/// </summary>
+		/// <param name="service">The service to match</param>
+		Array ResolveAll(Type service);
+
+		/// <summary>
 		/// Returns a component instance by the service.
 		/// </summary>
 		/// <typeparam name="T">The Service type</typeparam>
-		/// <returns>
-		/// The component instance
-		/// </returns>		
 		T Resolve<T>();
 
 		/// <summary>
