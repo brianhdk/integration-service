@@ -226,6 +226,15 @@ namespace Vertica.Integration.Perfion
 				return element?.Id();
 			}
 
+			public int[] IdsOf(XName relatedComponent, string language = null)
+			{
+				if (relatedComponent == null) throw new ArgumentNullException(nameof(relatedComponent));
+
+				IEnumerable<XElement> elements = _element.Elements(relatedComponent, language);
+
+				return elements.Select(x => x.Id()).Distinct().ToArray();
+			}
+
 			public Component FindRelation(XName relatedComponent, string language = null)
 			{
 				if (relatedComponent == null) throw new ArgumentNullException(nameof(relatedComponent));
@@ -236,6 +245,15 @@ namespace Vertica.Integration.Perfion
 					return null;
 
 				return _xml.Components(relatedComponent).FirstOrDefault(x => x.Id == id.Value);
+			}
+
+			public Component[] FindRelations(XName relatedComponent, string language = null)
+			{
+				if (relatedComponent == null) throw new ArgumentNullException(nameof(relatedComponent));
+
+				int[] ids = IdsOf(relatedComponent, language);
+
+				return _xml.Components(relatedComponent).Where(x => ids.Contains(x.Id)).ToArray();
 			}
 
 			public File[] GetFiles(XName name)
