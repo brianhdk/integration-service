@@ -1,6 +1,10 @@
 ﻿using System;
 using Castle.MicroKernel;
+using Microsoft.WindowsAzure.Storage.Analytics;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.WindowsAzure.Storage.File;
+using Microsoft.WindowsAzure.Storage.Queue;
+using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Vertica.Integration.Azure.Infrastructure.BlobStorage
 {
@@ -18,7 +22,32 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage
 
 	    public CloudBlobClient Create()
 	    {
-		    return _connection.Create(_kernel);
+		    return CreateBlobClient();
+	    }
+
+	    public CloudBlobClient CreateBlobClient()
+	    {
+		    return _connection.CreateBlobClient(_kernel);
+	    }
+
+	    public CloudQueueClient CreateQueueClient()
+	    {
+		    return _connection.CreateQueueClient(_kernel);
+	    }
+
+	    public CloudTableClient CreateTableClient()
+	    {
+		    return _connection.CreateTableClient(_kernel);
+	    }
+
+	    public CloudAnalyticsClient CreateAnalyticsClient()
+	    {
+		    return _connection.CreateAnalyticsClient(_kernel);
+	    }
+
+	    public CloudFileClient CreateFileClient()
+	    {
+		    return _connection.CreateFileClient(_kernel);
 	    }
     }
 
@@ -35,7 +64,32 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage
 
 		public CloudBlobClient Create()
 		{
-			return _decoree.Create();
+			return CreateBlobClient();
+		}
+
+		public CloudBlobClient CreateBlobClient()
+		{
+			return _decoree.CreateBlobClient();
+		}
+
+		public CloudQueueClient CreateQueueClient()
+		{
+			return _decoree.CreateQueueClient();
+		}
+
+		public CloudTableClient CreateTableClient()
+		{
+			return _decoree.CreateTableClient();
+		}
+
+		public CloudAnalyticsClient CreateAnalyticsClient()
+		{
+			return _decoree.CreateAnalyticsClient();
+		}
+
+		public CloudFileClient CreateFileClient()
+		{
+			return _decoree.CreateFileClient();
 		}
 	}
 }
