@@ -68,7 +68,7 @@ namespace Vertica.Integration.Tests.Model
             using (CreateSubject(out subject, tasks => AddFromTestAssembly(tasks).Remove<TestTask>().Task<AnotherTask>()))
             {
                 TaskNotFoundException ex = Assert.Throws<TaskNotFoundException>(() => subject.Get<TestTask>());
-                Assert.That(ex.Message, Is.StringContaining("TestTask"));
+                Assert.That(ex.Message, Does.Contain("TestTask"));
 
                 ITask anotherTask = subject.Get<AnotherTask>();
                 Assert.That(anotherTask, Is.Not.Null);

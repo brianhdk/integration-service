@@ -81,26 +81,27 @@ namespace Vertica.Integration.Perfion
 		public class File
 		{
 			private readonly PerfionXml _xml;
-			private readonly XElement _element;
 
 			public File(PerfionXml xml, XElement element)
 			{
 				if (xml == null) throw new ArgumentNullException(nameof(xml));
 				if (element == null) throw new ArgumentNullException(nameof(element));
 
-				_element = element;
+				Element = element;
 				_xml = xml;
 			}
 
-			public XElement Element => _element;
+			public XElement Element { get; }
 
-			public Guid Id => _element.AsGuid();
+			public Component Parent => new Component(_xml, Element.Parent);
 
-			public string Name => _element.AttributeOrThrow("string").Value;
+			public Guid Id => Element.AsGuid();
 
-			public DateTime LastModified => _element.LastModified();
+			public string Name => Element.AttributeOrThrow("string").Value;
 
-			public DateTime FileLastModified => _element.AttributeOrThrow("fileModifiedDate").AsDateTime();
+			public DateTime LastModified => Element.LastModified();
+
+			public DateTime FileLastModified => Element.AttributeOrThrow("fileModifiedDate").AsDateTime();
 
 			public byte[] Download()
 			{
@@ -117,6 +118,9 @@ namespace Vertica.Integration.Perfion
 			{
 				_xml = xml;
 			}
+
+			public int Width => Element.AttributeOrThrow("width").AsInt32();
+			public int Height => Element.AttributeOrThrow("height").AsInt32();
 
 			public byte[] Download(NameValueCollection options)
 			{
@@ -278,7 +282,6 @@ namespace Vertica.Integration.Perfion
 					.ToArray();
 			}
 
-
 			public int? AsInt32(XName name, string language = null)
 			{
 				if (name == null) throw new ArgumentNullException(nameof(name));
@@ -325,6 +328,11 @@ namespace Vertica.Integration.Perfion
 					return null;
 
 				return Decimal.Parse(value, ParsingExtensions.English);
+			}
+
+			public byte[] DownloadPdfReport(string reportName, string language = null, NameValueCollection options = null)
+			{
+				return _xml.Service.DownloadPdfReport(new[] { Id }, reportName, language, options);
 			}
 		}
 	}

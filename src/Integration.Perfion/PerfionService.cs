@@ -54,20 +54,34 @@ namespace Vertica.Integration.Perfion
 
 		public byte[] DownloadFile(Guid id)
 		{
-			return Download("File", id);
+			return Download("File.aspx", id);
 		}
 
 		public byte[] DownloadImage(Guid id, NameValueCollection options = null)
 		{
-			return Download("Image", id, options);
+			return Download("Image.aspx", id, options);
 		}
 
-		private byte[] Download(string path, Guid id, NameValueCollection options = null)
+		public byte[] DownloadPdfReport(int[] ids, string reportName, string language = null, NameValueCollection options = null)
+		{
+			if (ids == null) throw new ArgumentNullException(nameof(ids));
+			if (string.IsNullOrWhiteSpace(language)) throw new ArgumentException(@"Value cannot be null or empty", nameof(language));
+			
+			options = options ?? new NameValueCollection();
+			options.Set("ReportName", reportName);
+
+			if (!string.IsNullOrWhiteSpace(language))
+				options.Set("lg", language);
+
+			return Download("report.ashx", string.Join(",", ids.Distinct()), options);
+		}
+
+		private byte[] Download(string path, object id, NameValueCollection options = null)
 		{
 			using (var webClient = new WebClient())
 			{
 				string url =
-					$"{ParseBaseUri()}{path}.aspx?id={id}{(options != null ? string.Join(string.Empty, options.AllKeys.Select(x => $"&{x}={options[x]}")) : string.Empty)}";
+					$"{ParseBaseUri()}{path}?id={id}{(options != null ? string.Join(string.Empty, options.AllKeys.Select(x => $"&{x}={options[x]}")) : string.Empty)}";
 
 				return webClient.DownloadData(url);
 			}
@@ -101,8 +115,7 @@ namespace Vertica.Integration.Perfion
 				SendTimeout = _configuration.ServiceClientInternal.SendTimeout
 			};
 
-			if (_configuration.ServiceClientInternal.Binding != null)
-				_configuration.ServiceClientInternal.Binding(binding);
+			_configuration.ServiceClientInternal.Binding?.Invoke(binding);
 
 			var proxy = new GetDataSoapClient(binding, new EndpointAddress(_configuration.ConnectionStringInternal));
 

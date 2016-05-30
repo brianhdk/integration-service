@@ -9,5 +9,6 @@ namespace Vertica.Integration.Perfion
 
 		byte[] DownloadFile(Guid id);
 		byte[] DownloadImage(Guid id, NameValueCollection options = null);
+		byte[] DownloadPdfReport(int[] ids, string reportName, string language = null, NameValueCollection options = null);
 	}
 }
