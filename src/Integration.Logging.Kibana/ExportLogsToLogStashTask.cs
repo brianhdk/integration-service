@@ -22,7 +22,7 @@ namespace Vertica.Integration.Logging.Kibana
 
 	    public override ExportLogsToLogStashWorkItem Start(ITaskExecutionContext context)
         {
-            CloudBlobClient client = _factory.Create();
+            CloudBlobClient client = _factory.CreateBlobClient();
 
             CloudBlobContainer container = client.GetContainerReference("logs");
             container.CreateIfNotExists();

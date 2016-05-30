@@ -27,7 +27,7 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage.Archiving
         {
             return new BeginArchive(name, (stream, options) =>
             {
-                CloudBlobClient client = _factory.Create();
+                CloudBlobClient client = _factory.CreateBlobClient();
 
                 CloudBlobContainer container = client.GetContainerReference(_containerName);
                 container.CreateIfNotExists(BlobContainerPublicAccessType.Blob);
@@ -52,7 +52,7 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage.Archiving
 
         public Archive[] GetAll()
         {
-            CloudBlobClient client = _factory.Create();
+            CloudBlobClient client = _factory.CreateBlobClient();
 
             CloudBlobContainer container = client.GetContainerReference(_containerName);
 
@@ -85,7 +85,7 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage.Archiving
 
         public byte[] Get(string id)
         {
-            CloudBlobClient client = _factory.Create();
+            CloudBlobClient client = _factory.CreateBlobClient();
 
             CloudBlobContainer container = client.GetContainerReference(_containerName);
             container.CreateIfNotExists();
@@ -109,7 +109,7 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage.Archiving
         {
             int deleted = 0;
 
-            CloudBlobClient client = _factory.Create();
+            CloudBlobClient client = _factory.CreateBlobClient();
 
             CloudBlobContainer container = client.GetContainerReference(_containerName);
 
@@ -135,7 +135,7 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage.Archiving
         {
             int deleted = 0;
 
-            CloudBlobClient client = _factory.Create();
+            CloudBlobClient client = _factory.CreateBlobClient();
 
             CloudBlobContainer container = client.GetContainerReference(_containerName);
 

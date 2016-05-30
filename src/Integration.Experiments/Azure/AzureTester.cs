@@ -47,7 +47,7 @@ namespace Vertica.Integration.Experiments.Azure
 
 		public override void StartTask(ITaskExecutionContext context)
 		{
-			CloudBlobClient client = _blobStorageClientFactory.Create();
+			CloudBlobClient client = _blobStorageClientFactory.CreateBlobClient();
 
 			CloudBlobContainer container = client.GetContainerReference("task");
 			container.CreateIfNotExists();
