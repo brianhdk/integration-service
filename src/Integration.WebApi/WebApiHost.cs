@@ -67,13 +67,16 @@ namespace Vertica.Integration.WebApi
 			return _windowsService.Handle(
 				args, 
 				new HandleAsWindowsService(
-					this.Name(), 
-					this.Name(),
+					WindowsServiceName,
+					WindowsServiceDisplayName,
 					$"[URL: {url}] {Description}", 
 					() => _factory.Create(url)));
 		}
 
-	    public string Description => @"WebApiHost is used to host and expose all WebApi ApiControllers registred part of the initial configuration. To start this Host, use the following command: ""WebApiHost url:http://localhost:8080"" (you can choose any valid URL).";
+	    protected virtual string WindowsServiceName => this.Name();
+	    protected virtual string WindowsServiceDisplayName => this.Name();
+
+	    public virtual string Description => @"WebApiHost is used to host and expose all WebApi ApiControllers registred part of the initial configuration. To start this Host, use the following command: ""WebApiHost url:http://localhost:8080"" (you can choose any valid URL).";
 
 	    private static string EnsureUrl(string url, IRuntimeSettings settings)
 	    {

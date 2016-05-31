@@ -96,6 +96,12 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 
 		private string Prefix(string value)
 		{
+			bool dontPrefix;
+			bool.TryParse(_runtimeSettings["WindowsService.DontPrefix"], out dontPrefix);
+
+			if (dontPrefix)
+				return value;
+
 			ApplicationEnvironment environment = _runtimeSettings.Environment;
 
 			return $"Integration Service{(environment != null ? $" [{environment}]" : string.Empty)}: {value}";
