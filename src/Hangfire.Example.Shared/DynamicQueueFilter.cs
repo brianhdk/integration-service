@@ -20,7 +20,9 @@ namespace Hangfire.Example.Shared
 		{
 			if (options == null) throw new ArgumentNullException(nameof(options));
 
-			options.Queues = new[] {QueueName.Value};
+			options.Queues = new[] { QueueName.Value };
+
+			GlobalJobFilters.Filters.Add(new DynamicQueueFilter());
 
 			return options;
 		}

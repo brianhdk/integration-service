@@ -119,6 +119,8 @@ namespace Vertica.Integration.Perfion
 
 			var proxy = new GetDataSoapClient(binding, new EndpointAddress(_configuration.ConnectionStringInternal));
 
+			_configuration.ServiceClientInternal.ClientCredentials?.Invoke(proxy.ClientCredentials);
+
 			try
 			{
 				return client(proxy);

@@ -1,5 +1,6 @@
 using System;
 using System.ServiceModel;
+using System.ServiceModel.Description;
 
 namespace Vertica.Integration.Perfion
 {
@@ -7,7 +8,7 @@ namespace Vertica.Integration.Perfion
 	{
 		public ServiceClientConfiguration()
 		{
-			MaxReceivedMessageSize = Int32.MaxValue;
+			MaxReceivedMessageSize = int.MaxValue;
 			ReceiveTimeout = SendTimeout = TimeSpan.MaxValue;
 		}
 
@@ -16,19 +17,19 @@ namespace Vertica.Integration.Perfion
 		public TimeSpan SendTimeout { get; set; }
 
 		internal Action<BasicHttpBinding> Binding { get; private set; }
+		internal Action<ClientCredentials> ClientCredentials { get; private set; }
 
-		public ServiceClientConfiguration Advanced(Action<BasicHttpBinding> binding)
+		public ServiceClientConfiguration Advanced(Action<BasicHttpBinding> binding = null, Action<ClientCredentials> clientCredentials = null)
 		{
-			if (binding == null) throw new ArgumentNullException(nameof(binding));
-
 			Binding = binding;
+			ClientCredentials = clientCredentials;
+
 			return this;
 		}
 
 		public ServiceClientConfiguration Change(Action<ServiceClientConfiguration> change)
 		{
-			if (change != null)
-				change(this);
+			change?.Invoke(this);
 
 			return this;
 		}

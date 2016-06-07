@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Vertica.Integration.Experiments;
+using Vertica.Integration.Perfion;
 
 namespace Vertica.Integration.Console
 {
@@ -9,6 +10,15 @@ namespace Vertica.Integration.Console
 		{
 			using (IApplicationContext context = ApplicationContext.Create(application => application
 				.NoDatabase()
+				.UsePerfion(perfion => perfion
+					.ServiceClient(client => client.Advanced(
+						binding: binding =>
+						{
+						}, 
+						clientCredentials: clientCredentials =>
+						{
+
+						})))
                 .Void()))
 			{
 				context.Resolve<TextWriter>().WriteLine("Hello!");
