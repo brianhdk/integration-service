@@ -68,12 +68,11 @@ namespace Vertica.Integration.Perfion
 			if (string.IsNullOrWhiteSpace(language)) throw new ArgumentException(@"Value cannot be null or empty", nameof(language));
 			
 			options = options ?? new NameValueCollection();
-			options.Set("ReportName", reportName);
 
 			if (!string.IsNullOrWhiteSpace(language))
 				options.Set("lg", language);
 
-			return Download("report.ashx", string.Join(",", ids.Distinct()), options);
+			return Download($"../{reportName}.report", string.Join(",", ids.Distinct()), options);
 		}
 
 		private byte[] Download(string path, object id, NameValueCollection options = null)

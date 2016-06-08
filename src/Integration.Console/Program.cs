@@ -17,12 +17,17 @@ namespace Vertica.Integration.Console
 						}, 
 						clientCredentials: clientCredentials =>
 						{
-
 						})))
                 .Void()))
 			{
-				context.Resolve<TextWriter>().WriteLine("Hello!");
-                context.Execute(args);
+				//context.Resolve<TextWriter>().WriteLine("Hello!");
+    //            context.Execute(args);
+
+				var perfion = context.Resolve<IPerfionService>();
+
+				byte[] bytes = perfion.DownloadPdfReport(new[] {78091}, "Produktblad_DK", "DAN");
+
+				File.WriteAllBytes(@"c:\tmp\perfion.pdf", bytes);
 			}
 		}
 	}
