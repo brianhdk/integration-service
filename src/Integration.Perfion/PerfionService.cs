@@ -82,7 +82,14 @@ namespace Vertica.Integration.Perfion
 				string url =
 					$"{ParseBaseUri()}{path}?id={id}{(options != null ? string.Join(string.Empty, options.AllKeys.Select(x => $"&{x}={options[x]}")) : string.Empty)}";
 
-				return webClient.DownloadData(url);
+				try
+				{
+					return webClient.DownloadData(url);
+				}
+				catch (Exception ex)
+				{
+					throw new WebException($"Error downloading from {url}. {ex.Message}.", ex);
+				}
 			}
 		}
 
