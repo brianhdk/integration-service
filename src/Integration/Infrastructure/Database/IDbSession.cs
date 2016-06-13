@@ -9,8 +9,8 @@ namespace Vertica.Integration.Infrastructure.Database
     {
         IDbTransaction BeginTransaction(IsolationLevel? isolationLevel = null);
 
-        int Execute(string sql, dynamic param = null);
-        T ExecuteScalar<T>(string sql, dynamic param = null);
+        int Execute(string sql, dynamic param = null, int? commandTimeout = null, CommandType? commandType = null);
+        T ExecuteScalar<T>(string sql, dynamic param = null, int? commandTimeout = null, CommandType? commandType = null);
 
 	    IEnumerable<dynamic> Query(string sql, dynamic param = null);
         IEnumerable<T> Query<T>(string sql, dynamic param = null);

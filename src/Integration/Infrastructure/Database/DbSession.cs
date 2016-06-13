@@ -31,14 +31,14 @@ namespace Vertica.Integration.Infrastructure.Database
             return new TransactionScope(transaction, () => _transactions.Pop());
         }
 
-        public int Execute(string sql, dynamic param = null)
+        public int Execute(string sql, dynamic param = null, int? commandTimeout = null, CommandType? commandType = null)
         {
-            return SqlMapper.Execute(_connection, sql, param, CurrentTransaction);
+            return SqlMapper.Execute(_connection, sql, param, CurrentTransaction, commandTimeout, commandType);
         }
 
-        public T ExecuteScalar<T>(string sql, dynamic param = null)
+        public T ExecuteScalar<T>(string sql, dynamic param = null, int? commandTimeout = null, CommandType? commandType = null)
         {
-            return SqlMapper.ExecuteScalar<T>(_connection, sql, param, CurrentTransaction);
+            return SqlMapper.ExecuteScalar<T>(_connection, sql, param, CurrentTransaction, commandTimeout, commandType);
         }
 
 	    public IEnumerable<dynamic> Query(string sql, dynamic param = null)
