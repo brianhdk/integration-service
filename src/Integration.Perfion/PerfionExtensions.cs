@@ -12,8 +12,7 @@ namespace Vertica.Integration.Perfion
 			{
 				PerfionConfiguration configuration = extensibility.Register(() => new PerfionConfiguration(application));
 
-				if (perfion != null)
-					perfion(configuration);
+				perfion?.Invoke(configuration);
 			});
 		}
 	}

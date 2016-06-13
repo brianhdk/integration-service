@@ -44,8 +44,7 @@ namespace Vertica.Integration.Perfion
 
 		public PerfionConfiguration Change(Action<PerfionConfiguration> change)
 		{
-			if (change != null)
-				change(this);
+			change?.Invoke(this);
 
 			return this;
 		}
@@ -55,10 +54,9 @@ namespace Vertica.Integration.Perfion
 		/// </summary>
 		public PerfionConfiguration EnableArchiving(Action<ArchiveOptions> options = null)
 		{
-			ArchiveOptions = new ArchiveOptions("Catalog").GroupedBy("Perfion").ExpiresAfterMonths(1);
+			ArchiveOptions = new ArchiveOptions("Data").GroupedBy("Perfion").ExpiresAfterMonths(1);
 
-			if (options != null)
-				options(ArchiveOptions);
+			options?.Invoke(ArchiveOptions);
 
 			return this;
 		}

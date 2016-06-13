@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.ServiceModel;
 using System.Xml.Linq;
+using Castle.MicroKernel;
 using Vertica.Integration.Infrastructure.Archiving;
 using Vertica.Integration.Perfion.PerfionAPIService;
 
@@ -13,11 +14,13 @@ namespace Vertica.Integration.Perfion
 	{
 		private readonly PerfionConfiguration _configuration;
 		private readonly IArchiveService _archive;
+		private readonly IKernel _kernel;
 
-		public PerfionService(PerfionConfiguration configuration, IArchiveService archive)
+		public PerfionService(PerfionConfiguration configuration, IArchiveService archive, IKernel kernel)
 		{
 			_configuration = configuration;
 			_archive = archive;
+			_kernel = kernel;
 		}
 
 		public PerfionXml Query(string query)
@@ -82,6 +85,8 @@ namespace Vertica.Integration.Perfion
 				string url =
 					$"{ParseBaseUri()}{path}?id={id}{(options != null ? string.Join(string.Empty, options.AllKeys.Select(x => $"&{x}={options[x]}")) : string.Empty)}";
 
+				_configuration.ServiceClientInternal.Binding?.Invoke(_kernel, webClient);
+
 				try
 				{
 					return webClient.DownloadData(url);
@@ -121,11 +126,11 @@ namespace Vertica.Integration.Perfion
 				SendTimeout = _configuration.ServiceClientInternal.SendTimeout
 			};
 
-			_configuration.ServiceClientInternal.Binding?.Invoke(binding);
+			_configuration.ServiceClientInternal.Binding?.Invoke(_kernel, binding);
 
 			var proxy = new GetDataSoapClient(binding, new EndpointAddress(_configuration.ConnectionStringInternal));
 
-			_configuration.ServiceClientInternal.ClientCredentials?.Invoke(proxy.ClientCredentials);
+			_configuration.ServiceClientInternal.ClientCredentials?.Invoke(_kernel, proxy.ClientCredentials);
 
 			try
 			{

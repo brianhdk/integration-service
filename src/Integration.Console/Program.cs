@@ -12,10 +12,10 @@ namespace Vertica.Integration.Console
 				.NoDatabase()
 				.UsePerfion(perfion => perfion
 					.ServiceClient(client => client.Advanced(
-						binding: binding =>
+						binding: (kernel, binding) =>
 						{
 						}, 
-						clientCredentials: clientCredentials =>
+						clientCredentials: (kernel, clientCredentials) =>
 						{
 						})))
                 .Void()))
