@@ -1899,6 +1899,18 @@ namespace ConsoleApplication16
 
 					// Enable archiving lets us create an entry in the archive with the data retrieved from Perfion
 					.EnableArchiving()
+
+					// Allows you to modify the behaviour of the WCF service - e.g. setting credentials, timeouts and more
+					.ServiceClient(client => 
+					{
+						client.Binding((kernel, binding) => 
+						{
+						});
+					})
+
+					// Allows you to modify the behaviour of the WebClient used to download files, images and reports
+					.WebClient(client => client
+						.Configure((kernel, webClient) => client.SetBasicAuthentication(webClient, "username", "password")))
 				));
         }
     }
