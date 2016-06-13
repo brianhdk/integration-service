@@ -78,6 +78,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="WebClientConfiguration.cs" />
     <Compile Include="ServiceClientConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>

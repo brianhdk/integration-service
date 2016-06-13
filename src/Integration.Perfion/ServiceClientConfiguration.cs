@@ -1,5 +1,4 @@
 using System;
-using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using Castle.MicroKernel;
@@ -18,20 +17,31 @@ namespace Vertica.Integration.Perfion
 		public TimeSpan ReceiveTimeout { get; set; }
 		public TimeSpan SendTimeout { get; set; }
 
-		internal Action<IKernel, BasicHttpBinding> Binding { get; private set; }
-		internal Action<IKernel, ClientCredentials> ClientCredentials { get; private set; }
-		internal Action<IKernel, WebClient> WebClient { get; private set; }
+		internal Action<IKernel, BasicHttpBinding> BindingInternal { get; private set; }
+		internal Action<IKernel, ClientCredentials> ClientCredentialsInternal { get; private set; }
 
-		public ServiceClientConfiguration Advanced(
-			Action<IKernel, BasicHttpBinding> binding = null, 
-			Action<IKernel, ClientCredentials> clientCredentials = null,
-			Action<IKernel, WebClient> webClient = null)
+		public ServiceClientConfiguration Binding(Action<IKernel, BasicHttpBinding> binding)
 		{
-			Binding = binding;
-			ClientCredentials = clientCredentials;
-			WebClient = webClient;
+			if (binding == null) throw new ArgumentNullException(nameof(binding));
+
+			BindingInternal = binding;
 
 			return this;
+		}
+
+		public ServiceClientConfiguration ClientCredentials(Action<IKernel, ClientCredentials> clientCredentials)
+		{
+			if (clientCredentials == null) throw new ArgumentNullException(nameof(clientCredentials));
+
+			ClientCredentialsInternal = clientCredentials;
+
+			return this;
+		}
+
+		[Obsolete("This method throws. Use the specific Binding and ClientCredentials methods instead.")]
+		public ServiceClientConfiguration Advanced(Action<BasicHttpBinding> binding = null, Action<ClientCredentials> clientCredentials = null)
+		{
+			throw new NotSupportedException("Use the specific methods. Binding(...) and ClientCredentials(...)");
 		}
 
 		public ServiceClientConfiguration Change(Action<ServiceClientConfiguration> change)

@@ -85,7 +85,7 @@ namespace Vertica.Integration.Perfion
 				string url =
 					$"{ParseBaseUri()}{path}?id={id}{(options != null ? string.Join(string.Empty, options.AllKeys.Select(x => $"&{x}={options[x]}")) : string.Empty)}";
 
-				_configuration.ServiceClientInternal.WebClient?.Invoke(_kernel, webClient);
+				_configuration.WebClientConfiguration.Configuration?.Invoke(_kernel, webClient);
 
 				try
 				{
@@ -121,16 +121,16 @@ namespace Vertica.Integration.Perfion
 			var binding = new BasicHttpBinding
 			{
 				Name = "PerfionService",
-				MaxReceivedMessageSize = _configuration.ServiceClientInternal.MaxReceivedMessageSize,
-				ReceiveTimeout = _configuration.ServiceClientInternal.ReceiveTimeout,
-				SendTimeout = _configuration.ServiceClientInternal.SendTimeout
+				MaxReceivedMessageSize = _configuration.ServiceClientConfiguration.MaxReceivedMessageSize,
+				ReceiveTimeout = _configuration.ServiceClientConfiguration.ReceiveTimeout,
+				SendTimeout = _configuration.ServiceClientConfiguration.SendTimeout
 			};
 
-			_configuration.ServiceClientInternal.Binding?.Invoke(_kernel, binding);
+			_configuration.ServiceClientConfiguration.BindingInternal?.Invoke(_kernel, binding);
 
 			var proxy = new GetDataSoapClient(binding, new EndpointAddress(_configuration.ConnectionStringInternal));
 
-			_configuration.ServiceClientInternal.ClientCredentials?.Invoke(_kernel, proxy.ClientCredentials);
+			_configuration.ServiceClientConfiguration.ClientCredentialsInternal?.Invoke(_kernel, proxy.ClientCredentials);
 
 			try
 			{

@@ -17,12 +17,14 @@ namespace Vertica.Integration.Perfion
 					.AddFromAssemblyOfThis<PerfionConfiguration>()
 					.Ignore<PerfionConfiguration>());
 
-			ServiceClientInternal = new ServiceClientConfiguration();
+			ServiceClientConfiguration = new ServiceClientConfiguration();
+			WebClientConfiguration = new WebClientConfiguration();
 		}
 
 		internal ConnectionString ConnectionStringInternal { get; set; }
 		internal ArchiveOptions ArchiveOptions { get; private set; }
-		internal ServiceClientConfiguration ServiceClientInternal { get; }
+		internal ServiceClientConfiguration ServiceClientConfiguration { get; }
+		internal WebClientConfiguration WebClientConfiguration { get; }
 
 		public PerfionConfiguration ConnectionString(ConnectionString connectionString)
 		{
@@ -33,11 +35,26 @@ namespace Vertica.Integration.Perfion
 			return this;
 		}
 
+		/// <summary>
+		/// ServiceClient allows configuration of the WCF proxy client that connects to the Perfion API.
+		/// </summary>
 		public PerfionConfiguration ServiceClient(Action<ServiceClientConfiguration> serviceClient)
 		{
 			if (serviceClient == null) throw new ArgumentNullException(nameof(serviceClient));
 
-			serviceClient(ServiceClientInternal);
+			serviceClient(ServiceClientConfiguration);
+
+			return this;
+		}
+
+		/// <summary>
+		/// WebClient is used for all download related tasks, e.g. downloading files, images and reports.
+		/// </summary>
+		public PerfionConfiguration WebClient(Action<WebClientConfiguration> webClient)
+		{
+			if (webClient == null) throw new ArgumentNullException(nameof(webClient));
+
+			webClient(WebClientConfiguration);
 
 			return this;
 		}

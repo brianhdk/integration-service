@@ -11,13 +11,9 @@ namespace Vertica.Integration.Console
 			using (IApplicationContext context = ApplicationContext.Create(application => application
 				.NoDatabase()
 				.UsePerfion(perfion => perfion
-					.ServiceClient(client => client.Advanced(
-						binding: (kernel, binding) =>
-						{
-						}, 
-						clientCredentials: (kernel, clientCredentials) =>
-						{
-						})))
+					.WebClient(client => client.Configure((kernel, webClient) =>
+					{
+					})))
                 .Void()))
 			{
 				//context.Resolve<TextWriter>().WriteLine("Hello!");
