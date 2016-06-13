@@ -85,7 +85,7 @@ namespace Vertica.Integration.Perfion
 				string url =
 					$"{ParseBaseUri()}{path}?id={id}{(options != null ? string.Join(string.Empty, options.AllKeys.Select(x => $"&{x}={options[x]}")) : string.Empty)}";
 
-				_configuration.ServiceClientInternal.Binding?.Invoke(_kernel, webClient);
+				_configuration.ServiceClientInternal.WebClient?.Invoke(_kernel, webClient);
 
 				try
 				{
