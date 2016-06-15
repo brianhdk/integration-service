@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web.Http;
 using Castle.MicroKernel;
 
 namespace Vertica.Integration.WebApi.Infrastructure
@@ -9,10 +10,12 @@ namespace Vertica.Integration.WebApi.Infrastructure
 		private readonly List<Action<IOwinConfiguration>> _configurers;
 		private bool _allowCaching;
 		private bool _allowHttpFormatter;
+		private IncludeErrorDetailPolicy _errorDetailPolicy;
 
 		internal HttpServerConfiguration()
 		{
 			_configurers = new List<Action<IOwinConfiguration>>();
+			_errorDetailPolicy = IncludeErrorDetailPolicy.Always;
 		}
 
 		/// <summary>
@@ -30,6 +33,15 @@ namespace Vertica.Integration.WebApi.Infrastructure
 		public HttpServerConfiguration AllowXmlFormatter()
 		{
 			_allowHttpFormatter = true;
+			return this;
+		}
+
+		/// <summary>
+		/// By default Integration Service will set the IncludeErrorDetailPolicy to Always. Use this method to override that behaviour.
+		/// </summary>
+		public HttpServerConfiguration ErrorDetailPolicy(IncludeErrorDetailPolicy policy)
+		{
+			_errorDetailPolicy = policy;
 			return this;
 		}
 
@@ -58,6 +70,8 @@ namespace Vertica.Integration.WebApi.Infrastructure
 
 			Configure(configurer =>
 			{
+				configurer.Http.IncludeErrorDetailPolicy = _errorDetailPolicy;
+
 				if (!_allowCaching)
 					configurer.Http.MessageHandlers.Add(new NoCachingHandler());
 				

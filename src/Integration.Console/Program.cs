@@ -1,6 +1,4 @@
-﻿using System.IO;
-using Vertica.Integration.Experiments;
-using Vertica.Integration.Perfion;
+﻿using Vertica.Integration.Experiments;
 
 namespace Vertica.Integration.Console
 {
@@ -10,20 +8,20 @@ namespace Vertica.Integration.Console
 		{
 			using (IApplicationContext context = ApplicationContext.Create(application => application
 				.NoDatabase()
-				.UsePerfion(perfion => perfion
-					.WebClient(client => client.Configure((kernel, webClient) =>
-					{
-					})))
+				//.UsePerfion(perfion => perfion
+					//.WebClient(client => client.Configure((kernel, webClient) =>
+					//{
+					//})))
                 .Void()))
 			{
 				//context.Resolve<TextWriter>().WriteLine("Hello!");
-    //            context.Execute(args);
+                context.Execute(args);
 
-				var perfion = context.Resolve<IPerfionService>();
+				//var perfion = context.Resolve<IPerfionService>();
 
-				byte[] bytes = perfion.DownloadPdfReport(new[] {78091}, "Produktblad_DK", "DAN");
+				//byte[] bytes = perfion.DownloadPdfReport(new[] {78091}, "Produktblad_DK", "DAN");
 
-				File.WriteAllBytes(@"c:\tmp\perfion.pdf", bytes);
+				//File.WriteAllBytes(@"c:\tmp\perfion.pdf", bytes);
 			}
 		}
 	}

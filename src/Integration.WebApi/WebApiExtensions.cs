@@ -12,8 +12,7 @@ namespace Vertica.Integration.WebApi
 			{
 				var configuration = extensibility.Register(() => new WebApiConfiguration(application));
 
-				if (webApi != null)
-					webApi(configuration);
+				webApi?.Invoke(configuration);
 			});
         }
     }

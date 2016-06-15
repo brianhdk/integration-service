@@ -14,9 +14,9 @@
     <description>$description$</description>
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2016</copyright>
-    <tags>Vertica Integration Service IntegrationService SQLite</tags>
+    <tags>Vertica Integration Service IntegrationService Campaign Monitor CampaignMonitor</tags>
   </metadata>
   <files>
-    <file src="App_Readme/Integration.SQLite-readme.txt" target="readme.txt" />
+    <file src="App_Readme/Integration.CampaignMonitor-readme.txt" target="readme.txt" />
   </files>
 </package>

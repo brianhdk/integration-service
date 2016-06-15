@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration", "src\Integration\Integration.csproj", "{460F774F-2C89-47F4-84BD-B97653060E68}"
 EndProject
@@ -79,6 +79,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Experiments.Hangfire", "src\Integration.Experiments.Hangfire\Integration.Experiments.Hangfire.csproj", "{9337C682-E764-4B2B-8561-4556FEE013E1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hangfire.Example.Shared", "src\Hangfire.Example.Shared\Hangfire.Example.Shared.csproj", "{1C78178D-CB2F-452D-9B39-CDF082DDD63C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.CampaignMonitor", "src\Integration.CampaignMonitor\Integration.CampaignMonitor.csproj", "{26C94247-A2DB-47AA-886F-AF3FD15C6EB2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -182,6 +184,10 @@ Global
 		{1C78178D-CB2F-452D-9B39-CDF082DDD63C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C78178D-CB2F-452D-9B39-CDF082DDD63C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C78178D-CB2F-452D-9B39-CDF082DDD63C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26C94247-A2DB-47AA-886F-AF3FD15C6EB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26C94247-A2DB-47AA-886F-AF3FD15C6EB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26C94247-A2DB-47AA-886F-AF3FD15C6EB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26C94247-A2DB-47AA-886F-AF3FD15C6EB2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

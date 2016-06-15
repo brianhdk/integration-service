@@ -9,8 +9,7 @@ namespace Vertica.Integration.Domain.Monitoring
 {
     internal class MonitorEmailTemplate : EmailTemplate
 	{
-        private readonly string _subject;
-        private readonly MonitorEntry[] _entries;
+	    private readonly MonitorEntry[] _entries;
         private readonly MonitorTarget _target;
 
         public MonitorEmailTemplate(string subject, MonitorEntry[] entries, MonitorTarget target)
@@ -18,12 +17,12 @@ namespace Vertica.Integration.Domain.Monitoring
 		    if (entries == null) throw new ArgumentNullException(nameof(entries));
 		    if (target == null) throw new ArgumentNullException(nameof(target));
 
-		    _subject = subject;
+		    Subject = subject;
 		    _entries = entries;
             _target = target;
 		}
 
-	    protected internal override string Subject => _subject;
+	    protected internal override string Subject { get; }
 
 	    protected internal override bool IsHtml => true;
 
