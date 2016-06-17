@@ -44,5 +44,10 @@ namespace Vertica.Integration.RavenDB
 		}
 
 		public IDocumentStore DocumentStore => _decoree.DocumentStore;
+
+		public void Dispose()
+		{
+			_decoree.Dispose();
+		}
 	}
 }

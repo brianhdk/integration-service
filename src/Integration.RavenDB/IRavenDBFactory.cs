@@ -1,4 +1,5 @@
-﻿using Raven.Client;
+﻿using System;
+using Raven.Client;
 using Vertica.Integration.RavenDB.Infrastructure;
 
 namespace Vertica.Integration.RavenDB
@@ -7,7 +8,7 @@ namespace Vertica.Integration.RavenDB
 	{
 	}
 
-	public interface IRavenDbFactory<TConnection>
+	public interface IRavenDbFactory<TConnection> : IDisposable
 		where TConnection : Connection
 	{
 		IDocumentStore DocumentStore { get; }

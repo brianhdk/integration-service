@@ -1890,10 +1890,10 @@ namespace ConsoleApplication16
 				.Tasks(tasks => tasks.Task<PerfionTask>())
 				.UsePerfion(perfion => perfion
 					// Hard-coded connection string (NOT RECOMMENDED)
-					.Change(x => x.ConnectionString = ConnectionString.FromText("http://perfion-api.local/Perfion/GetData.asmx"))
+					.ConnectionString(ConnectionString.FromText("http://perfion-api.local/Perfion/GetData.asmx"))
 
 					//// Based on element in app.config: <add name="Perfion" connectionString="http://perfion-api.local/Perfion/GetData.asmx" />
-					//.Change(x => x.ConnectionString = ConnectionString.FromName("Perfion"))
+					//.ConnectionString(ConnectionString.FromName("Perfion"))
 
 					// ... or just simply add a connection-string element in app.config, name it "Perfion.APIService.Url" and we'll auto-wire it up.
 
