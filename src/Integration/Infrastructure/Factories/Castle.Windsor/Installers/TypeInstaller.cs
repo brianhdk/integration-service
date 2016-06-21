@@ -22,8 +22,7 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 		{
 			ComponentRegistration<TService> registration = Component.For<TService>().ImplementedBy(_type);
 
-			if (_registration != null)
-				_registration(registration);
+			_registration?.Invoke(registration);
 
 			container.Register(registration);
 		}
