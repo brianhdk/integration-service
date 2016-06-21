@@ -34,6 +34,7 @@ $settings = @{
 		"integration_sqlite" = Resolve-Path $script_directory\..\src\Integration.SQLite
 		"integration_perfion" = Resolve-Path $script_directory\..\src\Integration.Perfion
         "integration_hangfire" = Resolve-Path $script_directory\..\src\Integration.Hangfire
+		"integration_globase" = Resolve-Path $script_directory\..\src\Integration.Globase
     }
     "tools" = @{
         "nuget" = Resolve-Path $script_directory\..\.nuget\NuGet.exe
