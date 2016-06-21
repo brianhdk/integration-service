@@ -1,4 +1,6 @@
 ﻿using Vertica.Integration.Experiments;
+using Vertica.Integration.Portal;
+using Vertica.Integration.WebApi;
 
 namespace Vertica.Integration.Console
 {
@@ -7,12 +9,13 @@ namespace Vertica.Integration.Console
 		private static void Main(string[] args)
 		{
 			using (IApplicationContext context = ApplicationContext.Create(application => application
-				.NoDatabase()
+				//.NoDatabase()
 				//.UsePerfion(perfion => perfion
 					//.WebClient(client => client.Configure((kernel, webClient) =>
 					//{
 					//})))
-                .Void()))
+				.UseWebApi(webApi => webApi.WithPortal())
+				.Void()))
 			{
 				//context.Resolve<TextWriter>().WriteLine("Hello!");
                 context.Execute(args);

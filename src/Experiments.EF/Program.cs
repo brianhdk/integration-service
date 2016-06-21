@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Linq;
 using Experiments.EF.DAL;
 using Experiments.EF.Models;
 using Vertica.Integration;
@@ -15,10 +14,11 @@ namespace Experiments.EF
 			{
 				var writer = context.Resolve<TextWriter>();
 
-				var db = new SchoolContext();
-
-				foreach (Student student in db.Students)
-					writer.WriteLine(student.ID);
+				using (var db = new SchoolContext())
+				{
+					foreach (Student student in db.Students)
+						writer.WriteLine(student.ID);
+				}
 			}
 		}
 	}

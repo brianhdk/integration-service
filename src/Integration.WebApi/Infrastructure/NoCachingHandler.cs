@@ -7,9 +7,9 @@ namespace Vertica.Integration.WebApi.Infrastructure
 {
 	internal class NoCachingHandler : DelegatingHandler
     {
-		protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+		protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
 		{
-			HttpResponseMessage response = base.SendAsync(request, cancellationToken).Result;
+			HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
 
 			if (response.Headers.CacheControl == null)
 			{
@@ -17,7 +17,7 @@ namespace Vertica.Integration.WebApi.Infrastructure
 				response.Headers.Pragma.ParseAdd("no-cache");
 			}
 
-			return Task.FromResult(response);
+			return response;
 		}
     }
 }
