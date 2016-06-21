@@ -84,6 +84,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.CampaignMonitor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Experiments.EF", "src\Experiments.EF\Experiments.EF.csproj", "{30EE697F-3338-40F1-8742-0CC7472DB60F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Globase", "src\Integration.Globase\Integration.Globase.csproj", "{B66C0A0E-BE2C-4B8A-8080-19141BCB41C4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -194,6 +196,10 @@ Global
 		{30EE697F-3338-40F1-8742-0CC7472DB60F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30EE697F-3338-40F1-8742-0CC7472DB60F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30EE697F-3338-40F1-8742-0CC7472DB60F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B66C0A0E-BE2C-4B8A-8080-19141BCB41C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B66C0A0E-BE2C-4B8A-8080-19141BCB41C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B66C0A0E-BE2C-4B8A-8080-19141BCB41C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B66C0A0E-BE2C-4B8A-8080-19141BCB41C4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
