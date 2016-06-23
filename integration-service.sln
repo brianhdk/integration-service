@@ -86,6 +86,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Experiments.EF", "src\Exper
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Globase", "src\Integration.Globase\Integration.Globase.csproj", "{B66C0A0E-BE2C-4B8A-8080-19141BCB41C4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Experiments.Dapper", "src\Experiments.Dapper\Experiments.Dapper.csproj", "{74DCEDC0-FC43-47D3-BC3D-A749F798839D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -200,6 +202,10 @@ Global
 		{B66C0A0E-BE2C-4B8A-8080-19141BCB41C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B66C0A0E-BE2C-4B8A-8080-19141BCB41C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B66C0A0E-BE2C-4B8A-8080-19141BCB41C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74DCEDC0-FC43-47D3-BC3D-A749F798839D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74DCEDC0-FC43-47D3-BC3D-A749F798839D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74DCEDC0-FC43-47D3-BC3D-A749F798839D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74DCEDC0-FC43-47D3-BC3D-A749F798839D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -216,5 +222,6 @@ Global
 		{1C78178D-CB2F-452D-9B39-CDF082DDD63C} = {960ECE29-BE4A-4CB8-A7FA-91F696811BA5}
 		{26C94247-A2DB-47AA-886F-AF3FD15C6EB2} = {94C4BD7C-68E5-43C7-BBEC-F1A49115C616}
 		{30EE697F-3338-40F1-8742-0CC7472DB60F} = {960ECE29-BE4A-4CB8-A7FA-91F696811BA5}
+		{74DCEDC0-FC43-47D3-BC3D-A749F798839D} = {960ECE29-BE4A-4CB8-A7FA-91F696811BA5}
 	EndGlobalSection
 EndGlobal

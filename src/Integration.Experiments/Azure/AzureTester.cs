@@ -55,7 +55,7 @@ namespace Vertica.Integration.Experiments.Azure
 			string id = Guid.NewGuid().ToString("N");
 
 			CloudBlockBlob newBlock = container.GetBlockBlobReference(id);
-			newBlock.UploadFromFile(@"D:\Dropbox\Photos\ipad_IMG_6578.jpg", FileMode.Open);
+			newBlock.UploadFromFile(@"D:\Dropbox\Photos\ipad_IMG_6578.jpg");
 
 			CloudBlockBlob savedBlock = container.GetBlockBlobReference(id);
 
