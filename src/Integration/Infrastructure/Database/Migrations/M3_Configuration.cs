@@ -12,7 +12,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
                 .WithColumn("Id").AsString(255).PrimaryKey()
                 .WithColumn("Name").AsString(50)
                 .WithColumn("Description").AsString(255).Nullable()
-                .WithColumn("JsonData").AsString(Int32.MaxValue)
+                .WithColumn("JsonData").AsString(int.MaxValue)
                 .WithColumn("Created").AsDateTimeOffset()
                 .WithColumn("Updated").AsDateTimeOffset()
                 .WithColumn("UpdatedBy").AsString(50);

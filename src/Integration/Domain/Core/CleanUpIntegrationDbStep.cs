@@ -64,7 +64,7 @@ Archive: {4}",
 	            string query = $" FROM [{tableName}] WHERE [TimeStamp] <= @lowerbound";
 
 	            string csv = s.QueryToCsv(string.Concat("SELECT *", query), new { lowerBound });
-                int count = s.Execute(string.Concat("DELETE", query), new { lowerBound });
+                int count = s.Execute(string.Concat("DELETE", query), new { lowerBound }, commandTimeout: 10800);
 
 	            return Tuple.Create(count, csv);
 	        });

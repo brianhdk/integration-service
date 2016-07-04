@@ -44,9 +44,8 @@ namespace Vertica.Integration.Infrastructure.Archiving
                     transaction.Commit();
                 }
 
-                if (onCreated != null)
-                    onCreated(new ArchiveCreated(archiveId.ToString()));
-            });
+				onCreated?.Invoke(new ArchiveCreated(archiveId.ToString()));
+			});
         }
 
         public Archive[] GetAll()
@@ -61,7 +60,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
         public byte[] Get(string id)
         {
             int value;
-            if (!Int32.TryParse(id, out value))
+            if (!int.TryParse(id, out value))
                 return null;
 
 			using (IDbSession session = OpenSession())
@@ -77,7 +76,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 			using (IDbSession session = OpenSession())
             using (IDbTransaction transaction = session.BeginTransaction())
             {
-                int count = session.Wrap(s => s.Execute("DELETE FROM Archive WHERE Created <= @olderThan", new { olderThan }));
+                int count = session.Wrap(s => s.Execute("DELETE FROM Archive WHERE Created <= @olderThan", new { olderThan }, commandTimeout: 10800));
 
                 transaction.Commit();
 
@@ -90,7 +89,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 			using (IDbSession session = OpenSession())
             using (IDbTransaction transaction = session.BeginTransaction())
             {
-                int count = session.Wrap(s => s.Execute("DELETE FROM Archive WHERE Expires <= @now", new { now = Time.UtcNow }));
+                int count = session.Wrap(s => s.Execute("DELETE FROM Archive WHERE Expires <= @now", new { now = Time.UtcNow }, commandTimeout: 10800));
 
                 transaction.Commit();
 

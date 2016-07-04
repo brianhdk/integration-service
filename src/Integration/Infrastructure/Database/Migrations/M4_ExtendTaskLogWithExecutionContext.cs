@@ -11,7 +11,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
             Alter.Table("TaskLog")
 				.AddColumn("MachineName").AsString(255).Nullable()
                 .AddColumn("IdentityName").AsString(255).Nullable()
-                .AddColumn("CommandLine").AsString(Int32.MaxValue).Nullable();
+                .AddColumn("CommandLine").AsString(int.MaxValue).Nullable();
         }
 
         public override void Down()

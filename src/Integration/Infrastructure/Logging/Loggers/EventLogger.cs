@@ -104,7 +104,7 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
                 _sourceName,
                 sb.ToString(),
                 EventLogEntryType.Information,
-                Int32.Parse(log.Id));
+				int.Parse(log.Id));
         }
 
         protected override void Update(StepLog log)

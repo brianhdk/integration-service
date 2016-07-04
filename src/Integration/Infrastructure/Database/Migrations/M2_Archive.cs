@@ -11,7 +11,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
             Create.Table("Archive")
                 .WithColumn("Id").AsInt32().PrimaryKey().Identity()
                 .WithColumn("Name").AsString(255)
-                .WithColumn("BinaryData").AsBinary(Int32.MaxValue)
+                .WithColumn("BinaryData").AsBinary(int.MaxValue)
                 .WithColumn("ByteSize").AsInt32()
                 .WithColumn("Created").AsDateTimeOffset();
         }

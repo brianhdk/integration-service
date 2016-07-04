@@ -55,7 +55,7 @@ namespace Vertica.Integration.Infrastructure.Database.Extensions
                         if (headers == null)
                             headers = row.Keys.ToArray();
 
-                        return row.Values.Select(x => x != null ? x.ToString() : null).ToArray();
+                        return row.Values.Select(x => x?.ToString()).ToArray();
                     })
                     .Headers(headers)
                     .ToString();

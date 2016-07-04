@@ -42,6 +42,7 @@ namespace Vertica.Integration.Logging.Elmah
                 connection.Open();
 
                 command.CommandType = CommandType.Text;
+		        command.CommandTimeout = 10800;
                 command.CommandText = "DELETE FROM [ELMAH_Error] WHERE [TimeUtc] <= @t";
                 command.Parameters.AddWithValue("t", lowerBound);
 
@@ -53,7 +54,6 @@ namespace Vertica.Integration.Logging.Elmah
         }
 
         public override string Description =>
-	        $"Deletes Elmah entries older than {_configuration.GetElmahConfiguration().CleanUpEntriesOlderThan.TotalDays} days"
-	        ;
+	        $"Deletes Elmah entries older than {_configuration.GetElmahConfiguration().CleanUpEntriesOlderThan.TotalDays} days";
     }
 }
