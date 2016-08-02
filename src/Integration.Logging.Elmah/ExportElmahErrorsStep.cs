@@ -43,7 +43,8 @@ namespace Vertica.Integration.Logging.Elmah
             {
                 connection.Open();
 
-                command.CommandText = @"
+				command.CommandTimeout = 10800;
+				command.CommandText = @"
 SELECT TOP 1000
 	errorId     = [ErrorId], 
 	application = [Application],

@@ -62,11 +62,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EventActions.cs" />
     <Compile Include="HangfireConfiguration.cs" />
     <Compile Include="HangfireHost.cs" />
     <Compile Include="IInternalConfiguration.cs" />
-    <Compile Include="Infrastructure\Castle.Windsor\HangfireInstaller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="InternalConfiguration.cs" />
     <Compile Include="HangfireExtensions.cs" />

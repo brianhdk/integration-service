@@ -20,10 +20,7 @@ namespace Vertica.Integration
 
 		public static implicit operator string(ApplicationEnvironment target)
 		{
-			if (target == null)
-				return null;
-
-			return target.ToString();
+			return target?.ToString();
 		}
 
 		public static implicit operator ApplicationEnvironment(string name)

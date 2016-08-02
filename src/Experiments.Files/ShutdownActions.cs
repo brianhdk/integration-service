@@ -1,6 +1,6 @@
 using Vertica.Integration.Infrastructure;
 
-namespace Vertica.Integration.Hangfire
+namespace Experiments.Files
 {
 	public class ShutdownActions : KernelActions<ShutdownActions>
 	{

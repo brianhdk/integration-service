@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Reflection;
 using Castle.MicroKernel;
 using Castle.Windsor;
 using Hangfire;
 using Hangfire.Server;
-using Vertica.Integration.Hangfire.Infrastructure.Castle.Windsor;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 
 namespace Vertica.Integration.Hangfire
@@ -13,11 +10,8 @@ namespace Vertica.Integration.Hangfire
 	public class HangfireConfiguration : IInitializable<IWindsorContainer>
 	{
 		private readonly IInternalConfiguration _configuration;
-
-		private readonly List<Assembly> _scan;
-		private readonly List<Type> _add;
-		private readonly List<Type> _remove;
-
+		private readonly ScanAddRemoveInstaller<IBackgroundProcess> _backgroundProcesses;
+		
 		internal HangfireConfiguration(ApplicationConfiguration application)
 		{
 			if (application == null) throw new ArgumentNullException(nameof(application));
@@ -27,9 +21,7 @@ namespace Vertica.Integration.Hangfire
 
 			_configuration = new InternalConfiguration();
 
-			_scan = new List<Assembly>();
-			_add = new List<Type>();
-			_remove = new List<Type>();
+			_backgroundProcesses = new ScanAddRemoveInstaller<IBackgroundProcess>();
 		}
 
 		public ApplicationConfiguration Application { get; }
@@ -77,7 +69,7 @@ namespace Vertica.Integration.Hangfire
 		/// <typeparam name="T">The type in which its assembly will be scanned.</typeparam>
 		public HangfireConfiguration AddFromAssemblyOfThis<T>()
 		{
-			_scan.Add(typeof (T).Assembly);
+			_backgroundProcesses.AddFromAssemblyOfThis<T>();
 
 			return this;
 		}
@@ -89,19 +81,19 @@ namespace Vertica.Integration.Hangfire
 		public HangfireConfiguration Add<TProcess>()
 			where TProcess : IBackgroundProcess
 		{
-			_add.Add(typeof(TProcess));
+			_backgroundProcesses.Add<TProcess>();
 
 			return this;
 		}
 
 		/// <summary>
-		/// Skips the specified <typeparamref name="TController" />.
+		/// Skips the specified <typeparamref name="TProcess" />.
 		/// </summary>
-		/// <typeparam name="TController">Specifies the <see cref="IBackgroundProcess"/> that will be skipped.</typeparam>
-		public HangfireConfiguration Remove<TController>()
-			where TController : IBackgroundProcess
+		/// <typeparam name="TProcess">Specifies the <see cref="IBackgroundProcess"/> that will be skipped.</typeparam>
+		public HangfireConfiguration Remove<TProcess>()
+			where TProcess : IBackgroundProcess
 		{
-			_remove.Add(typeof (TController));
+			_backgroundProcesses.Remove<TProcess>();
 
 			return this;
 		}
@@ -111,9 +103,7 @@ namespace Vertica.Integration.Hangfire
 		/// </summary>
 		public HangfireConfiguration Clear()
 		{
-			_remove.Clear();
-			_add.Clear();
-			_scan.Clear();
+			_backgroundProcesses.Clear();
 
 			return this;
 		}
@@ -122,7 +112,7 @@ namespace Vertica.Integration.Hangfire
 		{
 			JobActivator.Current = _configuration.ServerOptions.Activator = new WindsorJobActivator(container.Kernel);
 
-			container.Install(new HangfireInstaller(_scan.ToArray(), _add.ToArray(), _remove.ToArray()));
+			container.Install(_backgroundProcesses);
 			container.Install(Install.Instance(_configuration));
 		}
 

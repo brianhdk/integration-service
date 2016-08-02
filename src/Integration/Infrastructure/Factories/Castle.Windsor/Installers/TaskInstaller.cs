@@ -16,26 +16,31 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 {
     internal class TaskInstaller : IWindsorInstaller
     {
-        private readonly Assembly[] _scanAssemblies;
-        private readonly Type[] _addTasks;
-        private readonly Type[] _ignoreTasks;
+        private readonly Assembly[] _scan;
+        private readonly Type[] _add;
+        private readonly Type[] _ignore;
 
         public TaskInstaller(Assembly[] scanAssemblies, Type[] addTasks, Type[] ignoreTasks)
         {
-            _scanAssemblies = scanAssemblies ?? new Assembly[0];
-            _addTasks = addTasks ?? new Type[0];
-            _ignoreTasks = ignoreTasks ?? new Type[0];
+            _scan = scanAssemblies ?? new Assembly[0];
+            _add = addTasks ?? new Type[0];
+            _ignore = ignoreTasks ?? new Type[0];
         }
 
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            foreach (Assembly assembly in _scanAssemblies.Distinct())
+            foreach (Assembly assembly in _scan.Distinct())
             {
                 container.Register(
                     Classes.FromAssembly(assembly)
                         .BasedOn<Task>()
-                        .Unless(_ignoreTasks.Contains)
-                        .Unless(_addTasks.Contains)
+						.Unless(x =>
+						{
+							if (_ignore.Contains(x) || _add.Contains(x))
+								return true;
+
+							return false;
+						})
                         .Configure(x =>
                         {
                             string name = x.Implementation.TaskName();
@@ -48,7 +53,7 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
                         .WithServiceDefaultInterfaces());
             }
 
-            foreach (Type addType in _addTasks.Except(_ignoreTasks).Distinct())
+            foreach (Type addType in _add.Except(_ignore).Distinct())
             {
                 try
                 {

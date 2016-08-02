@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 using Castle.Windsor;
@@ -10,7 +9,6 @@ using Vertica.Integration.Model.Hosting;
 
 namespace Vertica.Integration
 {
-	[SuppressMessage("ReSharper", "UseNullPropagation")]
 	public sealed class ApplicationContext : IApplicationContext
     {
         private static readonly Lazy<Action> EnsureSingleton = new Lazy<Action>(() => () => { });

@@ -2,7 +2,7 @@ using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Database.Migrations;
 using Vertica.Integration.Model;
 
-namespace Vertica.Integration.Hangfire
+namespace Experiments.Files
 {
 	public class StartupActions : KernelActions<StartupActions>
 	{

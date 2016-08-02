@@ -3,14 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using Castle.MicroKernel;
 
-namespace Vertica.Integration.Hangfire
+namespace Vertica.Integration.Infrastructure
 {
-	public abstract class EventActions<TEvent> : IEnumerable<Action<IKernel>>
-		where TEvent : EventActions<TEvent>
+	public abstract class KernelActions<TEvent> : IEnumerable<Action<IKernel>>
+		where TEvent : KernelActions<TEvent>
 	{
 		private readonly List<Action<IKernel>> _list;
 
-		protected EventActions()
+		protected KernelActions()
 		{
 			_list = new List<Action<IKernel>>();
 		}

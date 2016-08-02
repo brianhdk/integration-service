@@ -41,7 +41,6 @@ namespace Vertica.Integration.Logging.Elmah
             {
                 connection.Open();
 
-                command.CommandType = CommandType.Text;
 		        command.CommandTimeout = 10800;
                 command.CommandText = "DELETE FROM [ELMAH_Error] WHERE [TimeUtc] <= @t";
                 command.Parameters.AddWithValue("t", lowerBound);
