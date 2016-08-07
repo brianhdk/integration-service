@@ -1,6 +1,6 @@
 using Vertica.Integration.Infrastructure;
 
-namespace Experiments.Files
+namespace Vertica.Integration.Domain.LiteServer
 {
 	public class ShutdownActions : KernelActions<ShutdownActions>
 	{

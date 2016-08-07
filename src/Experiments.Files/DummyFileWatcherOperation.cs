@@ -2,10 +2,11 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Vertica.Integration.Domain.LiteServer;
 
 namespace Experiments.Files
 {
-	internal class DummyFileWatcherOperation : IBackgroundOperation
+	internal class DummyFileWatcherOperation : IBackgroundServer
 	{
 		public Task Create(CancellationToken token)
 		{

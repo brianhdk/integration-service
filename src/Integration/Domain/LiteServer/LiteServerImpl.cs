@@ -8,9 +8,9 @@ using Castle.MicroKernel;
 using Vertica.Integration.Infrastructure.Logging;
 using Scheduler = System.Threading.Tasks.TaskScheduler;
 
-namespace Experiments.Files
+namespace Vertica.Integration.Domain.LiteServer
 {
-	internal class Server : IDisposable, IBackgroundRepeatable
+	internal class LiteServerImpl : IDisposable, IBackgroundWorker
 	{
 		private readonly IKernel _kernel;
 		private readonly InternalConfiguration _configuration;
@@ -21,7 +21,7 @@ namespace Experiments.Files
 		private readonly Scheduler _scheduler;
 		private readonly List<Task> _tasks;
 
-		public Server(IKernel kernel, InternalConfiguration configuration)
+		public LiteServerImpl(IKernel kernel, InternalConfiguration configuration)
 		{
 			if (kernel == null) throw new ArgumentNullException(nameof(kernel));
 
@@ -33,24 +33,24 @@ namespace Experiments.Files
 			_cancellation = new CancellationTokenSource();
 			_scheduler = Scheduler.Current;
 
-			_outputter.WriteLine("Starting Server");
+			_outputter.WriteLine("Starting LiteServer");
 			_outputter.WriteLine();
 
 			Execute(_configuration.OnStartup);
 
-			_tasks = _kernel.ResolveAll<IBackgroundRepeatable>()
-				.Select(repeatable => new BackgroundRepeater(repeatable, _scheduler))
-				.Concat(_kernel.ResolveAll<IBackgroundOperation>())
+			_tasks = _kernel.ResolveAll<IBackgroundWorker>()
+				.Select(worker => new BackgroundWorkServer(worker, _scheduler))
+				.Concat(_kernel.ResolveAll<IBackgroundServer>())
 				.Select(Create)
 				.ToList();
 
 			// We'll add our own instance for house-keeping operations.
-			_tasks.Add(Create(new BackgroundRepeater(this, _scheduler)));
+			_tasks.Add(Create(new BackgroundWorkServer(this, _scheduler)));
 		}
 
-		private Task Create(IBackgroundOperation operation)
+		private Task Create(IBackgroundServer server)
 		{
-			return operation.Create(_cancellation.Token);
+			return server.Create(_cancellation.Token);
 		}
 
 		public void Dispose()
@@ -69,7 +69,7 @@ namespace Experiments.Files
 			try
 			{
 				// We allow for some wait-time to finish the background threads.
-				Task.WaitAll(_tasks.Where(x => !x.IsFaulted).ToArray(), _configuration.WaitOnTasksTimeout);
+				Task.WaitAll(_tasks.Where(x => !x.IsFaulted).ToArray(), _configuration.ShutdownTimeout);
 			}
 			catch (AggregateException ex)
 			{
@@ -79,20 +79,22 @@ namespace Experiments.Files
 			}
 
 			foreach (Exception ex in exceptions)
-				_logger.LogError(ex);
+				LogError(ex);
 
 			_cancellation.Dispose();
 
 			Execute(_configuration.OnShutdown);
 		}
 
-		public TimeSpan Work(BackgroundRepeatedContext context)
+		public TimeSpan Work(BackgroundWorkContext context)
 		{
 			// Ensure all tasks are started.
 			foreach (Task nonStartedTask in _tasks.Where(x => x.Status == TaskStatus.Created))
 				nonStartedTask.Start(_scheduler);
 
-			foreach (Task failedTask in _tasks.Where(x => x.IsFaulted))
+			Task[] failedTasks = _tasks.Where(x => x.IsFaulted).ToArray();
+
+			foreach (Task failedTask in failedTasks)
 			{
 				if (context.CancellationToken.IsCancellationRequested)
 					break;
@@ -100,13 +102,21 @@ namespace Experiments.Files
 				if (failedTask.Exception != null)
 				{
 					foreach (Exception ex in failedTask.Exception.InnerExceptions)
-						_logger.LogError(ex);
+						LogError(ex);
 				}
+
+				_tasks.Remove(failedTask);
 			}
 
 			return TimeSpan.FromSeconds(5);
 		}
-		
+
+		private void LogError(Exception ex)
+		{
+			_outputter.WriteLine($"[ERROR] {ex.Message}");
+			_logger.LogError(ex);
+		}
+
 		private void Execute(IEnumerable<Action<IKernel>> actions)
 		{
 			foreach (Action<IKernel> action in actions)

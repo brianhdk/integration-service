@@ -1,13 +1,13 @@
 using System;
 using System.Threading;
 
-namespace Experiments.Files
+namespace Vertica.Integration.Domain.LiteServer
 {
-	public struct BackgroundRepeatedContext
+	public struct BackgroundWorkContext
 	{
 		private readonly Func<TimeSpan> _exit;
 
-		internal BackgroundRepeatedContext(CancellationToken cancellationToken, uint invocationCount, Func<TimeSpan> exit)
+		internal BackgroundWorkContext(CancellationToken cancellationToken, uint invocationCount, Func<TimeSpan> exit)
 		{
 			if (exit == null) throw new ArgumentNullException(nameof(exit));
 

@@ -1,19 +1,20 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
+using Vertica.Integration.Domain.LiteServer;
 
 namespace Experiments.Files
 {
-	public class DummyBackgroundRepeatable : IBackgroundRepeatable
+	internal class DummyBackgroundWorker : IBackgroundWorker
 	{
 		private readonly TextWriter _outputter;
 
-		public DummyBackgroundRepeatable(TextWriter outputter)
+		public DummyBackgroundWorker(TextWriter outputter)
 		{
 			_outputter = outputter;
 		}
 
-		public TimeSpan Work(BackgroundRepeatedContext context)
+		public TimeSpan Work(BackgroundWorkContext context)
 		{
 			_outputter.WriteLine(Thread.CurrentThread.ManagedThreadId);
 

@@ -4,14 +4,9 @@ using System.Threading;
 
 namespace Vertica.Integration.Infrastructure.IO
 {
-	public class FilesChangedHandler : IProcessExitHandler
+	internal class FilesChangedHandler : IProcessExitHandler
 	{
 		private readonly ManualResetEvent _waitHandle;
-
-		public FilesChangedHandler(FileInfo fileToWatch)
-			: this(fileToWatch?.FullName)
-		{
-		}
 
 		public FilesChangedHandler(DirectoryInfo directoryToWatch)
 			: this(directoryToWatch?.FullName)

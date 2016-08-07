@@ -2,7 +2,7 @@ using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Database.Migrations;
 using Vertica.Integration.Model;
 
-namespace Experiments.Files
+namespace Vertica.Integration.Domain.LiteServer
 {
 	public class StartupActions : KernelActions<StartupActions>
 	{

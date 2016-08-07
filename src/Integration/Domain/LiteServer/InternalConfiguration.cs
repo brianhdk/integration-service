@@ -1,30 +1,30 @@
 using System;
 
-namespace Experiments.Files
+namespace Vertica.Integration.Domain.LiteServer
 {
 	internal class InternalConfiguration
 	{
-		private TimeSpan _waitOnTasksTimeout;
+		private TimeSpan _shutdownTimeout;
 
 		public InternalConfiguration()
 		{
 			OnStartup = new StartupActions();
 			OnShutdown = new ShutdownActions();
-			WaitOnTasksTimeout = TimeSpan.FromSeconds(5);
+			ShutdownTimeout = TimeSpan.FromSeconds(5);
 		}
 
 		public StartupActions OnStartup { get; }
 		public ShutdownActions OnShutdown { get; }
 
-		public TimeSpan WaitOnTasksTimeout
+		public TimeSpan ShutdownTimeout
 		{
-			get { return _waitOnTasksTimeout; }
+			get { return _shutdownTimeout; }
 			set
 			{
 				if (value < TimeSpan.Zero)
 					throw new ArgumentOutOfRangeException(nameof(value), @"Value must be zero or greater than zero.");
 
-				_waitOnTasksTimeout = value;
+				_shutdownTimeout = value;
 			}
 		}
 	}

@@ -93,6 +93,20 @@
     <Compile Include="Domain\Core\MaintenanceTaskExtensions.cs" />
     <Compile Include="Domain\Core\MaintenanceWorkItem.cs" />
     <Compile Include="Domain\Core\WriteDocumentationTask.cs" />
+    <Compile Include="Domain\LiteServer\BackgroundWorkContext.cs" />
+    <Compile Include="Domain\LiteServer\BackgroundWorkServer.cs" />
+    <Compile Include="Domain\LiteServer\IBackgroundServer.cs" />
+    <Compile Include="Domain\LiteServer\IBackgroundWorker.cs" />
+    <Compile Include="Domain\LiteServer\ILiteServerFactory.cs" />
+    <Compile Include="Domain\LiteServer\InternalConfiguration.cs" />
+    <Compile Include="Domain\LiteServer\IO\FileWatcherServer.cs" />
+    <Compile Include="Domain\LiteServer\IO\ManualFileSystemEventArgs.cs" />
+    <Compile Include="Domain\LiteServer\LiteServerConfiguration.cs" />
+    <Compile Include="Domain\LiteServer\LiteServerExtensions.cs" />
+    <Compile Include="Domain\LiteServer\LiteServerHost.cs" />
+    <Compile Include="Domain\LiteServer\LiteServerImpl.cs" />
+    <Compile Include="Domain\LiteServer\ShutdownActions.cs" />
+    <Compile Include="Domain\LiteServer\StartupActions.cs" />
     <Compile Include="Domain\Monitoring\ExportIntegrationErrorsStep.cs" />
     <Compile Include="Domain\Monitoring\MessageContainsText.cs" />
     <Compile Include="Domain\Monitoring\MonitorConfiguration.cs" />
@@ -323,6 +337,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

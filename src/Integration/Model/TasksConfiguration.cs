@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Castle.Windsor;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
+using Vertica.Integration.Model.Hosting;
 
 namespace Vertica.Integration.Model
 {
@@ -18,18 +19,19 @@ namespace Vertica.Integration.Model
         {
             if (application == null) throw new ArgumentNullException(nameof(application));
 
-			Application = application;
+			Application = application
+				.Hosts(hosts => hosts.Host<TaskHost>());
 
-            _scan = new List<Assembly>();
+			_scan = new List<Assembly>();
             _simpleTasks = new List<Type>();
             _removeTasks = new List<Type>();
             _complexTasks = new List<TaskConfiguration>();
 
             // scan own assembly
             AddFromAssemblyOfThis<TasksConfiguration>();
-        }
+		}
 
-        public ApplicationConfiguration Application { get; private set; }
+        public ApplicationConfiguration Application { get; }
 
         /// <summary>
         /// Scans the assembly of the defined <typeparamref name="T"></typeparamref> for public classes inheriting <see cref="Task"/>.

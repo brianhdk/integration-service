@@ -4,15 +4,17 @@ using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Model.Hosting;
 using Vertica.Integration.Model.Hosting.Handlers;
 
-namespace Experiments.Files
+namespace Vertica.Integration.Domain.LiteServer
 {
-	internal class ServerHost : IHost
+	public class LiteServerHost : IHost
 	{
+		internal static readonly string Command = typeof(LiteServerHost).HostName();
+
 		private readonly IWindowsServiceHandler _windowsService;
 		private readonly IProcessExitHandler _processExit;
-		private readonly IServerFactory _serverFactory;
+		private readonly ILiteServerFactory _serverFactory;
 
-		public ServerHost(IWindowsServiceHandler windowsService, IProcessExitHandler processExit, IServerFactory serverFactory)
+		public LiteServerHost(IWindowsServiceHandler windowsService, IProcessExitHandler processExit, ILiteServerFactory serverFactory)
 		{
 			_windowsService = windowsService;
 			_processExit = processExit;
@@ -21,12 +23,15 @@ namespace Experiments.Files
 
 		public bool CanHandle(HostArguments args)
 		{
-			// TODO
-			return true;
+			if (args == null) throw new ArgumentNullException(nameof(args));
+
+			return string.Equals(args.Command, Command, StringComparison.OrdinalIgnoreCase);
 		}
 
 		public void Handle(HostArguments args)
 		{
+			if (args == null) throw new ArgumentNullException(nameof(args));
+
 			if (InstallOrRunAsWindowsService(args, Create))
 				return;
 
@@ -35,8 +40,6 @@ namespace Experiments.Files
 				_processExit.Wait();
 			}
 
-			// start X-servere op
-			// tillad registrering af egne "servere"
 			// fx WebApi
 			// fx Rebus
 			// fx hMail

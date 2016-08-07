@@ -18,8 +18,6 @@ namespace Vertica.Integration.Model.Hosting
 
             _add = new List<Type>();
             _remove = new List<Type>();
-
-            Host<TaskHost>();
         }
 
         public ApplicationConfiguration Application { get; private set; }

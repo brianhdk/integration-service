@@ -3,19 +3,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using Scheduler = System.Threading.Tasks.TaskScheduler;
 
-namespace Experiments.Files
+namespace Vertica.Integration.Domain.LiteServer
 {
-	internal class BackgroundRepeater : IBackgroundOperation
+	internal class BackgroundWorkServer : IBackgroundServer
 	{
-		private readonly IBackgroundRepeatable _repeatable;
+		private readonly IBackgroundWorker _worker;
 		private readonly Scheduler _scheduler;
 
-		public BackgroundRepeater(IBackgroundRepeatable repeatable, Scheduler scheduler)
+		public BackgroundWorkServer(IBackgroundWorker worker, Scheduler scheduler)
 		{
-			if (repeatable == null) throw new ArgumentNullException(nameof(repeatable));
+			if (worker == null) throw new ArgumentNullException(nameof(worker));
 			if (scheduler == null) throw new ArgumentNullException(nameof(scheduler));
 
-			_repeatable = repeatable;
+			_worker = worker;
 			_scheduler = scheduler;
 		}
 
@@ -27,7 +27,7 @@ namespace Experiments.Files
 
 				while (!token.IsCancellationRequested)
 				{
-					TimeSpan waitTime = _repeatable.Work(new BackgroundRepeatedContext(token, ++iterations, () => TimeSpan.MinValue));
+					TimeSpan waitTime = _worker.Work(new BackgroundWorkContext(token, ++iterations, () => TimeSpan.MinValue));
 
 					if (waitTime <= TimeSpan.Zero)
 						break;

@@ -1,10 +1,11 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Vertica.Integration.Domain.LiteServer;
 
 namespace Experiments.Files
 {
-	internal class DummyBackgroundOperation : IBackgroundOperation
+	internal class DummyBackgroundOperation : IBackgroundServer
 	{
 		private readonly TextWriter _outputter;
 

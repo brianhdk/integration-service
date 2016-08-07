@@ -10,7 +10,6 @@ using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Hosting;
 using Vertica.Utilities_v4.Extensions.EnumerableExt;
-// ReSharper disable UseNullPropagation
 
 namespace Vertica.Integration
 {
@@ -20,11 +19,11 @@ namespace Vertica.Integration
 
         private readonly List<IWindsorInstaller> _customInstallers;
 
-        private readonly DatabaseConfiguration _database;
-        private readonly TasksConfiguration _tasks;
-        private readonly LoggingConfiguration _logging;
-        private readonly MigrationConfiguration _migration;
-        private readonly HostsConfiguration _hosts;
+		private readonly HostsConfiguration _hosts;
+		private readonly DatabaseConfiguration _database;
+		private readonly TasksConfiguration _tasks;
+		private readonly LoggingConfiguration _logging;
+		private readonly MigrationConfiguration _migration;
 		private readonly AdvancedConfiguration _advanced;
 
 		internal ApplicationConfiguration()
@@ -35,11 +34,11 @@ namespace Vertica.Integration
 
             _customInstallers = new List<IWindsorInstaller>();
 
-            _database = Register(() => new DatabaseConfiguration(this));
+			_hosts = Register(() => new HostsConfiguration(this));
+			_database = Register(() => new DatabaseConfiguration(this));
             _tasks = Register(() => new TasksConfiguration(this));
             _logging = Register(() => new LoggingConfiguration(this));
             _migration = Register(() => new MigrationConfiguration(this));
-            _hosts = Register(() => new HostsConfiguration(this));
 			_advanced = Register(() => new AdvancedConfiguration(this));
 
 			Register(() => this);
@@ -69,65 +68,58 @@ namespace Vertica.Integration
             return this;
         }
 
-        public ApplicationConfiguration RegisterDependency<T>(T singletonInstance) where T : class
+		public ApplicationConfiguration RegisterDependency<T>(T singletonInstance) where T : class
         {
             if (singletonInstance == null) throw new ArgumentNullException(nameof(singletonInstance));
 
             return AddCustomInstaller(new InstanceInstaller<T>(singletonInstance));
         }
 
-        public ApplicationConfiguration Tasks(Action<TasksConfiguration> tasks)
-        {
-            if (tasks != null)
-                tasks(_tasks);
+		public ApplicationConfiguration Hosts(Action<HostsConfiguration> hosts)
+		{
+			hosts?.Invoke(_hosts);
 
-            return this;
+			return this;
+		}
+
+		public ApplicationConfiguration Tasks(Action<TasksConfiguration> tasks)
+        {
+			tasks?.Invoke(_tasks);
+
+			return this;
         }
 
-        public ApplicationConfiguration Logging(Action<LoggingConfiguration> logging)
+		public ApplicationConfiguration Logging(Action<LoggingConfiguration> logging)
         {
-            if (logging != null)
-                logging(_logging);
+			logging?.Invoke(_logging);
 
-            return this;
+			return this;
         }
 
-        public ApplicationConfiguration Database(Action<DatabaseConfiguration> database)
+		public ApplicationConfiguration Database(Action<DatabaseConfiguration> database)
         {
-            if (database != null)
-                database(_database);
+			database?.Invoke(_database);
 
-            return this;
+			return this;
         }
 
-        public ApplicationConfiguration Migration(Action<MigrationConfiguration> migration)
+		public ApplicationConfiguration Migration(Action<MigrationConfiguration> migration)
         {
-            if (migration != null)
-                migration(_migration);
+			migration?.Invoke(_migration);
 
-            return this;
-        }
-
-        public ApplicationConfiguration Hosts(Action<HostsConfiguration> hosts)
-        {
-            if (hosts != null)
-                hosts(_hosts);
-
-            return this;
+			return this;
         }
 
 		public ApplicationConfiguration Advanced(Action<AdvancedConfiguration> advanced)
 		{
-			if (advanced != null)
-				advanced(_advanced);
+			advanced?.Invoke(_advanced);
 
 			return this;
 		}
 
 		public ApplicationConfiguration Extensibility(Action<ExtensibilityConfiguration> extensibility)
 		{
-			if (extensibility != null)
-				extensibility(_extensibility);
+			extensibility?.Invoke(_extensibility);
 
 			return this;
 		}
@@ -148,10 +140,9 @@ namespace Vertica.Integration
 
 		public ApplicationConfiguration Change(Action<ApplicationConfiguration> change)
         {
-            if (change != null)
-                change(this);
+			change?.Invoke(this);
 
-            return this;
+			return this;
         }
 
 		void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
