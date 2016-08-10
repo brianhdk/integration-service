@@ -66,6 +66,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Integration.Hangfire\Integration.Hangfire.csproj">
+      <Project>{7158B2C5-5725-4B55-B9ED-C58169712051}</Project>
+      <Name>Integration.Hangfire</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Integration.WebApi\Integration.WebApi.csproj">
       <Project>{A6CB3949-9637-4952-AB0F-0DE199E29B36}</Project>
       <Name>Integration.WebApi</Name>

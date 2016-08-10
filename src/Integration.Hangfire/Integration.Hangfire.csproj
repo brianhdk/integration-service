@@ -62,8 +62,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HangfireBackgroundServer.cs" />
     <Compile Include="HangfireConfiguration.cs" />
     <Compile Include="HangfireHost.cs" />
+    <Compile Include="HangfireServerImpl.cs" />
+    <Compile Include="IHangfireServerFactory.cs" />
     <Compile Include="IInternalConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="InternalConfiguration.cs" />

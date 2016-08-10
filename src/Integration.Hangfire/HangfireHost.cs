@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using Castle.MicroKernel;
-using Hangfire;
-using Hangfire.Server;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Model.Hosting;
@@ -16,15 +12,13 @@ namespace Vertica.Integration.Hangfire
 
 		private readonly IWindowsServiceHandler _windowsService;
 		private readonly IProcessExitHandler _processExit;
-		private readonly IInternalConfiguration _configuration;
-		private readonly IKernel _kernel;
+		private readonly IHangfireServerFactory _serverFactory;
 
-		public HangfireHost(IWindowsServiceHandler windowsService, IProcessExitHandler processExit, IKernel kernel)
+		public HangfireHost(IWindowsServiceHandler windowsService, IProcessExitHandler processExit, IHangfireServerFactory serverFactory)
 		{
 			_windowsService = windowsService;
 			_processExit = processExit;
-			_kernel = kernel;
-			_configuration = kernel.Resolve<IInternalConfiguration>();
+			_serverFactory = serverFactory;
 		}
 
 		public bool CanHandle(HostArguments args)
@@ -38,18 +32,18 @@ namespace Vertica.Integration.Hangfire
 		{
 			if (args == null) throw new ArgumentNullException(nameof(args));
 
-			if (InstallOrRunAsWindowsService(args, Initialize))
+			if (InstallOrRunAsWindowsService(args, Create))
 				return;
 
-			using (Initialize())
+			using (Create())
 			{
 				_processExit.Wait();
 			}
 		}
 
-		private IDisposable Initialize()
+		private IDisposable Create()
 		{
-			return new HangfireServer(_configuration, _kernel);
+			return _serverFactory.Create();
 		}
 
 		private bool InstallOrRunAsWindowsService(HostArguments args, Func<IDisposable> factory)
@@ -58,37 +52,5 @@ namespace Vertica.Integration.Hangfire
 		}
 
 		public string Description => "Hangfire host.";
-
-		private class HangfireServer : IDisposable
-		{
-			private readonly IInternalConfiguration _configuration;
-			private readonly IKernel _kernel;
-			private readonly BackgroundJobServer _server;
-
-			public HangfireServer(IInternalConfiguration configuration, IKernel kernel)
-			{
-				_configuration = configuration;
-				_kernel = kernel;
-
-				Execute(_configuration.OnStartup);
-
-				IBackgroundProcess[] backgroundProcesses = kernel.ResolveAll<IBackgroundProcess>();
-
-				_server = new BackgroundJobServer(configuration.ServerOptions, JobStorage.Current, backgroundProcesses);
-			}
-
-			public void Dispose()
-			{
-				_server.Dispose();
-
-				Execute(_configuration.OnShutdown);
-			}
-
-			private void Execute(IEnumerable<Action<IKernel>> actions)
-			{
-				foreach (Action<IKernel> action in actions)
-					action(_kernel);
-			}
-		}
 	}
 }

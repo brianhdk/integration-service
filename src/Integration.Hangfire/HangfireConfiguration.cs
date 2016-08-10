@@ -1,8 +1,10 @@
 using System;
 using Castle.MicroKernel;
+using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Hangfire;
 using Hangfire.Server;
+using Vertica.Integration.Domain.LiteServer;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 
 namespace Vertica.Integration.Hangfire
@@ -75,6 +77,16 @@ namespace Vertica.Integration.Hangfire
 		}
 
 		/// <summary>
+		/// Adds Hangfire to <see cref="ILiteServerFactory"/> allowing Hangfire to run simultaneously with other servers.
+		/// </summary>
+		public HangfireConfiguration AddToLiteServer()
+		{
+			Application.UseLiteServer(server => server.AddServer<HangfireBackgroundServer>());
+
+			return this;
+		}
+
+		/// <summary>
 		/// Adds the specified <typeparamref name="TProcess"/>.
 		/// </summary>
 		/// <typeparam name="TProcess">Specifies the <see cref="IBackgroundProcess"/> to be added.</typeparam>
@@ -113,7 +125,27 @@ namespace Vertica.Integration.Hangfire
 			JobActivator.Current = _configuration.ServerOptions.Activator = new WindsorJobActivator(container.Kernel);
 
 			container.Install(_backgroundProcesses);
-			container.Install(Install.Instance(_configuration));
+
+			container.Register(
+				Component.For<IHangfireServerFactory>()
+					.UsingFactoryMethod(kernel => new HangfireServerFactory(kernel, _configuration)));
+		}
+
+		private class HangfireServerFactory : IHangfireServerFactory
+		{
+			private readonly IKernel _kernel;
+			private readonly IInternalConfiguration _configuration;
+
+			public HangfireServerFactory(IKernel kernel, IInternalConfiguration configuration)
+			{
+				_kernel = kernel;
+				_configuration = configuration;
+			}
+
+			public IDisposable Create()
+			{
+				return new HangfireServerImpl(_kernel, _configuration);
+			}
 		}
 
 		private class WindsorJobActivator : JobActivator
