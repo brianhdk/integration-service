@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Web.Http;
 using Castle.Windsor;
+using Vertica.Integration.Domain.LiteServer;
 using Vertica.Integration.WebApi.Infrastructure;
 using Vertica.Integration.WebApi.Infrastructure.Castle.Windsor;
 
@@ -30,7 +31,7 @@ namespace Vertica.Integration.WebApi
             AddFromAssemblyOfThis<WebApiConfiguration>();
         }
 
-        public ApplicationConfiguration Application { get; private set; }
+        public ApplicationConfiguration Application { get; }
 
         /// <summary>
         /// Scans the assembly of the defined <typeparamref name="T"></typeparamref> for public classes inheriting <see cref="ApiController"/>.
@@ -76,6 +77,16 @@ namespace Vertica.Integration.WebApi
 		    _remove.Clear();
 		    _add.Clear();
 			_scan.Clear();
+
+		    return this;
+	    }
+
+		/// <summary>
+		/// Adds WebApi to <see cref="ILiteServerFactory"/> allowing WebApi to run simultaneously with other servers.
+		/// </summary>
+		public WebApiConfiguration AddToLiteServer()
+	    {
+		    Application.UseLiteServer(server => server.AddServer<WebApiBackgroundServer>());
 
 		    return this;
 	    }

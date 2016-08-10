@@ -37,6 +37,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Owin.Host.HttpListener">
+      <HintPath>..\Integration.WebApi\bin\Debug\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -63,6 +66,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Integration.WebApi\Integration.WebApi.csproj">
+      <Project>{A6CB3949-9637-4952-AB0F-0DE199E29B36}</Project>
+      <Name>Integration.WebApi</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Integration\Integration.csproj">
       <Project>{460F774F-2C89-47F4-84BD-B97653060E68}</Project>
       <Name>Integration</Name>

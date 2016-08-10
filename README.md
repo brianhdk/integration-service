@@ -502,7 +502,7 @@ Install-Package Vertica.Integration.WebApi
 .exe WebApiHost url:http://localhost:8123 -service:install
 .exe WebApiHost url:http://+:8080/ -service:install
 
-If you leave out the "url" argument, it will use the one specified in app.config: <add key="WebApiHost.DefaultUrl" value="http://localhost:8400" />
+If you leave out the "url" argument, it will use the one specified in app.config: <add key="WebApi.Url" value="http://localhost:8400" />
 
 .exe WebApiHost -service:install -startmode:Automatic
 .exe WebApiHost -service:install -startmode:Automatic -account:NetworkService

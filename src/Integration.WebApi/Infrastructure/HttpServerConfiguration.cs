@@ -61,7 +61,7 @@ namespace Vertica.Integration.WebApi.Infrastructure
 		{
 			if (kernel == null) throw new ArgumentNullException(nameof(kernel));
 
-			return new HttpServer(url, kernel, Apply);
+			return new HttpServer(kernel, Apply, url);
 		}
 
 		private void Apply(IOwinConfiguration configuration)

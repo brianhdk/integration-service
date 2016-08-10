@@ -39,16 +39,6 @@ namespace Vertica.Integration.Domain.LiteServer
 			{
 				_processExit.Wait();
 			}
-
-			// fx WebApi
-			// fx Rebus
-			// fx hMail
-			// implementer en server som kan:
-			// registrere fil-watchers
-			// registrere sin egen fil-watcher baseret på konfiguration
-			// som afvikler tasks
-			// registrere baggrundstråde
-			// som kan køre hvert X-sekund
 		}
 
 		private IDisposable Create()
@@ -61,6 +51,6 @@ namespace Vertica.Integration.Domain.LiteServer
 			return _windowsService.Handle(args, new HandleAsWindowsService(this.Name(), this.Name(), Description, factory));
 		}
 
-		public string Description => "TBD";
+		public virtual string Description => @"LiteServerHost is a generic server component.";
 	}
 }

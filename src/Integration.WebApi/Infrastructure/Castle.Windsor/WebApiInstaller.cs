@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Web.Http;
 using Castle.MicroKernel;
@@ -78,9 +80,30 @@ namespace Vertica.Integration.WebApi.Infrastructure.Castle.Windsor
 			    _configuration = configuration;
 		    }
 
-			public IDisposable Create(string url)
-			{
-				return _configuration.CreateHttpServer(_kernel, url);
+		    public IDisposable Create(string url = null)
+		    {
+			    bool basedOnSettings;
+			    return _configuration.CreateHttpServer(_kernel, url ?? GetOrGenerateUrl(out basedOnSettings));
+		    }
+
+		    public string GetOrGenerateUrl(out bool basedOnSettings)
+		    {
+			    var settings = _kernel.Resolve<IRuntimeSettings>();
+
+				string url = settings["WebApi.Url"] ?? settings["WebApiHost.DefaultUrl"];
+			    basedOnSettings = !string.IsNullOrWhiteSpace(url);
+
+				if (!basedOnSettings)
+				{
+					var listener = new TcpListener(IPAddress.Loopback, 0);
+					listener.Start();
+
+					url = $"http://localhost:{((IPEndPoint)listener.LocalEndpoint).Port}";
+
+					listener.Stop();
+				}
+
+			    return url;
 		    }
 	    }
 

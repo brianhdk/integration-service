@@ -1,4 +1,5 @@
 ﻿using System;
+using Vertica.Integration.Domain.LiteServer;
 
 namespace Vertica.Integration.WebApi
 {

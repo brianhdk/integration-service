@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
@@ -23,11 +24,11 @@ namespace Vertica.Integration.WebApi.Infrastructure
         private readonly IKernel _kernel;
 		private readonly TextWriter _outputter;
 
-		public HttpServer(string url, IKernel kernel, Action<IOwinConfiguration> configuration)
+		public HttpServer(IKernel kernel, Action<IOwinConfiguration> configuration, string url)
         {
-	        if (string.IsNullOrWhiteSpace(url)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(url));
 	        if (kernel == null) throw new ArgumentNullException(nameof(kernel));
 			if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+			AssertUrl(url);
 
 	        _kernel = kernel;
 	        _outputter = kernel.Resolve<TextWriter>();
@@ -52,7 +53,19 @@ namespace Vertica.Integration.WebApi.Infrastructure
             });
         }
 
-        private void ConfigureServices(HttpConfiguration configuration)
+		private static void AssertUrl(string url)
+		{
+			Uri dummy;
+			if (Uri.TryCreate(url, UriKind.Absolute, out dummy))
+				return;
+
+			if (Regex.IsMatch(url ?? string.Empty, @"^http(?:s)?://\+(?:\:\d+)?/?$", RegexOptions.IgnoreCase))
+				return;
+
+			throw new ArgumentOutOfRangeException(nameof(url), url, $"'{url}' is not a valid absolute url.");
+		}
+
+		private void ConfigureServices(HttpConfiguration configuration)
         {
             var resolver = new CustomResolver(GetControllerTypes, CreateController);
 

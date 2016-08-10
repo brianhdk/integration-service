@@ -8,15 +8,18 @@ namespace Experiments.Files
 	public class DummyFileWatcherServer : FileWatcherServer
 	{
 		private readonly TextWriter _writer;
+		private readonly DirectoryInfo _pathToMonitor;
 
 		public DummyFileWatcherServer(TextWriter writer)
 		{
 			_writer = writer;
+			_pathToMonitor = new DirectoryInfo(@"c:\tmp\watcher");
+			_writer.WriteLine("Monitor: {0}", _pathToMonitor);
 		}
 
 		protected override DirectoryInfo PathToMonitor()
 		{
-			return new DirectoryInfo(@"c:\tmp\watcher");
+			return _pathToMonitor;
 		}
 
 		protected override bool IncludeSubDirectories => false;

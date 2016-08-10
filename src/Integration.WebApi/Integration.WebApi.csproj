@@ -91,6 +91,7 @@
     <Compile Include="Infrastructure\HttpServerConfiguration.cs" />
     <Compile Include="Infrastructure\Castle.Windsor\WebApiInstaller.cs" />
     <Compile Include="Infrastructure\IOwinConfiguration.cs" />
+    <Compile Include="WebApiBackgroundServer.cs" />
     <Compile Include="WebApiExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebApiHost.cs" />
