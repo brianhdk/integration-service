@@ -30,8 +30,6 @@ namespace Vertica.Integration
         {
 			_extensibility = new ExtensibilityConfiguration();
 
-            IgnoreSslErrors = true;
-
             _customInstallers = new List<IWindsorInstaller>();
 
 			_hosts = Register(() => new HostsConfiguration(this));
@@ -52,9 +50,7 @@ namespace Vertica.Integration
 
 			return result;
 		}
-
-        public bool IgnoreSslErrors { get; set; }
-
+		
         public ApplicationConfiguration AddCustomInstaller(IWindsorInstaller installer)
         {
             return AddCustomInstallers(installer);

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Net;
 using Castle.Windsor;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Infrastructure.Logging.Loggers;
@@ -11,9 +10,9 @@ namespace Vertica.Integration
 {
 	public sealed class ApplicationContext : IApplicationContext
     {
-        private static readonly Lazy<Action> EnsureSingleton = new Lazy<Action>(() => () => { });
+		private static readonly Lazy<Action> EnsureSingleton = new Lazy<Action>(() => () => { });
 
-	    private readonly ApplicationConfiguration _configuration;
+		private readonly ApplicationConfiguration _configuration;
 
 	    private readonly IWindsorContainer _container;
 	    private readonly IArgumentsParser _parser;
@@ -23,30 +22,34 @@ namespace Vertica.Integration
 
 	    internal ApplicationContext(Action<ApplicationConfiguration> application)
         {
-            _configuration = new ApplicationConfiguration();
+		    _configuration = new ApplicationConfiguration();
 
 			application?.Invoke(_configuration);
 
 			_configuration.RegisterDependency<IApplicationContext>(this);
 
-            if (_configuration.IgnoreSslErrors)
-			    ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
-
             _container = CastleWindsor.Initialize(_configuration);
             _parser = Resolve<IArgumentsParser>();
             _hosts = Resolve<IHostFactory>().GetAll();
-
-            AppDomain.CurrentDomain.UnhandledException += LogException;
 		}
 
 	    public static IApplicationContext Create(Action<ApplicationConfiguration> application = null)
 	    {
-            if (EnsureSingleton.IsValueCreated)
-			    throw new InvalidOperationException("An instance of ApplicationContext has already been created. It might have been disposed, but you should make sure to reuse the same instance for the entire lifecycle of this application.");
+			if (EnsureSingleton.IsValueCreated)
+			{
+				throw new InvalidOperationException(@"An instance of ApplicationContext has already been created. 
+It might have been disposed, but then you should make sure to reuse the same instance for the entire lifecycle of this application.
 
-	        EnsureSingleton.Value();
+If you're using LINQPad to test code, you must set:
 
-		    return new ApplicationContext(application);
+Util.NewProcess = true; 
+
+... somewhere in the beginning of your LINQPad code.");
+			}
+
+			EnsureSingleton.Value();
+
+			return new ApplicationContext(application);
 	    }
 
 		public object Resolve(Type service)
@@ -92,7 +95,16 @@ namespace Vertica.Integration
 	        if (hosts.Length > 1)
 		        throw new MultipleHostsFoundException(args, hosts);
 
-            hosts[0].Handle(args);
+	        try
+	        {
+				hosts[0].Handle(args);
+			}
+	        catch (Exception ex)
+	        {
+		        LogException(ex);
+
+		        throw;
+	        }
         }
 
         public void Dispose()
@@ -117,25 +129,14 @@ namespace Vertica.Integration
 				}
 			});
 
-			AppDomain.CurrentDomain.UnhandledException -= LogException;
 			_container.Dispose();
 		}
-
-        private void LogException(object sender, UnhandledExceptionEventArgs e)
-        {
-            var exception = e.ExceptionObject as Exception;
-
-            if (exception == null)
-                return;
-
-            LogException(exception);
-        }
 
         private void LogException(Exception exception)
         {
             if (exception == null) throw new ArgumentNullException(nameof(exception));
 
-            if (exception is TaskExecutionFailedException)
+            if (exception is ISkipLoggingException)
                 return;
 
             var logger = Resolve<ILogger>();

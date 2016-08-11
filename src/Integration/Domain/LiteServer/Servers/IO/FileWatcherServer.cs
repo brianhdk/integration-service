@@ -4,7 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Vertica.Integration.Domain.LiteServer.IO
+namespace Vertica.Integration.Domain.LiteServer.Servers.IO
 {
 	public abstract class FileWatcherServer : IBackgroundServer
 	{

@@ -99,8 +99,9 @@
     <Compile Include="Domain\LiteServer\IBackgroundWorker.cs" />
     <Compile Include="Domain\LiteServer\ILiteServerFactory.cs" />
     <Compile Include="Domain\LiteServer\InternalConfiguration.cs" />
-    <Compile Include="Domain\LiteServer\IO\FileWatcherServer.cs" />
-    <Compile Include="Domain\LiteServer\IO\ManualFileSystemEventArgs.cs" />
+    <Compile Include="Domain\LiteServer\Servers\IO\FileWatcherServer.cs" />
+    <Compile Include="Domain\LiteServer\Servers\IO\FileWatcherRunTaskServer.cs" />
+    <Compile Include="Domain\LiteServer\Servers\IO\ManualFileSystemEventArgs.cs" />
     <Compile Include="Domain\LiteServer\LiteServerConfiguration.cs" />
     <Compile Include="Domain\LiteServer\LiteServerExtensions.cs" />
     <Compile Include="Domain\LiteServer\LiteServerHost.cs" />
@@ -247,6 +248,7 @@
     <Compile Include="IRuntimeSettings.cs" />
     <Compile Include="Model\Arguments.cs" />
     <Compile Include="Model\ContextWorkItem.cs" />
+    <Compile Include="Model\Exceptions\ISkipLoggingException.cs" />
     <Compile Include="Model\Exceptions\MultipleHostsFoundException.cs" />
     <Compile Include="Model\Exceptions\NoHostFoundException.cs" />
     <Compile Include="Model\Exceptions\TaskWithSameNameAlreadyRegistredException.cs" />

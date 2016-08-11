@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace Vertica.Integration.Domain.LiteServer.IO
+namespace Vertica.Integration.Domain.LiteServer.Servers.IO
 {
 	public class ManualFileSystemEventArgs : FileSystemEventArgs
 	{
