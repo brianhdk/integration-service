@@ -8,7 +8,7 @@ namespace Vertica.Integration.Domain.LiteServer.Servers.IO
 {
 	public abstract class FileWatcherServer : IBackgroundServer
 	{
-		public Task Create(CancellationToken token)
+		public Task Create(CancellationToken token, BackgroundServerContext context)
 		{
 			DirectoryInfo path = PathToMonitor();
 
@@ -37,10 +37,17 @@ namespace Vertica.Integration.Domain.LiteServer.Servers.IO
 						watcher.NotifyFilter = notifyFiltersLocal;
 						watcher.IncludeSubdirectories = includeSubDirectoriesLocal;
 
-						watcher.Created += (sender, args) => events.Add(args, token);
-						watcher.Renamed += (sender, args) => events.Add(args, token);
-						watcher.Deleted += (sender, args) => events.Add(args, token);
-						watcher.Changed += (sender, args) => events.Add(args, token);
+						if (WatchCreated)
+							watcher.Created += (sender, args) => events.Add(args, token);
+
+						if (WatchRenamed)
+							watcher.Renamed += (sender, args) => events.Add(args, token);
+
+						if (WatchDeleted)
+							watcher.Deleted += (sender, args) => events.Add(args, token);
+
+						if (WatchChanged)
+							watcher.Changed += (sender, args) => events.Add(args, token);
 
 						AddManualFileSystemEventArgs(
 							path, 
@@ -67,7 +74,27 @@ namespace Vertica.Integration.Domain.LiteServer.Servers.IO
 
 			}, token);
 		}
-		
+
+		/// <summary>
+		/// (Default: True) By default we'll watch on the Created event of <see cref="FileSystemWatcher"/>
+		/// </summary>
+		public virtual bool WatchCreated => true;
+
+		/// <summary>
+		/// (Default: False) By default we'll not watch on the Deleted event of <see cref="FileSystemWatcher"/>
+		/// </summary>
+		public virtual bool WatchDeleted => false;
+
+		/// <summary>
+		/// (Default: False) By default we'll not watch on the Renamed event of <see cref="FileSystemWatcher"/>
+		/// </summary>
+		public virtual bool WatchRenamed => false;
+
+		/// <summary>
+		/// (Default: False) By default we'll not watch on the Changed event of <see cref="FileSystemWatcher"/>
+		/// </summary>
+		public virtual bool WatchChanged => false;
+
 		/// <summary>
 		/// Specifies the path used by the <see cref="FileSystemWatcher"/>.
 		/// </summary>
@@ -117,12 +144,12 @@ namespace Vertica.Integration.Domain.LiteServer.Servers.IO
 		}
 
 		/// <summary>
-		/// Specifies the filter used by the <see cref="FileSystemWatcher"/>.
+		/// (Default: *.*) Specifies the filter used by the <see cref="FileSystemWatcher"/>.
 		/// </summary>
 		protected virtual string Filter => "*.*";
 
 		/// <summary>
-		/// Specifies whether sub directories should be monitored. Default: False
+		/// (Default: False) Specifies whether sub directories should be monitored.
 		/// </summary>
 		protected virtual bool IncludeSubDirectories => false;
 

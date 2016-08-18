@@ -6,12 +6,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using Castle.MicroKernel;
 using Vertica.Integration.Infrastructure.Logging;
+using Vertica.Utilities_v4;
+using Vertica.Utilities_v4.Extensions.EnumerableExt;
 using Scheduler = System.Threading.Tasks.TaskScheduler;
 
 namespace Vertica.Integration.Domain.LiteServer
 {
 	internal class LiteServerImpl : IDisposable, IBackgroundWorker
 	{
+		private readonly DateTimeOffset _started;
+
 		private readonly IKernel _kernel;
 		private readonly InternalConfiguration _configuration;
 		private readonly ILogger _logger;
@@ -20,10 +24,13 @@ namespace Vertica.Integration.Domain.LiteServer
 		private readonly CancellationTokenSource _cancellation;
 		private readonly Scheduler _scheduler;
 		private readonly List<Task> _tasks;
+		private readonly Task _houseKeeping;
 
 		public LiteServerImpl(IKernel kernel, InternalConfiguration configuration)
 		{
 			if (kernel == null) throw new ArgumentNullException(nameof(kernel));
+
+			_started = Time.UtcNow;
 
 			_kernel = kernel;
 			_configuration = configuration;
@@ -33,8 +40,7 @@ namespace Vertica.Integration.Domain.LiteServer
 			_cancellation = new CancellationTokenSource();
 			_scheduler = Scheduler.Current;
 
-			_outputter.WriteLine("Starting LiteServer");
-			_outputter.WriteLine();
+			Output("Starting LiteServer");
 
 			Execute(_configuration.OnStartup);
 
@@ -44,19 +50,22 @@ namespace Vertica.Integration.Domain.LiteServer
 				.Select(Create)
 				.ToList();
 
-			// We'll add our own instance for house-keeping operations.
-			_tasks.Add(Create(new BackgroundWorkServer(this, _scheduler)));
+			_houseKeeping = Create(new BackgroundWorkServer(this, _scheduler));
+		}
+
+		private void Output(string message)
+		{
+			_outputter.WriteLine(message);
 		}
 
 		private Task Create(IBackgroundServer server)
 		{
-			return server.Create(_cancellation.Token);
+			return server.Create(_cancellation.Token, new BackgroundServerContext());
 		}
 
 		public void Dispose()
 		{
-			_outputter.WriteLine("Stopping server.");
-			_outputter.WriteLine();
+			Output("Stopping LiteServer.");
 
 			// Signal to cancel all tasks.
 			_cancellation.Cancel();
@@ -68,8 +77,13 @@ namespace Vertica.Integration.Domain.LiteServer
 
 			try
 			{
+				Task[] waitTasks = _tasks
+					.Where(x => !x.IsFaulted)
+					.Append(_houseKeeping)
+					.ToArray();
+
 				// We allow for some wait-time to finish the background threads.
-				Task.WaitAll(_tasks.Where(x => !x.IsFaulted).ToArray(), _configuration.ShutdownTimeout);
+				Task.WaitAll(waitTasks, _configuration.ShutdownTimeout);
 			}
 			catch (AggregateException ex)
 			{
@@ -82,21 +96,54 @@ namespace Vertica.Integration.Domain.LiteServer
 				LogError(ex);
 
 			_cancellation.Dispose();
+			_houseKeeping.Dispose();
 
 			Execute(_configuration.OnShutdown);
+
+			Output($"Stopped LiteServer. Uptime: {Uptime}.");
 		}
 
-		public TimeSpan Work(BackgroundWorkContext context)
+		private string Uptime
+		{
+			get
+			{
+				TimeSpan span = Time.UtcNow - _started;
+
+				if (span.TotalSeconds < 1)
+					return $"{span.TotalSeconds} seconds";
+
+				var segments = new List<string>(4);
+
+				if (span.Days > 0)
+					segments.Add($"{span.Days} day{(span.Days == 1 ? string.Empty : "s")}");
+
+				if (span.Hours > 0)
+					segments.Add($"{span.Hours} hour{(span.Hours == 1 ? string.Empty : "s")}");
+
+				if (span.Minutes > 0)
+					segments.Add($"{span.Minutes} minute{(span.Minutes == 1 ? string.Empty : "s")}");
+
+				if (span.Seconds > 0)
+					segments.Add($"{span.Seconds} second{(span.Seconds == 1 ? string.Empty : "s")}");
+
+				return string.Join(" ", segments);
+			}
+		}
+
+		public TimeSpan Work(CancellationToken token, BackgroundWorkerContext context)
 		{
 			// Ensure all tasks are started.
 			foreach (Task nonStartedTask in _tasks.Where(x => x.Status == TaskStatus.Created))
 				nonStartedTask.Start(_scheduler);
 
+			if (context.InvocationCount == 1)
+				return TimeSpan.FromSeconds(1);
+
 			Task[] failedTasks = _tasks.Where(x => x.IsFaulted).ToArray();
 
 			foreach (Task failedTask in failedTasks)
 			{
-				if (context.CancellationToken.IsCancellationRequested)
+				if (token.IsCancellationRequested)
 					break;
 
 				if (failedTask.Exception != null)
@@ -106,6 +153,12 @@ namespace Vertica.Integration.Domain.LiteServer
 				}
 
 				_tasks.Remove(failedTask);
+			}
+
+			if (_tasks.All(x => x.IsCompleted))
+			{
+				Output("Exiting housekeeping (no more tasks to monitor).");
+				return context.Exit();
 			}
 
 			return TimeSpan.FromSeconds(5);

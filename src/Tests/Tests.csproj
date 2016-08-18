@@ -129,6 +129,10 @@
       <Project>{be14da0e-31c6-4417-8ec6-ed1658b51fa9}</Project>
       <Name>Integration.Portal</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Integration.Slack\Integration.Slack.csproj">
+      <Project>{2E86F586-A386-4E65-8241-BA6E0C24F4B6}</Project>
+      <Name>Integration.Slack</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Integration.SQLite\Integration.SQLite.csproj">
       <Project>{F644F439-7604-44D1-97C0-855081F8A2D8}</Project>
       <Name>Integration.SQLite</Name>

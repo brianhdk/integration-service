@@ -19,7 +19,7 @@ namespace Vertica.Integration.Domain.LiteServer
 			_scheduler = scheduler;
 		}
 
-		public Task Create(CancellationToken token)
+		public Task Create(CancellationToken token, BackgroundServerContext context)
 		{	
 			return Task.Factory.StartNew(() =>
 			{
@@ -27,7 +27,7 @@ namespace Vertica.Integration.Domain.LiteServer
 
 				while (!token.IsCancellationRequested)
 				{
-					TimeSpan waitTime = _worker.Work(new BackgroundWorkContext(token, ++iterations, () => TimeSpan.MinValue));
+					TimeSpan waitTime = _worker.Work(token, new BackgroundWorkerContext(++iterations, () => TimeSpan.Zero));
 
 					if (waitTime <= TimeSpan.Zero)
 						break;

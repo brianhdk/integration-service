@@ -13,7 +13,7 @@ namespace Vertica.Integration.Hangfire
 			_factory = factory;
 		}
 
-		public Task Create(CancellationToken token)
+		public Task Create(CancellationToken token, BackgroundServerContext context)
 		{
 			return Task.Run(() =>
 			{

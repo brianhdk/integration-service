@@ -93,7 +93,8 @@
     <Compile Include="Domain\Core\MaintenanceTaskExtensions.cs" />
     <Compile Include="Domain\Core\MaintenanceWorkItem.cs" />
     <Compile Include="Domain\Core\WriteDocumentationTask.cs" />
-    <Compile Include="Domain\LiteServer\BackgroundWorkContext.cs" />
+    <Compile Include="Domain\LiteServer\BackgroundServerContext.cs" />
+    <Compile Include="Domain\LiteServer\BackgroundWorkerContext.cs" />
     <Compile Include="Domain\LiteServer\BackgroundWorkServer.cs" />
     <Compile Include="Domain\LiteServer\IBackgroundServer.cs" />
     <Compile Include="Domain\LiteServer\IBackgroundWorker.cs" />

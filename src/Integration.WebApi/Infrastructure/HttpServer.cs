@@ -34,7 +34,6 @@ namespace Vertica.Integration.WebApi.Infrastructure
 	        _outputter = kernel.Resolve<TextWriter>();
 
 			_outputter.WriteLine("Starting HttpServer listening on URL: {0}", url);
-			_outputter.WriteLine();
 
 			// TODO: Make it possible to add multiple URL's to listen on
 	        _httpServer = WebApp.Start(new StartOptions(url), builder =>
@@ -103,11 +102,11 @@ namespace Vertica.Integration.WebApi.Infrastructure
 
         private static void ConfigureJson(HttpConfiguration configuration)
         {
-            JsonSerializerSettings jsonSettings =
+            JsonSerializerSettings json =
                 configuration.Formatters.JsonFormatter.SerializerSettings;
 
-            jsonSettings.Formatting = Formatting.Indented;
-            jsonSettings.Converters.Add(new StringEnumConverter());
+            json.Formatting = Formatting.Indented;
+            json.Converters.Add(new StringEnumConverter());
         }
 
         public void Dispose()
@@ -115,7 +114,6 @@ namespace Vertica.Integration.WebApi.Infrastructure
             if (_httpServer != null)
             {
 	            _outputter.WriteLine("Shutting down HttpServer.");
-				_outputter.WriteLine();
 
 	            _httpServer.Dispose();
             }

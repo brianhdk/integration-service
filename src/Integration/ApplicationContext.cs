@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using Castle.Windsor;
 using Vertica.Integration.Infrastructure.Logging;
@@ -17,10 +18,11 @@ namespace Vertica.Integration
 	    private readonly IWindsorContainer _container;
 	    private readonly IArgumentsParser _parser;
 	    private readonly IHost[] _hosts;
+		private readonly TextWriter _writer;
 
 		private readonly Lazy<Action> _disposed = new Lazy<Action>(() => () => { });
 
-	    internal ApplicationContext(Action<ApplicationConfiguration> application)
+		internal ApplicationContext(Action<ApplicationConfiguration> application)
         {
 		    _configuration = new ApplicationConfiguration();
 
@@ -31,7 +33,10 @@ namespace Vertica.Integration
             _container = CastleWindsor.Initialize(_configuration);
             _parser = Resolve<IArgumentsParser>();
             _hosts = Resolve<IHostFactory>().GetAll();
-		}
+		    _writer = Resolve<TextWriter>();
+
+			_writer.WriteLine("ApplicationContext created.");
+        }
 
 	    public static IApplicationContext Create(Action<ApplicationConfiguration> application = null)
 	    {
@@ -111,6 +116,8 @@ Util.NewProcess = true;
 		{
 			if (_disposed.IsValueCreated)
 				throw new InvalidOperationException("ApplicationContext has already been disposed.");
+
+			_writer.WriteLine("ApplicationContext disposed.");
 
 			_disposed.Value();
 

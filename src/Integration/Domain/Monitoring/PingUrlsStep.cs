@@ -106,7 +106,7 @@ namespace Vertica.Integration.Domain.Monitoring
 
 {exception.InnerException.AggregateMessages()}";
 
-            workItem.Add(Time.UtcNow, this.Name(), message);
+            workItem.Add(Time.UtcNow, "Ping Urls", message);
         }
 
         private async Response HttpGet(Uri absoluteUri, uint maximumWaitTimeSeconds)

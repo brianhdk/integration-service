@@ -1,22 +1,18 @@
 using System;
-using System.Threading;
 
 namespace Vertica.Integration.Domain.LiteServer
 {
-	public struct BackgroundWorkContext
+	public class BackgroundWorkerContext
 	{
 		private readonly Func<TimeSpan> _exit;
 
-		internal BackgroundWorkContext(CancellationToken cancellationToken, uint invocationCount, Func<TimeSpan> exit)
+		internal BackgroundWorkerContext(uint invocationCount, Func<TimeSpan> exit)
 		{
 			if (exit == null) throw new ArgumentNullException(nameof(exit));
 
-			CancellationToken = cancellationToken;
 			InvocationCount = invocationCount;
 			_exit = exit;
 		}
-
-		public CancellationToken CancellationToken { get; }
 
 		/// <summary>
 		/// Specifies the number of times the method has been invoked.
@@ -24,7 +20,7 @@ namespace Vertica.Integration.Domain.LiteServer
 		public uint InvocationCount { get; }
 
 		/// <summary>
-		/// Use this method to signal that you want to stop having your method repeated.
+		/// Use this method to signal that you want to stop having your method invoked.
 		/// </summary>
 		public TimeSpan Exit()
 		{

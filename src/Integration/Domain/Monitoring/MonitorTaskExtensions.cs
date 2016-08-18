@@ -15,14 +15,13 @@ namespace Vertica.Integration.Domain.Monitoring
                 .Task<MonitorTask, MonitorWorkItem>(x => localConfiguration = x);
 
             localConfiguration
-                .Step<ExportIntegrationErrorsStep>()
                 .Step<MonitorFoldersStep>()
-                .Step<PingUrlsStep>();
+                .Step<PingUrlsStep>()
+				.Step<ExportIntegrationErrorsStep>();
 
-            if (task != null)
-                task(localConfiguration);
+	        task?.Invoke(localConfiguration);
 
-            return configuration;
+	        return configuration;
         }        
     }
 }

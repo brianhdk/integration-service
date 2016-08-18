@@ -8,6 +8,6 @@ namespace Vertica.Integration.Domain.LiteServer
 	/// </summary>
 	public interface IBackgroundServer
 	{
-		Task Create(CancellationToken token);
+		Task Create(CancellationToken token, BackgroundServerContext context);
 	}
 }
