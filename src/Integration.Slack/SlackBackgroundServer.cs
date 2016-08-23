@@ -18,6 +18,8 @@ namespace Vertica.Integration.Slack
 
 		public Task Create(CancellationToken token, BackgroundServerContext context)
 		{
+			// queue up messages/tasks to be run
+
 			return Task.Run(() =>
 			{
 				// https://api.slack.com/methods/chat.postMessage/test
