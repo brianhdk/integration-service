@@ -8,6 +8,7 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
  - [Built-in Tasks](#built-in-tasks) 
  - [Task Execution Flow](#task-execution-flow)  
  - [Scheduling Tasks](#scheduling-tasks)   
+ - [Basics of LiteServer](#basics-of-liteserver)   
  - [Basics of WebApi](#basics-of-webapi)
  - [Logging and Exceptions](#logging-and-exceptions) 
  - [Command Line Reference](#command-line-reference)
@@ -489,6 +490,22 @@ As stated earlier, if an exception is thrown, this will abort the flow and assoc
 [Back to Table of Contents](#table-of-contents)
 
 ## Scheduling Tasks
+
+TBD. 
+[Back to Table of Contents](#table-of-contents)
+
+## Basics of LiteServer
+
+LiteServer is an extensible way of hosting long-running background operations / servers with the Integration Service.
+
+In LiteServer there's basically two components:
+
+1. **IBackgroundServer**
+  * ... which is an interface, that you implement to create a long-running Task.
+2. **IBackgroundWorker** 
+  * ... which is an interface, that you implement to have specific code run on specific intervals, e.g. every 1 minute.
+
+You can use the built-in **LiteServerHost** to run it.
 
 TBD. 
 [Back to Table of Contents](#table-of-contents)
