@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<package>
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://github.com/vertica-as/integration-service</projectUrl>
+    <iconUrl>http://icons.iconarchive.com/icons/icons8/ios7/32/Data-Workflow-icon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2016</copyright>
+    <tags>Vertica Integration Service IntegrationService Windows TaskScheduler Task Scheduler</tags>
+  </metadata>
+  <files>
+    <file src="App_Readme/Integration.WindowsTaskScheduler-readme.txt" target="readme.txt" />
+  </files>
+</package>

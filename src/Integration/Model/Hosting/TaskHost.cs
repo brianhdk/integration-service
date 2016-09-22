@@ -10,15 +10,13 @@ namespace Vertica.Integration.Model.Hosting
 		private readonly ITaskFactory _factory;
 		private readonly ITaskRunner _runner;
 		private readonly IWindowsServiceHandler _windowsService;
-		private readonly IScheduledTaskHandler _scheduledTask;
 		private readonly TextWriter _textWriter;
 
-		public TaskHost(ITaskFactory factory, ITaskRunner runner, IWindowsServiceHandler windowsService, IScheduledTaskHandler scheduledTask, TextWriter textWriter)
+		public TaskHost(ITaskFactory factory, ITaskRunner runner, IWindowsServiceHandler windowsService, TextWriter textWriter)
 		{
 			_factory = factory;
 			_runner = runner;
 			_windowsService = windowsService;
-			_scheduledTask = scheduledTask;
 			_textWriter = textWriter;
 		}
 
@@ -36,9 +34,6 @@ namespace Vertica.Integration.Model.Hosting
 			ITask task = _factory.Get(args.Command);
 
 			if (InstallOrRunAsWindowsService(args, task))
-				return;
-
-			if (InstallAsScheduledTask(args, task))
 				return;
 
 			_runner.Execute(task, args.Args);
@@ -59,11 +54,6 @@ namespace Vertica.Integration.Model.Hosting
 			};
 
 			return _windowsService.Handle(args, new HandleAsWindowsService(task.Name(), task.Name(), task.Description, onStart));
-		}
-
-		private bool InstallAsScheduledTask(HostArguments args, ITask task)
-		{
-			return _scheduledTask.Handle(args, task);
 		}
 
 		public string Description => "Handles execution of Tasks.";

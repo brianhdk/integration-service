@@ -4,8 +4,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Vertica.Integration.MongoDB")]
-[assembly: AssemblyDescription("Integration to MongoDB")]
+[assembly: AssemblyTitle("Vertica.Integration.WindowsTaskScheduler")]
+[assembly: AssemblyDescription("Simple .NET wrapper to support configuring Windows Scheduled Tasks.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Vertica A/S")]
 [assembly: AssemblyProduct("")]
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("3dc954dd-f826-488b-bf67-b6f74957303d")]
+[assembly: Guid("fbfc536a-2a09-4095-b1e7-3a8127de6ae1")]
 
 // Version information for an assembly consists of the following four values:
 //

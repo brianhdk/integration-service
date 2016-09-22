@@ -5,16 +5,6 @@ Param(
 	[string]$target = "Local"
 )
 
-function Get-Target() {
-
-    if ($target -eq "Remote") {
-
-		Return "\\nuget.vertica.dk\nuget.vertica.dk\root\Packages"
-	}
-
-	Return "D:\Dropbox\Development\NuGet.Packages"
-}
-
 $ErrorActionPreference = "Stop"
 $script_directory = Split-Path -Parent $PSCommandPath
 
@@ -24,6 +14,7 @@ $settings = @{
         "integration_host" = Resolve-Path $script_directory\..\src\Integration.Host
 		"integration_webapi" = Resolve-Path $script_directory\..\src\Integration.WebApi
 		"integration_webapi_signalr" = Resolve-Path $script_directory\..\src\Integration.WebApi.SignalR
+        "integration_windowstaskscheduler" = Resolve-Path $script_directory\..\src\Integration.WindowsTaskScheduler
         "integration_portal" = Resolve-Path $script_directory\..\src\Integration.Portal
 		"integration_logging_elmah" = Resolve-Path $script_directory\..\src\Integration.Logging.Elmah
 		"integration_azure" = Resolve-Path $script_directory\..\src\Integration.Azure
@@ -39,11 +30,10 @@ $settings = @{
     "tools" = @{
         "nuget" = Resolve-Path $script_directory\..\.nuget\NuGet.exe
     }
-	"packages" = @{
-		"destination" = Get-Target
-		#"destination" = "D:\Dropbox\Development\NuGet.Packages"
-	}
 }
+
+# remove .nupkg files in script directory
+Get-ChildItem $script_directory | Where-Object { $_.Extension -eq ".nupkg" } | Remove-Item
 
 foreach ($project in $settings.src.Keys) {
 
@@ -51,7 +41,7 @@ foreach ($project in $settings.src.Keys) {
 
     cd $projectDirectory
 
-    # remove .nupkg files
+    # remove .nupkg files in project directory
     Get-ChildItem $projectDirectory | Where-Object { $_.Extension -eq ".nupkg" } | Remove-Item
 
 	if (Test-Path (Join-Path $projectDirectory "NuGet-Before-Pack.ps1")) {
@@ -77,8 +67,38 @@ foreach ($project in $settings.src.Keys) {
 	
 		Invoke-Expression $afterPack
 	}
-	
-    Get-ChildItem $projectDirectory | Where-Object { $_.Extension -eq ".nupkg" } | Move-Item -Destination $settings.packages.destination -Force
+
+    # Move .nupkg to script directory
+    Get-ChildItem $projectDirectory | Where-Object { $_.Extension -eq ".nupkg" } | Move-Item -Destination $script_directory -Force
+}
+
+
+Get-ChildItem $script_directory | Where-Object { $_.Extension -eq ".nupkg" } | ForEach {
+
+	If ($target -eq "Remote") {
+
+        Try {
+
+		    &$settings.tools.nuget push $_.FullName 66666666-6666-6666-6666-666666666666 -Source http://nuget.vertica.dk/api/v2/package
+        }
+        Catch {
+
+            $message = $_.Exception.Message
+            
+            If ($message.Contains("The server is configured to not allow overwriting packages that already exist.")) {
+
+                Write-Host "WARNING: $message" -ForegroundColor Yellow
+            }
+            Else {
+
+                Throw $_.Exception
+            }
+        }
+	} 
+    Else {
+
+		Get-ChildItem $projectDirectory | Where-Object { $_.Extension -eq ".nupkg" } | Move-Item -Destination "D:\Dropbox\Development\NuGet.Packages" -Force
+	}
 }
 
 cd $script_directory

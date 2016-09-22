@@ -35,7 +35,7 @@ namespace Vertica.Integration
             _hosts = Resolve<IHostFactory>().GetAll();
 		    _writer = Resolve<TextWriter>();
 
-			_writer.WriteLine("ApplicationContext created.");
+			_writer.WriteLine("[Integration Service]: Initialized");
         }
 
 	    public static IApplicationContext Create(Action<ApplicationConfiguration> application = null)
@@ -117,7 +117,7 @@ Util.NewProcess = true;
 			if (_disposed.IsValueCreated)
 				throw new InvalidOperationException("ApplicationContext has already been disposed.");
 
-			_writer.WriteLine("ApplicationContext disposed.");
+			_writer.WriteLine("[Integration Service]: Shutting down");
 
 			_disposed.Value();
 

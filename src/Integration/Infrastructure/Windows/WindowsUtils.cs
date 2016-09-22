@@ -8,10 +8,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 		{
 			WindowsIdentity identity = WindowsIdentity.GetCurrent();
 
-			if (identity != null)
-				return identity.Name;
-
-			return null;
+			return identity.Name;
 		}		 
 	}
 }

@@ -6,10 +6,5 @@
 		{
 			return new WindowsServices(machineName);
 		}
-
-		public ITaskScheduler TaskScheduler(string machineName = null)
-		{
-			return new TaskScheduler(machineName);
-		}
 	}
 }

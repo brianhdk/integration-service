@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TaskScheduler;
 
-namespace Vertica.Integration.Infrastructure.Windows
+namespace Vertica.Integration.WindowsTaskScheduler
 {
 	public abstract class ScheduledTaskTrigger
 	{

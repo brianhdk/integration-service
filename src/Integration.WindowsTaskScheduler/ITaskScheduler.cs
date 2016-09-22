@@ -1,4 +1,4 @@
-namespace Vertica.Integration.Infrastructure.Windows
+namespace Vertica.Integration.WindowsTaskScheduler
 {
 	public interface ITaskScheduler
 	{

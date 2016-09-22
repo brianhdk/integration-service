@@ -2,24 +2,16 @@
 using System.Collections;
 using TaskScheduler;
 
-namespace Vertica.Integration.Infrastructure.Windows
+namespace Vertica.Integration.WindowsTaskScheduler
 {
-	internal class TaskScheduler : ITaskScheduler
+    public class TaskScheduler : ITaskScheduler
 	{
 		private readonly ITaskService _taskService;
 
-		public TaskScheduler(string machineName = null)
+		public TaskScheduler()
 		{
 			_taskService = new global::TaskScheduler.TaskScheduler();
-
-			if (string.IsNullOrWhiteSpace(machineName))
-			{
-				_taskService.Connect();
-			}
-			else
-			{
-				_taskService.Connect(machineName);
-			}
+			_taskService.Connect();
 		}
 
 		public void InstallOrUpdate(ScheduledTaskConfiguration scheduledTask)

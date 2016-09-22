@@ -4,10 +4,11 @@ using System.Linq;
 using System.Reflection;
 using System.ServiceProcess;
 using Vertica.Integration.Infrastructure.Extensions;
-using Vertica.Integration.Infrastructure.Windows;
+using Vertica.Integration.Model;
+using Vertica.Integration.Model.Hosting;
 using Vertica.Utilities_v4.Extensions.EnumerableExt;
 
-namespace Vertica.Integration.Model.Hosting.Handlers
+namespace Vertica.Integration.WindowsTaskScheduler
 {
 	public class ScheduledTaskHandler : IScheduledTaskHandler
 	{
@@ -20,10 +21,10 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 		private readonly IRuntimeSettings _runtimeSettings;
 		private readonly ITaskScheduler _taskScheduler;
 
-		public ScheduledTaskHandler(IRuntimeSettings runtimeSettings, IWindowsFactory windows)
+		public ScheduledTaskHandler(IRuntimeSettings runtimeSettings)
 		{
 			_runtimeSettings = runtimeSettings;
-			_taskScheduler = windows.TaskScheduler();
+			//_taskScheduler = windows.TaskScheduler();
 		}
 
 		public bool Handle(HostArguments args, ITask task)

@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.ServiceProcess;
 using TaskScheduler;
+using Vertica.Integration.Infrastructure.Windows;
 using Vertica.Utilities_v4.Extensions.StringExt;
 
-namespace Vertica.Integration.Infrastructure.Windows
+namespace Vertica.Integration.WindowsTaskScheduler
 {
 	public class ScheduledTaskConfiguration
 	{
@@ -53,6 +54,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 		public ScheduledTaskConfiguration Description(string description)
 		{
 			_description = description.NullIfEmpty();
+
 			return this;
 		}
 

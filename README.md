@@ -492,6 +492,8 @@ As stated earlier, if an exception is thrown, this will abort the flow and assoc
 ## Scheduling Tasks
 
 TBD. 
+ - Include desciption of WindowsTaskScheduler + WindowsService
+
 [Back to Table of Contents](#table-of-contents)
 
 ## Basics of LiteServer

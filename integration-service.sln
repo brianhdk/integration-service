@@ -84,6 +84,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Experiments.Slack", "src\Ex
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Experiments.LiteServer", "src\Experiments.LiteServer\Experiments.LiteServer.csproj", "{49E7AFD7-C5E8-470D-A27D-84749D9A6555}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.WindowsTaskScheduler", "src\Integration.WindowsTaskScheduler\Integration.WindowsTaskScheduler.csproj", "{FBFC536A-2A09-4095-B1E7-3A8127DE6AE1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -194,6 +196,10 @@ Global
 		{49E7AFD7-C5E8-470D-A27D-84749D9A6555}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49E7AFD7-C5E8-470D-A27D-84749D9A6555}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49E7AFD7-C5E8-470D-A27D-84749D9A6555}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBFC536A-2A09-4095-B1E7-3A8127DE6AE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBFC536A-2A09-4095-B1E7-3A8127DE6AE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBFC536A-2A09-4095-B1E7-3A8127DE6AE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBFC536A-2A09-4095-B1E7-3A8127DE6AE1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

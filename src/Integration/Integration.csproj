@@ -257,15 +257,8 @@
     <Compile Include="Model\Exceptions\MultipleHostsFoundException.cs" />
     <Compile Include="Model\Exceptions\NoHostFoundException.cs" />
     <Compile Include="Model\Exceptions\TaskWithSameNameAlreadyRegistredException.cs" />
-    <Compile Include="Infrastructure\Windows\ScheduledTaskAction.cs" />
     <Compile Include="Infrastructure\Windows\Credentials.cs" />
-    <Compile Include="Model\Hosting\Handlers\IScheduledTaskHandler.cs" />
-    <Compile Include="Infrastructure\Windows\ITaskScheduler.cs" />
     <Compile Include="Model\Hosting\Handlers\IWindowsServiceHandler.cs" />
-    <Compile Include="Infrastructure\Windows\ScheduledTaskConfiguration.cs" />
-    <Compile Include="Model\Hosting\Handlers\ScheduledTaskHandler.cs" />
-    <Compile Include="Infrastructure\Windows\TaskScheduler.cs" />
-    <Compile Include="Infrastructure\Windows\ScheduledTaskTrigger.cs" />
     <Compile Include="Model\Hosting\Handlers\HandleAsWindowsService.cs" />
     <Compile Include="Model\Hosting\Handlers\WindowsServiceHandler.cs" />
     <Compile Include="Model\Hosting\HostArguments.cs" />
@@ -333,17 +326,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="TaskScheduler">
-      <Guid>{E34CB9F1-C7F7-424C-BE29-027DCC09363A}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
