@@ -98,6 +98,7 @@
     <Compile Include="Infrastructure\Parsing\CsvRowTester.cs" />
     <Compile Include="Infrastructure\RazorEngine\RazorEngineTester.cs" />
     <Compile Include="Infrastructure\RepeatTester.cs" />
+    <Compile Include="Model\ArgumentsTester.cs" />
     <Compile Include="Model\Hosting\ArgumentsParserTester.cs" />
     <Compile Include="Model\TaskFactoryTester.cs" />
     <Compile Include="Model\TaskRunnerTester.cs" />

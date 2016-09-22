@@ -58,8 +58,7 @@ namespace Vertica.Integration.Model
         {
             var configuration = new TaskConfiguration<TWorkItem>(typeof (TTask));
 
-            if (task != null)
-                task(configuration);
+            task?.Invoke(configuration);
 
             if (_complexTasks.Contains(configuration))
                 throw new InvalidOperationException(
@@ -91,6 +90,11 @@ namespace Vertica.Integration.Model
         {
             _removeTasks.Add(typeof(TTask));
 
+            return this;
+        }
+
+        public TasksConfiguration EnableDistributedMutex()
+        {
             return this;
         }
 

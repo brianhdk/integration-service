@@ -75,7 +75,7 @@ namespace Vertica.Integration.Model
 
         public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
         {
-            return _pairs.OfType<KeyValuePair<string, string>>().GetEnumerator();
+            return ((IEnumerable<KeyValuePair<string, string>>)_pairs).GetEnumerator();
         }
 
 	    public override string ToString()
