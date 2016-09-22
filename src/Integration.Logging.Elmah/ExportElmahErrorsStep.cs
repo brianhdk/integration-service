@@ -27,6 +27,9 @@ namespace Vertica.Integration.Logging.Elmah
             if (string.IsNullOrWhiteSpace(configuration.ConnectionStringName))
                 return Execution.StepOver;
 
+            if (configuration.Disabled)
+                return Execution.StepOver;
+
             workItem.Context(ConfigurationName, configuration);
 
             return Execution.Execute;
@@ -43,7 +46,7 @@ namespace Vertica.Integration.Logging.Elmah
             {
                 connection.Open();
 
-				command.CommandTimeout = 10800;
+				command.CommandTimeout = (int)configuration.CommandTimeout.TotalSeconds;
 				command.CommandText = @"
 SELECT TOP 1000
 	errorId     = [ErrorId], 
