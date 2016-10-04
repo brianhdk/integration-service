@@ -155,15 +155,20 @@
     <Compile Include="Infrastructure\Database\DefaultConnection.cs" />
     <Compile Include="Infrastructure\Database\Extensions\DbExtensions.cs" />
     <Compile Include="Infrastructure\Database\Extensions\SqlDbExtensions.cs" />
+    <Compile Include="Infrastructure\Database\IDatabaseConfiguration.cs" />
     <Compile Include="Infrastructure\Database\IntegrationDbException.cs" />
     <Compile Include="Infrastructure\Database\IDbFactory.cs" />
     <Compile Include="Infrastructure\Database\IDbSession.cs" />
     <Compile Include="Infrastructure\Database\DatabaseConfiguration.cs" />
     <Compile Include="Infrastructure\Database\Migrations\DatabaseServer.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\Features\DbDistributedMutexFeatureAttribute.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\Features\DbLoggerFeatureAttribute.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\Features\FeatureAttribute.cs" />
     <Compile Include="Infrastructure\Database\Migrations\IMigrationDbs.cs" />
     <Compile Include="Infrastructure\Database\Migrations\IntegrationMigration.cs" />
     <Compile Include="Infrastructure\Database\Migrations\IntegrationMigrationDb.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M1_Baseline.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\M7_DbDistributedMutex.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M6_ExtendArchiveWithExpirationAndGroup.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M5_TaskLogNullableExecutionTimeSeconds.cs" />
     <Compile Include="Infrastructure\Database\Migrations\M4_ExtendTaskLogWithExecutionContext.cs" />
@@ -180,6 +185,8 @@
     <Compile Include="Infrastructure\Email\IEmailService.cs" />
     <Compile Include="Infrastructure\Email\TextBasedEmailTemplate.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ScanAddRemoveInstaller.cs" />
+    <Compile Include="Infrastructure\Features\FeatureToggler.cs" />
+    <Compile Include="Infrastructure\Features\IFeatureToggler.cs" />
     <Compile Include="Infrastructure\KernelActions.cs" />
     <Compile Include="Infrastructure\Extensions\ActionRepeaterExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\ExceptionExtensions.cs" />
@@ -219,9 +226,12 @@
     <Compile Include="Infrastructure\Logging\Loggers\TextFileLogger.cs" />
     <Compile Include="Infrastructure\Logging\Loggers\TextFileLoggerConfiguration.cs" />
     <Compile Include="Infrastructure\Logging\Loggers\VoidLogger.cs" />
-    <Compile Include="Infrastructure\Threading\DbDistributedMutex.cs" />
-    <Compile Include="Infrastructure\Threading\MutexContext.cs" />
-    <Compile Include="Infrastructure\Threading\IDistributedMutex.cs" />
+    <Compile Include="Infrastructure\Threading\DistributedMutex\Db\CleanUpDbDistributedMutexStep.cs" />
+    <Compile Include="Infrastructure\Threading\DistributedMutex\Db\DbDistributedMutex.cs" />
+    <Compile Include="Infrastructure\Threading\DistributedMutex\Db\DbDistributedMutexLock.cs" />
+    <Compile Include="Infrastructure\Threading\DistributedMutex\DistributedMutexConfiguration.cs" />
+    <Compile Include="Infrastructure\Threading\DistributedMutex\DistributedMutexContext.cs" />
+    <Compile Include="Infrastructure\Threading\DistributedMutex\IDistributedMutex.cs" />
     <Compile Include="Infrastructure\Parsing\CsvConfiguration.cs" />
     <Compile Include="Infrastructure\Parsing\CsvParser.cs" />
     <Compile Include="Infrastructure\Parsing\CsvRow.cs" />
@@ -243,7 +253,9 @@
     <Compile Include="Infrastructure\Templating\HtmlHelper.cs" />
     <Compile Include="Infrastructure\Templating\RawString.cs" />
     <Compile Include="Infrastructure\Extensions\OutputterExtensions.cs" />
-    <Compile Include="Infrastructure\Threading\MachineWideMutex.cs" />
+    <Compile Include="Infrastructure\Threading\DistributedMutex\MachineWideMutex.cs" />
+    <Compile Include="Infrastructure\Threading\DistributedMutexTimeoutException.cs" />
+    <Compile Include="Infrastructure\Threading\DistributedMutex\ThrowingDistributedMutex.cs" />
     <Compile Include="Infrastructure\Windows\WindowsServiceConfiguration.cs" />
     <Compile Include="Infrastructure\Windows\IWindowsServices.cs" />
     <Compile Include="Infrastructure\Windows\IWindowsFactory.cs" />
@@ -253,7 +265,7 @@
     <Compile Include="IRuntimeSettings.cs" />
     <Compile Include="Model\Arguments.cs" />
     <Compile Include="Model\ContextWorkItem.cs" />
-    <Compile Include="Model\Exceptions\ISkipLoggingException.cs" />
+    <Compile Include="Model\Exceptions\IIgnoreLogging.cs" />
     <Compile Include="Model\Exceptions\MultipleHostsFoundException.cs" />
     <Compile Include="Model\Exceptions\NoHostFoundException.cs" />
     <Compile Include="Model\Exceptions\TaskWithSameNameAlreadyRegistredException.cs" />
@@ -309,6 +321,9 @@
     <Compile Include="Model\Task.cs" />
     <Compile Include="Model\TaskExecutionResult.cs" />
     <Compile Include="Model\TaskRunner.cs" />
+    <Compile Include="Model\Tasks\AllowConcurrentExecutionAttribute.cs" />
+    <Compile Include="Model\Tasks\ConcurrentTaskExecution.cs" />
+    <Compile Include="Model\Tasks\IConcurrentTaskExecution.cs" />
     <Compile Include="Model\Tasks\PreventConcurrentExecutionAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

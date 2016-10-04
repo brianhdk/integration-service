@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Vertica.Integration.Model.Exceptions
 {
 	[Serializable]
-	public class TaskExecutionFailedException : Exception, ISkipLoggingException
+	public class TaskExecutionFailedException : Exception, IIgnoreLogging
 	{
 		public TaskExecutionFailedException()
 		{

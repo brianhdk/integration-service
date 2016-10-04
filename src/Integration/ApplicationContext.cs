@@ -143,7 +143,7 @@ Util.NewProcess = true;
         {
             if (exception == null) throw new ArgumentNullException(nameof(exception));
 
-            if (exception is ISkipLoggingException)
+            if (exception is IIgnoreLogging)
                 return;
 
             var logger = Resolve<ILogger>();

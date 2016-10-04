@@ -1,5 +1,6 @@
 ﻿using System;
 using Vertica.Integration.Infrastructure.Archiving;
+using Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db;
 using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Domain.Core
@@ -17,11 +18,11 @@ namespace Vertica.Integration.Domain.Core
 
             taskConfiguration
                 .Step<CleanUpIntegrationDbStep>()
+                .Step<CleanUpDbDistributedMutexStep>()
                 .Step<CleanUpArchivesStep>()
                 .Step<ArchiveFoldersStep>();
 
-            if (task != null)
-                task(taskConfiguration);
+            task?.Invoke(taskConfiguration);
 
             return configuration;
         }

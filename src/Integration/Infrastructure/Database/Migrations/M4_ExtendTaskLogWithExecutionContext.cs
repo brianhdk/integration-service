@@ -1,9 +1,11 @@
 ﻿using System;
 using FluentMigrator;
+using Vertica.Integration.Infrastructure.Database.Migrations.Features;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
     [Migration(4)]
+    [DbLoggerFeature]
     public class M4_ExtendTaskLogWithExecutionContext : Migration
     {
         public override void Up()

@@ -65,13 +65,13 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
         protected abstract void Update(TaskLog log);
         protected abstract void Update(StepLog log);
 
-        public IDisposable Disable()
+        public virtual IDisposable Disable()
         {
             _disablers.Push(_dummy);
             return new Disabler(() => _disablers.Pop());
         }
 
-        private bool LoggingDisabled => _disablers.Count > 0;
+        protected virtual bool LoggingDisabled => _disablers.Count > 0;
 
 	    private class Disabler : IDisposable
         {

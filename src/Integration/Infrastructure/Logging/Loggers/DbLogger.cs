@@ -2,17 +2,22 @@
 using System.Data;
 using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Database.Extensions;
+using Vertica.Integration.Infrastructure.Features;
 
 namespace Vertica.Integration.Infrastructure.Logging.Loggers
 {
     internal class DbLogger : Logger
     {
         private readonly IDbFactory _db;
+        private readonly IFeatureToggler _featureToggler;
 
-        public DbLogger(IDbFactory db)
+        public DbLogger(IDbFactory db, IFeatureToggler featureToggler)
         {
             _db = db;
+            _featureToggler = featureToggler;
         }
+
+        protected override bool LoggingDisabled => base.LoggingDisabled || _featureToggler.IsDisabled<DbLogger>();
 
         protected override string Insert(TaskLog log)
         {
@@ -40,10 +45,10 @@ SELECT CAST(SCOPE_IDENTITY() AS INT)",
                 {
                     TaskName = log.TaskLog.Name,
                     log.TimeStamp,
-                    StepName = log.StepLog != null ? log.StepLog.Name : null,
+                    StepName = log.StepLog?.Name,
                     log.Message,
                     TaskLog_Id = log.TaskLog.Id,
-                    StepLog_Id = log.StepLog != null ? log.StepLog.Id : null
+                    StepLog_Id = log.StepLog?.Id
                 })).ToString();
         }
 
@@ -89,7 +94,7 @@ UPDATE TaskLog SET ExecutionTimeSeconds = @ExecutionTimeSeconds, ErrorLog_Id = @
                 {
                     log.Id,
                     ExecutionTimeSeconds = log.ExecutionTimeSeconds.GetValueOrDefault(),
-                    ErrorLog_Id = log.ErrorLog != null ? log.ErrorLog.Id : null
+                    ErrorLog_Id = log.ErrorLog?.Id
                 }));
         }
 
@@ -101,7 +106,7 @@ UPDATE TaskLog SET ExecutionTimeSeconds = @ExecutionTimeSeconds, ErrorLog_Id = @
                 {
                     log.Id,
                     ExecutionTimeSeconds = log.ExecutionTimeSeconds.GetValueOrDefault(),
-                    ErrorLog_Id = log.ErrorLog != null ? log.ErrorLog.Id : null
+                    ErrorLog_Id = log.ErrorLog?.Id
                 }));
         }
 

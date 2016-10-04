@@ -1,9 +1,11 @@
 ﻿using System;
 using FluentMigrator;
+using Vertica.Integration.Infrastructure.Database.Migrations.Features;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
     [Migration(1)]
+    [DbLoggerFeature]
 	public class M1_Baseline : Migration
 	{
 		public override void Up()

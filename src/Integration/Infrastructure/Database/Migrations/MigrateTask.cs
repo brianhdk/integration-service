@@ -11,30 +11,37 @@ using FluentMigrator.Runner.Initialization;
 using FluentMigrator.Runner.Processors;
 using FluentMigrator.Runner.Processors.SqlServer;
 using FluentMigrator.Runner.Processors.SQLite;
+using Vertica.Integration.Infrastructure.Database.Migrations.Features;
+using Vertica.Integration.Infrastructure.Features;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
+using Vertica.Integration.Model.Tasks;
 using Vertica.Utilities_v4.Extensions.AttributeExt;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
+    [PreventConcurrentExecution]
     public class MigrateTask : Task
     {
         private readonly IKernel _kernel;
-        private readonly MigrationDb[] _dbs;
-        private readonly IDisposable _loggingDisabler;
-        private readonly bool _databaseCreated;
 	    private readonly ITaskFactory _taskFactory;
 	    private readonly ITaskRunner _taskRunner;
+        private readonly IFeatureToggler _featureToggler;
 
-        public MigrateTask(Func<IDbFactory> db, ILogger logger, IKernel kernel, IMigrationDbs dbs, ITaskFactory taskFactory, ITaskRunner taskRunner)
+        private readonly MigrationDb[] _dbs;
+        private readonly bool _databaseCreated;
+        private readonly FeatureAttribute[] _disabledFeatures;
+
+        public MigrateTask(IDatabaseConfiguration configuration, Lazy<IDbFactory> db, IKernel kernel, IMigrationDbs dbs, ITaskFactory taskFactory, ITaskRunner taskRunner, IFeatureToggler featureToggler)
         {
             _kernel = kernel;
 	        _taskFactory = taskFactory;
 	        _taskRunner = taskRunner;
+            _featureToggler = featureToggler;
 
-	        if (!dbs.IntegrationDbDisabled)
+	        if (!configuration.IntegrationDbDisabled)
 	        {
-		        string connectionString = EnsureIntegrationDb(db(), dbs.CheckExistsAndCreateIntegrationDbIfNotFound, out _databaseCreated);
+		        string connectionString = EnsureIntegrationDb(db.Value, dbs.CheckExistsAndCreateIntegrationDbIfNotFound, out _databaseCreated);
 
 		        var integrationDb = new IntegrationMigrationDb(
 			        dbs.IntegrationDbDatabaseServer,
@@ -45,9 +52,8 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 		        StringBuilder output;
 		        MigrationRunner runner = CreateRunner(integrationDb, out output);
 
-		        // Latest migration has not been applied, so we'll have to disable any logging.
-		        if (!runner.VersionLoader.VersionInfo.HasAppliedMigration(FindLatestMigration()))
-			        _loggingDisabler = logger.Disable();
+	            long latestVersion = runner.VersionLoader.VersionInfo.Latest();
+	            _disabledFeatures = DisableFeatures(latestVersion);
 
 		        dbs = dbs.WithIntegrationDb(integrationDb);
 	        }
@@ -55,31 +61,35 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 	        _dbs = dbs.ToArray();
         }
 
-        private static long FindLatestMigration()
+        private FeatureAttribute[] DisableFeatures(long laterThanVersion)
         {
-            long latestMigration =
-                typeof (M1_Baseline).Assembly.GetTypes()
+            // we need to disable database related features like logging, distributed mutex and such - when upgrading our own schema
+            return
+                typeof(M1_Baseline).Assembly.GetTypes()
                     .Where(x =>
-                        x.IsClass &&
-                        x.Namespace == typeof (M1_Baseline).Namespace)
-                    .Select(x =>
+                        x.IsSubclassOf(typeof(Migration)) && 
+                        !x.IsAbstract &&
+                        x.Namespace == typeof(M1_Baseline).Namespace)
+                    .Where(x =>
                     {
                         var migration = x.GetAttribute<MigrationAttribute>();
 
-                        return migration != null ? migration.Version : -1;
+                        return (migration?.Version ?? -1) > laterThanVersion;
                     })
-                    .OrderByDescending(x => x)
-                    .First();
+                    .SelectMany(x => x.GetAttributes<FeatureAttribute>())
+                    .Select(x =>
+                    {
+                        x.Disable(_featureToggler);
 
-            return latestMigration;
+                        return x;
+                    })
+                    .ToArray();
         }
 
         public override string Description => "Runs migrations against all configured databases. Will also execute any custom task if provided by Arguments.";
 
 	    public override void StartTask(ITaskExecutionContext context)
         {
-            bool enableLogger = _loggingDisabler != null;
-
 	        MigrationDb[] destinations = _dbs;
 
 			string[] names = (context.Arguments["Names"] ?? string.Empty)
@@ -120,10 +130,10 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
                 if (output.Length > 0)
                     context.Log.Message(output.ToString());
 
-                if (enableLogger)
+                if (_disabledFeatures != null)
                 {
-                    _loggingDisabler.Dispose();
-                    enableLogger = false;
+                    foreach (FeatureAttribute feature in _disabledFeatures)
+                        feature.Enable(_featureToggler);
                 }
             }
         }

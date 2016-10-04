@@ -2,6 +2,8 @@
 {
 	public interface IProcessExitHandler
 	{
+        //CancellationToken CancellationToken { get; }
+
 		void Wait();
 	}
 }

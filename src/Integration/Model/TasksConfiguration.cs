@@ -93,11 +93,6 @@ namespace Vertica.Integration.Model
             return this;
         }
 
-        public TasksConfiguration EnableDistributedMutex()
-        {
-            return this;
-        }
-
         void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
         {
             container.Install(new TaskInstaller(_scan.ToArray(), _simpleTasks.ToArray(), _removeTasks.ToArray()));

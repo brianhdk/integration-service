@@ -4,6 +4,12 @@
     <add name="IntegrationDb" connectionString="Integrated Security=SSPI;Data Source=[NAME-OF-SQL-SERVER];Database=[NAME-OF-INTEGRATION-DATABASE]" xdt:Transform="InsertIfMissing" />
   </connectionStrings>
 
+  <appSettings xdt:Transform="InsertIfMissing">
+    <add key="ConcurrentTaskExecution.EnabledOnAllTasks" value="false" xdt:Transform="InsertIfMissing" />
+    <add key="ConcurrentTaskExecution.DefaultWaitTime" value="00:01:00" xdt:Transform="InsertIfMissing" />
+    <add key="DbDistributedMutex.QueryLockInterval" value="00:00:10" xdt:Transform="InsertIfMissing" />
+  </appSettings>
+
   <system.net xdt:Transform="InsertIfMissing">
     <mailSettings xdt:Transform="InsertIfMissing">
       <smtp from="[EMAIL-ADDRESS]" xdt:Transform="InsertIfMissing">
