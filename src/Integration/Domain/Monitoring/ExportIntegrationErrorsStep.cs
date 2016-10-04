@@ -15,22 +15,30 @@ namespace Vertica.Integration.Domain.Monitoring
     {
         internal const string MessageGroupingPattern = @"ErrorID: .+$";
 
-        private readonly IDbFactory _db;
+        private readonly IDatabaseConfiguration _configuration;
+        private readonly Lazy<IDbFactory> _db;
         private readonly ITaskFactory _taskFactory;
 
-        public ExportIntegrationErrorsStep(IDbFactory db, ITaskFactory taskFactory)
+        public ExportIntegrationErrorsStep(IDatabaseConfiguration configuration, Lazy<IDbFactory> db, ITaskFactory taskFactory)
         {
+            _configuration = configuration;
             _db = db;
             _taskFactory = taskFactory;
         }
 
-        public override string Description => "Exports errors from integration error log.";
+        public override Execution ContinueWith(MonitorWorkItem workItem)
+        {
+            if (_configuration.IntegrationDbDisabled)
+                return Execution.StepOver;
 
-	    public override void Execute(MonitorWorkItem workItem, ITaskExecutionContext context)
+            return Execution.Execute;
+        }
+
+        public override void Execute(MonitorWorkItem workItem, ITaskExecutionContext context)
         {
             workItem.AddMessageGroupingPatterns(MessageGroupingPattern);
 
-            using (var session = _db.OpenSession())
+            using (IDbSession session = _db.Value.OpenSession())
             {
                 ErrorEntry[] errors = session.Query<ErrorEntry>(@"
 SELECT
@@ -102,6 +110,8 @@ ORDER BY ErrorLog.Id DESC",
                 }
             }
         }
+
+        public override string Description => "Exports errors from integration error log.";
 
         public class ErrorEntry
         {

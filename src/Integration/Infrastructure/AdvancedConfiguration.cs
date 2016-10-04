@@ -8,6 +8,8 @@ using Vertica.Integration.Infrastructure.Archiving;
 using Vertica.Integration.Infrastructure.Configuration;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Infrastructure.Logging.Loggers;
+using Vertica.Integration.Infrastructure.Threading.DistributedMutex;
+using Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db;
 
 namespace Vertica.Integration.Infrastructure
 {
@@ -30,6 +32,7 @@ namespace Vertica.Integration.Infrastructure
 			Register<ILogger, DbLogger, EventLogger>();
 		    Register<IConfigurationRepository, DbConfigurationRepository, FileBasedConfigurationRepository>();
 		    Register<IArchiveService, DbArchiveService, FileBasedArchiveService>();
+	        Register<IDistributedMutex, DbDistributedMutex, ThrowingDistributedMutex>();
 		    Register<IRuntimeSettings, AppConfigRuntimeSettings>();
 
 		    Register(() => Environment.UserInteractive ? Console.Out : TextWriter.Null);

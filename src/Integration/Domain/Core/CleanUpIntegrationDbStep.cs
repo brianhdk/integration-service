@@ -11,23 +11,33 @@ namespace Vertica.Integration.Domain.Core
 {
 	public class CleanUpIntegrationDbStep : Step<MaintenanceWorkItem>
 	{
-	    private readonly IDbFactory _db;
+	    private readonly IDatabaseConfiguration _dbConfiguration;
+	    private readonly Lazy<IDbFactory> _db;
 	    private readonly IConfigurationService _configuration;
 	    private readonly IArchiveService _archiver;
 
-		public CleanUpIntegrationDbStep(IDbFactory db, IConfigurationService configuration, IArchiveService archiver)
+		public CleanUpIntegrationDbStep(IDatabaseConfiguration dbConfiguration, Lazy<IDbFactory> db, IConfigurationService configuration, IArchiveService archiver)
 		{
+		    _dbConfiguration = dbConfiguration;
 		    _db = db;
 		    _configuration = configuration;
 		    _archiver = archiver;
 		}
+
+        public override Execution ContinueWith(MaintenanceWorkItem workItem)
+        {
+            if (_dbConfiguration.IntegrationDbDisabled)
+                return Execution.StepOver;
+
+            return Execution.Execute;
+        }
 
         public override void Execute(MaintenanceWorkItem workItem, ITaskExecutionContext context)
         {
 			DateTimeOffset tasksLowerBound = Time.UtcNow.Subtract(workItem.Configuration.CleanUpTaskLogEntriesOlderThan),
 				errorsLowerBound = Time.UtcNow.Subtract(workItem.Configuration.CleanUpErrorLogEntriesOlderThan);
 
-			using (IDbSession session = _db.OpenSession())
+			using (IDbSession session = _db.Value.OpenSession())
 			using (IDbTransaction transaction = session.BeginTransaction())
 			{
 			    Tuple<int, string> taskLog = DeleteEntries(session, "TaskLog", tasksLowerBound);

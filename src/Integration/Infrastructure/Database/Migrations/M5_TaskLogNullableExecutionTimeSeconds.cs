@@ -1,9 +1,11 @@
 ﻿using System;
 using FluentMigrator;
+using Vertica.Integration.Infrastructure.Database.Migrations.Features;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
     [Migration(5)]
+    [DbLoggerFeature]
     public class M5_TaskLogNullableExecutionTimeSeconds : Migration
     {
         public override void Up()

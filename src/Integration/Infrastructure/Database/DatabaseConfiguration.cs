@@ -1,10 +1,12 @@
 using System;
+using Castle.MicroKernel;
 using Castle.Windsor;
 using Vertica.Integration.Infrastructure.Database.Castle.Windsor;
+using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 
 namespace Vertica.Integration.Infrastructure.Database
 {
-    public class DatabaseConfiguration : IInitializable<IWindsorContainer>
+    public class DatabaseConfiguration : IDatabaseConfiguration, IInitializable<IWindsorContainer>
     {
 	    private DefaultConnection _defaultConnection;
 
@@ -18,14 +20,25 @@ namespace Vertica.Integration.Infrastructure.Database
         public ApplicationConfiguration Application { get; }
 
         public bool IntegrationDbDisabled { get; private set; }
+        //public Func<IKernel, string> IntegrationDbTablePrefix { get; private set; }
 
         public DatabaseConfiguration DisableIntegrationDb()
         {
             IntegrationDbDisabled = true;
+
             return this;
         }
 
-	    public DatabaseConfiguration IntegrationDb(ConnectionString connectionString)
+        //public DatabaseConfiguration PrefixIntegrationDbTables(Func<IKernel, string> prefix)
+        //{
+        //    if (prefix == null) throw new ArgumentNullException(nameof(prefix));
+
+        //    IntegrationDbTablePrefix = prefix;
+
+        //    return this;
+        //}
+
+        public DatabaseConfiguration IntegrationDb(ConnectionString connectionString)
 	    {
 		    if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
 
@@ -53,14 +66,15 @@ namespace Vertica.Integration.Infrastructure.Database
 
         public DatabaseConfiguration Change(Action<DatabaseConfiguration> change)
         {
-            if (change != null)
-                change(this);
+            change?.Invoke(this);
 
             return this;
         }
 
         void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
         {
+            container.RegisterInstance<IDatabaseConfiguration>(this);
+
 	        container.Install(new DbInstaller(IntegrationDbDisabled ? 
 				DefaultConnection.Disabled : 
 				_defaultConnection ?? new DefaultConnection(ConnectionString.FromName("IntegrationDb"))));

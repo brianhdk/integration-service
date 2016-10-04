@@ -4,6 +4,7 @@ using System.IO;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model.Exceptions;
+using Vertica.Integration.Model.Tasks;
 using Vertica.Utilities_v4;
 
 namespace Vertica.Integration.Model
@@ -11,12 +12,14 @@ namespace Vertica.Integration.Model
 	public class TaskRunner : ITaskRunner
 	{
 		private readonly ILogger _logger;
+	    private readonly IConcurrentTaskExecution _concurrentTaskExecution;
 		private readonly TextWriter _outputter;
 
-		public TaskRunner(ILogger logger, TextWriter outputter)
+		public TaskRunner(ILogger logger, IConcurrentTaskExecution concurrentTaskExecution, TextWriter outputter)
 		{
 			_logger = logger;
 			_outputter = outputter;
+		    _concurrentTaskExecution = concurrentTaskExecution;
 		}
 
 		public TaskExecutionResult Execute(ITask task, Arguments arguments = null)
@@ -42,69 +45,70 @@ namespace Vertica.Integration.Model
 				output.Add(message);
 			};
 
-			using (var taskLog = new TaskLog(task, _logger.LogEntry, new Output(outputter)))
-			{
-				TWorkItem workItem;
+            using (var taskLog = new TaskLog(task, _logger.LogEntry, new Output(outputter)))
+            using (_concurrentTaskExecution.Handle(task, taskLog))
+            {
+                TWorkItem workItem;
 
-				try
-				{
-					workItem = task.Start(new TaskExecutionContext(new Log(taskLog.LogMessage, _logger), arguments));
-				}
-				catch (Exception ex)
-				{
-					ErrorLog errorLog = _logger.LogError(ex);
-					taskLog.ErrorLog = errorLog;
+                try
+                {
+                    workItem = task.Start(new TaskExecutionContext(new Log(taskLog.LogMessage, _logger), arguments));
+                }
+                catch (Exception ex)
+                {
+                    ErrorLog errorLog = _logger.LogError(ex);
+                    taskLog.ErrorLog = errorLog;
 
-					throw new TaskExecutionFailedException("Starting task failed.", ex);
-				}
-				
-				try
-				{
-					foreach (IStep<TWorkItem> step in task.Steps)
-					{
-						Execution continueWith = step.ContinueWith(workItem);
+                    throw new TaskExecutionFailedException("Starting task failed.", ex);
+                }
 
-						if (continueWith == Execution.StepOut)
-							break;
+                try
+                {
+                    foreach (IStep<TWorkItem> step in task.Steps)
+                    {
+                        Execution continueWith = step.ContinueWith(workItem);
 
-						if (continueWith == Execution.StepOver)
-							continue;
+                        if (continueWith == Execution.StepOut)
+                            break;
 
-						using (var stepLog = taskLog.LogStep(step))
-						{
-							try
-							{
-								step.Execute(workItem, new TaskExecutionContext(new Log(stepLog.LogMessage, _logger), arguments));
-							}
-							catch (Exception ex)
-							{
-								ErrorLog errorLog = _logger.LogError(ex);
+                        if (continueWith == Execution.StepOver)
+                            continue;
 
-								taskLog.ErrorLog = errorLog;
-								stepLog.ErrorLog = errorLog;
+                        using (var stepLog = taskLog.LogStep(step))
+                        {
+                            try
+                            {
+                                step.Execute(workItem, new TaskExecutionContext(new Log(stepLog.LogMessage, _logger), arguments));
+                            }
+                            catch (Exception ex)
+                            {
+                                ErrorLog errorLog = _logger.LogError(ex);
 
-								throw new TaskExecutionFailedException($"Step '{stepLog.Name}' failed.", ex);
-							}
-						}
-					}
+                                taskLog.ErrorLog = errorLog;
+                                stepLog.ErrorLog = errorLog;
 
-					try
-					{
-						task.End(workItem, new TaskExecutionContext(new Log(taskLog.LogMessage, _logger), arguments));
-					}
-					catch (Exception ex)
-					{
-						ErrorLog errorLog = _logger.LogError(ex);
-						taskLog.ErrorLog = errorLog;
+                                throw new TaskExecutionFailedException($"Step '{stepLog.Name}' failed.", ex);
+                            }
+                        }
+                    }
 
-						throw new TaskExecutionFailedException("Ending task failed.", ex);
-					}
-				}
-				finally
-				{
-					workItem.DisposeIfDisposable();
-				}
-			}
+                    try
+                    {
+                        task.End(workItem, new TaskExecutionContext(new Log(taskLog.LogMessage, _logger), arguments));
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorLog errorLog = _logger.LogError(ex);
+                        taskLog.ErrorLog = errorLog;
+
+                        throw new TaskExecutionFailedException("Ending task failed.", ex);
+                    }
+                }
+                finally
+                {
+                    workItem.DisposeIfDisposable();
+                }
+            }
 
 			return new TaskExecutionResult(output.ToArray());
 		}

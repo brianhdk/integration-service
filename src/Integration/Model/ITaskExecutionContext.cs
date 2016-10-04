@@ -4,5 +4,8 @@
     {
         ILog Log { get; }
         Arguments Arguments { get; }
+
+        //void ThrowIfCancelled();
+        //CancellationToken CancellationToken { get; }
     }
 }

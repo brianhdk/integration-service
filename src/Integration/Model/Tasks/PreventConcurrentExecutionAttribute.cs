@@ -1,22 +1,31 @@
 ﻿using System;
+using Vertica.Integration.Infrastructure.Threading.DistributedMutex;
 
 namespace Vertica.Integration.Model.Tasks
 {
-    /*
     [AttributeUsage(AttributeTargets.Class)]
-    internal sealed class PreventConcurrentExecutionAttribute : Attribute
+    public sealed class PreventConcurrentExecutionAttribute : Attribute
     {
-        // TODO: Sikre at man via global configuration (TasksConfiguration) kan slå det til for alle.
-        //  - stadig med mulighed for at AllowConcurrentExecution på en specifik task via attribut
-        //  - undersøg hvordan det virker i et udviklingsmiljø
-        //      - på Duba er det slået fra i UDV! - når man kører DEBUG
-        //  - god ide at skrive maskinnavn på
-        //  - hvis man ikke kan acquire lock, så skal den SELECT current lock (for at læse detaljer omkring denne)
-    }
+        private uint? _waitTimeMs;
 
-    [AttributeUsage(AttributeTargets.Class)]
-    internal sealed class AllowConcurrentExecutionAttribute : Attribute
-    {
+        internal DistributedMutexConfiguration Configuration
+        {
+            get
+            {
+                if (_waitTimeMs.HasValue)
+                    return new DistributedMutexConfiguration(TimeSpan.FromMilliseconds(_waitTimeMs.Value));
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Specifies the number of milliseconds to wait for a lock to become available.
+        /// </summary>
+        public uint WaitTimeMs
+        {
+            get { return _waitTimeMs.GetValueOrDefault(); }
+            set { _waitTimeMs = value; }
+        }
     }
-    */
 }

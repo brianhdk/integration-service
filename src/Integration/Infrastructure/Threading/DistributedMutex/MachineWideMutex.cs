@@ -1,11 +1,4 @@
-using System;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Security.AccessControl;
-using System.Security.Principal;
-using System.Threading;
-
-namespace Vertica.Integration.Infrastructure.Threading
+namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex
 {
     /*
     /// <summary>

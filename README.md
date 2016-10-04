@@ -38,6 +38,7 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
  - [How to Extend MonitorTask](#how-to-extend-monitortask)
  - [How to Setup ArchiveFoldersStep](#how-to-setup-archivefoldersstep)
  - [How to Extend MaintenanceTask](#how-to-extend-maintenancetask)
+ - [How to Use Distributed Mutex](#how-to-use-distributed-mutex)
 
 ## How to Get Started
 
@@ -2461,5 +2462,50 @@ Other examples of customizing the **MaintenanceTask** could be to:
 2. Archive Sitecore log files
 3. Archive IIS log files
 4. Archive MongoDB log files
+
+[Back to Table of Contents](#table-of-contents)
+
+## How to Use Distributed Mutex
+
+By default Tasks can be executed in parallel, e.g. you can have multiple instances of the Integration Service running - thus executing the same Task at the same time (Azure WebJob scaled out as an example).
+Another example could be if you're using Hangfire it's definitely also possible that the same task can be executed at the same time.
+
+Depending on your Task, it might not be optimal to have multiple instances running at the same time.
+
+See example below on two tasks - one is decorated with the "AllowConcurrentExecution"-attribute the other with "PreventConcurrentExecution"-attribute.
+
+```c#
+[AllowConcurrentExecution]
+public class ConcurrentExecutableTask : Task
+{
+    public override void StartTask(ITaskExecutionContext context)
+    {
+    }
+
+    public override string Description => "This task can be executed in parallel.";
+}
+
+[PreventConcurrentExecution]
+public class SynchronousOnlyTask : Task
+{
+    public override void StartTask(ITaskExecutionContext context)
+    {
+    }
+
+    public override string Description => "This task cannot be executed in parallel due.";
+}
+```
+
+In app.config, you can turn on "Prevent Concurrent Execution" on all tasks, by setting the value of "ConcurrentTaskExecution.EnabledOnAllTasks" to "true".
+Only tasks that have been explicity marked as "AllowConcurrentExecution" will support running in parallel.
+
+
+```xml
+  <appSettings>
+    <add key="ConcurrentTaskExecution.EnabledOnAllTasks" value="false" />
+    <add key="ConcurrentTaskExecution.DefaultWaitTime" value="00:00:20" />
+    <add key="DbDistributedMutex.QueryLockInterval" value="00:00:01" />
+  </appSettings>
+```
 
 [Back to Table of Contents](#table-of-contents)
