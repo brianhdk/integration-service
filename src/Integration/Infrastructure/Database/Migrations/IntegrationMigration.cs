@@ -5,7 +5,6 @@ using Castle.MicroKernel;
 using FluentMigrator;
 using Vertica.Integration.Infrastructure.Configuration;
 using Vertica.Integration.Model;
-using Vertica.Integration.Model.Hosting;
 using Arguments = Vertica.Integration.Model.Arguments;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
@@ -100,16 +99,6 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 		protected ITask GetTask<TTask>() where TTask : class, ITask
 		{
 			return Resolve<ITaskFactory>().Get<TTask>();
-		}
-
-		protected void RunExecute(HostArguments args)
-		{
-			Resolve<IApplicationContext>().Execute(args);
-		}
-
-		protected void RunExecute(params string[] args)
-		{
-			Resolve<IApplicationContext>().Execute(args);
 		}
 		
 		public override void Down()

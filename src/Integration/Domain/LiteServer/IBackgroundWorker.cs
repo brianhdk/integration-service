@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 
 namespace Vertica.Integration.Domain.LiteServer
@@ -9,6 +8,6 @@ namespace Vertica.Integration.Domain.LiteServer
 	/// </summary>
 	public interface IBackgroundWorker
 	{
-		TimeSpan Work(CancellationToken token, BackgroundWorkerContext context);
+		BackgroundWorkerContinuation Work(CancellationToken token, BackgroundWorkerContext context);
 	}
 }

@@ -93,10 +93,7 @@
     <Compile Include="Infrastructure\BlobStorage\AzureBlobStorageClientFactory.cs" />
     <Compile Include="Infrastructure\BlobStorage\AzureBlobStorageConfiguration.cs" />
     <Compile Include="Infrastructure\BlobStorage\DefaultConnection.cs" />
-    <Compile Include="Infrastructure\BlobStorage\IO\FileSystemConnection.cs" />
-    <Compile Include="Infrastructure\BlobStorage\IO\AzureFileSystemService.cs" />
     <Compile Include="Infrastructure\Castle.Windsor\AzureServiceBusInstaller.cs" />
-    <Compile Include="Infrastructure\Castle.Windsor\AzureFileSystemInstaller.cs" />
     <Compile Include="Infrastructure\Castle.Windsor\AzureArchiveInstaller.cs" />
     <Compile Include="Infrastructure\BlobStorage\Archiving\ArchiveConnection.cs" />
     <Compile Include="Infrastructure\BlobStorage\Archiving\AzureBlobStorageArchiveService.cs" />

@@ -2,11 +2,11 @@
 
 namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex
 {
-    internal class ThrowingDistributedMutex : IDistributedMutex
+    internal sealed class ThrowingDistributedMutex : IDistributedMutex
     {
         public IDisposable Enter(DistributedMutexContext context)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException($"{nameof(ThrowingDistributedMutex)}");
         }
     }
 }

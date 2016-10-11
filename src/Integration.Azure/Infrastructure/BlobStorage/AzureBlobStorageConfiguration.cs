@@ -61,17 +61,6 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage
             return this;
         }
 
-		// TODO: Implement this
-		internal AzureBlobStorageConfiguration ReplaceFileSystem(ConnectionString connectionString, string containerName = "filesystem")
-        {
-            if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
-            if (string.IsNullOrWhiteSpace(containerName)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(containerName));
-
-            _installers.Add(new AzureFileSystemInstaller(connectionString, containerName));
-
-            return this;            
-        }
-
         void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
         {
 			if (_defaultConnection != null)

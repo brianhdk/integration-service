@@ -12,9 +12,9 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 			return new CollectionInstaller<TService>();
 		}
 
-		public static IWindsorInstaller Instance<T>(T instance) where T : class
+		public static IWindsorInstaller Instance<T>(T instance, Action<ComponentRegistration<T>> registration = null) where T : class
 		{
-			return new InstanceInstaller<T>(instance);
+			return new InstanceInstaller<T>(instance, registration);
 		}
 
 		public static IWindsorInstaller Type<TService>(Type type, Action<ComponentRegistration<TService>> registration = null) where TService : class

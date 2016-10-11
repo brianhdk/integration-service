@@ -7,7 +7,7 @@ using Vertica.Integration.Infrastructure.IO;
 namespace Vertica.Integration.Tests.Infrastructure.IO
 {
 	[TestFixture]
-	public class FilesChangedHandlerTester
+	public class AzureWebJobShutdownNotifierTester
 	{
 		[Test]
 		public void Wait_Multiple_Threads()
@@ -16,7 +16,7 @@ namespace Vertica.Integration.Tests.Infrastructure.IO
 
 			try
 			{
-				var subject = new FilesChangedHandler(directory);
+				var subject = new AzureWebJobShutdownRequest(directory);
 
 				Task t1 = Task.Run(() => subject.Wait());
 				Task t2 = Task.Run(() => subject.Wait());
@@ -35,7 +35,6 @@ namespace Vertica.Integration.Tests.Infrastructure.IO
 			finally
 			{
 				directory.Delete(true);
-
 			}
 		}
 	}

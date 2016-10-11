@@ -38,7 +38,8 @@ namespace Vertica.Integration.WebApi.Infrastructure.Castle.Windsor
         {
 			container.Register(
 				Component.For<IHttpServerFactory>()
-					.UsingFactoryMethod(kernel => new HttpServerFactory(kernel, _httpServerConfiguration)));
+					.UsingFactoryMethod(kernel => new HttpServerFactory(kernel, _httpServerConfiguration))
+                    .LifestyleSingleton());
 
             var types = new List<Type>();
 
@@ -66,7 +67,7 @@ namespace Vertica.Integration.WebApi.Infrastructure.Castle.Windsor
                     .WithServiceSelf()
                     .LifestyleTransient());
 
-            container.RegisterInstance<IWebApiControllers>(new ControllerTypes(types.ToArray()));
+            container.RegisterInstance<IWebApiControllers>(new ControllerTypes(types.ToArray()), x => x.LifestyleSingleton());
         }
 
 	    private class HttpServerFactory : IHttpServerFactory

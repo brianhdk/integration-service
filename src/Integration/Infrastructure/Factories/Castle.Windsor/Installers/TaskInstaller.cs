@@ -50,7 +50,8 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 
                             x.Named(name);
                         })
-                        .WithServiceDefaultInterfaces());
+                        .WithServiceDefaultInterfaces()
+                        .LifestyleSingleton());
             }
 
             foreach (Type addType in _add.Except(_ignore).Distinct())
@@ -60,7 +61,8 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
                     container.Register(
                         Component.For<ITask>()
                             .ImplementedBy(addType)
-                            .Named(addType.TaskName()));
+                            .Named(addType.TaskName())
+                            .LifestyleSingleton());
                 }
                 catch (ComponentRegistrationException ex)
                 {
@@ -91,7 +93,8 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
                 container.Register(
                     Component.For(typeof(ITask))
                         .ImplementedBy(_task)
-                        .Named(_task.TaskName()));
+                        .Named(_task.TaskName())
+                        .LifestyleSingleton());
             }
             catch (ComponentRegistrationException ex)
             {
@@ -107,7 +110,8 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
                 container.Register(
                     Component.For<IStep<TWorkItem>>()
                         .ImplementedBy(step)
-                        .Named(name));
+                        .Named(name)
+                        .LifestyleSingleton());
 
                 names.Add(name);
             }

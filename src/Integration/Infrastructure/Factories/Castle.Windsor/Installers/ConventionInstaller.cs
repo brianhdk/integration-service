@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Castle.Core;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
@@ -36,25 +35,23 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
+            Func<Type, Type, Assembly, bool> isConvention = (@class, @interface, assembly) =>
+                @interface.Assembly.Equals(@class.Assembly) &&
+                (@interface.Namespace ?? string.Empty).Equals(@class.Namespace) &&
+                @interface.Name.Equals($"I{@class.Name}");
+
             foreach (Assembly assembly in _assemblies.Distinct())
             {
                 container.Register(
                     Classes.FromAssembly(assembly)
                         .Pick()
-                        .If(classType =>
-                            classType.GetInterfaces().Any(classInterface => _assemblies.Contains(classInterface.Assembly)) &&
-                            !_ignoreTypes.Any(ignoreType => ignoreType.IsAssignableFrom(classType)))
-                        .WithService.DefaultInterfaces()
-                        .Configure(registration => SetLifestyle(registration.IsFallback())));
+                        .If(@class =>
+                            @class.GetInterfaces().Any(@interface => isConvention(@class, @interface, assembly)) &&
+                            !_ignoreTypes.Any(ignoreType => @class == ignoreType || ignoreType.IsAssignableFrom(@class)))
+                        .WithService.Select((@class, baseTypes) => new[] { @class.GetInterfaces().First(@interface => isConvention(@class, @interface, assembly)) })
+                        .LifestyleSingleton()
+                        .Configure(registration => registration.IsFallback()));
             }
-        }
-
-        private static ComponentRegistration<object> SetLifestyle(ComponentRegistration<object> registration)
-        {
-            if (!Attribute.IsDefined(registration.Implementation, typeof(LifestyleAttribute)))
-                return registration.LifeStyle.Singleton;
-
-            return registration;
         }
     }
 }

@@ -85,7 +85,7 @@ namespace Vertica.Integration.Perfion
 			if (ConnectionStringInternal == null)
 				ConnectionStringInternal = Integration.Infrastructure.ConnectionString.FromName("Perfion.APIService.Url");
 
-			container.RegisterInstance(this);
+			container.RegisterInstance(this, x => x.LifestyleSingleton());
 		}
 	}
 }

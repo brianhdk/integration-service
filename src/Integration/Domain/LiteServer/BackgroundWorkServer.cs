@@ -27,7 +27,9 @@ namespace Vertica.Integration.Domain.LiteServer
 
 				while (!token.IsCancellationRequested)
 				{
-					TimeSpan waitTime = _worker.Work(token, new BackgroundWorkerContext(++iterations, () => TimeSpan.Zero));
+					BackgroundWorkerContinuation continuation = _worker.Work(token, new BackgroundWorkerContext(++iterations));
+
+				    TimeSpan waitTime = continuation.WaitTime.GetValueOrDefault();
 
 					if (waitTime <= TimeSpan.Zero)
 						break;

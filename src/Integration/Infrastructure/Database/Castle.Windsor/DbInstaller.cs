@@ -22,7 +22,8 @@ namespace Vertica.Integration.Infrastructure.Database.Castle.Windsor
 
 		    container.Register(
 		        Component.For<IDbFactory>()
-		            .UsingFactoryMethod(kernel => new DbFactory(kernel.Resolve<IDbFactory<DefaultConnection>>())));
+		            .UsingFactoryMethod(kernel => new DbFactory(kernel.Resolve<IDbFactory<DefaultConnection>>()))
+                    .LifestyleSingleton());
 		}
 	}
 
@@ -61,13 +62,15 @@ namespace Vertica.Integration.Infrastructure.Database.Castle.Windsor
 		                    context.BuildCycleMessageFor(context.Handler, sb);
 
 		                    throw new DatabaseDisabledException(sb.ToString());
-		                }));
+		                })
+                        .LifestyleSingleton());
 		    }
 		    else
 		    {
                 container.Register(
                     Component.For<IDbFactory<TConnection>>()
-                        .UsingFactoryMethod(kernel => new DbFactory<TConnection>(_connection, kernel)));
+                        .UsingFactoryMethod(kernel => new DbFactory<TConnection>(_connection, kernel))
+                        .LifestyleSingleton());
 		    }
 		}
 	}

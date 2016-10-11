@@ -18,7 +18,7 @@ namespace Vertica.Integration.Infrastructure
 	    private readonly IDictionary<Type, Tuple<Type, Type>> _types;
 	    private readonly IDictionary<Type, Tuple<Func<object>, Func<object>>> _instances;
 
-	    private ProcessExitConfiguration _processExit;
+	    private ShutdownConfiguration _shutdown;
 
 	    internal AdvancedConfiguration(ApplicationConfiguration application)
         {
@@ -37,7 +37,7 @@ namespace Vertica.Integration.Infrastructure
 
 		    Register(() => Environment.UserInteractive ? Console.Out : TextWriter.Null);
 
-		    Application.Extensibility(extensibility => _processExit = extensibility.Register(() => new ProcessExitConfiguration(this)));
+		    Application.Extensibility(extensibility => _shutdown = extensibility.Register(() => new ShutdownConfiguration(this)));
         }
 
         public ApplicationConfiguration Application { get; }
@@ -96,11 +96,11 @@ namespace Vertica.Integration.Infrastructure
 			return this;
 	    }
 
-	    public AdvancedConfiguration ProcessExit(Action<ProcessExitConfiguration> processExit)
+	    public AdvancedConfiguration ProcessExit(Action<ShutdownConfiguration> processExit)
 	    {
 		    if (processExit == null) throw new ArgumentNullException(nameof(processExit));
 
-		    processExit(_processExit);
+		    processExit(_shutdown);
 
 		    return this;
 	    }
@@ -111,10 +111,10 @@ namespace Vertica.Integration.Infrastructure
 		    Application.Database(database => disabled = database.IntegrationDbDisabled);
 
 		    foreach (var pair in _types.Where(x => x.Value != null))
-			    container.Register(Component.For(pair.Key).ImplementedBy(!disabled ? pair.Value.Item1 : pair.Value.Item2));
+			    container.Register(Component.For(pair.Key).ImplementedBy(!disabled ? pair.Value.Item1 : pair.Value.Item2).LifestyleSingleton());
 
 		    foreach (var pair in _instances.Where(x => x.Value != null))
-			    container.Register(Component.For(pair.Key).Instance(!disabled ? pair.Value.Item1() : pair.Value.Item2()));
+			    container.Register(Component.For(pair.Key).Instance(!disabled ? pair.Value.Item1() : pair.Value.Item2()).LifestyleSingleton());
 	    }
     }
 }

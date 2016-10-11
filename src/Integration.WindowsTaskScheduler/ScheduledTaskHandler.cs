@@ -21,10 +21,10 @@ namespace Vertica.Integration.WindowsTaskScheduler
 		private readonly IRuntimeSettings _runtimeSettings;
 		private readonly ITaskScheduler _taskScheduler;
 
-		public ScheduledTaskHandler(IRuntimeSettings runtimeSettings)
+		public ScheduledTaskHandler(IRuntimeSettings runtimeSettings, ITaskScheduler taskScheduler)
 		{
 			_runtimeSettings = runtimeSettings;
-			//_taskScheduler = windows.TaskScheduler();
+			_taskScheduler = taskScheduler;
 		}
 
 		public bool Handle(HostArguments args, ITask task)

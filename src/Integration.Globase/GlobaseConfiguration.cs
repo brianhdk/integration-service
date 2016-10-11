@@ -57,7 +57,7 @@ namespace Vertica.Integration.Globase
 			if (FtpConnectionStringInternal == null)
 				FtpConnectionStringInternal = ConnectionString.FromName("Globase.Ftp.Url");
 
-			container.RegisterInstance(this);
+			container.RegisterInstance(this, x => x.LifestyleSingleton());
 		}
 	}
 }

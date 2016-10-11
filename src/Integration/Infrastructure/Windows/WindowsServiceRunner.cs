@@ -5,8 +5,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 {
     internal class WindowsServiceRunner : ServiceBase
     {
-	    private readonly string _name;
-	    private readonly Func<IDisposable> _onStartFactory;
+        private readonly Func<IDisposable> _onStartFactory;
 
 	    private IDisposable _current;
 
@@ -14,13 +13,13 @@ namespace Vertica.Integration.Infrastructure.Windows
         {
 	        if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
 
-	        _name = name;
+	        ServiceName = name;
 	        _onStartFactory = onStartFactory;
         }
 
-	    public new string ServiceName => _name;
+	    public new string ServiceName { get; }
 
-	    protected override void OnStart(string[] args)
+        protected override void OnStart(string[] args)
         {
             if (_current != null)
                 throw new InvalidOperationException("Cannot start when already running.");

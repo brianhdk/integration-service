@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Extensions;
-using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Model.Hosting;
 using Vertica.Integration.Model.Hosting.Handlers;
 using Vertica.Integration.WebApi.Infrastructure;
@@ -18,13 +18,13 @@ namespace Vertica.Integration.WebApi
 
 	    private readonly IWindowsServiceHandler _windowsService;
 	    private readonly IHttpServerFactory _factory;
-	    private readonly IProcessExitHandler _processExit;
+	    private readonly IShutdown _shutdown;
 
-	    public WebApiHost(IWindowsServiceHandler windowsService, IHttpServerFactory factory, IProcessExitHandler processExit)
+	    public WebApiHost(IWindowsServiceHandler windowsService, IHttpServerFactory factory, IShutdown shutdown)
 	    {
 		    _windowsService = windowsService;
 		    _factory = factory;
-		    _processExit = processExit;
+		    _shutdown = shutdown;
 	    }
 
 	    public bool CanHandle(HostArguments args)
@@ -55,7 +55,7 @@ namespace Vertica.Integration.WebApi
 				if (Environment.UserInteractive && !args.CommandArgs.Contains("noBrowser"))
 					Process.Start(url);
 
-				_processExit.Wait();
+				_shutdown.WaitForShutdown();
 			}
         }
 

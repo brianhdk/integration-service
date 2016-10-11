@@ -1,6 +1,6 @@
 using System;
+using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Extensions;
-using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Model.Hosting;
 using Vertica.Integration.Model.Hosting.Handlers;
 
@@ -11,14 +11,14 @@ namespace Vertica.Integration.Domain.LiteServer
 		internal static readonly string Command = typeof(LiteServerHost).HostName();
 
 		private readonly IWindowsServiceHandler _windowsService;
-		private readonly IProcessExitHandler _processExit;
-		private readonly ILiteServerFactory _serverFactory;
+	    private readonly ILiteServerFactory _serverFactory;
+	    private readonly IShutdown _shutdown;
 
-		public LiteServerHost(IWindowsServiceHandler windowsService, IProcessExitHandler processExit, ILiteServerFactory serverFactory)
+	    public LiteServerHost(IWindowsServiceHandler windowsService, ILiteServerFactory serverFactory, IShutdown shutdown)
 		{
 			_windowsService = windowsService;
-			_processExit = processExit;
-			_serverFactory = serverFactory;
+	        _serverFactory = serverFactory;
+	        _shutdown = shutdown;
 		}
 
 		public bool CanHandle(HostArguments args)
@@ -37,7 +37,7 @@ namespace Vertica.Integration.Domain.LiteServer
 
 			using (Create())
 			{
-				_processExit.Wait();
+				_shutdown.WaitForShutdown();
 			}
 		}
 

@@ -89,6 +89,8 @@ namespace Vertica.Integration.Infrastructure.Archiving
 			using (IDbSession session = OpenSession())
             using (IDbTransaction transaction = session.BeginTransaction())
             {
+                // TODO: Den her tager lang tid, hvis der er rigtig mange arkiv-rækker!
+                //  - undersøg om vi kan gøre noget smartere mht. filerne og sletning
                 int count = session.Wrap(s => s.Execute("DELETE FROM Archive WHERE Expires <= @now", new { now = Time.UtcNow }, commandTimeout: 10800));
 
                 transaction.Commit();

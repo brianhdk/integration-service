@@ -48,23 +48,19 @@ namespace Vertica.Integration.WebApi.SignalR.Infrastructure.Castle.Windsor
 						.BasedOn<IHubPipelineModule>()
 						.Unless(_removePipelines.Contains)
 						.WithService.FromInterface());
-
-				// TODO: Lifestyle?
 			}
 
-			container.RegisterInstance<IHubsProvider>(new SignalRHubs(hubs.ToArray()));
+			container.RegisterInstance<IHubsProvider>(new SignalRHubs(hubs.ToArray()), x => x.LifestyleSingleton());
         }
 
 		private class SignalRHubs : IHubsProvider
 		{
-			private readonly Type[] _hubs;
-
-			public SignalRHubs(Type[] hubs)
+		    public SignalRHubs(Type[] hubs)
 			{
-				_hubs = hubs;
+				Hubs = hubs;
 			}
 
-			public Type[] Hubs => _hubs;
+			public Type[] Hubs { get; }
 		}
 	}
 }

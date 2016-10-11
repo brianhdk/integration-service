@@ -14,14 +14,14 @@ namespace Experiments.LiteServer
 			_writer = writer;
 		}
 
-		public TimeSpan Work(CancellationToken token, BackgroundWorkerContext context)
+		public BackgroundWorkerContinuation Work(CancellationToken token, BackgroundWorkerContext context)
 		{
 			_writer.WriteLine("Ping!");
 
 			if (context.InvocationCount == 5)
 				return context.Exit();
 
-			return TimeSpan.FromSeconds(1);
+			return context.Wait(TimeSpan.FromSeconds(1));
 		}
 	}
 }

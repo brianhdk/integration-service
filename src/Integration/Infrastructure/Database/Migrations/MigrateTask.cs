@@ -92,6 +92,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
         {
 	        MigrationDb[] destinations = _dbs;
 
+            // if specific migration dbs have been provided by argument, only they'll be run
 			string[] names = (context.Arguments["Names"] ?? string.Empty)
 				.Split(new[] { ",", ";" }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -109,6 +110,8 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
 			foreach (MigrationDb destination in destinations)
             {
+                context.ThrowIfCancelled();
+
                 StringBuilder output;
                 MigrationRunner runner = CreateRunner(destination, out output);
 
@@ -213,7 +216,7 @@ ELSE
 
                     command.Parameters.Add(parameter);
 
-                    databaseCreated = ((string)command.ExecuteScalar() == "CREATED");
+                    databaseCreated = (string)command.ExecuteScalar() == "CREATED";
 
                     return changeDatabase(databaseName);
                 }                

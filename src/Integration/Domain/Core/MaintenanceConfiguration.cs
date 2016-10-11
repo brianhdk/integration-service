@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using Newtonsoft.Json;
 using Vertica.Integration.Infrastructure.Archiving;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Logging;
@@ -68,14 +69,17 @@ namespace Vertica.Integration.Domain.Core
                 {
                     Enabled = true;
                     Target = Target.Service;
-                    ArchiveOptions = new ArchiveOptions(typeof (ArchiveFoldersStep).StepName()).GroupedBy("Backup");
+
+                    ArchiveOptions = new PersistedArchiveOptions(typeof (ArchiveFoldersStep).StepName());
+                    ArchiveOptions.GroupedBy("Backup");
                 }
 
+                public string Name { get; set; }
                 public bool Enabled { get; set; }
                 public string Path { get; set; }
                 public FolderHandler Handler { get; set; }
                 public Target Target { get; set; }
-                public ArchiveOptions ArchiveOptions { get; private set; }
+                public PersistedArchiveOptions ArchiveOptions { get; }
 
                 public override string ToString()
                 {
@@ -98,25 +102,106 @@ namespace Vertica.Integration.Domain.Core
                 {
                     return Handler.GetFolders(new DirectoryInfo(Path)).Where(x => x.Exists).ToArray();
                 }
+
+                public class PersistedArchiveOptions : ArchiveOptions
+                {
+                    public PersistedArchiveOptions(string name) : base(name)
+                    {
+                    }
+
+                    public override ArchiveOptions ExpiresAfter(TimeSpan timeSpan)
+                    {
+                        ExpirationPeriod = timeSpan;
+                        ExpirationMonths = null;
+
+                        return this;
+                    }
+
+                    public override ArchiveOptions ExpiresAfterMonths(uint months)
+                    {
+                        ExpirationMonths = months;
+                        ExpirationPeriod = null;
+
+                        return this;
+                    }
+
+                    [JsonProperty]
+                    public TimeSpan? ExpirationPeriod { get; private set; }
+
+                    [JsonProperty]
+                    public uint? ExpirationMonths { get; private set; }
+
+                    [JsonIgnore]
+                    public override DateTimeOffset? Expires
+                    {
+                        get
+                        {
+                            if (ExpirationPeriod.HasValue)
+                                base.ExpiresAfter(ExpirationPeriod.Value);
+
+                            if (ExpirationMonths.HasValue)
+                                base.ExpiresAfterMonths(ExpirationMonths.Value);
+
+                            return base.Expires;
+                        }
+                    }
+                }
             }
 
+            [Obsolete("Use the AddOrUpdate() method instead.")]
             public void Add(Func<Folder, FolderHandlers, FolderHandler> folder)
+            {
+                AddOrUpdate(null, folder);
+            }
+
+            /// <summary>
+            /// Adds or updates a folder to the archive folder configuration.
+            /// </summary>
+            /// <param name="name">Friendly name for this Folder. If a folder exists by the name, this folder will be updated.</param>
+            /// <param name="folder">Configuration of the folder.</param>
+            /// <returns>The actual </returns>
+            public Folder AddOrUpdate(string name, Func<Folder, FolderHandlers, FolderHandler> folder)
             {
                 if (folder == null) throw new ArgumentNullException(nameof(folder));
 
-                var local = new Folder();
+                EnsureFolders();
+
+                Folder existing = null;
+
+                if (!string.IsNullOrWhiteSpace(name))
+                    existing = Folders.FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.OrdinalIgnoreCase));
+
+                var local = existing ?? new Folder();
+
+                local.Name = name;
                 local.Handler = folder(local, new FolderHandlers());
 
-                EnsureFolders();
-                Folders = Folders.Append(local).ToArray();
+                if (existing == null)
+                    Folders = Folders.Append(local).ToArray();
+
+                return local;
+            }
+
+            public void Remove(string name)
+            {
+                if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty", nameof(name));
+                
+                Remove(x => string.Equals(x.Name, name, StringComparison.OrdinalIgnoreCase));
             }
 
             public void Remove(Folder folder)
             {
                 if (folder == null) throw new ArgumentNullException(nameof(folder));
 
+                Remove(x => x.Equals(folder));
+            }
+
+            public void Remove(Func<Folder, bool> predicate)
+            {
+                if (predicate == null) throw new ArgumentNullException(nameof(predicate));
+
                 EnsureFolders();
-                Folders = Folders.Except(new[] { folder }).ToArray();
+                Folders = Folders.Where(x => !predicate(x)).ToArray();
             }
 
             public void Clear()
@@ -133,7 +218,9 @@ namespace Vertica.Integration.Domain.Core
 
                 public FolderHandler FilesOlderThan(TimeSpan timeSpan, string searchPattern = null, bool includeSubDirectories = false)
                 {
-                    return new FilesOlderThanHandler((uint)timeSpan.TotalSeconds, searchPattern, includeSubDirectories);
+                    double totalSeconds = Math.Max(timeSpan.TotalSeconds, 0d);
+
+                    return new FilesOlderThanHandler((uint)totalSeconds, searchPattern, includeSubDirectories);
                 }
             }
 
@@ -177,7 +264,7 @@ namespace Vertica.Integration.Domain.Core
                 public override IEnumerable<FileInfo> GetFiles(DirectoryInfo path)
                 {
                     return path.EnumerateFiles(SearchPattern ?? "*", IncludeSubDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
-                        .Where(x => Time.UtcNow - x.LastWriteTimeUtc > TimeSpan.FromSeconds(Seconds));
+                        .Where(x => Seconds == 0 || Time.UtcNow - x.LastWriteTimeUtc > TimeSpan.FromSeconds(Seconds));
                 }
 
                 public override IEnumerable<DirectoryInfo> GetFolders(DirectoryInfo path)

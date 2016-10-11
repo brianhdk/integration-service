@@ -24,7 +24,8 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
             {
                 container.Register(
                     Component.For<IHost>()
-                        .ImplementedBy(add));
+                        .ImplementedBy(add)
+                        .LifestyleSingleton());
             }
         }
     }

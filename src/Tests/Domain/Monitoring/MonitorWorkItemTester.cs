@@ -80,17 +80,17 @@ ErrorID: 1 (6/13/2015 10:00:00 AM +00:00)"));
             var subject = new MonitorWorkItem(new MonitorConfiguration())
                 .AddMessageGroupingPatterns(ExportIntegrationErrorsStep.MessageGroupingPattern);
 
-            var a = new MonitorEntry(Time.UtcNow, "SourceA", "Message. ErrorID: 1");
-            var b = new MonitorEntry(Time.UtcNow, "SourceB", "Message. ErrorID: 2");
+            var firstError = new MonitorEntry(Time.UtcNow.AddSeconds(-10), "SourceA", "Message. ErrorID: 1");
+            var lastError = new MonitorEntry(Time.UtcNow, "SourceB", "Message. ErrorID: 2");
 
-            subject.Add(a);
-            subject.Add(b);
+            subject.Add(firstError);
+            subject.Add(lastError);
 
             MonitorEntry[] entries = subject.GetEntries(Target.Service);
 
             Assert.That(entries.Length, Is.EqualTo(2));
-            Assert.That(entries[0], Is.SameAs(a));
-            Assert.That(entries[1], Is.SameAs(b));
+            Assert.That(entries[1], Is.SameAs(firstError));
+            Assert.That(entries[0], Is.SameAs(lastError));
         }
 	}
 }

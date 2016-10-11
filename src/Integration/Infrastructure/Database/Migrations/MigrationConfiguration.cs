@@ -79,7 +79,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
         void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
         {
-            container.RegisterInstance<IMigrationDbs>(_dbs);
+            container.RegisterInstance<IMigrationDbs>(_dbs, x => x.LifestyleSingleton());
         }
 
 	    private class MigrationDbs : IMigrationDbs

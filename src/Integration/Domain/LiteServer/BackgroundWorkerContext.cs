@@ -4,14 +4,9 @@ namespace Vertica.Integration.Domain.LiteServer
 {
 	public class BackgroundWorkerContext
 	{
-		private readonly Func<TimeSpan> _exit;
-
-		internal BackgroundWorkerContext(uint invocationCount, Func<TimeSpan> exit)
+		internal BackgroundWorkerContext(uint invocationCount)
 		{
-			if (exit == null) throw new ArgumentNullException(nameof(exit));
-
 			InvocationCount = invocationCount;
-			_exit = exit;
 		}
 
 		/// <summary>
@@ -22,9 +17,19 @@ namespace Vertica.Integration.Domain.LiteServer
 		/// <summary>
 		/// Use this method to signal that you want to stop having your method invoked.
 		/// </summary>
-		public TimeSpan Exit()
+		public BackgroundWorkerContinuation Exit()
 		{
-			return _exit();
-		}
+            return new BackgroundWorkerContinuation();
+        }
+
+        /// <summary>
+        /// Use this method to signal 
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+	    public BackgroundWorkerContinuation Wait(TimeSpan time)
+        {
+            return new BackgroundWorkerContinuation(time);
+        }
 	}
 }

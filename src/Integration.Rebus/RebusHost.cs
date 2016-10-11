@@ -1,7 +1,7 @@
 using System;
 using Rebus.Bus;
+using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Extensions;
-using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Model.Hosting;
 using Vertica.Integration.Model.Hosting.Handlers;
 
@@ -11,13 +11,13 @@ namespace Vertica.Integration.Rebus
     {
 	    private readonly Func<IBus> _bus;
 	    private readonly IWindowsServiceHandler _windowsService;
-		private readonly IProcessExitHandler _processExit;
+		private readonly IShutdown _shutdown;
 
-	    public RebusHost(Func<IBus> bus, IWindowsServiceHandler windowsService, IProcessExitHandler processExit)
+	    public RebusHost(Func<IBus> bus, IWindowsServiceHandler windowsService, IShutdown shutdown)
 	    {
-		    _windowsService = windowsService;
-		    _processExit = processExit;
-		    _bus = bus;
+	        _bus = bus;
+	        _windowsService = windowsService;
+	        _shutdown = shutdown;
 	    }
 
 	    public bool CanHandle(HostArguments args)
@@ -37,7 +37,7 @@ namespace Vertica.Integration.Rebus
 	        var windowsService = new HandleAsWindowsService(this.Name(), this.Name(), Description);
 
 	        if (!_windowsService.Handle(args, windowsService))
-				_processExit.Wait();
+				_shutdown.WaitForShutdown();
         }
 
 		public string Description => "Hosts Rebus";

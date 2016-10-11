@@ -10,15 +10,17 @@ namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db
     {
         private readonly IDbFactory _db;
         private readonly IFeatureToggler _featureToggler;
+        private readonly IShutdown _shutdown;
 
         private readonly TimeSpan _queryLockInterval;
 
         public static readonly string QueryLockIntervalKey = $"{nameof(DbDistributedMutex)}.QueryLockInterval";
 
-        public DbDistributedMutex(IDbFactory db, IRuntimeSettings settings, IFeatureToggler featureToggler)
+        public DbDistributedMutex(IDbFactory db, IRuntimeSettings settings, IFeatureToggler featureToggler, IShutdown shutdown)
         {
             _db = db;
             _featureToggler = featureToggler;
+            _shutdown = shutdown;
 
             TimeSpan queryLockInterval;
             if (!TimeSpan.TryParse(settings[QueryLockIntervalKey], out queryLockInterval))
@@ -34,7 +36,7 @@ namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db
             if (_featureToggler.IsDisabled<DbDistributedMutex>())
                 return null;
 
-            return new EnterLock(_db, context, _queryLockInterval);
+            return new EnterLock(_db, context, _queryLockInterval, _shutdown.Token);
         }
 
         private class EnterLock : IDisposable
@@ -42,7 +44,11 @@ namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db
             private readonly IDbFactory _db;
             private readonly DbDistributedMutexLock _newLock;
 
-            public EnterLock(IDbFactory db, DistributedMutexContext context, TimeSpan queryLockInterval)
+            private CancellationTokenRegistration _onCancel;
+            private readonly object _releaseOnce = new object();
+            private bool _isReleased;
+
+            public EnterLock(IDbFactory db, DistributedMutexContext context, TimeSpan queryLockInterval, CancellationToken cancellationToken)
             {
                 _db = db;
                 _newLock = new DbDistributedMutexLock(context.Name)
@@ -61,7 +67,10 @@ namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db
                     while (true)
                     {
                         if (TryEnterLock(session, out currentLock))
+                        {
+                            _onCancel = cancellationToken.Register(ReleaseLock);
                             return;
+                        }
 
                         if (currentLock == null)
                             throw new InvalidOperationException($"Cannot obtain lock for '{_newLock.Name}', but current lock is null.");
@@ -71,7 +80,7 @@ namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db
 
                         context.Waiting($"{currentLock}. Waiting for {queryLockInterval} (attemt {attempts} of {maxRetries}).");
 
-                        Thread.Sleep(queryLockInterval);
+                        cancellationToken.WaitHandle.WaitOne(queryLockInterval);
                     }
 
                     throw new DistributedMutexTimeoutException($"Unable to acquire lock '{_newLock.Name}' within wait time ({waitTime}) using {attempts} attempts with a query interval of {queryLockInterval}. {currentLock}");
@@ -102,15 +111,28 @@ END CATCH
 
             private void ReleaseLock()
             {
-                using (IDbSession session = _db.OpenSession())
+                if (!_isReleased)
                 {
-                    session.Execute(@"DELETE FROM DistributedMutex WHERE (Name = @Name AND LockId = @LockId)", _newLock);
+                    lock (_releaseOnce)
+                    {
+                        if (!_isReleased)
+                        {
+                            using (IDbSession session = _db.OpenSession())
+                            {
+                                session.Execute(@"DELETE FROM DistributedMutex WHERE (Name = @Name AND LockId = @LockId)", _newLock);
+                            }
+
+                            _isReleased = true;
+                        }
+                    }
                 }
             }
 
             public void Dispose()
             {
                 ReleaseLock();
+
+                _onCancel.Dispose();
             }
         }
     }

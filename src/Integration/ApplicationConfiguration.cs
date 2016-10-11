@@ -28,7 +28,7 @@ namespace Vertica.Integration
 
 		internal ApplicationConfiguration()
         {
-			_extensibility = new ExtensibilityConfiguration();
+		    _extensibility = new ExtensibilityConfiguration();
 
             _customInstallers = new List<IWindsorInstaller>();
 
@@ -68,7 +68,7 @@ namespace Vertica.Integration
         {
             if (singletonInstance == null) throw new ArgumentNullException(nameof(singletonInstance));
 
-            return AddCustomInstaller(new InstanceInstaller<T>(singletonInstance));
+		    return AddCustomInstaller(new InstanceInstaller<T>(singletonInstance, x => x.LifestyleSingleton()));
         }
 
 		public ApplicationConfiguration Hosts(Action<HostsConfiguration> hosts)

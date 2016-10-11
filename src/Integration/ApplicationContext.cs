@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Castle.Windsor;
+using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Infrastructure.Logging.Loggers;
 using Vertica.Integration.Model.Exceptions;
@@ -9,11 +11,10 @@ using Vertica.Integration.Model.Hosting;
 
 namespace Vertica.Integration
 {
-	public sealed class ApplicationContext : IApplicationContext
+	public sealed class ApplicationContext : IApplicationContext, IShutdown
     {
-		private static readonly Lazy<Action> EnsureSingleton = new Lazy<Action>(() => () => { });
-
-		private readonly ApplicationConfiguration _configuration;
+	    private readonly CancellationTokenSource _cancellation;
+	    private readonly ApplicationConfiguration _configuration;
 
 	    private readonly IWindsorContainer _container;
 	    private readonly IArgumentsParser _parser;
@@ -23,37 +24,24 @@ namespace Vertica.Integration
 		private readonly Lazy<Action> _disposed = new Lazy<Action>(() => () => { });
 
 		internal ApplicationContext(Action<ApplicationConfiguration> application)
-        {
-		    _configuration = new ApplicationConfiguration();
+		{
+            _cancellation = new CancellationTokenSource();
+            _configuration = new ApplicationConfiguration();
 
 			application?.Invoke(_configuration);
 
-			_configuration.RegisterDependency<IApplicationContext>(this);
+		    _configuration.RegisterDependency<IShutdown>(this);
 
-            _container = CastleWindsor.Initialize(_configuration);
+		    _container = CastleWindsor.Initialize(_configuration);
             _parser = Resolve<IArgumentsParser>();
             _hosts = Resolve<IHostFactory>().GetAll();
 		    _writer = Resolve<TextWriter>();
 
-			_writer.WriteLine("[Integration Service]: Initialized");
+		    _writer.WriteLine("[Integration Service]: Started.");
         }
 
-	    public static IApplicationContext Create(Action<ApplicationConfiguration> application = null)
+        public static IApplicationContext Create(Action<ApplicationConfiguration> application = null)
 	    {
-			if (EnsureSingleton.IsValueCreated)
-			{
-				throw new InvalidOperationException(@"An instance of ApplicationContext has already been created. 
-It might have been disposed, but then you should make sure to reuse the same instance for the entire lifecycle of this application.
-
-If you're using LINQPad to test code, you must set:
-
-Util.NewProcess = true; 
-
-... somewhere in the beginning of your LINQPad code.");
-			}
-
-			EnsureSingleton.Value();
-
 			return new ApplicationContext(application);
 	    }
 
@@ -112,16 +100,40 @@ Util.NewProcess = true;
 	        }
         }
 
+        public void WaitForShutdown()
+        {
+            Resolve<IWaitForShutdownRequest>().Wait();
+
+            _writer.WriteLine("[Integration Service]: Shutdown requested.");
+
+            _cancellation.Cancel();
+        }
+
+        public CancellationToken Token => _cancellation.Token;
+
         public void Dispose()
-		{
-			if (_disposed.IsValueCreated)
-				throw new InvalidOperationException("ApplicationContext has already been disposed.");
+	    {
+            if (_disposed.IsValueCreated)
+			    throw new InvalidOperationException("ApplicationContext has already been disposed.");
 
-			_writer.WriteLine("[Integration Service]: Shutting down");
+            _disposed.Value();
 
-			_disposed.Value();
+            _writer.WriteLine("[Integration Service]: Shutting down.");
 
-			_configuration.Extensibility(extensibility => 
+            if (!_cancellation.IsCancellationRequested)
+            {
+                try
+                {
+                    // if anything is running, we need to signal a cancellation
+                    _cancellation.Cancel();
+                }
+                catch (Exception ex)
+                {
+                    LogException(ex);
+                }
+            }
+
+            _configuration.Extensibility(extensibility => 
 			{
 				foreach (var disposable in extensibility.OfType<IDisposable>())
 				{
@@ -136,8 +148,11 @@ Util.NewProcess = true;
 				}
 			});
 
+            _writer.WriteLine("[Integration Service]: Shut down");
+
+            _cancellation.Dispose();
 			_container.Dispose();
-		}
+        }
 
         private void LogException(Exception exception)
         {

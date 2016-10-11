@@ -19,7 +19,7 @@ namespace Vertica.Integration.WindowsTaskScheduler
         
 		void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
 		{
-			container.RegisterInstance(this);
+			container.RegisterInstance(this, x => x.LifestyleSingleton());
 		}
 	}
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Castle.MicroKernel;
+using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Utilities_v4;
 using Vertica.Utilities_v4.Extensions.EnumerableExt;
@@ -16,13 +17,13 @@ namespace Vertica.Integration.Domain.LiteServer
 	{
 		private readonly DateTimeOffset _started;
 
-		private readonly IKernel _kernel;
-		private readonly InternalConfiguration _configuration;
-		private readonly ILogger _logger;
-		private readonly TextWriter _outputter;
+	    private readonly IKernel _kernel;
+	    private readonly IShutdown _shutdown;
+	    private readonly ILogger _logger;
+	    private readonly TextWriter _outputter;
+	    private readonly InternalConfiguration _configuration;
 
-		private readonly CancellationTokenSource _cancellation;
-		private readonly Scheduler _scheduler;
+	    private readonly Scheduler _scheduler;
 		private readonly List<Task> _tasks;
 		private readonly Task _houseKeeping;
 
@@ -32,21 +33,21 @@ namespace Vertica.Integration.Domain.LiteServer
 
 			_started = Time.UtcNow;
 
-			_kernel = kernel;
-			_configuration = configuration;
-			_outputter = kernel.Resolve<TextWriter>();
-			_logger = kernel.Resolve<ILogger>();
+		    _kernel = kernel;
+		    _shutdown = kernel.Resolve<IShutdown>();
+		    _outputter = kernel.Resolve<TextWriter>();
+		    _logger = kernel.Resolve<ILogger>();
+		    _configuration = configuration;
 
-			_cancellation = new CancellationTokenSource();
-			_scheduler = Scheduler.Current;
+		    _scheduler = Scheduler.Current;
 
-			Output("Starting LiteServer");
+			Output("[LiteServer]: Starting");
 
 			Execute(_configuration.OnStartup);
 
-			_tasks = _kernel.ResolveAll<IBackgroundWorker>()
+			_tasks = kernel.ResolveAll<IBackgroundWorker>()
 				.Select(worker => new BackgroundWorkServer(worker, _scheduler))
-				.Concat(_kernel.ResolveAll<IBackgroundServer>())
+				.Concat(kernel.ResolveAll<IBackgroundServer>())
 				.Select(Create)
 				.ToList();
 
@@ -60,15 +61,12 @@ namespace Vertica.Integration.Domain.LiteServer
 
 		private Task Create(IBackgroundServer server)
 		{
-			return server.Create(_cancellation.Token, new BackgroundServerContext());
+			return server.Create(_shutdown.Token, new BackgroundServerContext());
 		}
 
 		public void Dispose()
 		{
-			Output("Stopping LiteServer.");
-
-			// Signal to cancel all tasks.
-			_cancellation.Cancel();
+			Output("[LiteServer]: Stopping.");
 
 			Exception[] exceptions = _tasks
 				.Where(x => x.IsFaulted && x.Exception != null)
@@ -95,12 +93,11 @@ namespace Vertica.Integration.Domain.LiteServer
 			foreach (Exception ex in exceptions)
 				LogError(ex);
 
-			_cancellation.Dispose();
 			_houseKeeping.Dispose();
 
 			Execute(_configuration.OnShutdown);
 
-			Output($"Stopped LiteServer. Uptime: {Uptime}.");
+			Output($"[LiteServer]: Stopped. Uptime: {Uptime}.");
 		}
 
 		private string Uptime
@@ -130,14 +127,14 @@ namespace Vertica.Integration.Domain.LiteServer
 			}
 		}
 
-		public TimeSpan Work(CancellationToken token, BackgroundWorkerContext context)
+		public BackgroundWorkerContinuation Work(CancellationToken token, BackgroundWorkerContext context)
 		{
 			// Ensure all tasks are started.
 			foreach (Task nonStartedTask in _tasks.Where(x => x.Status == TaskStatus.Created))
 				nonStartedTask.Start(_scheduler);
 
 			if (context.InvocationCount == 1)
-				return TimeSpan.FromSeconds(1);
+				return context.Wait(TimeSpan.FromSeconds(1));
 
 			Task[] failedTasks = _tasks.Where(x => x.IsFaulted).ToArray();
 
@@ -157,16 +154,16 @@ namespace Vertica.Integration.Domain.LiteServer
 
 			if (_tasks.All(x => x.IsCompleted))
 			{
-				Output("Exiting housekeeping (no more tasks to monitor).");
+				Output("[LiteServer]: Exiting housekeeping (no more tasks to monitor).");
 				return context.Exit();
 			}
 
-			return TimeSpan.FromSeconds(5);
+			return context.Wait(TimeSpan.FromSeconds(5));
 		}
 
 		private void LogError(Exception ex)
 		{
-			_outputter.WriteLine($"[ERROR] {ex.Message}");
+			_outputter.WriteLine($"[LiteServer]: ERROR: {ex.Message}");
 			_logger.LogError(ex);
 		}
 

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Model.Hosting.Handlers;
 
@@ -7,16 +8,18 @@ namespace Vertica.Integration.Model.Hosting
 {
 	public class TaskHost : IHost
 	{
-		private readonly ITaskFactory _factory;
-		private readonly ITaskRunner _runner;
-		private readonly IWindowsServiceHandler _windowsService;
-		private readonly TextWriter _textWriter;
+	    private readonly ITaskFactory _factory;
+	    private readonly ITaskRunner _runner;
+	    private readonly IWindowsServiceHandler _windowsService;
+	    private readonly IShutdown _shutdown;
+	    private readonly TextWriter _textWriter;
 
-		public TaskHost(ITaskFactory factory, ITaskRunner runner, IWindowsServiceHandler windowsService, TextWriter textWriter)
+		public TaskHost(ITaskFactory factory, ITaskRunner runner, IWindowsServiceHandler windowsService, IShutdown shutdown, TextWriter textWriter)
 		{
-			_factory = factory;
+		    _factory = factory;
 			_runner = runner;
 			_windowsService = windowsService;
+		    _shutdown = shutdown;
 			_textWriter = textWriter;
 		}
 
@@ -50,7 +53,7 @@ namespace Vertica.Integration.Model.Hosting
 				if (!TimeSpan.TryParse(value, out interval))
 					interval = TimeSpan.FromMinutes(1);
 
-				return interval.Repeat(() => _runner.Execute(task, args.Args), _textWriter);
+				return interval.Repeat(() => _runner.Execute(task, args.Args), _shutdown.Token, _textWriter);
 			};
 
 			return _windowsService.Handle(args, new HandleAsWindowsService(task.Name(), task.Name(), task.Description, onStart));

@@ -36,7 +36,7 @@ namespace Vertica.Integration.Experiments
             configuration.ArchiveFolders.Clear();
             configuration.ArchiveFolders.Enabled = true;
 
-            configuration.ArchiveFolders.Add((folder, handlers) =>
+            configuration.ArchiveFolders.AddOrUpdate("IIS", (folder, handlers) =>
             {
                 folder.Path = @"C:\inetpub\logs\LogFiles\W3SVC13";
 
@@ -48,7 +48,7 @@ namespace Vertica.Integration.Experiments
                 return handlers.FilesOlderThan(TimeSpan.FromDays(5));
             });
 
-            configuration.ArchiveFolders.Add((folder, handlers) =>
+            configuration.ArchiveFolders.AddOrUpdate("Sitecore", (folder, handlers) =>
             {
                 folder.Path = @"\\maersk-web01\c$\Websites\stargate3\data\logs";
 
@@ -60,7 +60,7 @@ namespace Vertica.Integration.Experiments
                 return handlers.FilesOlderThan(TimeSpan.FromDays(5), "*.txt");
             });
 
-            configuration.ArchiveFolders.Add((folder, handlers) =>
+            configuration.ArchiveFolders.AddOrUpdate("Everything", (folder, handlers) =>
             {
                 folder.Path = @"C:\tmp\201506";
 

@@ -18,7 +18,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
         public string GroupName { get; private set; }
 
         [JsonProperty]
-        public DateTimeOffset? Expires { get; private set; }
+        public virtual DateTimeOffset? Expires { get; private set; }
 
         public ArchiveOptions Named(string name)
         {
@@ -40,7 +40,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
             return this;
         }
 
-        public ArchiveOptions ExpiresAfter(TimeSpan timeSpan)
+        public virtual ArchiveOptions ExpiresAfter(TimeSpan timeSpan)
         {
             return ExpiresOn(Time.UtcNow.Add(timeSpan));
         }
@@ -50,7 +50,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
             return ExpiresAfter(TimeSpan.FromDays(days));
         }
 
-        public ArchiveOptions ExpiresAfterMonths(uint months)
+        public virtual ArchiveOptions ExpiresAfterMonths(uint months)
         {
             return ExpiresOn(Time.UtcNow.AddMonths((int)months));
         }

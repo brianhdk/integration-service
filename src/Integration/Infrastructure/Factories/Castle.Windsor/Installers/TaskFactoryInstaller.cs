@@ -16,7 +16,8 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 		{
 		    container.Register(
 		        Component.For<ITaskFactory>()
-		            .UsingFactoryMethod(kernel => new TaskFactory(kernel)));
+		            .UsingFactoryMethod(kernel => new TaskFactory(kernel))
+                    .LifestyleSingleton());
 		}
 
         private class TaskFactory : ITaskFactory

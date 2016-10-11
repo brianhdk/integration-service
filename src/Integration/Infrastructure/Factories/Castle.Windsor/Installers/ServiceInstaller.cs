@@ -38,13 +38,13 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 
 		public void Install(IWindsorContainer container, IConfigurationStore store)
 		{
-			ComponentRegistration<TService> registration = 
-				Component.For<TService>().ImplementedBy<TImplementation>();
+			ComponentRegistration<TService> registration = Component
+                .For<TService>()
+                .ImplementedBy<TImplementation>();
 
-			if (_registration != null)
-				_registration(registration);
+		    _registration?.Invoke(registration);
 
-			container.Register(registration);
+		    container.Register(registration);
 		}
 	}
 }

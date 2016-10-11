@@ -1,6 +1,6 @@
 ﻿using System;
+using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Extensions;
-using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Model.Hosting;
 using Vertica.Integration.Model.Hosting.Handlers;
 
@@ -11,14 +11,14 @@ namespace Vertica.Integration.Hangfire
 		internal static readonly string Command = typeof(HangfireHost).HostName();
 
 		private readonly IWindowsServiceHandler _windowsService;
-		private readonly IProcessExitHandler _processExit;
-		private readonly IHangfireServerFactory _serverFactory;
+	    private readonly IHangfireServerFactory _serverFactory;
+	    private readonly IShutdown _shutdown;
 
-		public HangfireHost(IWindowsServiceHandler windowsService, IProcessExitHandler processExit, IHangfireServerFactory serverFactory)
+	    public HangfireHost(IWindowsServiceHandler windowsService, IHangfireServerFactory serverFactory, IShutdown shutdown)
 		{
 			_windowsService = windowsService;
-			_processExit = processExit;
-			_serverFactory = serverFactory;
+	        _serverFactory = serverFactory;
+	        _shutdown = shutdown;
 		}
 
 		public bool CanHandle(HostArguments args)
@@ -37,7 +37,7 @@ namespace Vertica.Integration.Hangfire
 
 			using (Create())
 			{
-				_processExit.Wait();
+				_shutdown.WaitForShutdown();
 			}
 		}
 

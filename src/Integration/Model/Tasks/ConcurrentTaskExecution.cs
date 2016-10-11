@@ -28,13 +28,16 @@ namespace Vertica.Integration.Model.Tasks
             if (task == null) throw new ArgumentNullException(nameof(task));
             if (log == null) throw new ArgumentNullException(nameof(log));
 
-            if (task.HasAttribute<AllowConcurrentExecutionAttribute>())
-                return null;
-
             var preventConcurrent = task.GetAttribute<PreventConcurrentExecutionAttribute>();
 
-            if (preventConcurrent == null && !_enabledOnAllTasks)
-                return null;
+            if (preventConcurrent == null)
+            {
+                if (task.HasAttribute<AllowConcurrentExecutionAttribute>())
+                    return null;
+
+                if (!_enabledOnAllTasks)
+                    return null;
+            }
 
             try
             {

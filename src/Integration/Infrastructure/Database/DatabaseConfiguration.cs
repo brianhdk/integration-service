@@ -73,7 +73,7 @@ namespace Vertica.Integration.Infrastructure.Database
 
         void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
         {
-            container.RegisterInstance<IDatabaseConfiguration>(this);
+            container.RegisterInstance<IDatabaseConfiguration>(this, x => x.LifestyleSingleton());
 
 	        container.Install(new DbInstaller(IntegrationDbDisabled ? 
 				DefaultConnection.Disabled : 

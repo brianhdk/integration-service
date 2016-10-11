@@ -64,7 +64,7 @@ namespace Vertica.Integration.Domain.Core
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception($"Unable to delete file '{fileToDelete.FullName}'.", ex);
+                        context.Log.Error(folder.Target, $"Unable to delete file '{fileToDelete.FullName}'. Message: {ex.Message}");
                     }
                 }
 
@@ -76,7 +76,7 @@ namespace Vertica.Integration.Domain.Core
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception($"Unable to delete folder '{folderToDelete.FullName}'.", ex);
+                        context.Log.Error(folder.Target, $"Unable to delete folder '{folderToDelete.FullName}'. Message: {ex.Message}");
                     }
                 }
             }

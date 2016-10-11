@@ -98,7 +98,7 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
 
 		void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
 		{
-			container.RegisterInstance(this);
+			container.RegisterInstance(this, x => x.LifestyleSingleton());
 		}
     }
 }

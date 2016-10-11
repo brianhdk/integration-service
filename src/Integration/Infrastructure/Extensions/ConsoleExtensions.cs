@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Vertica.Integration.Infrastructure.Extensions
 {
-	public static class OutputterExtensions
+	public static class ConsoleExtensions
 	{
 		public static string ReadLine(this TextWriter outputter, string message = "Enter value: ")
 		{

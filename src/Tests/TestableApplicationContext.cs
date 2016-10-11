@@ -1,4 +1,5 @@
 ﻿using System;
+using Vertica.Integration.Infrastructure.Threading.DistributedMutex;
 
 namespace Vertica.Integration.Tests
 {
@@ -13,6 +14,8 @@ namespace Vertica.Integration.Tests
 				.Logging(logging => logging.Disable())
 				.RuntimeSettings(new InMemoryRuntimeSettings()
 					.Set("Environment", "Testing"))
+                .Advanced(advanced => advanced
+                    .Register<IDistributedMutex, VoidDistributedMutex>())
 				.Change(application));
 
 			return context;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model.Exceptions;
@@ -11,15 +12,17 @@ namespace Vertica.Integration.Model
 {
 	public class TaskRunner : ITaskRunner
 	{
-		private readonly ILogger _logger;
+	    private readonly ILogger _logger;
 	    private readonly IConcurrentTaskExecution _concurrentTaskExecution;
-		private readonly TextWriter _outputter;
+	    private readonly IShutdown _shutdown;
+	    private readonly TextWriter _outputter;
 
-		public TaskRunner(ILogger logger, IConcurrentTaskExecution concurrentTaskExecution, TextWriter outputter)
+	    public TaskRunner(ILogger logger, IConcurrentTaskExecution concurrentTaskExecution, IShutdown shutdown, TextWriter outputter)
 		{
-			_logger = logger;
-			_outputter = outputter;
+	        _logger = logger;
 		    _concurrentTaskExecution = concurrentTaskExecution;
+	        _shutdown = shutdown;
+		    _outputter = outputter;
 		}
 
 		public TaskExecutionResult Execute(ITask task, Arguments arguments = null)
@@ -52,7 +55,10 @@ namespace Vertica.Integration.Model
 
                 try
                 {
-                    workItem = task.Start(new TaskExecutionContext(new Log(taskLog.LogMessage, _logger), arguments));
+                    var context = new TaskExecutionContext(new Log(taskLog.LogMessage, _logger), arguments, _shutdown.Token);
+                    context.ThrowIfCancelled();
+
+                    workItem = task.Start(context);
                 }
                 catch (Exception ex)
                 {
@@ -74,11 +80,14 @@ namespace Vertica.Integration.Model
                         if (continueWith == Execution.StepOver)
                             continue;
 
-                        using (var stepLog = taskLog.LogStep(step))
+                        using (StepLog stepLog = taskLog.LogStep(step))
                         {
                             try
                             {
-                                step.Execute(workItem, new TaskExecutionContext(new Log(stepLog.LogMessage, _logger), arguments));
+                                var context = new TaskExecutionContext(new Log(stepLog.LogMessage, _logger), arguments, _shutdown.Token);
+                                context.ThrowIfCancelled();
+
+                                step.Execute(workItem, context);
                             }
                             catch (Exception ex)
                             {
@@ -94,7 +103,10 @@ namespace Vertica.Integration.Model
 
                     try
                     {
-                        task.End(workItem, new TaskExecutionContext(new Log(taskLog.LogMessage, _logger), arguments));
+                        var context = new TaskExecutionContext(new Log(taskLog.LogMessage, _logger), arguments, _shutdown.Token);
+                        context.ThrowIfCancelled();
+
+                        task.End(workItem, context);
                     }
                     catch (Exception ex)
                     {

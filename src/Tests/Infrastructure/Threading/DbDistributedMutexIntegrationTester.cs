@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NSubstitute;
 using NUnit.Framework;
+using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Features;
 using Vertica.Integration.Infrastructure.Threading;
@@ -14,7 +15,7 @@ using Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db;
 namespace Vertica.Integration.Tests.Infrastructure.Threading
 {
     [TestFixture(Category = "Slow,Integration")]
-    [Ignore("Integration")]
+    [Ignore("Threading")]
     public class DbDistributedMutexIntegrationTester
     {
         [Test]
@@ -24,12 +25,13 @@ namespace Vertica.Integration.Tests.Infrastructure.Threading
             var session = Substitute.For<IDbSession>();
             var settings = Substitute.For<IRuntimeSettings>();
             var featureToggler = Substitute.For<IFeatureToggler>();
+            var shutdown = Substitute.For<IShutdown>();
 
             settings[DbDistributedMutex.QueryLockIntervalKey].Returns(TimeSpan.FromSeconds(1).ToString());
 
             db.OpenSession().Returns(session);
 
-            var subject = new DbDistributedMutex(db, settings, featureToggler);
+            var subject = new DbDistributedMutex(db, settings, featureToggler, shutdown);
 
             var locks = new ConcurrentDictionary<string, DbDistributedMutexLock>();
 
@@ -115,7 +117,6 @@ namespace Vertica.Integration.Tests.Infrastructure.Threading
                     foreach (var innerException in inner)
                         Console.WriteLine(innerException.Message);
                 }
-
             }
 
             // we expected this to timeout

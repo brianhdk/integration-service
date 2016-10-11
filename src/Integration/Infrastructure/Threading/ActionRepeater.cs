@@ -3,19 +3,21 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Vertica.Integration.Infrastructure
+namespace Vertica.Integration.Infrastructure.Threading
 {
 	public class ActionRepeater : IDisposable
     {
         private readonly TimeSpan _delay;
-        private readonly TextWriter _outputter;
+	    private readonly CancellationToken _cancellationToken;
+	    private readonly TextWriter _outputter;
 
         private Task _task;
         private bool _repeating = true;
 
-        private ActionRepeater(TimeSpan delay, TextWriter outputter)
+        private ActionRepeater(TimeSpan delay, CancellationToken cancellationToken, TextWriter outputter)
         {
             _delay = delay;
+            _cancellationToken = cancellationToken;
             _outputter = outputter ?? TextWriter.Null;
         }
 
@@ -29,15 +31,15 @@ namespace Vertica.Integration.Infrastructure
 
             _task = Task.Factory.StartNew(() =>
             {
-                while (_repeating)
+                while (_repeating && !_cancellationToken.IsCancellationRequested)
                 {
                     action();
                     iterations++;
 
-                    Thread.Sleep(_delay);
+                    _cancellationToken.WaitHandle.WaitOne(_delay);
                 }
 
-            }, TaskCreationOptions.LongRunning);
+            }, _cancellationToken);
 
             await _task;
 
@@ -49,15 +51,22 @@ namespace Vertica.Integration.Infrastructure
             _repeating = false;
 
             _outputter.WriteLine("Waiting for Repeater to stop.");
-            Task.WaitAll(_task);
+
+            try
+            {
+                _task.Wait(_cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+            }
 
             _task.Dispose();
             _task = null;
         }
 
-        public static ActionRepeater Start(Action task, TimeSpan delay, TextWriter outputter)
+        public static ActionRepeater Start(Action task, TimeSpan delay, CancellationToken cancellationToken, TextWriter outputter)
         {
-            var repeater = new ActionRepeater(delay, outputter);
+            var repeater = new ActionRepeater(delay, cancellationToken, outputter);
             repeater.Repeat(task);
 
             return repeater;
