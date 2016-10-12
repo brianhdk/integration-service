@@ -15,12 +15,10 @@ using Vertica.Integration.Infrastructure.Database.Migrations.Features;
 using Vertica.Integration.Infrastructure.Features;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
-using Vertica.Integration.Model.Tasks;
 using Vertica.Utilities_v4.Extensions.AttributeExt;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
-    [PreventConcurrentExecution]
     public class MigrateTask : Task
     {
         private readonly IKernel _kernel;

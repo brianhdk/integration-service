@@ -20,8 +20,7 @@ namespace Experiments.ConcurrentTasks
 
             using (IApplicationContext context = ApplicationContext.Create(application => application
                 .Database(database => database
-                    .DisableIntegrationDb())
-                    //.IntegrationDb(db))
+                    .IntegrationDb(db).DisableIntegrationDb())
                 .UseLiteServer(server => server
                     .AddFromAssemblyOfThis<Program>())
                 .UseHangfire(hangfire => hangfire
@@ -34,7 +33,9 @@ namespace Experiments.ConcurrentTasks
                         })))
                 .Tasks(tasks => tasks
                     .AddFromAssemblyOfThis<Program>()
-                    .MaintenanceTask())
+                    .MaintenanceTask()
+                    .ConcurrentTaskExecution(concurrentTaskExecution => concurrentTaskExecution
+                        .AddFromAssemblyOfThis<Program>()))
                 .AddCustomInstaller(Install.ByConvention.AddFromAssemblyOfThis<Program>())))
             {
                 var shutdown = context.Resolve<IShutdown>();
@@ -45,6 +46,9 @@ namespace Experiments.ConcurrentTasks
                 // migrate first
                 runner.Execute(factory.Get<MigrateTask>());
 
+                //runner.Execute(factory.Get<ConcurrentExecutableTask>());
+                //runner.Execute(factory.Get<SynchronousOnlyTask>());
+
                 RecurringJob.AddOrUpdate<ITaskByNameRunner>(nameof(ConcurrentExecutableTask), x => x.Run(nameof(ConcurrentExecutableTask)), Cron.Minutely);
                 RecurringJob.AddOrUpdate<ITaskByNameRunner>(nameof(SynchronousOnlyTask), x => x.Run(nameof(SynchronousOnlyTask)), Cron.Minutely);
 
@@ -53,7 +57,7 @@ namespace Experiments.ConcurrentTasks
                     shutdown.WaitForShutdown();
                 }
 
-                // maintenance last
+                //maintenance last
                 //runner.Execute(factory.Get<MaintenanceTask>());
             }
         }

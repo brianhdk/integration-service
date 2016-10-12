@@ -4,7 +4,7 @@ using Vertica.Integration.Model.Tasks;
 
 namespace Experiments.ConcurrentTasks
 {
-    [AllowConcurrentExecution]
+    [AllowConcurrentTaskExecution]
     public class ConcurrentExecutableTask : Task
     {
         public override void StartTask(ITaskExecutionContext context)
@@ -24,8 +24,7 @@ namespace Experiments.ConcurrentTasks
         public override string Description => "This task can be executed in parallel.";
     }
 
-    [PreventConcurrentExecution]
-    [AllowConcurrentExecution]
+    [PreventConcurrentTaskExecution(RuntimeEvaluator = typeof(MyCustomEvaluator))]
     public class SynchronousOnlyTask : Task
     {
         public override void StartTask(ITaskExecutionContext context)

@@ -23,8 +23,8 @@ namespace Vertica.Integration.Domain.LiteServer
 
 			_configuration = new InternalConfiguration();
 
-			_servers = new ScanAddRemoveInstaller<IBackgroundServer>(x => x.LifeStyle.Is(LifestyleType.Transient));
-			_workers = new ScanAddRemoveInstaller<IBackgroundWorker>(x => x.LifeStyle.Is(LifestyleType.Transient));
+			_servers = new ScanAddRemoveInstaller<IBackgroundServer>(configure: x => x.LifeStyle.Is(LifestyleType.Transient));
+			_workers = new ScanAddRemoveInstaller<IBackgroundWorker>(configure: x => x.LifeStyle.Is(LifestyleType.Transient));
 		}
 
 		public ApplicationConfiguration Application { get; }

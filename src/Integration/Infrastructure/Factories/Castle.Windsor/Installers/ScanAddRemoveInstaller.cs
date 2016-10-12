@@ -10,14 +10,17 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 {
 	public class ScanAddRemoveInstaller<T> : IWindsorInstaller
 	{
-		private readonly Action<ComponentRegistration> _configure;
+	    private readonly Func<ServiceDescriptor, BasedOnDescriptor> _serviceDescriptor;
+	    private readonly Action<ComponentRegistration> _configure;
+
 		private readonly List<Assembly> _scan;
 		private readonly List<Type> _add;
 		private readonly List<Type> _remove;
 
-		public ScanAddRemoveInstaller(Action<ComponentRegistration> configure = null)
+		public ScanAddRemoveInstaller(Func<ServiceDescriptor, BasedOnDescriptor> serviceDescriptor = null, Action<ComponentRegistration> configure = null)
 		{
-			_configure = configure;
+		    _serviceDescriptor = serviceDescriptor ?? (x => x.FromInterface(typeof(T)));
+		    _configure = configure ?? (x => x.LifestyleSingleton());
 
 			_scan = new List<Assembly>();
 			_add = new List<Type>();
@@ -66,25 +69,26 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 		{
 			foreach (Assembly assembly in _scan.Distinct())
 			{
-				container.Register(
-					Classes.FromAssembly(assembly)
-						.BasedOn<T>()
-						.WithServiceFromInterface(typeof (T))
-						.Unless(x =>
-						{
-							if (_add.Contains(x) || _remove.Contains(x))
-								return true;
-
-							return false;
-						})
-						.Configure(x => _configure?.Invoke(x)));
+                container.Register(
+                    Locate(Classes.FromAssembly(assembly))
+                        .Unless(x =>
+                        {
+                            if (_add.Contains(x) || _remove.Contains(x))
+                                return true;
+    
+                            return false;
+                        })
+                        .Configure(x => _configure?.Invoke(x)));
 			}
 
-			container.Register(
-				Classes.From(_add.Except(_remove).Distinct())
-					.BasedOn<T>()
-					.WithServiceFromInterface(typeof(T))
+		    container.Register(
+				Locate(Classes.From(_add.Except(_remove).Distinct()))
 					.Configure(x => _configure?.Invoke(x)));
 		}
+
+	    private BasedOnDescriptor Locate(FromDescriptor fromDescriptor)
+	    {
+	        return _serviceDescriptor(fromDescriptor.BasedOn<T>().WithService);
+	    }
 	}
 }

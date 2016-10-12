@@ -1,4 +1,5 @@
 ﻿using System;
+using Castle.MicroKernel;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Infrastructure.Threading.DistributedMutex;
@@ -10,14 +11,16 @@ namespace Vertica.Integration.Model.Tasks
     public class ConcurrentTaskExecution : IConcurrentTaskExecution
     {
         private readonly IDistributedMutex _distributedMutex;
+        private readonly IKernel _kernel;
         private readonly ILogger _logger;
 
         private readonly DistributedMutexConfiguration _defaultConfiguration;
         private readonly bool _enabledOnAllTasks;
 
-        public ConcurrentTaskExecution(IDistributedMutex distributedMutex, ILogger logger, IRuntimeSettings settings)
+        public ConcurrentTaskExecution(IDistributedMutex distributedMutex, IKernel kernel, ILogger logger, IRuntimeSettings settings)
         {
             _distributedMutex = distributedMutex;
+            _kernel = kernel;
             _logger = logger;
 
             _defaultConfiguration = DefaultConfiguration(settings, out _enabledOnAllTasks);
@@ -28,15 +31,41 @@ namespace Vertica.Integration.Model.Tasks
             if (task == null) throw new ArgumentNullException(nameof(task));
             if (log == null) throw new ArgumentNullException(nameof(log));
 
-            var preventConcurrent = task.GetAttribute<PreventConcurrentExecutionAttribute>();
+            var preventConcurrent = task.GetAttribute<PreventConcurrentTaskExecutionAttribute>();
 
             if (preventConcurrent == null)
             {
-                if (task.HasAttribute<AllowConcurrentExecutionAttribute>())
+                if (task.HasAttribute<AllowConcurrentTaskExecutionAttribute>())
                     return null;
 
                 if (!_enabledOnAllTasks)
                     return null;
+            }
+            else
+            {
+                Type runtimeEvaluatorType = preventConcurrent.RuntimeEvaluator;
+
+                if (runtimeEvaluatorType != null)
+                {
+                    var runtimeEvaluator = _kernel.Resolve(runtimeEvaluatorType) as IPreventConcurrentTaskExecutionRuntimeEvaluator;
+
+                    if (runtimeEvaluator == null)
+                        throw new InvalidOperationException($@"Unable to resolve evaluator type '{runtimeEvaluatorType.FullName}'. 
+
+
+Either the type does not implement '{nameof(IPreventConcurrentTaskExecutionRuntimeEvaluator)}'-interface or you forgot to register the type as a custom evaluator. 
+
+You can register custom evaluators when setting up Integration Service in the ApplicationContext.Create(...)-method:
+
+using (IApplicationContext context = ApplicationContext.Create(application => application
+    .Tasks(tasks => tasks
+        .ConcurrentTaskExecution(concurrentTaskExecution => concurrentTaskExecution
+            .AddFromAssemblyOfThis<Program>()
+            .AddEvaluator<MyCustomEvaluator>()))");
+
+                    if (runtimeEvaluator.Disabled(task))
+                        return null;
+                }
             }
 
             try

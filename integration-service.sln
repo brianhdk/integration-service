@@ -84,8 +84,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Experiments.Slack", "src\Ex
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Experiments.LiteServer", "src\Experiments.LiteServer\Experiments.LiteServer.csproj", "{49E7AFD7-C5E8-470D-A27D-84749D9A6555}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.WindowsTaskScheduler", "src\Integration.WindowsTaskScheduler\Integration.WindowsTaskScheduler.csproj", "{FBFC536A-2A09-4095-B1E7-3A8127DE6AE1}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Experiments.ConcurrentTasks", "src\Experiments.ConcurrentTasks\Experiments.ConcurrentTasks.csproj", "{11A1D3ED-75A6-4596-A791-9FB98D9B7105}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Experiments.MaintenanceTask", "src\Experiments.MaintenanceTask\Experiments.MaintenanceTask.csproj", "{1A983103-BBBD-47BC-9258-83E437DF4751}"
@@ -200,10 +198,6 @@ Global
 		{49E7AFD7-C5E8-470D-A27D-84749D9A6555}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49E7AFD7-C5E8-470D-A27D-84749D9A6555}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49E7AFD7-C5E8-470D-A27D-84749D9A6555}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FBFC536A-2A09-4095-B1E7-3A8127DE6AE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FBFC536A-2A09-4095-B1E7-3A8127DE6AE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FBFC536A-2A09-4095-B1E7-3A8127DE6AE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FBFC536A-2A09-4095-B1E7-3A8127DE6AE1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{11A1D3ED-75A6-4596-A791-9FB98D9B7105}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{11A1D3ED-75A6-4596-A791-9FB98D9B7105}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11A1D3ED-75A6-4596-A791-9FB98D9B7105}.Release|Any CPU.ActiveCfg = Release|Any CPU

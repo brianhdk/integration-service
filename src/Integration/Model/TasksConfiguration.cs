@@ -5,6 +5,7 @@ using System.Reflection;
 using Castle.Windsor;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Model.Hosting;
+using Vertica.Integration.Model.Tasks;
 
 namespace Vertica.Integration.Model
 {
@@ -15,12 +16,18 @@ namespace Vertica.Integration.Model
         private readonly List<Type> _removeTasks;
         private readonly List<TaskConfiguration> _complexTasks;
 
+        private ConcurrentTaskExecutionConfiguration _concurrentTaskExecution;
+
         internal TasksConfiguration(ApplicationConfiguration application)
         {
             if (application == null) throw new ArgumentNullException(nameof(application));
 
 			Application = application
-				.Hosts(hosts => hosts.Host<TaskHost>());
+				.Hosts(hosts => hosts.Host<TaskHost>())
+                .Extensibility(extensibility =>
+                {
+                    _concurrentTaskExecution = extensibility.Register(() => new ConcurrentTaskExecutionConfiguration(this));
+                });
 
 			_scan = new List<Assembly>();
             _simpleTasks = new List<Type>();
@@ -93,16 +100,6 @@ namespace Vertica.Integration.Model
             return this;
         }
 
-        void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
-        {
-            container.Install(new TaskInstaller(_scan.ToArray(), _simpleTasks.ToArray(), _removeTasks.ToArray()));
-
-            foreach (TaskConfiguration task in _complexTasks.Distinct())
-                container.Install(task.GetInstaller());
-
-            container.Install(new TaskFactoryInstaller());
-        }
-
         /// <summary>
         /// Clears all registred Tasks including the built-in Tasks (MigrateTask, WriteDocumentationTask etc.).
         /// </summary>
@@ -113,6 +110,28 @@ namespace Vertica.Integration.Model
             _removeTasks.Clear();
 
             return this;
+        }
+
+        /// <summary>
+        /// Allows for configuration of the <see cref="IConcurrentTaskExecution"/> functionality.
+        /// </summary>
+        public TasksConfiguration ConcurrentTaskExecution(Action<ConcurrentTaskExecutionConfiguration> concurrentTaskExecution)
+        {
+            if (concurrentTaskExecution == null) throw new ArgumentNullException(nameof(concurrentTaskExecution));
+
+            concurrentTaskExecution(_concurrentTaskExecution);
+
+            return this;
+        }
+
+        void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
+        {
+            container.Install(new TaskInstaller(_scan.ToArray(), _simpleTasks.ToArray(), _removeTasks.ToArray()));
+
+            foreach (TaskConfiguration task in _complexTasks.Distinct())
+                container.Install(task.GetInstaller());
+
+            container.Install(new TaskFactoryInstaller());
         }
     }
 }

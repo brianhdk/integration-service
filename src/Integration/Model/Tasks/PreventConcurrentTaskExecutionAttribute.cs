@@ -4,7 +4,7 @@ using Vertica.Integration.Infrastructure.Threading.DistributedMutex;
 namespace Vertica.Integration.Model.Tasks
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public sealed class PreventConcurrentExecutionAttribute : Attribute
+    public sealed class PreventConcurrentTaskExecutionAttribute : Attribute
     {
         private uint? _waitTimeMs;
 
@@ -27,5 +27,10 @@ namespace Vertica.Integration.Model.Tasks
             get { return _waitTimeMs.GetValueOrDefault(); }
             set { _waitTimeMs = value; }
         }
+
+        /// <summary>
+        /// Specifies a type that implements <see cref="IPreventConcurrentTaskExecutionRuntimeEvaluator" /> to be able to specify at runtime whether to prevent concurrent execution or not.
+        /// </summary>
+        public Type RuntimeEvaluator { get; set; }
     }
 }

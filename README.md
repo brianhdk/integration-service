@@ -39,6 +39,7 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
  - [How to Setup ArchiveFoldersStep](#how-to-setup-archivefoldersstep)
  - [How to Extend MaintenanceTask](#how-to-extend-maintenancetask)
  - [How to Use Distributed Mutex](#how-to-use-distributed-mutex)
+ - [How to Use Feature Toggler](#how-to-use-feature-togger)
 
 ## How to Get Started
 
@@ -2468,7 +2469,7 @@ Other examples of customizing the **MaintenanceTask** could be to:
 ## How to Use Distributed Mutex
 
 By default Tasks can be executed in parallel, e.g. you can have multiple instances of the Integration Service running - thus executing the same Task at the same time (Azure WebJob scaled out as an example).
-Another example could be if you're using Hangfire it's definitely also possible that the same task can be executed at the same time.
+Another example could be if you're using Hangfire it's definitely also possible that the same task will be executed at the same time.
 
 Depending on your Task, it might not be optimal to have multiple instances running at the same time.
 
@@ -2496,7 +2497,7 @@ public class SynchronousOnlyTask : Task
 }
 ```
 
-In app.config, you can turn on "Prevent Concurrent Execution" on all tasks, by setting the value of "ConcurrentTaskExecution.EnabledOnAllTasks" to "true".
+In app.config, you can turn on the "Prevent Concurrent Execution"-behaviour on all tasks, by setting the value of "ConcurrentTaskExecution.EnabledOnAllTasks" to "true".
 Only tasks that have been explicity marked as "AllowConcurrentExecution" will support running in parallel.
 
 
@@ -2508,4 +2509,12 @@ Only tasks that have been explicity marked as "AllowConcurrentExecution" will su
   </appSettings>
 ```
 
+TODO: Document the IPreventConcurrentExecutionRuntimeEvaluator feature.
+
+[Back to Table of Contents](#table-of-contents)
+
+
+## How to Use Feature Toggler
+
+TBD. 
 [Back to Table of Contents](#table-of-contents)
