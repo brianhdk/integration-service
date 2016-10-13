@@ -19,7 +19,8 @@ Details: /elmah.axd/detail?id=D1732EFF-3AA3-4A0E-A174-E51A2848522B";
 
 			var entry = new MonitorEntry(Time.Now, "Source", message);
 
-			var subject = new MessageContainsText("Sitecore.Exceptions.AccessDeniedException\r\nApplication access denied", "Unable to connect");
+			var subject = new MessageContainsText(@"Sitecore.Exceptions.AccessDeniedException
+Application access denied", "Unable to connect");
 
 			bool actual = subject.IsSatisfiedBy(entry);
 
