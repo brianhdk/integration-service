@@ -20,8 +20,7 @@ namespace Vertica.Integration.Tests.Infrastructure.Parsing
 
             var csv = string.Join(Environment.NewLine, rows.Select(x => x.ToString()));
 
-            Assert.That(csv, Is.EqualTo(@"John Doe;30
-Jane Doe;31"));
+            Assert.That(csv, Is.EqualTo($"John Doe;30{Environment.NewLine}Jane Doe;31"));
         }
 
         [Test]
@@ -56,9 +55,10 @@ Jane Doe;31"));
 
             var csv = string.Join(Environment.NewLine, rows.Select(x => x.ToString()));
 
-            Assert.That(csv, Is.EqualTo(@"Name;Age
-John Doe;30
-Jane Doe;31"));
+            Assert.That(csv, Is.EqualTo(string.Join(Environment.NewLine, 
+"Name;Age",
+"John Doe;30",
+"Jane Doe;31")));
         }
 
         [Test]
@@ -71,9 +71,10 @@ Jane Doe;31"));
                 .Add("Jane Doe", "31")
                 .ToString();
 
-            Assert.That(csv, Is.EqualTo(@"Name;Age
-John Doe;30
-Jane Doe;31"));
+            Assert.That(csv, Is.EqualTo(string.Join(Environment.NewLine, 
+"Name;Age",
+"John Doe;30",
+"Jane Doe;31")));
         }
 
 		[Test]
@@ -86,9 +87,10 @@ Jane Doe;31"));
 				.Add("Jane Doe", "31")
 				.ToString();
 
-			Assert.That(csv, Is.EqualTo(@"Name	Age
-John Doe	30
-Jane Doe	31"));
+			Assert.That(csv, Is.EqualTo(string.Join(Environment.NewLine, 
+"Name	Age",
+"John Doe	30",
+"Jane Doe	31")));
 		}
 
         [Test]
@@ -100,8 +102,9 @@ Jane Doe	31"));
                 .Add("Jane Doe", null)
                 .ToString();
 
-            Assert.That(csv, Is.EqualTo(@"John Doe;30
-Jane Doe;"));
+            Assert.That(csv, Is.EqualTo(string.Join(Environment.NewLine, 
+"John Doe;30",
+"Jane Doe;")));
         }
 
         [Test]
@@ -113,8 +116,9 @@ Jane Doe;"));
 
             var csv = string.Join(Environment.NewLine, rows.Select(x => x.ToString()));
 
-            Assert.That(csv, Is.EqualTo(@"John
-Jane"));
+            Assert.That(csv, Is.EqualTo(string.Join(Environment.NewLine, 
+"John", 
+"Jane")));
         }
 
         [Test]
@@ -126,8 +130,9 @@ Jane"));
                 .AddUsingMapper(x => x.Map("Age", "31").Map("Name", "Jane Doe"))
                 .ToString();
 
-            Assert.That(csv, Is.EqualTo(@"John Doe;30
-Jane Doe;31"));
+            Assert.That(csv, Is.EqualTo(string.Join(Environment.NewLine, 
+"John Doe;30",
+"Jane Doe;31")));
         }
 
         [Test]
@@ -139,8 +144,9 @@ Jane Doe;31"));
 
             var csv = string.Join(Environment.NewLine, rows.Select(x => x.ToString()));
 
-            Assert.That(csv, Is.EqualTo(@"John
-Jane"));
+            Assert.That(csv, Is.EqualTo(string.Join(Environment.NewLine,
+"John",
+"Jane")));
         }
 
         [Test]
@@ -172,9 +178,10 @@ Jane"));
 
             string csv = builder.ToString();
 
-            Assert.That(csv, Is.EqualTo(@"Name,Age
-John Doe,30
-Jane Doe,"));
+            Assert.That(csv, Is.EqualTo(string.Join(Environment.NewLine, 
+"Name,Age",
+"John Doe,30",
+"Jane Doe,")));
         }
 
         [Test]
@@ -191,8 +198,7 @@ Jane Doe,"));
 
             string csv = builder.ToString();
 
-            Assert.That(csv, Is.EqualTo(@"""""""Name"""""",Age
-""John,Doe"",""30"""""""));
+            Assert.That(csv, Is.EqualTo($@"""""""Name"""""",Age{Environment.NewLine}""John,Doe"",""30"""""""));
         }
 
         [Test]
@@ -203,15 +209,12 @@ Jane Doe,"));
                     .ReturnHeaderAsRow());
 
             builder.AddUsingMapper(x => x
-                .Map("Name", @"John
-Doe")
+                .Map("Name", $"John{Environment.NewLine}Doe")
                 .Map("Age", "30"));
 
             string csv = builder.ToString();
 
-            Assert.That(csv, Is.EqualTo(@"Name;Age
-""John
-Doe"";30"));
+            Assert.That(csv, Is.EqualTo($@"Name;Age{Environment.NewLine}""John{Environment.NewLine}Doe"";30"));
         }
 
         [Test]

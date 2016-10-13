@@ -12,8 +12,7 @@ namespace Vertica.Integration.Tests.Infrastructure.Parsing
         [Test]
         public void Parse_NoHeader_Different_Delimiter()
         {
-            CsvRow[] rows = Parse(@"Row1-Field1,Row1-Field2
-Row2-Field1,Row2-Field2",
+            CsvRow[] rows = Parse($"Row1-Field1,Row1-Field2{Environment.NewLine}Row2-Field1,Row2-Field2",
                 csv => csv
 					.NoHeaders()
 					.ChangeDelimiter(","));
@@ -31,9 +30,10 @@ Row2-Field1,Row2-Field2",
         [Test]
         public void Parse_Header_Default_Delimiter()
         {
-            CsvRow[] rows = Parse(@"Field1;Field2
-Row1-Field1;Row1-Field2
-Row2-Field1;Row2-Field2");
+            CsvRow[] rows = Parse(string.Join(Environment.NewLine, 
+"Field1;Field2",
+"Row1-Field1;Row1-Field2",
+"Row2-Field1;Row2-Field2"));
 
             Assert.That(rows.Length, Is.EqualTo(2));
 
@@ -92,8 +92,7 @@ Row2-Field1;Row2-Field2");
 		    string csv = CsvRow.BeginRows("Id", "Text")
 				.Configure(configure => configure.ReturnHeaderAsRow())
 			    .AddUsingMapper(mapper => mapper.Map("Id", "1").Map("Text", "SingleLine-1"))
-			    .AddUsingMapper(mapper => mapper.Map("Id", "2").Map("Text", @"Multi
-Line-2"))
+			    .AddUsingMapper(mapper => mapper.Map("Id", "2").Map("Text", $"Multi{Environment.NewLine}Line-2"))
 			    .AddUsingMapper(mapper => mapper.Map("Id", "3").Map("Text", "SingleLine-3"))
 			    .ToString();
 
@@ -105,20 +104,19 @@ Line-2"))
 			Assert.That(rows[2]["Id"], Is.EqualTo("3"));
 
 			Assert.That(rows[0]["Text"], Is.EqualTo("SingleLine-1"));
-			Assert.That(rows[1]["Text"], Is.EqualTo(@"Multi
-Line-2"));
+			Assert.That(rows[1]["Text"], Is.EqualTo($"Multi{Environment.NewLine}Line-2"));
 			Assert.That(rows[2]["Text"], Is.EqualTo("SingleLine-3"));
 	    }
 
 		[Test]
 		public void Parse_MultiLine_NoQuotations()
 		{
-			string csv = @"
-PartNumber|LanguageId|Name|ShortDescription|LongDescription|AuxDescription1|AuxDescription2|Keyword|Published|Delete
-030445|-1|Longines Ladies' Présence Watch|Quartz. Sapphire crystal. Gold-plated. Black leather strap. White dial. Date. Water-|Quartz. Sapphire crystal. Gold-plated. Black leather strap. White dial. Date. Water-resistant 30 m. 23 mm case.||||1|0
-030459|-1|Viktor & Rolf Flowerbomb EdP|The ultimate concentrate for enhancing skin's inherent multi-defensive power against|The ultimate concentrate for enhancing skin's inherent multi-defensive power against signs of aging, environmental factors and daily stress. Day by day, your skin becomes smoother and more resilient making wrinkles less noticeable and your complexion appears to glow with more radiance than ever. Ultimune Power Infusing Concentrate is for all women of all ages. It works with your skincare to boost the benefits of your regimen, no matter your concerns.
-Benefits: Shiseido's exclusive Ultimune Complex helps boost defensive functions that have declined in Langerhans Cells, the cells that hold the key to promoting skin's multi-defensive power. Now your skin can achieve its greatest beauty potential. Immediately, skin feels full and supple, with a silky-smooth surface. In one week, skin appears to glow more than ever. In 4 weeks: firmness and resilience are improved, making wrinkles less visible. Apply morning and night after cleansing and softening the face. When using other serums, apply Ultimune first to enhance the benefits of the following treatments.||||1|0
-030460|-1|Viktor & Rolf Flowerbomb EdT|A new chapter in the Flowerbomb story. A true bouquet of flowers that are good enoug|A new chapter in the Flowerbomb story. A true bouquet of flowers that are good enough to eat! With crispy buds that evoke the “morning dew”. This Fragrance is multi-faceted like the bottle it comes in: a mille-feuille of Flowerbomb flowers around freesia, centifolia rose and Sambac jasmine, refreshed by crispy green notes and a touch of mandarin and bergamot.||||1|0";
+		    string csv = string.Join(Environment.NewLine,
+		        "PartNumber|LanguageId|Name|ShortDescription|LongDescription|AuxDescription1|AuxDescription2|Keyword|Published|Delete",
+		        "030445|-1|Longines Ladies' Présence Watch|Quartz. Sapphire crystal. Gold-plated. Black leather strap. White dial. Date. Water-|Quartz. Sapphire crystal. Gold-plated. Black leather strap. White dial. Date. Water-resistant 30 m. 23 mm case.||||1|0",
+		        "030459|-1|Viktor & Rolf Flowerbomb EdP|The ultimate concentrate for enhancing skin's inherent multi-defensive power against|The ultimate concentrate for enhancing skin's inherent multi-defensive power against signs of aging, environmental factors and daily stress. Day by day, your skin becomes smoother and more resilient making wrinkles less noticeable and your complexion appears to glow with more radiance than ever. Ultimune Power Infusing Concentrate is for all women of all ages. It works with your skincare to boost the benefits of your regimen, no matter your concerns.",
+		        "Benefits: Shiseido's exclusive Ultimune Complex helps boost defensive functions that have declined in Langerhans Cells, the cells that hold the key to promoting skin's multi-defensive power. Now your skin can achieve its greatest beauty potential. Immediately, skin feels full and supple, with a silky-smooth surface. In one week, skin appears to glow more than ever. In 4 weeks: firmness and resilience are improved, making wrinkles less visible. Apply morning and night after cleansing and softening the face. When using other serums, apply Ultimune first to enhance the benefits of the following treatments.||||1|0",
+		        "030460|-1|Viktor & Rolf Flowerbomb EdT|A new chapter in the Flowerbomb story. A true bouquet of flowers that are good enoug|A new chapter in the Flowerbomb story. A true bouquet of flowers that are good enough to eat! With crispy buds that evoke the “morning dew”. This Fragrance is multi-faceted like the bottle it comes in: a mille-feuille of Flowerbomb flowers around freesia, centifolia rose and Sambac jasmine, refreshed by crispy green notes and a touch of mandarin and bergamot.||||1|0");
 
 			CsvRow[] rows = Parse(csv, configure => configure.ChangeDelimiter("|"));
 
@@ -128,8 +126,7 @@ Benefits: Shiseido's exclusive Ultimune Complex helps boost defensive functions 
 			Assert.That(rows[2]["PartNumber"], Is.EqualTo("030460"));
 
 			Assert.That(rows[0]["LongDescription"], Is.EqualTo("Quartz. Sapphire crystal. Gold-plated. Black leather strap. White dial. Date. Water-resistant 30 m. 23 mm case."));
-			Assert.That(rows[1]["LongDescription"], Is.EqualTo(@"The ultimate concentrate for enhancing skin's inherent multi-defensive power against signs of aging, environmental factors and daily stress. Day by day, your skin becomes smoother and more resilient making wrinkles less noticeable and your complexion appears to glow with more radiance than ever. Ultimune Power Infusing Concentrate is for all women of all ages. It works with your skincare to boost the benefits of your regimen, no matter your concerns.
-Benefits: Shiseido's exclusive Ultimune Complex helps boost defensive functions that have declined in Langerhans Cells, the cells that hold the key to promoting skin's multi-defensive power. Now your skin can achieve its greatest beauty potential. Immediately, skin feels full and supple, with a silky-smooth surface. In one week, skin appears to glow more than ever. In 4 weeks: firmness and resilience are improved, making wrinkles less visible. Apply morning and night after cleansing and softening the face. When using other serums, apply Ultimune first to enhance the benefits of the following treatments."));
+			Assert.That(rows[1]["LongDescription"], Is.EqualTo($"The ultimate concentrate for enhancing skin's inherent multi-defensive power against signs of aging, environmental factors and daily stress. Day by day, your skin becomes smoother and more resilient making wrinkles less noticeable and your complexion appears to glow with more radiance than ever. Ultimune Power Infusing Concentrate is for all women of all ages. It works with your skincare to boost the benefits of your regimen, no matter your concerns.{Environment.NewLine}Benefits: Shiseido's exclusive Ultimune Complex helps boost defensive functions that have declined in Langerhans Cells, the cells that hold the key to promoting skin's multi-defensive power. Now your skin can achieve its greatest beauty potential. Immediately, skin feels full and supple, with a silky-smooth surface. In one week, skin appears to glow more than ever. In 4 weeks: firmness and resilience are improved, making wrinkles less visible. Apply morning and night after cleansing and softening the face. When using other serums, apply Ultimune first to enhance the benefits of the following treatments."));
 			Assert.That(rows[2]["LongDescription"], Is.EqualTo("A new chapter in the Flowerbomb story. A true bouquet of flowers that are good enough to eat! With crispy buds that evoke the “morning dew”. This Fragrance is multi-faceted like the bottle it comes in: a mille-feuille of Flowerbomb flowers around freesia, centifolia rose and Sambac jasmine, refreshed by crispy green notes and a touch of mandarin and bergamot."));
 		}
 

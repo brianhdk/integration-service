@@ -65,12 +65,13 @@ namespace Vertica.Integration.Tests.Domain.Monitoring
                 Assert.That(entries.Length, Is.EqualTo(1));
                 Assert.That(entries[0].DateTime, Is.EqualTo(Time.UtcNow));
                 Assert.That(entries[0].Source, Is.EqualTo("Source"));
-                Assert.That(entries[0].Message, Is.EqualTo(@"Message. ErrorID: 3
-
---- Additional similar entries (Total: 3) ---
-
-ErrorID: 2 (6/13/2015 11:00:00 AM +00:00)
-ErrorID: 1 (6/13/2015 10:00:00 AM +00:00)"));
+                Assert.That(entries[0].Message, Is.EqualTo(string.Join(Environment.NewLine, 
+"Message. ErrorID: 3",
+string.Empty,
+"--- Additional similar entries (Total: 3) ---",
+string.Empty,
+"ErrorID: 2 (6/13/2015 11:00:00 AM +00:00)",
+"ErrorID: 1 (6/13/2015 10:00:00 AM +00:00)")));
             }
         }
 
