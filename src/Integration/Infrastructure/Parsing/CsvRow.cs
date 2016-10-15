@@ -224,8 +224,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
             public ICsvRowBuilderAdder Configure(Action<ICsvRowBuilderConfiguration> configure)
             {
-                if (configure != null)
-                    configure(this);
+                configure?.Invoke(this);
 
                 return this;
             }

@@ -44,9 +44,8 @@ namespace Vertica.Integration.Infrastructure.Logging
 				TextFileLoggerConfiguration configuration =
 					extensibility.Register(() => new TextFileLoggerConfiguration());
 
-				if (textFileLogger != null)
-					textFileLogger(configuration);
-			});
+                textFileLogger?.Invoke(configuration);
+            });
 
 			return Use<TextFileLogger>();
 		}
@@ -58,9 +57,8 @@ namespace Vertica.Integration.Infrastructure.Logging
 				TextWriterLoggerConfiguration configuration =
 					extensibility.Register(() => new TextWriterLoggerConfiguration());
 
-				if (textWriterLogger != null)
-					textWriterLogger(configuration);
-			});
+                textWriterLogger?.Invoke(configuration);
+            });
 
 			return Use<TextWriterLogger>();
 	    }

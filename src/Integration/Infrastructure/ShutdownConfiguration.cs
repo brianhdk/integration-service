@@ -8,7 +8,7 @@ namespace Vertica.Integration.Infrastructure
 {
 	public class ShutdownConfiguration : IInitializable<IWindsorContainer>
 	{
-        readonly Action<ComponentRegistration<IWaitForShutdownRequest>> _registration = component =>
+        private readonly Action<ComponentRegistration<IWaitForShutdownRequest>> _registration = component =>
         {
             component.LifestyleSingleton();
         };
@@ -27,10 +27,10 @@ namespace Vertica.Integration.Infrastructure
 		/// <summary>
 		/// Registers a custom implementation to take care of waiting for shutdown requests.
 		/// </summary>
-		public ShutdownConfiguration Custom<T>()
+		public ShutdownConfiguration Custom<T>(Action<ComponentRegistration<IWaitForShutdownRequest>> registration = null)
 			where T : class, IWaitForShutdownRequest
 		{
-		    _installer = Install.Type(typeof(T), _registration);
+		    _installer = Install.Type(typeof(T), registration ?? _registration);
 
 			return this;
 		}

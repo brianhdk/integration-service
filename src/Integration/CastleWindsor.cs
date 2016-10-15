@@ -5,6 +5,8 @@ using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.Resolvers;
 using Castle.Windsor;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
+using Vertica.Integration.Infrastructure.Logging;
+using Vertica.Integration.Infrastructure.Parsing;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Hosting;
 
@@ -32,7 +34,9 @@ namespace Vertica.Integration
 					.Ignore<IApplicationContext>()
 					.Ignore<IHost>()
                     .Ignore<ITask>()
-                    .Ignore<IStep>());
+                    .Ignore<IStep>()
+                    .Ignore<ITarget>()
+                    .Ignore<CsvRow.ICsvRowBuilder>());
 
             // Note: CollectionResolver is not added as this will cause problems for the StepResolver.
 
