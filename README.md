@@ -39,7 +39,7 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
  - [How to Setup ArchiveFoldersStep](#how-to-setup-archivefoldersstep)
  - [How to Extend MaintenanceTask](#how-to-extend-maintenancetask)
  - [How to Use Distributed Mutex](#how-to-use-distributed-mutex)
- - [How to Use Feature Toggler](#how-to-use-feature-togger)
+ - [How to Use Feature Toggler](#how-to-use-feature-toggler)
 
 ## How to Get Started
 

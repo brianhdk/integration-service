@@ -63,7 +63,7 @@ namespace Vertica.Integration.Model
         public TasksConfiguration Task<TTask, TWorkItem>(Action<TaskConfiguration<TWorkItem>> task = null)
             where TTask : Task<TWorkItem>
         {
-            var configuration = new TaskConfiguration<TWorkItem>(typeof (TTask));
+            var configuration = new TaskConfiguration<TWorkItem>(Application, typeof (TTask));
 
             task?.Invoke(configuration);
 

@@ -26,6 +26,7 @@ $settings = @{
 		"integration_perfion" = Resolve-Path $script_directory\..\src\Integration.Perfion
         "integration_hangfire" = Resolve-Path $script_directory\..\src\Integration.Hangfire
 		"integration_globase" = Resolve-Path $script_directory\..\src\Integration.Globase
+        "integration_ucommerce" = Resolve-Path $script_directory\..\src\Integration.UCommerce
     }
     "tools" = @{
         "nuget" = Resolve-Path $script_directory\..\.nuget\NuGet.exe

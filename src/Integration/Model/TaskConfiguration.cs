@@ -7,13 +7,17 @@ namespace Vertica.Integration.Model
 {
     public abstract class TaskConfiguration : IEquatable<TaskConfiguration>
     {
-        protected TaskConfiguration(Type task)
+        protected TaskConfiguration(ApplicationConfiguration application, Type task)
         {
+            if (application == null) throw new ArgumentNullException(nameof(application));
             if (task == null) throw new ArgumentNullException(nameof(task));
 
+            Application = application;
             Task = task;
             Steps = new List<Type>();
         }
+
+        public ApplicationConfiguration Application { get; }
 
         internal Type Task { get; }
         protected List<Type> Steps { get; }
@@ -43,8 +47,8 @@ namespace Vertica.Integration.Model
 
     public sealed class TaskConfiguration<TWorkItem> : TaskConfiguration
     {
-        internal TaskConfiguration(Type task)
-            : base(task)
+        internal TaskConfiguration(ApplicationConfiguration application, Type task)
+            : base(application, task)
         {
         }
 

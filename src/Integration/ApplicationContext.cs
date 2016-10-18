@@ -30,7 +30,13 @@ namespace Vertica.Integration
 
 			application?.Invoke(_configuration);
 
-		    _configuration.RegisterDependency<IShutdown>(this);
+            _configuration.Extensibility(extensibility =>
+            {
+                foreach (var subject in extensibility.OfType<IInitializable<ApplicationConfiguration>>())
+                    subject.Initialize(_configuration);
+            });
+
+            _configuration.RegisterDependency<IShutdown>(this);
 
 		    _container = CastleWindsor.Initialize(_configuration);
             _parser = Resolve<IArgumentsParser>();
