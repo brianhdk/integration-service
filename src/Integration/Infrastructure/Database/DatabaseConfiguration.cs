@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Vertica.Integration.Infrastructure.Database.Castle.Windsor;
@@ -24,7 +25,7 @@ namespace Vertica.Integration.Infrastructure.Database
         public ApplicationConfiguration Application { get; }
 
         public bool IntegrationDbDisabled { get; private set; }
-        //public Func<IKernel, string> IntegrationDbTablePrefix { get; private set; }
+        public Func<IKernel, string> IntegrationDbTablePrefix { get; private set; }
 
         public DatabaseConfiguration DisableIntegrationDb()
         {
@@ -33,14 +34,14 @@ namespace Vertica.Integration.Infrastructure.Database
             return this;
         }
 
-        //public DatabaseConfiguration PrefixIntegrationDbTables(Func<IKernel, string> prefix)
-        //{
-        //    if (prefix == null) throw new ArgumentNullException(nameof(prefix));
+        public DatabaseConfiguration PrefixIntegrationDbTables(Func<IKernel, string> prefix)
+        {
+            if (prefix == null) throw new ArgumentNullException(nameof(prefix));
 
-        //    IntegrationDbTablePrefix = prefix;
+            IntegrationDbTablePrefix = prefix;
 
-        //    return this;
-        //}
+            return this;
+        }
 
         /// <summary>
         /// Specifies the connection string for the IntegrationDb.
