@@ -4,6 +4,6 @@ namespace Vertica.Integration.Infrastructure.Database
     {
         bool Disabled { get; }
         
-        string TablePrefix { get; }
+        //string TablePrefix { get; }
     }
 }

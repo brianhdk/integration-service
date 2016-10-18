@@ -19,7 +19,7 @@ namespace Vertica.Integration.Infrastructure.Database
         public DatabaseConfiguration Database { get; }
 
         public bool Disabled { get; private set; }
-        public string TablePrefix { get; private set; }
+        //public string TablePrefix { get; private set; }
 
         public IntegrationDatabaseConfiguration Disable()
         {
@@ -28,14 +28,14 @@ namespace Vertica.Integration.Infrastructure.Database
             return this;
         }
 
-        public IntegrationDatabaseConfiguration PrefixTables(string prefix)
-        {
-            if (prefix == null) throw new ArgumentNullException(nameof(prefix));
+        //public IntegrationDatabaseConfiguration PrefixTables(string prefix)
+        //{
+        //    if (prefix == null) throw new ArgumentNullException(nameof(prefix));
 
-            TablePrefix = prefix;
+        //    TablePrefix = prefix;
 
-            return this;
-        }
+        //    return this;
+        //}
 
         public IntegrationDatabaseConfiguration Change(Action<IntegrationDatabaseConfiguration> change)
         {

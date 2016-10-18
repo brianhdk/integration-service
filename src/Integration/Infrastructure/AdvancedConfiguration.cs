@@ -18,7 +18,7 @@ namespace Vertica.Integration.Infrastructure
 	    private readonly IDictionary<Type, Tuple<Type, Type>> _types;
 	    private readonly IDictionary<Type, Tuple<Func<object>, Func<object>>> _instances;
 
-	    private ShutdownConfiguration _shutdown;
+	    private readonly ShutdownConfiguration _shutdown;
 
 	    internal AdvancedConfiguration(ApplicationConfiguration application)
         {
@@ -37,7 +37,9 @@ namespace Vertica.Integration.Infrastructure
 
 		    Register(() => Environment.UserInteractive ? Console.Out : TextWriter.Null);
 
-		    Application.Extensibility(extensibility => _shutdown = extensibility.Register(() => new ShutdownConfiguration(this)));
+	        _shutdown = new ShutdownConfiguration(this);
+
+            Application.Extensibility(extensibility => extensibility.Register(() => _shutdown));
         }
 
         public ApplicationConfiguration Application { get; }
@@ -96,11 +98,11 @@ namespace Vertica.Integration.Infrastructure
 			return this;
 	    }
 
-	    public AdvancedConfiguration ProcessExit(Action<ShutdownConfiguration> processExit)
+	    public AdvancedConfiguration Shutdown(Action<ShutdownConfiguration> shutdown)
 	    {
-		    if (processExit == null) throw new ArgumentNullException(nameof(processExit));
+		    if (shutdown == null) throw new ArgumentNullException(nameof(shutdown));
 
-		    processExit(_shutdown);
+		    shutdown(_shutdown);
 
 		    return this;
 	    }
