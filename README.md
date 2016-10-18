@@ -2510,6 +2510,7 @@ Only tasks that have been explicity marked as "AllowConcurrentExecution" will th
 ```
 
 TODO: Document the IPreventConcurrentExecutionRuntimeEvaluator feature.
+TODO: Document the IPreventConcurrentTaskExecutionCustomLockName feature.
 
 [Back to Table of Contents](#table-of-contents)
 
