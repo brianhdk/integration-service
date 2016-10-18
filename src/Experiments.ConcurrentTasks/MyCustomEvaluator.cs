@@ -13,9 +13,10 @@ namespace Experiments.ConcurrentTasks
             _inner = inner;
         }
 
-        public bool Disabled(ITask currentTask)
+        public bool Disabled(ITask currentTask, Arguments arguments)
         {
-            return _inner.Disabled(currentTask);
+            return false;
+            return _inner.Disabled(currentTask, arguments);
         }
     }
 }

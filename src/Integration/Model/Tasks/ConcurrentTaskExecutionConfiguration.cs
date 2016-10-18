@@ -7,12 +7,14 @@ namespace Vertica.Integration.Model.Tasks
     public class ConcurrentTaskExecutionConfiguration : IInitializable<IWindsorContainer>
     {
         private readonly ScanAddRemoveInstaller<IPreventConcurrentTaskExecutionRuntimeEvaluator> _evaluators;
+        private readonly ScanAddRemoveInstaller<IPreventConcurrentTaskExecutionCustomLockName> _customLockNames;
 
         internal ConcurrentTaskExecutionConfiguration(TasksConfiguration tasks)
         {
             if (tasks == null) throw new ArgumentNullException(nameof(tasks));
 
             _evaluators = new ScanAddRemoveInstaller<IPreventConcurrentTaskExecutionRuntimeEvaluator>(serviceDescriptor: x => x.Self());
+            _customLockNames = new ScanAddRemoveInstaller<IPreventConcurrentTaskExecutionCustomLockName>(serviceDescriptor: x => x.Self());
 
             // scan own assembly
             AddFromAssemblyOfThis<ConcurrentTaskExecutionConfiguration>();
@@ -26,6 +28,7 @@ namespace Vertica.Integration.Model.Tasks
         public ConcurrentTaskExecutionConfiguration AddFromAssemblyOfThis<T>()
         {
             _evaluators.AddFromAssemblyOfThis<T>();
+            _customLockNames.AddFromAssemblyOfThis<T>();
 
             return this;
         }
@@ -55,11 +58,36 @@ namespace Vertica.Integration.Model.Tasks
         }
 
         /// <summary>
+        /// Adds the specified <typeparamref name="TEvaluator"/>.
+        /// </summary>
+        /// <typeparam name="TEvaluator">Specifies the <see cref="IPreventConcurrentTaskExecutionCustomLockName"/> to be added.</typeparam>
+        public ConcurrentTaskExecutionConfiguration AddCustomLockName<TEvaluator>()
+            where TEvaluator : IPreventConcurrentTaskExecutionCustomLockName
+        {
+            _customLockNames.Add<TEvaluator>();
+
+            return this;
+        }
+
+        /// <summary>
+        /// Skips the specified <typeparamref name="TEvaluator" />.
+        /// </summary>
+        /// <typeparam name="TEvaluator">Specifies the <see cref="IPreventConcurrentTaskExecutionCustomLockName"/> that will be skipped.</typeparam>
+        public ConcurrentTaskExecutionConfiguration RemoveCustomLockName<TEvaluator>()
+            where TEvaluator : IPreventConcurrentTaskExecutionCustomLockName
+        {
+            _customLockNames.Remove<TEvaluator>();
+
+            return this;
+        }
+
+        /// <summary>
         /// Clears all registrations.
         /// </summary>
         public ConcurrentTaskExecutionConfiguration Clear()
         {
             _evaluators.Clear();
+            _customLockNames.Clear();
 
             return this;
         }
@@ -67,6 +95,7 @@ namespace Vertica.Integration.Model.Tasks
         void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
         {
             container.Install(_evaluators);
+            container.Install(_customLockNames);
         }
     }
 }

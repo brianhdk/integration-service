@@ -29,8 +29,13 @@ namespace Vertica.Integration.Model.Tasks
         }
 
         /// <summary>
-        /// Specifies a type that implements <see cref="IPreventConcurrentTaskExecutionRuntimeEvaluator" /> to be able to specify at runtime whether to prevent concurrent execution or not.
+        /// Specifies a type that implements <see cref="IPreventConcurrentTaskExecutionRuntimeEvaluator" /> to decide whether to Prevent Concurrent Execution at runtime.
         /// </summary>
         public Type RuntimeEvaluator { get; set; }
+
+        /// <summary>
+        /// Specifies a type that implements <see cref="IPreventConcurrentTaskExecutionCustomLockName"/> to be able to specify a custom lock name at runtime.
+        /// </summary>
+        public Type CustomLockName { get; set; }
     }
 }

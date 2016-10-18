@@ -5,6 +5,6 @@ namespace Vertica.Integration.Model.Tasks
 {
     public interface IConcurrentTaskExecution
     {
-        IDisposable Handle(ITask task, TaskLog log);
+        IDisposable Handle(ITask task, Arguments arguments, TaskLog log);
     }
 }

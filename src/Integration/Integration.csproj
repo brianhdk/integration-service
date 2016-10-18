@@ -318,6 +318,7 @@
     <Compile Include="Model\Tasks\Evaluators\DisabledIfEnvironmentIsDevelopment.cs" />
     <Compile Include="Model\Tasks\Evaluators\DisabledIfIntegrationDbIsDisabled.cs" />
     <Compile Include="Model\Tasks\IConcurrentTaskExecution.cs" />
+    <Compile Include="Model\Tasks\IPreventConcurrentTaskExecutionCustomLockName.cs" />
     <Compile Include="Model\Tasks\IPreventConcurrentTaskExecutionRuntimeEvaluator.cs" />
     <Compile Include="Model\Tasks\PreventConcurrentTaskExecutionAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

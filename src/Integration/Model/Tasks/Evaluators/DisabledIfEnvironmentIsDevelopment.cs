@@ -13,7 +13,7 @@ namespace Vertica.Integration.Model.Tasks.Evaluators
             _settings = settings;
         }
 
-        public bool Disabled(ITask currentTask)
+        public bool Disabled(ITask currentTask, Arguments arguments)
         {
             return _settings.Environment == ApplicationEnvironment.Development;
         }

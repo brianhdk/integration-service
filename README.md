@@ -2497,13 +2497,13 @@ public class SynchronousOnlyTask : Task
 }
 ```
 
-In app.config, you can turn on the "Prevent Concurrent Execution"-behaviour on all tasks, by setting the value of "ConcurrentTaskExecution.EnabledOnAllTasks" to "true".
-Only tasks that have been explicity marked as "AllowConcurrentExecution" will support running in parallel.
+In app.config, you can turn on the "Prevent Concurrent Execution"-behaviour on all tasks, by setting the value of "ConcurrentTaskExecution.PreventConcurrentTaskExecutionOnAllTasks" to "true".
+Only tasks that have been explicity marked as "AllowConcurrentExecution" will then support running in parallel.
 
 
 ```xml
   <appSettings>
-    <add key="ConcurrentTaskExecution.EnabledOnAllTasks" value="false" />
+    <add key="ConcurrentTaskExecution.PreventConcurrentTaskExecutionOnAllTasks" value="false" />
     <add key="ConcurrentTaskExecution.DefaultWaitTime" value="00:00:20" />
     <add key="DbDistributedMutex.QueryLockInterval" value="00:00:01" />
   </appSettings>

@@ -49,7 +49,7 @@ namespace Vertica.Integration.Model
 			};
 
             using (var taskLog = new TaskLog(task, _logger.LogEntry, new Output(outputter)))
-            using (_concurrentTaskExecution.Handle(task, taskLog))
+            using (_concurrentTaskExecution.Handle(task, arguments, taskLog))
             {
                 TWorkItem workItem;
 

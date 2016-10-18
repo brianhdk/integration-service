@@ -20,22 +20,21 @@ namespace Experiments.ConcurrentTasks
 
             using (IApplicationContext context = ApplicationContext.Create(application => application
                 .Database(database => database
-                    .IntegrationDb(db).DisableIntegrationDb())
+                    .IntegrationDb(db)/*.DisableIntegrationDb()*/)
                 .UseLiteServer(server => server
                     .AddFromAssemblyOfThis<Program>())
-                .UseHangfire(hangfire => hangfire
-                    .AddFromAssemblyOfThis<Program>()
-                    .AddToLiteServer()
-                    .Configuration(configuration => configuration
-                        .UseSqlServerStorage(db, new SqlServerStorageOptions
-                        {
-                            QueuePollInterval = TimeSpan.FromSeconds(1),
-                        })))
+                //.UseHangfire(hangfire => hangfire
+                //    .AddFromAssemblyOfThis<Program>()
+                //    .AddToLiteServer()
+                //    .Configuration(configuration => configuration
+                //        .UseSqlServerStorage(db, new SqlServerStorageOptions
+                //        {
+                //            QueuePollInterval = TimeSpan.FromSeconds(1),
+                //        })))
                 .Tasks(tasks => tasks
                     .AddFromAssemblyOfThis<Program>()
                     .MaintenanceTask()
-                    .ConcurrentTaskExecution(concurrentTaskExecution => concurrentTaskExecution
-                        .AddFromAssemblyOfThis<Program>()))
+                    .ConcurrentTaskExecution(concurrentTaskExecution => concurrentTaskExecution.AddFromAssemblyOfThis<Program>()))
                 .AddCustomInstaller(Install.ByConvention.AddFromAssemblyOfThis<Program>())))
             {
                 var shutdown = context.Resolve<IShutdown>();
@@ -46,11 +45,13 @@ namespace Experiments.ConcurrentTasks
                 // migrate first
                 runner.Execute(factory.Get<MigrateTask>());
 
+                runner.Execute(factory.Get<SynchronousOnlyTask>());
+
                 //runner.Execute(factory.Get<ConcurrentExecutableTask>());
                 //runner.Execute(factory.Get<SynchronousOnlyTask>());
 
-                RecurringJob.AddOrUpdate<ITaskByNameRunner>(nameof(ConcurrentExecutableTask), x => x.Run(nameof(ConcurrentExecutableTask)), Cron.Minutely);
-                RecurringJob.AddOrUpdate<ITaskByNameRunner>(nameof(SynchronousOnlyTask), x => x.Run(nameof(SynchronousOnlyTask)), Cron.Minutely);
+                //RecurringJob.AddOrUpdate<ITaskByNameRunner>(nameof(ConcurrentExecutableTask), x => x.Run(nameof(ConcurrentExecutableTask)), Cron.Minutely);
+                //RecurringJob.AddOrUpdate<ITaskByNameRunner>(nameof(SynchronousOnlyTask), x => x.Run(nameof(SynchronousOnlyTask)), Cron.Minutely);
 
                 using (liteServer.Create())
                 {

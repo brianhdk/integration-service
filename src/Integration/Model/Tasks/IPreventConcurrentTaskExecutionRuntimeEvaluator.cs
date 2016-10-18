@@ -5,6 +5,6 @@
     /// </summary>
     public interface IPreventConcurrentTaskExecutionRuntimeEvaluator
     {
-        bool Disabled(ITask currentTask);
+        bool Disabled(ITask currentTask, Arguments arguments);
     }
 }

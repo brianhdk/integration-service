@@ -31,7 +31,9 @@ namespace Vertica.Integration.Slack
 		/// </summary>
 		public SlackConfiguration AddToLiteServer()
 		{
-			Application.UseLiteServer(server => server.AddServer<SlackBackgroundServer>());
+			Application.UseLiteServer(server => server
+                .AddServer<SlackBackgroundServer>()
+                .AddServer<SlackWebApiServer>());
 
 			return this;
 		}

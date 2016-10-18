@@ -14,7 +14,7 @@ namespace Vertica.Integration.Model.Tasks.Evaluators
             _configuration = configuration;
         }
 
-        public bool Disabled(ITask currentTask)
+        public bool Disabled(ITask currentTask, Arguments arguments)
         {
             return _configuration.IntegrationDbDisabled;
         }

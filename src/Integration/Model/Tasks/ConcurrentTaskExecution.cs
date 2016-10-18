@@ -15,7 +15,7 @@ namespace Vertica.Integration.Model.Tasks
         private readonly ILogger _logger;
 
         private readonly DistributedMutexConfiguration _defaultConfiguration;
-        private readonly bool _enabledOnAllTasks;
+        private readonly bool _preventConcurrentTaskExecutionOnAllTasks;
 
         public ConcurrentTaskExecution(IDistributedMutex distributedMutex, IKernel kernel, ILogger logger, IRuntimeSettings settings)
         {
@@ -23,12 +23,13 @@ namespace Vertica.Integration.Model.Tasks
             _kernel = kernel;
             _logger = logger;
 
-            _defaultConfiguration = DefaultConfiguration(settings, out _enabledOnAllTasks);
+            _defaultConfiguration = DefaultConfiguration(settings, out _preventConcurrentTaskExecutionOnAllTasks);
         }
 
-        public IDisposable Handle(ITask task, TaskLog log)
+        public IDisposable Handle(ITask task, Arguments arguments, TaskLog log)
         {
             if (task == null) throw new ArgumentNullException(nameof(task));
+            if (arguments == null) throw new ArgumentNullException(nameof(arguments));
             if (log == null) throw new ArgumentNullException(nameof(log));
 
             var preventConcurrent = task.GetAttribute<PreventConcurrentTaskExecutionAttribute>();
@@ -38,7 +39,7 @@ namespace Vertica.Integration.Model.Tasks
                 if (task.HasAttribute<AllowConcurrentTaskExecutionAttribute>())
                     return null;
 
-                if (!_enabledOnAllTasks)
+                if (!_preventConcurrentTaskExecutionOnAllTasks)
                     return null;
             }
             else
@@ -63,14 +64,16 @@ using (IApplicationContext context = ApplicationContext.Create(application => ap
             .AddFromAssemblyOfThis<Program>()
             .AddEvaluator<MyCustomEvaluator>()))");
 
-                    if (runtimeEvaluator.Disabled(task))
+                    if (runtimeEvaluator.Disabled(task, arguments))
                         return null;
                 }
             }
 
+            string lockName = GetLockName(task, arguments, preventConcurrent);
+
             try
             {
-                var context = new DistributedMutexContext(task.Name(), preventConcurrent?.Configuration ?? _defaultConfiguration, log.LogMessage);
+                var context = new DistributedMutexContext(lockName, preventConcurrent?.Configuration ?? _defaultConfiguration, log.LogMessage);
 
                 return _distributedMutex.Enter(context);
             }
@@ -79,17 +82,50 @@ using (IApplicationContext context = ApplicationContext.Create(application => ap
                 ErrorLog errorLog = _logger.LogError(ex);
                 log.ErrorLog = errorLog;
 
-                throw new TaskExecutionFailedException("Unable to acquire lock.", ex);
+                throw new TaskExecutionFailedException($"Unable to acquire lock '{lockName}'.", ex);
             }
         }
 
-        private static DistributedMutexConfiguration DefaultConfiguration(IRuntimeSettings settings, out bool enabledOnAllTasks)
+        private string GetLockName(ITask task, Arguments arguments, PreventConcurrentTaskExecutionAttribute preventConcurrent)
+        {
+            Type customLockNameType = preventConcurrent?.CustomLockName;
+
+            if (customLockNameType != null)
+            {
+                var customLockName =
+                    _kernel.Resolve(customLockNameType) as IPreventConcurrentTaskExecutionCustomLockName;
+
+                if (customLockName == null)
+                    throw new InvalidOperationException(
+                        $@"Unable to resolve custom lock name type '{customLockNameType.FullName}'. 
+
+
+Either the type does not implement '{nameof(IPreventConcurrentTaskExecutionCustomLockName)}'-interface or you forgot to register the type as a custom lock name. 
+
+You can register custom evaluators when setting up Integration Service in the ApplicationContext.Create(...)-method:
+
+using (IApplicationContext context = ApplicationContext.Create(application => application
+    .Tasks(tasks => tasks
+        .ConcurrentTaskExecution(concurrentTaskExecution => concurrentTaskExecution
+            .AddFromAssemblyOfThis<Program>()
+            .AddCustomLockName<MyCustomEvaluator>()))");
+
+                string lockName = customLockName.GetLockName(task, arguments);
+
+                if (!string.IsNullOrWhiteSpace(lockName))
+                    return lockName;
+            }
+
+            return task.Name();
+        }
+
+        private static DistributedMutexConfiguration DefaultConfiguration(IRuntimeSettings settings, out bool preventConcurrentTaskExecutionOnAllTasks)
         {
             TimeSpan defaultWaitTime;
             if (!TimeSpan.TryParse(settings[$"{nameof(ConcurrentTaskExecution)}.DefaultWaitTime"], out defaultWaitTime))
                 defaultWaitTime = TimeSpan.FromSeconds(30);
 
-            bool.TryParse(settings[$"{nameof(ConcurrentTaskExecution)}.EnabledOnAllTasks"], out enabledOnAllTasks);
+            bool.TryParse(settings[$"{nameof(ConcurrentTaskExecution)}.PreventConcurrentTaskExecutionOnAllTasks"], out preventConcurrentTaskExecutionOnAllTasks);
 
             return new DistributedMutexConfiguration(defaultWaitTime);
         }
