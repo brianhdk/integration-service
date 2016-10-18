@@ -5,9 +5,9 @@ namespace Vertica.Integration.Model.Tasks.Evaluators
 {
     public sealed class DisabledIfIntegrationDbIsDisabled : IPreventConcurrentTaskExecutionRuntimeEvaluator
     {
-        private readonly IDatabaseConfiguration _configuration;
+        private readonly IIntegrationDatabaseConfiguration _configuration;
 
-        public DisabledIfIntegrationDbIsDisabled(IDatabaseConfiguration configuration)
+        public DisabledIfIntegrationDbIsDisabled(IIntegrationDatabaseConfiguration configuration)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
@@ -16,7 +16,7 @@ namespace Vertica.Integration.Model.Tasks.Evaluators
 
         public bool Disabled(ITask currentTask, Arguments arguments)
         {
-            return _configuration.IntegrationDbDisabled;
+            return _configuration.Disabled;
         }
     }
 }

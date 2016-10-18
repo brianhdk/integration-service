@@ -9,18 +9,18 @@ namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db
 {
     public class CleanUpDbDistributedMutexStep : Step<MaintenanceWorkItem>
     {
-        private readonly IDatabaseConfiguration _confiugration;
         private readonly Lazy<IDbFactory> _db;
+        private readonly IIntegrationDatabaseConfiguration _configuration;
 
-        public CleanUpDbDistributedMutexStep(IDatabaseConfiguration confiugration, Lazy<IDbFactory> db)
+        public CleanUpDbDistributedMutexStep(Lazy<IDbFactory> db, IIntegrationDatabaseConfiguration confiugration)
         {
             _db = db;
-            _confiugration = confiugration;
+            _configuration = confiugration;
         }
 
         public override Execution ContinueWith(MaintenanceWorkItem workItem)
         {
-            if (_confiugration.IntegrationDbDisabled)
+            if (_configuration.Disabled)
                 return Execution.StepOver;
 
             return Execution.Execute;

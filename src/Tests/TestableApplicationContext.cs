@@ -10,7 +10,7 @@ namespace Vertica.Integration.Tests
 			if (application == null) throw new ArgumentNullException(nameof(application));
 
 			var context = new ApplicationContext(configuration => configuration
-				.Database(database => database.DisableIntegrationDb())
+				.Database(database => database.IntegrationDb(integrationDb => integrationDb.Disable()))
 				.Logging(logging => logging.Disable())
 				.RuntimeSettings(new InMemoryRuntimeSettings()
 					.Set("Environment", "Testing"))

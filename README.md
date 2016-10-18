@@ -2018,7 +2018,7 @@ To setup a Hangfire integration, start by adding the following package:
 It is possible to disable the IntegrationDb entirely, if you are using the Integration Service in a way where the requirement on an underlying database seems overkill. 
 Maybe you're using it to expose some few HTTP services or maybe you're using it as a "Run-Once" Legacy Migration platform.
 
-Disabling the IntegrationDb is easy. Use the **.Database(...)** method on part of bootstrapping Integration Service.
+Disabling the IntegrationDb is easy. Use the **.Database(...)** method to access the IntegrationDbConfiguration. See below:
 
 ```c#
 namespace ConsoleApplication16
@@ -2028,7 +2028,9 @@ namespace ConsoleApplication16
         static void Main(string[] args)
         {
             IntegrationStartup.Run(args, application => application
-                .Database(database => database.DisableIntegrationDb()));
+                .Database(database => database
+                    .IntegrationDb(integrationDb => integrationDb
+                        .Disable())));
         }
     }
 }

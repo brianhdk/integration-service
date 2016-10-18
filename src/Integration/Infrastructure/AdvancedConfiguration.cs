@@ -108,7 +108,9 @@ namespace Vertica.Integration.Infrastructure
 	    void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
 	    {
 			bool disabled = false;
-		    Application.Database(database => disabled = database.IntegrationDbDisabled);
+		    Application.Database(database => database
+                .IntegrationDb(integrationDb => 
+                    disabled = integrationDb.Disabled));
 
 		    foreach (var pair in _types.Where(x => x.Value != null))
 			    container.Register(Component.For(pair.Key).ImplementedBy(!disabled ? pair.Value.Item1 : pair.Value.Item2).LifestyleSingleton());

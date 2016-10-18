@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using Experiments.MaintenanceTask.Migrations.UCommerce;
 using Vertica.Integration;
 using Vertica.Integration.Domain.Core;
@@ -16,7 +15,9 @@ namespace Experiments.MaintenanceTask
         static void Main(string[] args)
         {
             using (IApplicationContext context = ApplicationContext.Create(application => application
-                .Database(database => database.IntegrationDb(ConnectionString.FromText("Server=.\\SQLExpress;Database=IS_MaintenanceTask;Trusted_Connection=True;")))
+                .Database(database => database
+                    .IntegrationDb(integrationDb => integrationDb
+                        .Connection(ConnectionString.FromText("Server=.\\SQLExpress;Database=IS_MaintenanceTask;Trusted_Connection=True;"))))
                 .UseUCommerce(uCommerce => uCommerce.Database(ConnectionString.FromText("Server=.\\SQLExpress;Database=sc82-ucommerceSitecore_web;Trusted_Connection=True;")))
                 .Migration(migration => migration.AddUCommerceFromNamespaceOfThis<M1_UCommerce>(DatabaseServer.SqlServer2014))
                 .Tasks(tasks => tasks.MaintenanceTask(m => m.IncludeUCommerce()))))

@@ -11,12 +11,12 @@ namespace Vertica.Integration.Domain.Core
 {
 	public class CleanUpIntegrationDbStep : Step<MaintenanceWorkItem>
 	{
-	    private readonly IDatabaseConfiguration _dbConfiguration;
+	    private readonly IIntegrationDatabaseConfiguration _dbConfiguration;
 	    private readonly Lazy<IDbFactory> _db;
 	    private readonly IConfigurationService _configuration;
 	    private readonly IArchiveService _archiver;
 
-		public CleanUpIntegrationDbStep(IDatabaseConfiguration dbConfiguration, Lazy<IDbFactory> db, IConfigurationService configuration, IArchiveService archiver)
+		public CleanUpIntegrationDbStep(IIntegrationDatabaseConfiguration dbConfiguration, Lazy<IDbFactory> db, IConfigurationService configuration, IArchiveService archiver)
 		{
 		    _dbConfiguration = dbConfiguration;
 		    _db = db;
@@ -26,7 +26,7 @@ namespace Vertica.Integration.Domain.Core
 
         public override Execution ContinueWith(MaintenanceWorkItem workItem)
         {
-            if (_dbConfiguration.IntegrationDbDisabled)
+            if (_dbConfiguration.Disabled)
                 return Execution.StepOver;
 
             return Execution.Execute;

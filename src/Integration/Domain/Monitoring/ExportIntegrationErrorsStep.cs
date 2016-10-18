@@ -15,11 +15,11 @@ namespace Vertica.Integration.Domain.Monitoring
     {
         internal const string MessageGroupingPattern = @"ErrorID: .+$";
 
-        private readonly IDatabaseConfiguration _configuration;
+        private readonly IIntegrationDatabaseConfiguration _configuration;
         private readonly Lazy<IDbFactory> _db;
         private readonly ITaskFactory _taskFactory;
 
-        public ExportIntegrationErrorsStep(IDatabaseConfiguration configuration, Lazy<IDbFactory> db, ITaskFactory taskFactory)
+        public ExportIntegrationErrorsStep(IIntegrationDatabaseConfiguration configuration, Lazy<IDbFactory> db, ITaskFactory taskFactory)
         {
             _configuration = configuration;
             _db = db;
@@ -28,7 +28,7 @@ namespace Vertica.Integration.Domain.Monitoring
 
         public override Execution ContinueWith(MonitorWorkItem workItem)
         {
-            if (_configuration.IntegrationDbDisabled)
+            if (_configuration.Disabled)
                 return Execution.StepOver;
 
             return Execution.Execute;

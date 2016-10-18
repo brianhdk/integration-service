@@ -20,7 +20,8 @@ namespace Experiments.ConcurrentTasks
 
             using (IApplicationContext context = ApplicationContext.Create(application => application
                 .Database(database => database
-                    .IntegrationDb(db)/*.DisableIntegrationDb()*/)
+                    .IntegrationDb(integrationDb => integrationDb
+                        .Connection(db)))
                 .UseLiteServer(server => server
                     .AddFromAssemblyOfThis<Program>())
                 //.UseHangfire(hangfire => hangfire

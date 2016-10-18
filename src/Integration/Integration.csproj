@@ -130,6 +130,7 @@
     <Compile Include="ExtensibilityConfiguration.cs" />
     <Compile Include="IApplicationContext.cs" />
     <Compile Include="IInitializable.cs" />
+    <Compile Include="Infrastructure\Database\IntegrationDatabaseConfiguration.cs" />
     <Compile Include="Infrastructure\Extensions\QueueExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\RepeatExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\StringExtensions.cs" />
@@ -160,7 +161,7 @@
     <Compile Include="Infrastructure\Database\DefaultConnection.cs" />
     <Compile Include="Infrastructure\Database\Extensions\DbExtensions.cs" />
     <Compile Include="Infrastructure\Database\Extensions\SqlDbExtensions.cs" />
-    <Compile Include="Infrastructure\Database\IDatabaseConfiguration.cs" />
+    <Compile Include="Infrastructure\Database\IIntegrationDatabaseConfiguration.cs" />
     <Compile Include="Infrastructure\Database\IntegrationDbException.cs" />
     <Compile Include="Infrastructure\Database\IDbFactory.cs" />
     <Compile Include="Infrastructure\Database\IDbSession.cs" />
