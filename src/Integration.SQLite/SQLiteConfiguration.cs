@@ -26,11 +26,10 @@ namespace Vertica.Integration.SQLite
 		{
 			if (connection == null) throw new ArgumentNullException(nameof(connection));
 
-		    Database.IntegrationDb(integrationDb => integrationDb.Connection(connection));
-
-			Database.Application.Migration(migration => migration
-				.ChangeIntegrationDbDatabaseServer(DatabaseServer.Sqlite)
-				.DisableCheckExistsAndCreateIntegrationDbIfNotFound());
+		    Database.IntegrationDb(integrationDb => integrationDb
+                .Connection(connection)
+                .ChangeDatabaseServer(DatabaseServer.Sqlite)
+                .DisableCheckExistsAndCreateDatabaseIfNotFound());
 
 			return this;
 		}

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -8,15 +9,20 @@ namespace Vertica.Integration.Portal.Controllers
 {
 	public class GraphController : ApiController
 	{
-		private readonly IDbFactory _db;
+        private readonly Lazy<IDbFactory> _db;
+        private readonly IIntegrationDatabaseConfiguration _configuration;
 
-		public GraphController(IDbFactory db)
-		{
-			_db = db;
-		}
+        public GraphController(Lazy<IDbFactory> db, IIntegrationDatabaseConfiguration configuration)
+        {
+            _db = db;
+            _configuration = configuration;
+        }
 
-		public HttpResponseMessage Get(int id)
-		{
+        public HttpResponseMessage Get(int id)
+        {
+            if (_configuration.Disabled)
+                return Request.CreateResponse(HttpStatusCode.OK);
+
 			switch (id)
 			{
 				case 1:
@@ -35,15 +41,18 @@ namespace Vertica.Integration.Portal.Controllers
 
 		private HttpResponseMessage LastFiveDaysOfErrors()
 		{
-			string sql = @"SELECT TOP 5 Max(CONVERT(VARCHAR(50), TimeStamp, 105)) as Date,
-count(id) as Errors
-FROM [ErrorLog]
+			string sql = $@"
+SELECT 
+    TOP 5 Max(CONVERT(VARCHAR(50), TimeStamp, 105)) as Date,
+    count(id) as Errors
+FROM 
+    [{_configuration.TableName(IntegrationDbTable.ErrorLog)}]
 group by DAY(TimeStamp)
 order by Date desc";
 
 			IEnumerable<object> errors;
 
-			using (IDbSession session = _db.OpenSession())
+			using (IDbSession session = _db.Value.OpenSession())
 			{
 				errors = session.Query<object>(sql);
 			}

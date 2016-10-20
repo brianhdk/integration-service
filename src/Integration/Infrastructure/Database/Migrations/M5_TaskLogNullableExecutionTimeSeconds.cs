@@ -6,14 +6,16 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
     [Migration(5)]
     [DbLoggerFeature]
-    public class M5_TaskLogNullableExecutionTimeSeconds : Migration
+    public class M5_TaskLogNullableExecutionTimeSeconds : IntegrationMigration
     {
         public override void Up()
         {
-            Alter.Table("TaskLog")
+            var configuration = Resolve<IIntegrationDatabaseConfiguration>();
+
+            Alter.Table(configuration.TableName(IntegrationDbTable.TaskLog))
                 .AlterColumn("ExecutionTimeSeconds").AsDouble().Nullable();
 
-            Execute.Sql("UPDATE TaskLog SET ExecutionTimeSeconds = NULL WHERE ([Type] = 'M');");
+            Execute.Sql($"UPDATE [{configuration.TableName(IntegrationDbTable.TaskLog)}] SET ExecutionTimeSeconds = NULL WHERE ([Type] = 'M');");
         }
 
         public override void Down()

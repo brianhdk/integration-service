@@ -6,11 +6,13 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
     [Migration(7)]
     [DbDistributedMutexFeature]
-    public class M7_DbDistributedMutex : Migration
+    public class M7_DbDistributedMutex : IntegrationMigration
     {
         public override void Up()
         {
-            Create.Table("DistributedMutex")
+            var configuration = Resolve<IIntegrationDatabaseConfiguration>();
+
+            Create.Table(configuration.TableName(IntegrationDbTable.DistributedMutex))
                 .WithColumn("Name").AsString(50).PrimaryKey()
                 .WithColumn("LockId").AsGuid()
                 .WithColumn("CreatedAt").AsDateTimeOffset()

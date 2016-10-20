@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Castle.MicroKernel;
 using Vertica.Integration.Infrastructure;
+using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Utilities_v4;
 using Vertica.Utilities_v4.Extensions.EnumerableExt;
@@ -20,7 +20,7 @@ namespace Vertica.Integration.Domain.LiteServer
 	    private readonly IKernel _kernel;
 	    private readonly IShutdown _shutdown;
 	    private readonly ILogger _logger;
-	    private readonly TextWriter _outputter;
+	    private readonly IConsoleWriter _writer;
 	    private readonly InternalConfiguration _configuration;
 
 	    private readonly Scheduler _scheduler;
@@ -35,28 +35,28 @@ namespace Vertica.Integration.Domain.LiteServer
 
 		    _kernel = kernel;
 		    _shutdown = kernel.Resolve<IShutdown>();
-		    _outputter = kernel.Resolve<TextWriter>();
+		    _writer = kernel.Resolve<IConsoleWriter>();
 		    _logger = kernel.Resolve<ILogger>();
 		    _configuration = configuration;
 
 		    _scheduler = Scheduler.Current;
 
-			Output("[LiteServer]: Starting");
+			Output("Starting");
 
 			Execute(_configuration.OnStartup);
 
 			_tasks = kernel.ResolveAll<IBackgroundWorker>()
-				.Select(worker => new BackgroundWorkServer(worker, _scheduler))
+				.Select(worker => new BackgroundWorkServer(worker, _scheduler, _writer))
 				.Concat(kernel.ResolveAll<IBackgroundServer>())
 				.Select(Create)
 				.ToList();
 
-			_houseKeeping = Create(new BackgroundWorkServer(this, _scheduler));
+			_houseKeeping = Create(new BackgroundWorkServer(this, _scheduler, _writer));
 		}
 
 		private void Output(string message)
 		{
-			_outputter.WriteLine(message);
+			_writer.WriteLine($"[LiteServer]: {message}");
 		}
 
 		private Task Create(IBackgroundServer server)
@@ -66,7 +66,7 @@ namespace Vertica.Integration.Domain.LiteServer
 
 		public void Dispose()
 		{
-			Output("[LiteServer]: Stopping.");
+			Output("Stopping.");
 
 			Exception[] exceptions = _tasks
 				.Where(x => x.IsFaulted && x.Exception != null)
@@ -97,7 +97,7 @@ namespace Vertica.Integration.Domain.LiteServer
 
 			Execute(_configuration.OnShutdown);
 
-			Output($"[LiteServer]: Stopped. Uptime: {Uptime}.");
+			Output($"Stopped. Uptime: {Uptime}.");
 		}
 
 		private string Uptime
@@ -154,7 +154,7 @@ namespace Vertica.Integration.Domain.LiteServer
 
 			if (_tasks.All(x => x.IsCompleted))
 			{
-				Output("[LiteServer]: Exiting housekeeping (no more tasks to monitor).");
+				Output("Exiting housekeeping (no more tasks to monitor).");
 				return context.Exit();
 			}
 
@@ -163,7 +163,7 @@ namespace Vertica.Integration.Domain.LiteServer
 
 		private void LogError(Exception ex)
 		{
-			_outputter.WriteLine($"[LiteServer]: ERROR: {ex.Message}");
+			Output($"ERROR: {ex.Message}");
 			_logger.LogError(ex);
 		}
 

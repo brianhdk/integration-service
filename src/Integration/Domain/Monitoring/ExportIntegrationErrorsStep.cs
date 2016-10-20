@@ -15,14 +15,14 @@ namespace Vertica.Integration.Domain.Monitoring
     {
         internal const string MessageGroupingPattern = @"ErrorID: .+$";
 
-        private readonly IIntegrationDatabaseConfiguration _configuration;
         private readonly Lazy<IDbFactory> _db;
+        private readonly IIntegrationDatabaseConfiguration _configuration;
         private readonly ITaskFactory _taskFactory;
 
-        public ExportIntegrationErrorsStep(IIntegrationDatabaseConfiguration configuration, Lazy<IDbFactory> db, ITaskFactory taskFactory)
+        public ExportIntegrationErrorsStep(Lazy<IDbFactory> db, IIntegrationDatabaseConfiguration configuration, ITaskFactory taskFactory)
         {
-            _configuration = configuration;
             _db = db;
+            _configuration = configuration;
             _taskFactory = taskFactory;
         }
 
@@ -40,7 +40,7 @@ namespace Vertica.Integration.Domain.Monitoring
 
             using (IDbSession session = _db.Value.OpenSession())
             {
-                ErrorEntry[] errors = session.Query<ErrorEntry>(@"
+                ErrorEntry[] errors = session.Query<ErrorEntry>($@"
 SELECT
 	ErrorLog.Id AS ErrorId,
 	ErrorLog.[Message] AS ErrorMessage,
@@ -50,10 +50,10 @@ SELECT
 	TaskLog.TaskName,
 	TaskLog.StepName
 FROM
-	ErrorLog
+	[{_configuration.TableName(IntegrationDbTable.ErrorLog)}] AS ErrorLog
 	OUTER APPLY (
 		SELECT TOP 1 TaskLog.TaskName, TaskLog.StepName
-		FROM TaskLog
+		FROM [{_configuration.TableName(IntegrationDbTable.TaskLog)}] AS TaskLog
 		WHERE (TaskLog.ErrorLog_Id = ErrorLog.Id)
 		ORDER BY ID DESC
 	) AS TaskLog
@@ -111,7 +111,7 @@ ORDER BY ErrorLog.Id DESC",
             }
         }
 
-        public override string Description => "Exports errors from integration error log.";
+        public override string Description => $"Exports errors from table {_configuration.TableName(IntegrationDbTable.ErrorLog)}.";
 
         public class ErrorEntry
         {

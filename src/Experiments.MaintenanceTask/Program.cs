@@ -18,7 +18,7 @@ namespace Experiments.MaintenanceTask
                 .Database(database => database
                     .IntegrationDb(integrationDb => integrationDb
                         .Connection(ConnectionString.FromText("Server=.\\SQLExpress;Database=IS_MaintenanceTask;Trusted_Connection=True;"))))
-                .UseUCommerce(uCommerce => uCommerce.Database(ConnectionString.FromText("Server=.\\SQLExpress;Database=sc82-ucommerceSitecore_web;Trusted_Connection=True;")))
+                .UseUCommerce(uCommerce => uCommerce.Connection(ConnectionString.FromText("Server=.\\SQLExpress;Database=sc82-ucommerceSitecore_web;Trusted_Connection=True;")))
                 .Migration(migration => migration.AddUCommerceFromNamespaceOfThis<M1_UCommerce>(DatabaseServer.SqlServer2014))
                 .Tasks(tasks => tasks.MaintenanceTask(m => m.IncludeUCommerce()))))
             {

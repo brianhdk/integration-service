@@ -22,6 +22,7 @@ namespace Vertica.Integration.Tests.Infrastructure.Threading
         public void Complex_DifferentLocks_MultiThreaded()
         {
             var db = Substitute.For<IDbFactory>();
+            var dbConfiguration = Substitute.For<IIntegrationDatabaseConfiguration>();
             var session = Substitute.For<IDbSession>();
             var settings = Substitute.For<IRuntimeSettings>();
             var featureToggler = Substitute.For<IFeatureToggler>();
@@ -31,7 +32,7 @@ namespace Vertica.Integration.Tests.Infrastructure.Threading
 
             db.OpenSession().Returns(session);
 
-            var subject = new DbDistributedMutex(db, settings, featureToggler, shutdown);
+            var subject = new DbDistributedMutex(db, dbConfiguration, settings, featureToggler, shutdown);
 
             var locks = new ConcurrentDictionary<string, DbDistributedMutexLock>();
 

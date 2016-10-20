@@ -1,11 +1,10 @@
 ﻿using Vertica.Integration.Infrastructure;
-using Vertica.Integration.Infrastructure.Database;
 
 namespace Vertica.Integration.UCommerce.Database
 {
-    public abstract class UCommerceDb : Connection
+    internal sealed class DefaultConnection : UCommerceDb
     {
-        protected UCommerceDb(ConnectionString connectionString)
+        public DefaultConnection(ConnectionString connectionString)
             : base(connectionString)
         {
         }

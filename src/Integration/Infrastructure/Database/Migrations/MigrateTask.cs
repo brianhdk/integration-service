@@ -30,7 +30,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
         private readonly bool _databaseCreated;
         private readonly FeatureAttribute[] _disabledFeatures;
 
-        public MigrateTask(IIntegrationDatabaseConfiguration configuration, Lazy<IDbFactory> db, IKernel kernel, IMigrationDbs dbs, ITaskFactory taskFactory, ITaskRunner taskRunner, IFeatureToggler featureToggler)
+        public MigrateTask(Lazy<IDbFactory> db, IIntegrationDatabaseConfiguration configuration, IKernel kernel, IMigrationDbs dbs, ITaskFactory taskFactory, ITaskRunner taskRunner, IFeatureToggler featureToggler)
         {
             _kernel = kernel;
 	        _taskFactory = taskFactory;
@@ -39,10 +39,10 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
 	        if (!configuration.Disabled)
 	        {
-		        string connectionString = EnsureIntegrationDb(db.Value, dbs.CheckExistsAndCreateIntegrationDbIfNotFound, out _databaseCreated);
+		        string connectionString = EnsureIntegrationDb(db.Value, configuration.CheckExistsAndCreateDatabaseIfNotFound, out _databaseCreated);
 
 		        var integrationDb = new IntegrationMigrationDb(
-			        dbs.IntegrationDbDatabaseServer,
+			        configuration.DatabaseServer,
 			        ConnectionString.FromText(connectionString),
 			        typeof (M1_Baseline).Assembly,
 			        typeof (M1_Baseline).Namespace);

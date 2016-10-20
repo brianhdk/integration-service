@@ -23,9 +23,12 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
         public ApplicationConfiguration Application { get; }
 
+        [Obsolete("Use .Database(database => database.IntegrationDb(integrationDb => integrationDb.ChangeDatabaseServer(...)))")]
         public MigrationConfiguration ChangeIntegrationDbDatabaseServer(DatabaseServer db)
         {
-	        _dbs.IntegrationDbDatabaseServer = db;
+            Application.Database(database => database
+                .IntegrationDb(integrationDb => integrationDb
+                    .ChangeDatabaseServer(db)));
 
             return this;
         }
@@ -67,12 +70,15 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
 		    _dbs.Add(migrationDb);
 
-			return this;		    
+			return this;
 	    }
 
+        [Obsolete("Use .Database(database => database.IntegrationDb(integrationDb => integrationDb.DisableCheckExistsAndCreateDatabaseIfNotFound()))")]
         public MigrationConfiguration DisableCheckExistsAndCreateIntegrationDbIfNotFound()
         {
-	        _dbs.CheckExistsAndCreateIntegrationDbIfNotFound = false;
+            Application.Database(database => database
+                .IntegrationDb(integrationDb => integrationDb
+                    .DisableCheckExistsAndCreateDatabaseIfNotFound()));
 
             return this;
         }
@@ -91,9 +97,6 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 		    {
 			    _dbs = new List<MigrationDb>();
 			    _types = new List<Tuple<Type, string>>();
-
-			    IntegrationDbDatabaseServer = DatabaseServer.SqlServer2014;
-			    CheckExistsAndCreateIntegrationDbIfNotFound = true;
 		    }
 
 		    IEnumerator IEnumerable.GetEnumerator()
@@ -119,9 +122,6 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
 				_types.Add(Tuple.Create(migration, identifyingName));
 			}
-
-		    public DatabaseServer IntegrationDbDatabaseServer { get; set; }
-		    public bool CheckExistsAndCreateIntegrationDbIfNotFound { get; set; }
 
 		    public IMigrationDbs WithIntegrationDb(IntegrationMigrationDb integrationDb)
 		    {

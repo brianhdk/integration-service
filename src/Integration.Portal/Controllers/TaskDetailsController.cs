@@ -12,13 +12,15 @@ namespace Vertica.Integration.Portal.Controllers
 {
     public class TaskDetailsController : ApiController
     {
-        private readonly IDbFactory _db;
         private readonly ITaskFactory _taskFactory;
+        private readonly Lazy<IDbFactory> _db;
+        private readonly IIntegrationDatabaseConfiguration _configuration;
 
-        public TaskDetailsController(ITaskFactory taskFactory, IDbFactory db)
+        public TaskDetailsController(ITaskFactory taskFactory, Lazy<IDbFactory> db, IIntegrationDatabaseConfiguration configuration)
         {
             _taskFactory = taskFactory;
             _db = db;
+            _configuration = configuration;
         }
 
         public HttpResponseMessage Get()
@@ -47,18 +49,20 @@ namespace Vertica.Integration.Portal.Controllers
 
         public HttpResponseMessage Get(string name, int count)
         {
-            string sql =
-	            $@"
+            if (_configuration.Disabled)
+                return Request.CreateResponse(HttpStatusCode.OK, new DateTimeOffset[0]);
+
+            string sql = $@"
 SELECT TOP {count}
 	[TimeStamp]
-FROM [TaskLog]
+FROM [{_configuration.TableName(IntegrationDbTable.TaskLog)}]
 WHERE [TaskName] = '{name}' AND [Type] = 'T'
 ORDER BY [TimeStamp] DESC
 ";
 
             IEnumerable<DateTimeOffset> lastRun;
 
-            using (IDbSession session = _db.OpenSession())
+            using (IDbSession session = _db.Value.OpenSession())
             {
                 lastRun = session.Query<DateTimeOffset>(sql).ToList();
             }

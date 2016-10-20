@@ -11,15 +11,15 @@ namespace Vertica.Integration.Domain.Core
 {
 	public class CleanUpIntegrationDbStep : Step<MaintenanceWorkItem>
 	{
-	    private readonly IIntegrationDatabaseConfiguration _dbConfiguration;
 	    private readonly Lazy<IDbFactory> _db;
+	    private readonly IIntegrationDatabaseConfiguration _dbConfiguration;
 	    private readonly IConfigurationService _configuration;
 	    private readonly IArchiveService _archiver;
 
-		public CleanUpIntegrationDbStep(IIntegrationDatabaseConfiguration dbConfiguration, Lazy<IDbFactory> db, IConfigurationService configuration, IArchiveService archiver)
+		public CleanUpIntegrationDbStep(Lazy<IDbFactory> db, IIntegrationDatabaseConfiguration dbConfiguration, IConfigurationService configuration, IArchiveService archiver)
 		{
-		    _dbConfiguration = dbConfiguration;
 		    _db = db;
+		    _dbConfiguration = dbConfiguration;
 		    _configuration = configuration;
 		    _archiver = archiver;
 		}
@@ -40,8 +40,8 @@ namespace Vertica.Integration.Domain.Core
 			using (IDbSession session = _db.Value.OpenSession())
 			using (IDbTransaction transaction = session.BeginTransaction())
 			{
-			    Tuple<int, string> taskLog = DeleteEntries(session, "TaskLog", tasksLowerBound);
-			    Tuple<int, string> errorLog = DeleteEntries(session, "ErrorLog", errorsLowerBound);
+			    Tuple<int, string> taskLog = DeleteEntries(session, IntegrationDbTable.TaskLog, tasksLowerBound);
+			    Tuple<int, string> errorLog = DeleteEntries(session, IntegrationDbTable.ErrorLog, errorsLowerBound);
 
 				transaction.Commit();
 
@@ -67,11 +67,11 @@ Archive: {4}",
 			}
 		}
 
-	    private Tuple<int, string> DeleteEntries(IDbSession session, string tableName, DateTimeOffset lowerBound)
+	    private Tuple<int, string> DeleteEntries(IDbSession session, IntegrationDbTable table, DateTimeOffset lowerBound)
 	    {
 	        return session.Wrap(s =>
 	        {
-	            string query = $" FROM [{tableName}] WHERE [TimeStamp] <= @lowerbound";
+	            string query = $" FROM [{_dbConfiguration.TableName(table)}] WHERE [TimeStamp] <= @lowerbound";
 
 	            string csv = s.QueryToCsv(string.Concat("SELECT *", query), new { lowerBound });
                 int count = s.Execute(string.Concat("DELETE", query), new { lowerBound }, commandTimeout: 10800);

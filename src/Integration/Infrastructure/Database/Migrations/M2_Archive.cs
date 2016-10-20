@@ -4,11 +4,13 @@ using FluentMigrator;
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
     [Migration(2)]
-    public class M2_Archive : Migration
+    public class M2_Archive : IntegrationMigration
     {
         public override void Up()
         {
-            Create.Table("Archive")
+            var configuration = Resolve<IIntegrationDatabaseConfiguration>();
+
+            Create.Table(configuration.TableName(IntegrationDbTable.Archive))
                 .WithColumn("Id").AsInt32().PrimaryKey().Identity()
                 .WithColumn("Name").AsString(255)
                 .WithColumn("BinaryData").AsBinary(int.MaxValue)

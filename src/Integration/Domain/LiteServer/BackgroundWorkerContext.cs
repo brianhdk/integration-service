@@ -1,20 +1,31 @@
 using System;
+using Vertica.Integration.Infrastructure.IO;
 
 namespace Vertica.Integration.Domain.LiteServer
 {
+    // TODO: Tilføj en ILog ala den der findes på TaskExecutionContext
+    // TODO: Tilføj en Writer - IConsoleWriter
 	public class BackgroundWorkerContext
 	{
-		internal BackgroundWorkerContext(uint invocationCount)
+		internal BackgroundWorkerContext(uint invocationCount, IConsoleWriter writer)
 		{
-			InvocationCount = invocationCount;
+		    if (writer == null) throw new ArgumentNullException(nameof(writer));
+
+		    InvocationCount = invocationCount;
+		    Writer = writer;
 		}
 
-		/// <summary>
+	    /// <summary>
 		/// Specifies the number of times the method has been invoked.
 		/// </summary>
 		public uint InvocationCount { get; }
 
-		/// <summary>
+        /// <summary>
+        /// Gives access to the <see cref="IConsoleWriter"/>.
+        /// </summary>
+	    public IConsoleWriter Writer { get; }
+
+	    /// <summary>
 		/// Use this method to signal that you want to stop having your method invoked.
 		/// </summary>
 		public BackgroundWorkerContinuation Exit()

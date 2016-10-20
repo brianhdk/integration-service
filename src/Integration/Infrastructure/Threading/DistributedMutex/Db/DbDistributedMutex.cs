@@ -9,6 +9,7 @@ namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db
     internal class DbDistributedMutex : IDistributedMutex
     {
         private readonly IDbFactory _db;
+        private readonly IIntegrationDatabaseConfiguration _configuration;
         private readonly IFeatureToggler _featureToggler;
         private readonly IShutdown _shutdown;
 
@@ -16,9 +17,10 @@ namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db
 
         public static readonly string QueryLockIntervalKey = $"{nameof(DbDistributedMutex)}.QueryLockInterval";
 
-        public DbDistributedMutex(IDbFactory db, IRuntimeSettings settings, IFeatureToggler featureToggler, IShutdown shutdown)
+        public DbDistributedMutex(IDbFactory db, IIntegrationDatabaseConfiguration configuration, IRuntimeSettings settings, IFeatureToggler featureToggler, IShutdown shutdown)
         {
             _db = db;
+            _configuration = configuration;
             _featureToggler = featureToggler;
             _shutdown = shutdown;
 
@@ -36,21 +38,24 @@ namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db
             if (_featureToggler.IsDisabled<DbDistributedMutex>())
                 return null;
 
-            return new EnterLock(_db, context, _queryLockInterval, _shutdown.Token);
+            return new EnterLock(_db, _configuration, context, _queryLockInterval, _shutdown.Token);
         }
 
         private class EnterLock : IDisposable
         {
             private readonly IDbFactory _db;
+            private readonly IIntegrationDatabaseConfiguration _configuration;
             private readonly DbDistributedMutexLock _newLock;
 
             private CancellationTokenRegistration _onCancel;
             private readonly object _releaseOnce = new object();
             private bool _isReleased;
 
-            public EnterLock(IDbFactory db, DistributedMutexContext context, TimeSpan queryLockInterval, CancellationToken cancellationToken)
+            public EnterLock(IDbFactory db, IIntegrationDatabaseConfiguration configuration, DistributedMutexContext context, TimeSpan queryLockInterval, CancellationToken cancellationToken)
             {
                 _db = db;
+                _configuration = configuration;
+
                 _newLock = new DbDistributedMutexLock(context.Name)
                 {
                     MachineName = Environment.MachineName
@@ -89,9 +94,9 @@ namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db
 
             private bool TryEnterLock(IDbSession session, out DbDistributedMutexLock currentLock)
             {
-                currentLock = session.Query<DbDistributedMutexLock>(@"
+                currentLock = session.Query<DbDistributedMutexLock>($@"
 BEGIN TRY
-    INSERT INTO DistributedMutex (Name, LockId, CreatedAt, MachineName)
+    INSERT INTO [{_configuration.TableName(IntegrationDbTable.DistributedMutex)}] (Name, LockId, CreatedAt, MachineName)
         VALUES (@Name, @LockId, @CreatedAt, @MachineName)
 END TRY
 
@@ -100,11 +105,11 @@ BEGIN CATCH
     SELECT @ErrorNumber = ERROR_NUMBER();
 
     IF @ErrorNumber = 2627 -- PRIMARY KEY VIOLATION
-	    SELECT * FROM DistributedMutex WHERE (Name = @Name);
+	    SELECT * FROM [{_configuration.TableName(IntegrationDbTable.DistributedMutex)}] WHERE (Name = @Name);
     ELSE
 	    THROW
-END CATCH
-", _newLock).FirstOrDefault();
+END CATCH", 
+                    _newLock).FirstOrDefault();
 
                 return currentLock == null;
             }
@@ -119,7 +124,9 @@ END CATCH
                         {
                             using (IDbSession session = _db.OpenSession())
                             {
-                                session.Execute(@"DELETE FROM DistributedMutex WHERE (Name = @Name AND LockId = @LockId)", _newLock);
+                                session.Execute($@"
+DELETE FROM [{_configuration.TableName(IntegrationDbTable.DistributedMutex)}] WHERE (Name = @Name AND LockId = @LockId)", 
+                                    _newLock);
                             }
 
                             _isReleased = true;

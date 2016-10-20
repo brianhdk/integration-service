@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -10,27 +11,33 @@ namespace Vertica.Integration.Portal.Controllers
 {
     public class ErrorsController : ApiController
     {
-        private readonly IDbFactory _db;
+        private readonly Lazy<IDbFactory> _db;
+        private readonly IIntegrationDatabaseConfiguration _configuration;
 
-        public ErrorsController(IDbFactory db)
+        public ErrorsController(Lazy<IDbFactory> db, IIntegrationDatabaseConfiguration configuration)
         {
             _db = db;
+            _configuration = configuration;
         }
 
         public HttpResponseMessage Get()
         {
-            const string sql = @"
+            if (_configuration.Disabled)
+                return Request.CreateResponse(HttpStatusCode.OK, new ErrorLogModel[0]);
+
+            string sql = $@"
 SELECT [Id]
       ,[Message]
       ,[TimeStamp]
       ,[Severity]
       ,[Target]
-  FROM [ErrorLog] ORDER BY TimeStamp DESC
+FROM [{_configuration.TableName(IntegrationDbTable.ErrorLog)}] 
+ORDER BY TimeStamp DESC
 ";
 
             IEnumerable<ErrorLogModel> errors;
 
-            using (IDbSession session = _db.OpenSession())
+            using (IDbSession session = _db.Value.OpenSession())
             {
                 errors = session.Query<ErrorLogModel>(sql);
             }
@@ -40,6 +47,9 @@ SELECT [Id]
 
         public HttpResponseMessage Get(int id)
         {
+            if (_configuration.Disabled)
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Not found.");
+
             string sql = @"
 SELECT [Id]
       ,[MachineName]
@@ -50,13 +60,13 @@ SELECT [Id]
       ,[TimeStamp]
       ,[Severity]
       ,[Target]
-  FROM [ErrorLog]
-  WHERE [ID] = @id
+FROM [{_configuration.TableName(IntegrationDbTable.ErrorLog)}] 
+WHERE [ID] = @id
 ";
 
             ErrorLogDetailedModel error;
 
-            using (IDbSession session = _db.OpenSession())
+            using (IDbSession session = _db.Value.OpenSession())
             {
                 error = session.Query<ErrorLogDetailedModel>(sql, new { id }).SingleOrDefault();
             }

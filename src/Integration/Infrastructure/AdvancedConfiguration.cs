@@ -6,6 +6,7 @@ using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Vertica.Integration.Infrastructure.Archiving;
 using Vertica.Integration.Infrastructure.Configuration;
+using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Infrastructure.Logging.Loggers;
 using Vertica.Integration.Infrastructure.Threading.DistributedMutex;
@@ -109,10 +110,7 @@ namespace Vertica.Integration.Infrastructure
 
 	    void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
 	    {
-			bool disabled = false;
-		    Application.Database(database => database
-                .IntegrationDb(integrationDb => 
-                    disabled = integrationDb.Disabled));
+	        bool disabled = container.Resolve<IIntegrationDatabaseConfiguration>().Disabled;
 
 		    foreach (var pair in _types.Where(x => x.Value != null))
 			    container.Register(Component.For(pair.Key).ImplementedBy(!disabled ? pair.Value.Item1 : pair.Value.Item2).LifestyleSingleton());

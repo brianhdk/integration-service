@@ -69,7 +69,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 			}
 		}
 
-		internal protected void Persist(LogEntry logEntry)
+		protected internal void Persist(LogEntry logEntry)
 		{
 			if (logEntry == null) throw new ArgumentNullException(nameof(logEntry));
 

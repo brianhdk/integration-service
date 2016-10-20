@@ -75,6 +75,8 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
  
   ### Database configuration
   *By default Integration Service requires a database - but this can be disabled. See section [How to Disable IntegrationDb](#how-to-disable-integrationdb) to read more about the option of running Integration Service without a database.*
+
+  TODO: Document how to setup a table-prefix.
   
   ```xml
   <connectionStrings>
@@ -437,7 +439,7 @@ And you can of course combine these two examples, e.g. by moving the entire Task
 2. **MaintenanceTask**
   * Performs a number of clean-up related tasks, including:
 	* **CleanUpIntegrationDbStep** - Deletes entries from Task- and ErrorLog that are older than a predefined period
-	* **CleanUpArchivesStep** - Deletes archives that are older than a predefined period
+	* **CleanUpArchivesStep** - Deletes archives that are expired.
   * Requires registration to be available
     * Use **MaintenanceTask(...)** extension method on the **TasksConfiguration** instance	
   * Can easily be extended with additional Steps to perform maintenance of other parts of the solution
@@ -989,6 +991,8 @@ TBD.
 [Back to Table of Contents](#table-of-contents)
 
 ## Archives
+
+TODO: Document the "DbArchiveService.DeleteBatchSize" setting that defines the batch size when deleting archives. Default batchsize is 20.
 
 TBD. 
 [Back to Table of Contents](#table-of-contents)
@@ -2495,7 +2499,7 @@ public class SynchronousOnlyTask : Task
     {
     }
 
-    public override string Description => "This task cannot be executed in parallel due.";
+    public override string Description => "...";
 }
 ```
 

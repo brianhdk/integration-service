@@ -34,14 +34,14 @@ namespace Vertica.Integration.UCommerce
 
 		public ApplicationConfiguration Application { get; }
 
-        public UCommerceConfiguration Database(ConnectionString connectionString)
+        public UCommerceConfiguration Connection(ConnectionString connectionString)
         {
             if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
 
-            return Database(new UCommerceDb(connectionString));
+            return Connection(new DefaultConnection(connectionString));
         }
 
-        public UCommerceConfiguration Database<TConnection>(TConnection connection)
+        public UCommerceConfiguration Connection<TConnection>(TConnection connection)
             where TConnection : UCommerceDb
         {
             if (connection == null) throw new ArgumentNullException(nameof(connection));
@@ -64,7 +64,7 @@ namespace Vertica.Integration.UCommerce
         void IInitializable<ApplicationConfiguration>.Initialize(ApplicationConfiguration application)
         {
             if (_connection == null)
-                Database(ConnectionString.FromName("uCommerceDb"));
+                Connection(ConnectionString.FromName("uCommerceDb"));
 
             if (_connection != null)
             {

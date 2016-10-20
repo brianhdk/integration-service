@@ -33,7 +33,8 @@ namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db
             {
                 DateTimeOffset deleteBefore = Time.UtcNow.AddHours(-24);
 
-                var deletions = session.Execute(@"DELETE FROM DistributedMutex WHERE (CreatedAt <= @deleteBefore)", new { deleteBefore });
+                var deletions = session.Execute($@"
+DELETE FROM [{_configuration.TableName(IntegrationDbTable.DistributedMutex)}] WHERE (CreatedAt <= @deleteBefore)", new { deleteBefore });
 
                 if (deletions > 0)
                     context.Log.Message("Deleted {0} records locked before {1}", deletions, deleteBefore);

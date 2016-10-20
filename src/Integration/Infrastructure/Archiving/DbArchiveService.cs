@@ -10,14 +10,20 @@ namespace Vertica.Integration.Infrastructure.Archiving
 {
 	internal class DbArchiveService : IArchiveService
     {
-        private readonly Func<IDbFactory> _db;
+        private readonly IDbFactory _db;
+	    private readonly IIntegrationDatabaseConfiguration _configuration;
+	    private readonly int _deleteBatchSize;
 
-        public DbArchiveService(Func<IDbFactory> db)
+        public DbArchiveService(IDbFactory db, IIntegrationDatabaseConfiguration configuration, IRuntimeSettings settings)
         {
             _db = db;
+            _configuration = configuration;
+
+            if (!int.TryParse(settings[$"{nameof(DbArchiveService)}.DeleteBatchSize"], out _deleteBatchSize))
+                _deleteBatchSize = 20;
         }
 
-        public BeginArchive Create(string name, Action<ArchiveCreated> onCreated = null)
+	    public BeginArchive Create(string name, Action<ArchiveCreated> onCreated = null)
         {
             return new BeginArchive(name, (stream, options) =>
             {
@@ -28,9 +34,9 @@ namespace Vertica.Integration.Infrastructure.Archiving
                 {
                     byte[] binaryData = stream.ToArray();
 
-                    archiveId = session.Wrap(s => s.ExecuteScalar<int>(
-                        "INSERT INTO Archive (Name, BinaryData, ByteSize, Created, Expires, GroupName) VALUES (@name, @binaryData, @byteSize, @created, @expires, @groupName);" +
-                        "SELECT CAST(SCOPE_IDENTITY() AS INT);",
+                    archiveId = session.Wrap(s => s.ExecuteScalar<int>($@"
+INSERT INTO [{_configuration.TableName(IntegrationDbTable.Archive)}] (Name, BinaryData, ByteSize, Created, Expires, GroupName) VALUES (@name, @binaryData, @byteSize, @created, @expires, @groupName);
+SELECT CAST(SCOPE_IDENTITY() AS INT);",
                         new 
                         {
                             name = options.Name.MaxLength(255),
@@ -52,8 +58,15 @@ namespace Vertica.Integration.Infrastructure.Archiving
         {
 			using (IDbSession session = OpenSession())
             {
-                return session.Wrap(s => s.Query<Archive>("SELECT Id, Name, ByteSize, Created, GroupName, Expires FROM Archive"))
-                    .ToArray();
+                return session.Wrap(s => s.Query<Archive>($@"
+SELECT 
+    Id, 
+    Name, 
+    ByteSize, 
+    Created, 
+    GroupName, 
+    Expires 
+FROM [{_configuration.TableName(IntegrationDbTable.Archive)}]")).ToArray();
             }
         }
 
@@ -66,19 +79,17 @@ namespace Vertica.Integration.Infrastructure.Archiving
 			using (IDbSession session = OpenSession())
             {
                 return
-                    session.Wrap(s => s.Query<byte[]>("SELECT BinaryData FROM Archive WHERE Id = @Id", new { Id = value }))
-                        .SingleOrDefault();
+                    session.Wrap(s => s.Query<byte[]>($@"
+SELECT BinaryData FROM [{_configuration.TableName(IntegrationDbTable.Archive)}] WHERE Id = @Id", new { Id = value })).SingleOrDefault();
             }
         }
 
         public int Delete(DateTimeOffset olderThan)
         {
 			using (IDbSession session = OpenSession())
-            using (IDbTransaction transaction = session.BeginTransaction())
             {
-                int count = session.Wrap(s => s.Execute("DELETE FROM Archive WHERE Created <= @olderThan", new { olderThan }, commandTimeout: 10800));
-
-                transaction.Commit();
+                int count = session.Wrap(s => s.Execute(DeleteSql("Created <= @olderThan"),
+                    new { batchSize = _deleteBatchSize, olderThan }, commandTimeout: 0));
 
                 return count;
             }
@@ -87,21 +98,42 @@ namespace Vertica.Integration.Infrastructure.Archiving
         public int DeleteExpired()
         {
 			using (IDbSession session = OpenSession())
-            using (IDbTransaction transaction = session.BeginTransaction())
             {
-                // TODO: Den her tager lang tid, hvis der er rigtig mange arkiv-rækker!
-                //  - undersøg om vi kan gøre noget smartere mht. filerne og sletning
-                int count = session.Wrap(s => s.Execute("DELETE FROM Archive WHERE Expires <= @now", new { now = Time.UtcNow }, commandTimeout: 10800));
-
-                transaction.Commit();
+                int count = session.Wrap(s => s.Execute(DeleteSql("Expires <= @now"), 
+                    new { batchSize = _deleteBatchSize, now = Time.UtcNow }, commandTimeout: 0));
 
                 return count;
             }
         }
 
+	    private string DeleteSql(string where)
+	    {
+	        return $@"
+DECLARE @DELETEDCOUNT INT
+SET @DELETEDCOUNT = 0
+
+DECLARE @BATCHCOUNT INT
+SET @BATCHCOUNT = @batchSize
+
+WHILE @BATCHCOUNT > 0
+BEGIN
+
+    DELETE TOP(@BATCHCOUNT) FROM [{_configuration.TableName(IntegrationDbTable.Archive)}] WHERE ({where})
+    SET @BATCHCOUNT = @@ROWCOUNT
+    SET @DELETEDCOUNT = @DELETEDCOUNT + @BATCHCOUNT
+
+	IF @BATCHCOUNT > 0
+	BEGIN
+		WAITFOR DELAY '00:00:02' -- wait 2 secs to allow other processes access to the table
+	END
+END
+
+SELECT @DELETEDCOUNT";
+	    }
+
 		private IDbSession OpenSession()
 		{
-			return _db().OpenSession();
+			return _db.OpenSession();
 		}
     }
 }

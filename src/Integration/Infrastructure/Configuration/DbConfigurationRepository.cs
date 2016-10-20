@@ -9,21 +9,30 @@ namespace Vertica.Integration.Infrastructure.Configuration
 {
 	internal class DbConfigurationRepository : IConfigurationRepository
 	{
-		private readonly Func<IDbFactory> _db;
+        private readonly IDbFactory _db;
+        private readonly IIntegrationDatabaseConfiguration _configuration;
 
-		public DbConfigurationRepository(Func<IDbFactory> db)
-		{
-			_db = db;
-		}
+        public DbConfigurationRepository(IDbFactory db, IIntegrationDatabaseConfiguration configuration)
+        {
+            _db = db;
+            _configuration = configuration;
+        }
 
-		public Configuration[] GetAll()
+	    public Configuration[] GetAll()
 		{
 			using (IDbSession session = OpenSession())
 			{
 				return
 					session
-						.Query<Configuration>("SELECT Id, Name, Created, Updated, UpdatedBy FROM Configuration")
-						.ToArray();
+						.Query<Configuration>($@"
+SELECT 
+    Id, 
+    Name, 
+    Created, 
+    Updated, 
+    UpdatedBy 
+FROM 
+    [{_configuration.TableName(IntegrationDbTable.Configuration)}]").ToArray();
 			}
 		}
 
@@ -35,8 +44,20 @@ namespace Vertica.Integration.Infrastructure.Configuration
 			{
 				return
 					session
-						.Query<Configuration>(
-							"SELECT Id, Name, Description, JsonData, Created, Updated, UpdatedBy FROM Configuration WHERE (Id = @id)",
+						.Query<Configuration>($@"
+SELECT 
+    Id, 
+    Name, 
+    Description, 
+    JsonData, 
+    Created, 
+    Updated, 
+    UpdatedBy 
+FROM 
+    [{_configuration.TableName(IntegrationDbTable.Configuration)}]
+WHERE (
+    Id = @id
+)",
 							new { id })
 						.SingleOrDefault();
 			}
@@ -54,15 +75,15 @@ namespace Vertica.Integration.Infrastructure.Configuration
 			using (IDbSession session = OpenSession())
 			using (IDbTransaction transaction = session.BeginTransaction())
 			{
-				session.Execute(@"
-IF NOT EXISTS (SELECT Id FROM Configuration WHERE (Id = @Id))
+				session.Execute($@"
+IF NOT EXISTS (SELECT Id FROM [{_configuration.TableName(IntegrationDbTable.Configuration)}] WHERE (Id = @Id))
 	BEGIN
-		INSERT INTO Configuration (Id, Name, Description, JsonData, Created, Updated, UpdatedBy)
+		INSERT INTO [{_configuration.TableName(IntegrationDbTable.Configuration)}] (Id, Name, Description, JsonData, Created, Updated, UpdatedBy)
 			VALUES (@Id, @Name, @Description, @JsonData, @Updated, @Updated, @UpdatedBy);
 	END
 ELSE
 	BEGIN
-		UPDATE Configuration SET
+		UPDATE [{_configuration.TableName(IntegrationDbTable.Configuration)}] SET
 			JsonData = @JsonData,
 			Updated = @Updated,
             UpdatedBy = @UpdatedBy,
@@ -85,14 +106,14 @@ ELSE
 			using (IDbSession session = OpenSession())
 			using (IDbTransaction transaction = session.BeginTransaction())
 			{
-				session.Execute("DELETE FROM Configuration WHERE (Id = @id)", new { id });
+				session.Execute($"DELETE FROM [{_configuration.TableName(IntegrationDbTable.Configuration)}] WHERE (Id = @id)", new { id });
 				transaction.Commit();
 			}
 		}
 
 		private IDbSession OpenSession()
 		{
-			return _db().OpenSession();
+			return _db.OpenSession();
 		}
 	}
 }

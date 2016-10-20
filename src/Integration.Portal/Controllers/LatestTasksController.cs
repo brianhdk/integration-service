@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -10,30 +11,35 @@ namespace Vertica.Integration.Portal.Controllers
 {
     public class LatestTasksController : ApiController
     {
-        private readonly IDbFactory _db;
+        private readonly Lazy<IDbFactory> _db;
+        private readonly IIntegrationDatabaseConfiguration _configuration;
 
-        public LatestTasksController(IDbFactory db)
+        public LatestTasksController(Lazy<IDbFactory> db, IIntegrationDatabaseConfiguration configuration)
         {
             _db = db;
+            _configuration = configuration;
         }
 
         public HttpResponseMessage Get(int count)
         {
-            string sql =
-	            $@"
+            if (_configuration.Disabled)
+                return Request.CreateResponse(HttpStatusCode.OK, new TaskLogModel[0]);
+
+            string sql = $@"
 SELECT TOP {count}
 	[Id],
 	[TaskName],
 	[StepName],
 	[Message],
 	[TimeStamp]
-FROM [TaskLog]
+FROM 
+    [{_configuration.TableName(IntegrationDbTable.TaskLog)}]
 WHERE Type = 'T'
 ORDER BY timestamp DESC";
 
             IEnumerable<TaskLogModel> tasks;
 
-            using (IDbSession session = _db.OpenSession())
+            using (IDbSession session = _db.Value.OpenSession())
             {
                 tasks = session.Query<TaskLogModel>(sql).ToList();
             }

@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using NSubstitute;
 using NUnit.Framework;
 using Vertica.Integration.Infrastructure.Archiving;
@@ -33,7 +34,10 @@ namespace Vertica.Integration.Tests.Infrastructure.Archiving
             IDbTransaction transaction = Substitute.For<IDbTransaction>();
             session.BeginTransaction().Returns(transaction);
 
-            return new DbArchiveService(() => dbFactory);
+            var configuration = Substitute.For<IIntegrationDatabaseConfiguration>();
+            var settings = Substitute.For<IRuntimeSettings>();
+
+            return new DbArchiveService(dbFactory, configuration, settings);
         }
     }
 }

@@ -104,7 +104,6 @@
     <Compile Include="Model\Hosting\ArgumentsParserTester.cs" />
     <Compile Include="Model\TaskFactoryTester.cs" />
     <Compile Include="Model\TaskRunnerTester.cs" />
-    <Compile Include="Model\Web\ErrorsControllerTests.cs" />
     <Compile Include="Perfion\Examples.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

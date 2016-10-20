@@ -105,6 +105,17 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 		{
 		}
 
-		private IKernel Kernel => ApplicationContext as IKernel;
+		private IKernel Kernel
+		{
+		    get
+		    {
+		        var kernel = ApplicationContext as IKernel;
+
+                if (kernel == null)
+                    throw new InvalidOperationException($"Unable to cast {nameof(ApplicationContext)} to {nameof(IKernel)}. ApplicationContext: {ApplicationContext?.ToString() ?? "<null>"}");
+
+                return kernel;
+            }
+        }
 	}
 }

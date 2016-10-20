@@ -4,11 +4,13 @@ using FluentMigrator;
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
     [Migration(3)]
-    public class M3_Configuration : Migration
+    public class M3_Configuration : IntegrationMigration
     {
         public override void Up()
         {
-            Create.Table("Configuration")
+            var configuration = Resolve<IIntegrationDatabaseConfiguration>();
+
+            Create.Table(configuration.TableName(IntegrationDbTable.Configuration))
                 .WithColumn("Id").AsString(255).PrimaryKey()
                 .WithColumn("Name").AsString(50)
                 .WithColumn("Description").AsString(255).Nullable()

@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Database\DefaultConnection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Database\UCommerceDb.cs" />
     <Compile Include="UCommerceConfiguration.cs" />

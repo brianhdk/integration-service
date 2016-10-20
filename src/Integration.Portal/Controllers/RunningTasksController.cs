@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -10,35 +11,38 @@ namespace Vertica.Integration.Portal.Controllers
 {
     public class RunningTasksController : ApiController
     {
-        private readonly IDbFactory _dappper;
+        private readonly Lazy<IDbFactory> _db;
+        private readonly IIntegrationDatabaseConfiguration _configuration;
 
-        public RunningTasksController(IDbFactory dappper)
+        public RunningTasksController(Lazy<IDbFactory> db, IIntegrationDatabaseConfiguration configuration)
         {
-            _dappper = dappper;
+            _db = db;
+            _configuration = configuration;
         }
 
         public HttpResponseMessage Get()
         {
-            // TODO: Fix denne.
+            if (_configuration.Disabled)
+                return Request.CreateResponse(HttpStatusCode.OK, new TaskLogModel[0]);
 
-            string sql = string.Format(@"
+            string sql = $@"
 SELECT
 	[Id],
 	[TaskName],
 	[StepName],
 	[Message],
 	[TimeStamp]
-FROM [TaskLog]
+FROM [{_configuration.TableName(IntegrationDbTable.TaskLog)}]
 WHERE (
     [Type] = N'T' AND
     [ExecutionTimeSeconds] IS NULL AND
     [ErrorLog_Id] IS NULL
 )
-ORDER BY [Id] DESC");
+ORDER BY [Id] DESC";
 
             IEnumerable<TaskLogModel> tasks;
 
-            using (IDbSession session = _dappper.OpenSession())
+            using (IDbSession session = _db.Value.OpenSession())
             {
                 tasks = session.Query<TaskLogModel>(sql).ToList();
             }

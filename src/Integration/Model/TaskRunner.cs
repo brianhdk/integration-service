@@ -65,7 +65,7 @@ namespace Vertica.Integration.Model
                     ErrorLog errorLog = _logger.LogError(ex);
                     taskLog.ErrorLog = errorLog;
 
-                    throw new TaskExecutionFailedException("Starting task failed.", ex);
+                    throw new TaskExecutionFailedException($"Starting Task '{taskLog.Name}' failed with message: '{ex.Message}'. ErrorID: {errorLog?.Id ?? "<null>"}.", ex);
                 }
 
                 try
@@ -96,7 +96,7 @@ namespace Vertica.Integration.Model
                                 taskLog.ErrorLog = errorLog;
                                 stepLog.ErrorLog = errorLog;
 
-                                throw new TaskExecutionFailedException($"Step '{stepLog.Name}' failed.", ex);
+                                throw new TaskExecutionFailedException($"Step '{stepLog.Name}' on Task '{taskLog.Name}' failed with message: '{ex.Message}'. ErrorID: {errorLog?.Id ?? "<null>"}.", ex);
                             }
                         }
                     }
@@ -113,7 +113,7 @@ namespace Vertica.Integration.Model
                         ErrorLog errorLog = _logger.LogError(ex);
                         taskLog.ErrorLog = errorLog;
 
-                        throw new TaskExecutionFailedException("Ending task failed.", ex);
+                        throw new TaskExecutionFailedException($"Ending Task '{taskLog.Name}' failed with message: '{ex.Message}'. ErrorID: {errorLog?.Id ?? "<null>"}.", ex);
                     }
                 }
                 finally

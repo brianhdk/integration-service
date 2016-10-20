@@ -9,11 +9,13 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
     internal class DbLogger : Logger
     {
         private readonly IDbFactory _db;
+        private readonly IIntegrationDatabaseConfiguration _configuration;
         private readonly IFeatureToggler _featureToggler;
 
-        public DbLogger(IDbFactory db, IFeatureToggler featureToggler)
+        public DbLogger(IDbFactory db, IIntegrationDatabaseConfiguration configuration, IFeatureToggler featureToggler)
         {
             _db = db;
+            _configuration = configuration;
             _featureToggler = featureToggler;
         }
 
@@ -21,8 +23,8 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
 
         protected override string Insert(TaskLog log)
         {
-            return Persist(session => session.ExecuteScalar<int>(@"
-INSERT INTO TaskLog (Type, TaskName, TimeStamp, MachineName, IdentityName, CommandLine)
+            return Persist(session => session.ExecuteScalar<int>($@"
+INSERT INTO [{_configuration.TableName(IntegrationDbTable.TaskLog)}] (Type, TaskName, TimeStamp, MachineName, IdentityName, CommandLine)
 VALUES ('T', @TaskName, @TimeStamp, @MachineName, @IdentityName, @CommandLine)
 SELECT CAST(SCOPE_IDENTITY() AS INT)",
                 new
@@ -37,8 +39,8 @@ SELECT CAST(SCOPE_IDENTITY() AS INT)",
 
         protected override string Insert(MessageLog log)
         {
-            return Persist(session => session.ExecuteScalar<int>(@"
-INSERT INTO TaskLog (Type, TaskName, TimeStamp, StepName, Message, TaskLog_Id, StepLog_Id)
+            return Persist(session => session.ExecuteScalar<int>($@"
+INSERT INTO [{_configuration.TableName(IntegrationDbTable.TaskLog)}] (Type, TaskName, TimeStamp, StepName, Message, TaskLog_Id, StepLog_Id)
 VALUES ('M', @TaskName, @TimeStamp, @StepName, @Message, @TaskLog_Id, @StepLog_Id)
 SELECT CAST(SCOPE_IDENTITY() AS INT)",
                 new
@@ -54,8 +56,8 @@ SELECT CAST(SCOPE_IDENTITY() AS INT)",
 
         protected override string Insert(StepLog log)
         {
-            return Persist(session => session.ExecuteScalar<int>(@"
-INSERT INTO TaskLog (Type, TaskName, StepName, TimeStamp, TaskLog_Id)
+            return Persist(session => session.ExecuteScalar<int>($@"
+INSERT INTO [{_configuration.TableName(IntegrationDbTable.TaskLog)}] (Type, TaskName, StepName, TimeStamp, TaskLog_Id)
 VALUES ('S', @TaskName, @StepName, @TimeStamp, @TaskLog_Id)
 SELECT CAST(SCOPE_IDENTITY() AS INT)",
                 new
@@ -69,8 +71,8 @@ SELECT CAST(SCOPE_IDENTITY() AS INT)",
 
         protected override string Insert(ErrorLog log)
         {
-            return Persist(session => session.ExecuteScalar<int>(@"
-INSERT INTO [ErrorLog] (MachineName, IdentityName, CommandLine, Severity, Message, FormattedMessage, TimeStamp, Target)
+            return Persist(session => session.ExecuteScalar<int>($@"
+INSERT INTO [{_configuration.TableName(IntegrationDbTable.ErrorLog)}] (MachineName, IdentityName, CommandLine, Severity, Message, FormattedMessage, TimeStamp, Target)
 VALUES (@MachineName, @IdentityName, @CommandLine, @Severity, @Message, @FormattedMessage, @TimeStamp, @Target)
 SELECT CAST(SCOPE_IDENTITY() AS INT)",
                 new
@@ -88,8 +90,8 @@ SELECT CAST(SCOPE_IDENTITY() AS INT)",
 
         protected override void Update(TaskLog log)
         {
-            Persist(session => session.Execute(@"
-UPDATE TaskLog SET ExecutionTimeSeconds = @ExecutionTimeSeconds, ErrorLog_Id = @ErrorLog_Id WHERE Id = @Id",
+            Persist(session => session.Execute($@"
+UPDATE [{_configuration.TableName(IntegrationDbTable.TaskLog)}] SET ExecutionTimeSeconds = @ExecutionTimeSeconds, ErrorLog_Id = @ErrorLog_Id WHERE Id = @Id",
                 new
                 {
                     log.Id,
@@ -100,8 +102,8 @@ UPDATE TaskLog SET ExecutionTimeSeconds = @ExecutionTimeSeconds, ErrorLog_Id = @
 
         protected override void Update(StepLog log)
         {
-            Persist(session => session.Execute(@"
-UPDATE TaskLog SET ExecutionTimeSeconds = @ExecutionTimeSeconds, ErrorLog_Id = @ErrorLog_Id WHERE Id = @Id",
+            Persist(session => session.Execute($@"
+UPDATE [{_configuration.TableName(IntegrationDbTable.TaskLog)}] SET ExecutionTimeSeconds = @ExecutionTimeSeconds, ErrorLog_Id = @ErrorLog_Id WHERE Id = @Id",
                 new
                 {
                     log.Id,

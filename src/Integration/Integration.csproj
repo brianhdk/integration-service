@@ -131,9 +131,12 @@
     <Compile Include="IApplicationContext.cs" />
     <Compile Include="IInitializable.cs" />
     <Compile Include="Infrastructure\Database\IntegrationDatabaseConfiguration.cs" />
+    <Compile Include="Infrastructure\Database\IntegrationDbTable.cs" />
     <Compile Include="Infrastructure\Extensions\QueueExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\RepeatExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\StringExtensions.cs" />
+    <Compile Include="Infrastructure\IO\ConsoleWriter.cs" />
+    <Compile Include="Infrastructure\IO\IConsoleWriter.cs" />
     <Compile Include="Infrastructure\IShutdown.cs" />
     <Compile Include="Infrastructure\Threading\ActionRepeater.cs" />
     <Compile Include="Infrastructure\Archiving\ArchiveOptions.cs" />
