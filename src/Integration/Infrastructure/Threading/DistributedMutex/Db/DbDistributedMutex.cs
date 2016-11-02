@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using Vertica.Integration.Infrastructure.Database;
+using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Features;
 
 namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db
@@ -58,12 +59,13 @@ namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db
 
                 _newLock = new DbDistributedMutexLock(context.Name)
                 {
-                    MachineName = Environment.MachineName
+                    MachineName = Environment.MachineName,
+                    Description = context.Description.MaxLength(255)
                 };
 
                 using (IDbSession session = db.OpenSession())
                 {
-                    TimeSpan waitTime = context.Configuration.WaitTime;
+                    TimeSpan waitTime = context.WaitTime;
                     int maxRetries = Math.Max((int)Math.Ceiling(waitTime.TotalMilliseconds / queryLockInterval.TotalMilliseconds), 1);
                     int attempts = 0;
 
@@ -83,7 +85,7 @@ namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db
                         if (++attempts >= maxRetries)
                             break;
 
-                        context.Waiting($"{currentLock}. Waiting for {queryLockInterval} (attemt {attempts} of {maxRetries}).");
+                        context.OnWaiting($"{currentLock}. Waiting for {queryLockInterval} (attemt {attempts} of {maxRetries}).");
 
                         cancellationToken.WaitHandle.WaitOne(queryLockInterval);
                     }
@@ -96,8 +98,8 @@ namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db
             {
                 currentLock = session.Query<DbDistributedMutexLock>($@"
 BEGIN TRY
-    INSERT INTO [{_configuration.TableName(IntegrationDbTable.DistributedMutex)}] (Name, LockId, CreatedAt, MachineName)
-        VALUES (@Name, @LockId, @CreatedAt, @MachineName)
+    INSERT INTO [{_configuration.TableName(IntegrationDbTable.DistributedMutex)}] (Name, LockId, CreatedAt, MachineName, Description)
+        VALUES (@Name, @LockId, @CreatedAt, @MachineName, @Description)
 END TRY
 
 BEGIN CATCH

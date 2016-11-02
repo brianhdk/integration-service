@@ -15,7 +15,7 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
             if (instance == null) throw new ArgumentNullException(nameof(instance));
 
             _instance = instance;
-	        _registration = registration;
+	        _registration = registration ?? (x => x.LifestyleSingleton());
         }
 
         public void Install(IWindsorContainer container, IConfigurationStore store)

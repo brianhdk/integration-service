@@ -8,14 +8,16 @@ using Castle.Windsor;
 
 namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 {
-	public class ConventionInstaller : IWindsorInstaller
+	public sealed class ConventionInstaller : IWindsorInstaller
     {
-        private readonly List<Assembly> _assemblies;
+	    private readonly Action<ComponentRegistration> _registration;
+	    private readonly List<Assembly> _assemblies;
         private readonly List<Type> _ignoreTypes;
 
-		internal ConventionInstaller()
-        {
-            _assemblies = new List<Assembly>();
+		internal ConventionInstaller(Action<ComponentRegistration> registration = null)
+		{
+		    _registration = registration ?? (x => x.LifestyleSingleton().IsFallback());
+		    _assemblies = new List<Assembly>();
             _ignoreTypes = new List<Type>();
         }
 
@@ -33,7 +35,7 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
             return this;
         }
 
-        public void Install(IWindsorContainer container, IConfigurationStore store)
+        void IWindsorInstaller.Install(IWindsorContainer container, IConfigurationStore store)
         {
             Func<Type, Type, Assembly, bool> isConvention = (@class, @interface, assembly) =>
                 @interface.Assembly.Equals(@class.Assembly) &&
@@ -49,8 +51,7 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
                             @class.GetInterfaces().Any(@interface => isConvention(@class, @interface, assembly)) &&
                             !_ignoreTypes.Any(ignoreType => @class == ignoreType || ignoreType.IsAssignableFrom(@class)))
                         .WithService.Select((@class, baseTypes) => new[] { @class.GetInterfaces().First(@interface => isConvention(@class, @interface, assembly)) })
-                        .LifestyleSingleton()
-                        .Configure(registration => registration.IsFallback()));
+                        .Configure(_registration));
             }
         }
     }

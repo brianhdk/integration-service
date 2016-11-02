@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using Castle.MicroKernel.Registration;
-using Castle.Windsor;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Database.Migrations;
@@ -9,106 +7,81 @@ using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Hosting;
-using Vertica.Utilities_v4.Extensions.EnumerableExt;
 
 namespace Vertica.Integration
 {
-	public class ApplicationConfiguration : IInitializable<IWindsorContainer>
+	public class ApplicationConfiguration
     {
 		private readonly ExtensibilityConfiguration _extensibility;
 
-        private readonly List<IWindsorInstaller> _customInstallers;
-
-		private readonly HostsConfiguration _hosts;
-		private readonly DatabaseConfiguration _database;
-		private readonly TasksConfiguration _tasks;
+	    private readonly DatabaseConfiguration _database;
+	    private readonly ServicesConfiguration _services;
+	    private readonly HostsConfiguration _hosts;
+	    private readonly TasksConfiguration _tasks;
 		private readonly LoggingConfiguration _logging;
 		private readonly MigrationConfiguration _migration;
-		private readonly AdvancedConfiguration _advanced;
 
 		internal ApplicationConfiguration()
         {
 		    _extensibility = new ExtensibilityConfiguration();
 
-            _customInstallers = new List<IWindsorInstaller>();
-
-			_hosts = Register(() => new HostsConfiguration(this));
-			_database = Register(() => new DatabaseConfiguration(this));
-            _tasks = Register(() => new TasksConfiguration(this));
+		    _database = Register(() => new DatabaseConfiguration(this));
+		    _services = Register(() => new ServicesConfiguration(this));
+		    _hosts = Register(() => new HostsConfiguration(this));
+		    _tasks = Register(() => new TasksConfiguration(this));
             _logging = Register(() => new LoggingConfiguration(this));
             _migration = Register(() => new MigrationConfiguration(this));
-			_advanced = Register(() => new AdvancedConfiguration(this));
 
 			Register(() => this);
         }
 
-		private T Register<T>(Func<T> factory) where T : class
-		{
-			T result = null;
-
-			Extensibility(extensibility => result = extensibility.Register(factory));
-
-			return result;
-		}
-		
-        public ApplicationConfiguration AddCustomInstaller(IWindsorInstaller installer)
-        {
-            return AddCustomInstallers(installer);
-        }
-
-        public ApplicationConfiguration AddCustomInstallers(params IWindsorInstaller[] installers)
-        {
-            if (installers != null)
-                _customInstallers.AddRange(installers.SkipNulls());
+	    public ApplicationConfiguration Services(Action<ServicesConfiguration> services)
+	    {
+            services?.Invoke(_services);
 
             return this;
         }
 
-		public ApplicationConfiguration RegisterDependency<T>(T singletonInstance) where T : class
-        {
-            if (singletonInstance == null) throw new ArgumentNullException(nameof(singletonInstance));
+	    public ApplicationConfiguration Database(Action<DatabaseConfiguration> database)
+	    {
+	        database?.Invoke(_database);
 
-		    return AddCustomInstaller(new InstanceInstaller<T>(singletonInstance, x => x.LifestyleSingleton()));
-        }
+	        return this;
+	    }
 
-		public ApplicationConfiguration Hosts(Action<HostsConfiguration> hosts)
+	    public ApplicationConfiguration Hosts(Action<HostsConfiguration> hosts)
 		{
 			hosts?.Invoke(_hosts);
 
 			return this;
 		}
 
-		public ApplicationConfiguration Tasks(Action<TasksConfiguration> tasks)
+	    public ApplicationConfiguration Tasks(Action<TasksConfiguration> tasks)
         {
 			tasks?.Invoke(_tasks);
 
 			return this;
         }
 
-		public ApplicationConfiguration Logging(Action<LoggingConfiguration> logging)
+	    public ApplicationConfiguration Logging(Action<LoggingConfiguration> logging)
         {
 			logging?.Invoke(_logging);
 
 			return this;
         }
 
-		public ApplicationConfiguration Database(Action<DatabaseConfiguration> database)
-        {
-			database?.Invoke(_database);
-
-			return this;
-        }
-
-		public ApplicationConfiguration Migration(Action<MigrationConfiguration> migration)
+	    public ApplicationConfiguration Migration(Action<MigrationConfiguration> migration)
         {
 			migration?.Invoke(_migration);
 
 			return this;
         }
 
-		public ApplicationConfiguration Advanced(Action<AdvancedConfiguration> advanced)
-		{
-			advanced?.Invoke(_advanced);
+        [Obsolete("Use .Services(services => services.Advanced(advanced => advanced...)) to replace this configuration.")]
+        public ApplicationConfiguration Advanced(Action<ServicesAdvancedConfiguration> advanced)
+        {
+            if (advanced != null)
+                Services(services => services.Advanced(advanced));
 
 			return this;
 		}
@@ -120,30 +93,58 @@ namespace Vertica.Integration
 			return this;
 		}
 
+        [Obsolete("Use .Services(services => services.Advanced(advanced => advanced.Install(installer))")]
+        public ApplicationConfiguration AddCustomInstaller(IWindsorInstaller installer)
+        {
+            return AddCustomInstallers(installer);
+        }
+
+        [Obsolete("Use .Services(services => services.Advanced(advanced => advanced.Install(installers))")]
+        public ApplicationConfiguration AddCustomInstallers(params IWindsorInstaller[] installers)
+        {
+            Services(services => services.Advanced(advanced => advanced.Install(installers)));
+
+            return this;
+        }
+
+        [Obsolete("Use .Services(services => services.RegisterDependency(singletonInstance))")]
+        public ApplicationConfiguration RegisterDependency<T>(T singletonInstance) where T : class
+        {
+            if (singletonInstance == null) throw new ArgumentNullException(nameof(singletonInstance));
+
+            return AddCustomInstaller(new InstanceInstaller<T>(singletonInstance, x => x.LifestyleSingleton()));
+        }
+
+        [Obsolete("Use .Services(services => services.Register<IRuntimeSettings, T>())")]
 		public ApplicationConfiguration RuntimeSettings<T>()
-			where T : IRuntimeSettings
+			where T : class, IRuntimeSettings
 		{
 			return Advanced(advanced => advanced.Register<IRuntimeSettings, T>());
 		}
 
-		public ApplicationConfiguration RuntimeSettings<T>(T instance)
-			where T : IRuntimeSettings
+        [Obsolete("Use .Services(services => services.Register<IRuntimeSettings>(instance))")]
+        public ApplicationConfiguration RuntimeSettings<T>(T instance)
+			where T : class, IRuntimeSettings
 		{
 			if (instance == null) throw new ArgumentNullException(nameof(instance));
 
-			return Advanced(advanced => advanced.Register<IRuntimeSettings>(() => instance));
+			return Advanced(advanced => advanced.Register<IRuntimeSettings>(kernel => instance));
 		}
 
-		public ApplicationConfiguration Change(Action<ApplicationConfiguration> change)
-        {
-			change?.Invoke(this);
+	    public ApplicationConfiguration Change(Action<ApplicationConfiguration> change)
+	    {
+	        change?.Invoke(this);
 
-			return this;
-        }
+	        return this;
+	    }
 
-		void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
+	    private T Register<T>(Func<T> factory) where T : class
         {
-            container.Install(_customInstallers.ToArray());
+            T result = null;
+
+            Extensibility(extensibility => result = extensibility.Register(factory));
+
+            return result;
         }
     }
 }

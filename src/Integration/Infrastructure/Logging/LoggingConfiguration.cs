@@ -5,21 +5,34 @@ namespace Vertica.Integration.Infrastructure.Logging
 {
     public class LoggingConfiguration
     {
+        private readonly EventLoggerConfiguration _eventLogger;
+
         internal LoggingConfiguration(ApplicationConfiguration application)
         {
             if (application == null) throw new ArgumentNullException(nameof(application));
 
-			Application = application;
+            Application = application;
 
-			// Make sure that the EventLoggerConfiguration has been registred as this will be used as a fallback.
-			Application.Extensibility(extensibility => extensibility.Register(() => new EventLoggerConfiguration()));
+            _eventLogger = new EventLoggerConfiguration(this);
+
+			Application.Extensibility(extensibility => extensibility.Register(() => _eventLogger));
         }
 
         public ApplicationConfiguration Application { get; }
-
-        public LoggingConfiguration Use<T>() where T : Logger
+        
+        public LoggingConfiguration Change(Action<LoggingConfiguration> change)
         {
-	        Application.Advanced(advanced => advanced.Register<ILogger, T>());
+            change?.Invoke(this);
+
+            return this;
+        }
+
+        public LoggingConfiguration Use<TLogger>() 
+            where TLogger : Logger
+        {
+	        Application.Services(services => services
+                .Advanced(advanced => advanced
+                    .Register<ILogger, TLogger>()));
             
             return this;
         }
@@ -31,8 +44,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 
         public LoggingConfiguration EventLogger(Action<EventLoggerConfiguration> eventLogger = null)
         {
-	        if (eventLogger != null)
-		        Application.Extensibility(extensibility => eventLogger(extensibility.Get<EventLoggerConfiguration>()));
+            eventLogger?.Invoke(_eventLogger);
 
             return Use<EventLogger>();
         }
@@ -42,7 +54,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 			Application.Extensibility(extensibility =>
 			{
 				TextFileLoggerConfiguration configuration =
-					extensibility.Register(() => new TextFileLoggerConfiguration());
+					extensibility.Register(() => new TextFileLoggerConfiguration(this));
 
                 textFileLogger?.Invoke(configuration);
             });
@@ -55,7 +67,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 			Application.Extensibility(extensibility =>
 			{
 				TextWriterLoggerConfiguration configuration =
-					extensibility.Register(() => new TextWriterLoggerConfiguration());
+					extensibility.Register(() => new TextWriterLoggerConfiguration(this));
 
                 textWriterLogger?.Invoke(configuration);
             });

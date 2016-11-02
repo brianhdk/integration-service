@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Extensions;
+using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model.Exceptions;
 using Vertica.Integration.Model.Tasks;
@@ -15,14 +15,14 @@ namespace Vertica.Integration.Model
 	    private readonly ILogger _logger;
 	    private readonly IConcurrentTaskExecution _concurrentTaskExecution;
 	    private readonly IShutdown _shutdown;
-	    private readonly TextWriter _outputter;
+	    private readonly IConsoleWriter _console;
 
-	    public TaskRunner(ILogger logger, IConcurrentTaskExecution concurrentTaskExecution, IShutdown shutdown, TextWriter outputter)
+	    public TaskRunner(ILogger logger, IConcurrentTaskExecution concurrentTaskExecution, IShutdown shutdown, IConsoleWriter console)
 		{
 	        _logger = logger;
 		    _concurrentTaskExecution = concurrentTaskExecution;
 	        _shutdown = shutdown;
-		    _outputter = outputter;
+		    _console = console;
 		}
 
 		public TaskExecutionResult Execute(ITask task, Arguments arguments = null)
@@ -44,18 +44,23 @@ namespace Vertica.Integration.Model
 			{
 				message = $"[{Time.Now:HH:mm:ss}] {message}";
 
-				_outputter.WriteLine(message);
+				_console.WriteLine(message);
 				output.Add(message);
 			};
 
             using (var taskLog = new TaskLog(task, _logger.LogEntry, new Output(outputter)))
             using (_concurrentTaskExecution.Handle(task, arguments, taskLog))
             {
+                Action<string>[] logMessage = { x => { } };
+
+                var log = new Log(message => logMessage[0]?.Invoke(message), _logger);
+                var context = new TaskExecutionContext(log, arguments, _shutdown.Token);
+
                 TWorkItem workItem;
 
                 try
                 {
-                    var context = new TaskExecutionContext(new Log(taskLog.LogMessage, _logger), arguments, _shutdown.Token);
+                    logMessage[0] = taskLog.LogMessage;
                     context.ThrowIfCancelled();
 
                     workItem = task.Start(context);
@@ -84,7 +89,7 @@ namespace Vertica.Integration.Model
                         {
                             try
                             {
-                                var context = new TaskExecutionContext(new Log(stepLog.LogMessage, _logger), arguments, _shutdown.Token);
+                                logMessage[0] = stepLog.LogMessage;
                                 context.ThrowIfCancelled();
 
                                 step.Execute(workItem, context);
@@ -103,7 +108,7 @@ namespace Vertica.Integration.Model
 
                     try
                     {
-                        var context = new TaskExecutionContext(new Log(taskLog.LogMessage, _logger), arguments, _shutdown.Token);
+                        logMessage[0] = taskLog.LogMessage;
                         context.ThrowIfCancelled();
 
                         task.End(workItem, context);

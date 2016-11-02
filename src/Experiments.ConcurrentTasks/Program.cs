@@ -7,7 +7,6 @@ using Vertica.Integration.Domain.LiteServer;
 using Vertica.Integration.Domain.Monitoring;
 using Vertica.Integration.Hangfire;
 using Vertica.Integration.Infrastructure;
-using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Logging.Elmah;
 using Vertica.Integration.Portal;
 using Vertica.Integration.UCommerce;
@@ -50,11 +49,13 @@ namespace Experiments.ConcurrentTasks
                     .MonitorTask(task => task
                         .IncludeElmah())
                     .ConcurrentTaskExecution(concurrentTaskExecution => concurrentTaskExecution.AddFromAssemblyOfThis<Program>()))
-                .AddCustomInstaller(Install.ByConvention.AddFromAssemblyOfThis<Program>())))
+                .Services(services => services
+                    .Conventions(conventions => conventions
+                        .AddFromAssemblyOfThis<Program>()))))
             {
                 var shutdown = context.Resolve<IShutdown>();
                 var liteServer = context.Resolve<ILiteServerFactory>();
-                
+
                 RecurringJob.AddOrUpdate<ITaskByNameRunner>(nameof(ConcurrentExecutableTask), x => x.Run(nameof(ConcurrentExecutableTask)), Cron.Minutely);
                 RecurringJob.AddOrUpdate<ITaskByNameRunner>(nameof(SynchronousOnlyTask), x => x.Run(nameof(SynchronousOnlyTask)), Cron.Minutely);
 

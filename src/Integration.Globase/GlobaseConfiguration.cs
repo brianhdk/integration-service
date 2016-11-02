@@ -1,32 +1,32 @@
 ﻿using System;
-using Castle.Windsor;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Archiving;
-using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 
 namespace Vertica.Integration.Globase
 {
-	public class GlobaseConfiguration : IInitializable<IWindsorContainer>
+    public class GlobaseConfiguration : IInitializable<ApplicationConfiguration>
 	{
+	    private readonly ConfigurationImpl _configuration;
+
 		internal GlobaseConfiguration(ApplicationConfiguration application)
 		{
 			if (application == null) throw new ArgumentNullException(nameof(application));
 
-			Application = application
-				.AddCustomInstaller(Install.ByConvention
-					.AddFromAssemblyOfThis<GlobaseConfiguration>()
-					.Ignore<GlobaseConfiguration>());
-		}
+		    _configuration = new ConfigurationImpl();
 
-		internal ConnectionString FtpConnectionStringInternal { get; set; }
-		
-		public ArchiveOptions ArchiveOptions { get; private set; }
+            Application = application
+                .Services(services => services
+                    .Advanced(advanced => advanced
+                        .Register<IGlobaseConfiguration>(kernel => _configuration))
+                    .Conventions(conventions => conventions
+                        .AddFromAssemblyOfThis<GlobaseConfiguration>()));
+        }
 
 		public GlobaseConfiguration FtpConnectionString(ConnectionString ftp)
 		{
 			if (ftp == null) throw new ArgumentNullException(nameof(ftp));
 
-			FtpConnectionStringInternal = ftp;
+			_configuration.FtpConnectionString = ftp;
 
 			return this;
 		}
@@ -43,21 +43,28 @@ namespace Vertica.Integration.Globase
 		/// </summary>
 		public GlobaseConfiguration EnableArchiving(Action<ArchiveOptions> options = null)
 		{
-			ArchiveOptions = new ArchiveOptions("Globase").GroupedBy("Globase").ExpiresAfterMonths(1);
+			_configuration.ArchiveOptions = 
+                new ArchiveOptions("Globase")
+                    .GroupedBy("Globase")
+                    .ExpiresAfterMonths(1);
 
-			options?.Invoke(ArchiveOptions);
+			options?.Invoke(_configuration.ArchiveOptions);
 
 			return this;
 		}
 
 		public ApplicationConfiguration Application { get; private set; }
 
-		void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
-		{
-			if (FtpConnectionStringInternal == null)
-				FtpConnectionStringInternal = ConnectionString.FromName("Globase.Ftp.Url");
+        internal class ConfigurationImpl : IGlobaseConfiguration
+        {
+            public ArchiveOptions ArchiveOptions { get; set; }
+            public ConnectionString FtpConnectionString { get; set; }
+        }
 
-			container.RegisterInstance(this, x => x.LifestyleSingleton());
+        void IInitializable<ApplicationConfiguration>.Initialized(ApplicationConfiguration application)
+		{
+			if (_configuration.FtpConnectionString == null)
+				_configuration.FtpConnectionString = ConnectionString.FromName("Globase.Ftp.Url");
 		}
 	}
 }

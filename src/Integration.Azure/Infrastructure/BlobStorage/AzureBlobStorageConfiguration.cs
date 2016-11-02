@@ -1,27 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using Castle.MicroKernel.Registration;
-using Castle.Windsor;
 using Vertica.Integration.Azure.Infrastructure.Castle.Windsor;
 using Vertica.Integration.Infrastructure;
 
 namespace Vertica.Integration.Azure.Infrastructure.BlobStorage
 {
-	public class AzureBlobStorageConfiguration : IInitializable<IWindsorContainer>
+	public class AzureBlobStorageConfiguration : IInitializable<ApplicationConfiguration>
 	{
 		private IWindsorInstaller _defaultConnection;
-		private readonly List<IWindsorInstaller> _installers;
+		private readonly List<IWindsorInstaller> _connections;
 
 		internal AzureBlobStorageConfiguration(ApplicationConfiguration application)
         {
             if (application == null) throw new ArgumentNullException(nameof(application));
 
-			Application = application;
+		    _connections = new List<IWindsorInstaller>();
 
-            _installers = new List<IWindsorInstaller>();
+		    Application = application;
         }
 
-        public ApplicationConfiguration Application { get; private set; }
+        public ApplicationConfiguration Application { get; }
 
 		public AzureBlobStorageConfiguration DefaultConnection(ConnectionString connectionString)
 		{
@@ -46,7 +45,7 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage
 		{
 			if (connection == null) throw new ArgumentNullException(nameof(connection));
 
-			_installers.Add(new AzureBlobStorageInstaller<TConnection>(connection));
+			_connections.Add(new AzureBlobStorageInstaller<TConnection>(connection));
 
 			return this;
 		}
@@ -56,18 +55,20 @@ namespace Vertica.Integration.Azure.Infrastructure.BlobStorage
             if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
             if (string.IsNullOrWhiteSpace(containerName)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(containerName));
 
-            _installers.Add(new AzureArchiveInstaller(connectionString, containerName));
+            _connections.Add(new AzureArchiveInstaller(connectionString, containerName));
 
             return this;
         }
 
-        void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
+        void IInitializable<ApplicationConfiguration>.Initialized(ApplicationConfiguration application)
         {
-			if (_defaultConnection != null)
-				container.Install(_defaultConnection);
+            Application.Services(services => services.Advanced(advanced =>
+            {
+                if (_defaultConnection != null)
+                    advanced.Install(_defaultConnection);
 
-            foreach (IWindsorInstaller installer in _installers)
-                container.Install(installer);
+                advanced.Install(_connections.ToArray());
+            }));
         }
 	}
 }

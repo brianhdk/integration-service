@@ -42,7 +42,7 @@ namespace Vertica.Integration.Rebus
 		    return this;
 	    }
 
-	    void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
+	    void IInitializable<IWindsorContainer>.Initialized(IWindsorContainer container)
 		{
 			container.Register(
 			    Component.For<IBus>()

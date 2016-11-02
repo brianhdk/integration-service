@@ -7,6 +7,7 @@ using Rebus.Handlers;
 using Rebus.Routing.TypeBased;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Extensions;
+using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Model;
 using Vertica.Integration.Rebus;
 using Task = System.Threading.Tasks.Task;
@@ -67,17 +68,17 @@ namespace Vertica.Integration.Experiments.Rebus
 	public class RebusTask : Model.Task
 	{
 		private readonly Func<IBus> _bus;
-		private readonly TextWriter _writer;
+		private readonly IConsoleWriter _console;
 
-		public RebusTask(Func<IBus> bus, TextWriter writer)
+		public RebusTask(Func<IBus> bus, IConsoleWriter writer)
 		{
 			_bus = bus;
-			_writer = writer;
+			_console = writer;
 		}
 
 		public override void StartTask(ITaskExecutionContext context)
 		{
-			_writer.RepeatUntilEscapeKeyIsHit(() =>
+			_console.RepeatUntilEscapeKeyIsHit(() =>
 			{
 				_bus().Send(Console.ReadLine()).Wait();
 			});

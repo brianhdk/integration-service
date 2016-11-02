@@ -22,8 +22,10 @@ namespace Vertica.Integration.Tests.SQLite
 
 			var connection = new TestSqliteConnection(_fileName);
 
-			_context = TestableApplicationContext.Create(application => application
-				.Database(database => database.SQLite(sqlite => sqlite.AddConnection(connection)))
+			_context = ApplicationContext.Create(application => application
+				.Database(database => database
+                    .IntegrationDb(integrationDb => integrationDb.Disable())
+                    .SQLite(sqlite => sqlite.AddConnection(connection)))
 				.Migration(migration => migration.AddFromNamespaceOfThis<M1_CreateMyTable>(DatabaseServer.Sqlite, connection.ConnectionString))
 				.Tasks(tasks => tasks.Clear().Task<MigrateTask>().AddFromAssemblyOfThis<SQLiteTester>()));
 		}

@@ -20,7 +20,7 @@ namespace Experiments.ConcurrentTasks
             var archive = _archive.ArchiveFile(new FileInfo(@"c:\tmp\Archive-478.zip"), options => options
                 .ExpiresAfter(TimeSpan.FromHours(1)));
 
-            context.Writer.WriteLine("Archive {0}", archive.Id);
+            context.Console.WriteLine("Archive {0}", archive.Id);
 
             return context.Wait(TimeSpan.FromSeconds(2));
         }

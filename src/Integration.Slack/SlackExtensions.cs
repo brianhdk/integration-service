@@ -12,6 +12,11 @@ namespace Vertica.Integration.Slack
 			{
 				SlackConfiguration configuration = extensibility.Register(() => new SlackConfiguration(application));
 
+                // Bot Token
+                // Bot Channel (her vil botten skrive beskeder)
+                // Bot beskeder (beskeder en bot kan forstå)
+                    // Plug-in baseret (mulighed for at tilføje flere handlers)
+
 				slack?.Invoke(configuration);
 			});
 		}

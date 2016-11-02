@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using Castle.MicroKernel.Registration;
-using Castle.Windsor;
 using Vertica.Integration.Infrastructure;
-using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.MongoDB.Infrastructure;
 using Vertica.Integration.MongoDB.Infrastructure.Castle.Windsor;
 
 namespace Vertica.Integration.MongoDB
 {
-    public class MongoDbConfiguration : IInitializable<IWindsorContainer>
+    public class MongoDbConfiguration : IInitializable<ApplicationConfiguration>
     {
 		private IWindsorInstaller _defaultConnection;
         private readonly List<IWindsorInstaller> _connections;
@@ -18,9 +16,12 @@ namespace Vertica.Integration.MongoDB
         {
             if (application == null) throw new ArgumentNullException(nameof(application));
 
-			Application = application;
+            Application = application
+                .Services(services => services
+                    .Conventions(conventions => conventions
+                        .AddFromAssemblyOfThis<MongoDbConfiguration>()));
 
-			_connections = new List<IWindsorInstaller>();
+            _connections = new List<IWindsorInstaller>();
         }
 
         public ApplicationConfiguration Application { get; private set; }
@@ -53,15 +54,15 @@ namespace Vertica.Integration.MongoDB
             return this;
         }
 
-        void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
+        void IInitializable<ApplicationConfiguration>.Initialized(ApplicationConfiguration application)
         {
-	        container.Install(Install.ByConvention.AddFromAssemblyOfThis<MongoDbConfiguration>());
+            Application.Services(services => services.Advanced(advanced =>
+            {
+                if (_defaultConnection != null)
+                    advanced.Install(_defaultConnection);
 
-	        if (_defaultConnection != null)
-		        container.Install(_defaultConnection);
-
-	        foreach (IWindsorInstaller installer in _connections)
-		        container.Install(installer);
+                advanced.Install(_connections.ToArray());
+            }));
         }
     }
 }

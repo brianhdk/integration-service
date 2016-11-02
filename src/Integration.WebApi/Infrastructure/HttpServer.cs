@@ -13,6 +13,7 @@ using Microsoft.Owin.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Owin;
+using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.WebApi.Infrastructure.Castle.Windsor;
 
@@ -20,25 +21,26 @@ namespace Vertica.Integration.WebApi.Infrastructure
 {
 	internal class HttpServer : IDisposable
     {
-        private readonly IDisposable _httpServer;
-        private readonly IKernel _kernel;
-		private readonly TextWriter _outputter;
+	    private readonly IKernel _kernel;
+	    private readonly IConsoleWriter _console;
+	    private readonly IDisposable _httpServer;
 
-		public HttpServer(IKernel kernel, Action<IOwinConfiguration> configuration, string url)
+	    public HttpServer(IKernel kernel, Action<IOwinConfiguration> configuration, string url)
         {
 	        if (kernel == null) throw new ArgumentNullException(nameof(kernel));
 			if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 			AssertUrl(url);
 
 	        _kernel = kernel;
-	        _outputter = kernel.Resolve<TextWriter>();
+	        _console = kernel.Resolve<IConsoleWriter>();
 
-			_outputter.WriteLine("Starting HttpServer listening on URL: {0}", url);
+            Output($"Starting HttpServer listening on URL: {url}.");
 
 			// TODO: Make it possible to add multiple URL's to listen on
 	        _httpServer = WebApp.Start(new StartOptions(url), builder =>
             {
-				builder.Properties["host.TraceOutput"] = _outputter;
+                // TODO: Look into what this does exactly
+				builder.Properties["host.TraceOutput"] = _kernel.Resolve<TextWriter>();
 
 	            HttpConfiguration httpConfiguration = new HttpConfiguration();
 				configuration(new OwinConfiguration(builder, httpConfiguration, kernel));
@@ -113,13 +115,18 @@ namespace Vertica.Integration.WebApi.Infrastructure
         {
             if (_httpServer != null)
             {
-	            _outputter.WriteLine("Shutting down HttpServer.");
+	            Output("Shutting down.");
 
 	            _httpServer.Dispose();
             }
         }
+        
+        private void Output(string message)
+        {
+            _console.WriteLine($"[HttpServer]: {message}");
+        }
 
-		private class OwinConfiguration : IOwinConfiguration
+        private class OwinConfiguration : IOwinConfiguration
 		{
 			internal OwinConfiguration(IAppBuilder app, HttpConfiguration httpConfiguration, IKernel kernel)
 			{

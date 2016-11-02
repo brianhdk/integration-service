@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Castle.Windsor;
 using NUnit.Framework;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 
@@ -10,45 +9,49 @@ namespace Vertica.Integration.Tests.Infrastructure.Factories
 	public class CollectionInstallerTester
 	{
 		[Test]
-		public void Resolve_All_As_IEnumerable()
+		public void Resolve_As_DifferentDataStructures()
 		{
-			IWindsorContainer container = CastleWindsor.Initialize(new ApplicationConfiguration()
-				.AddCustomInstaller(Install.Collection<ISomeService>()
-					.AddFromAssemblyOfThis<CollectionInstallerTester>()));
+		    using (IApplicationContext context = ApplicationContext.Create(application => application
+		        .Services(services => services
+		            .Advanced(advanced => advanced
+		                .Install(Install
+		                    .Collection<ISomeService>()
+		                    .AddFromAssemblyOfThis<CollectionInstallerTester>())))))
+		    {
+                ISomeService[] enumerable = context.Resolve<IEnumerable<ISomeService>>().ToArray();
 
-			ISomeService[] implementations = container.Resolve<IEnumerable<ISomeService>>().ToArray();
+                Assert.IsNotNull(enumerable.SingleOrDefault(x => x.GetType() == typeof(SomeServiceImpl)));
+                Assert.IsNotNull(enumerable.SingleOrDefault(x => x.GetType() == typeof(SomeOtherServiceImpl)));
 
-			Assert.IsNotNull(implementations.SingleOrDefault(x => x.GetType() == typeof(SomeServiceImpl)));
-			Assert.IsNotNull(implementations.SingleOrDefault(x => x.GetType() == typeof(SomeOtherServiceImpl)));
-		}
+                ISomeService[] array = context.Resolve<ISomeService[]>();
 
-		[Test]
-		public void Resolve_All_As_Array()
-		{
-			IWindsorContainer container = CastleWindsor.Initialize(new ApplicationConfiguration()
-				.AddCustomInstaller(Install.Collection<ISomeService>()
-					.AddFromAssemblyOfThis<CollectionInstallerTester>()));
+                Assert.IsNotNull(array.SingleOrDefault(x => x.GetType() == typeof(SomeServiceImpl)));
+                Assert.IsNotNull(array.SingleOrDefault(x => x.GetType() == typeof(SomeOtherServiceImpl)));
 
-			ISomeService[] implementations = container.Resolve<ISomeService[]>();
+                ISomeService[] allArray = context.ResolveAll<ISomeService>();
 
-			Assert.IsNotNull(implementations.SingleOrDefault(x => x.GetType() == typeof(SomeServiceImpl)));
-			Assert.IsNotNull(implementations.SingleOrDefault(x => x.GetType() == typeof(SomeOtherServiceImpl)));
+                Assert.IsNotNull(allArray.SingleOrDefault(x => x.GetType() == typeof(SomeServiceImpl)));
+                Assert.IsNotNull(allArray.SingleOrDefault(x => x.GetType() == typeof(SomeOtherServiceImpl)));
+            }
 		}
 
 		[Test]
 		public void Ignore_Service_Gets_Ignored()
 		{
-			IWindsorContainer container = CastleWindsor.Initialize(new ApplicationConfiguration()
-				.AddCustomInstaller(Install.Collection<ISomeService>()
-					.AddFromAssemblyOfThis<CollectionInstallerTester>()
-					.Ignore<SomeServiceImpl>()));
+		    using (IApplicationContext context = ApplicationContext.Create(application => application
+		        .Services(services => services
+		            .Advanced(advanced => advanced
+		                .Install(Install
+		                    .Collection<ISomeService>()
+		                    .AddFromAssemblyOfThis<CollectionInstallerTester>()
+                            .Ignore<SomeServiceImpl>())))))
+		    {
+                ISomeService[] implementations = context.Resolve<ISomeService[]>();
 
-			ISomeService[] implementations = container.Resolve<ISomeService[]>();
-
-			Assert.IsNull(implementations.SingleOrDefault(x => x.GetType() == typeof(SomeServiceImpl)));
-			Assert.IsNotNull(implementations.SingleOrDefault(x => x.GetType() == typeof(SomeOtherServiceImpl)));
-		}
-
+                Assert.IsNull(implementations.SingleOrDefault(x => x.GetType() == typeof(SomeServiceImpl)));
+                Assert.IsNotNull(implementations.SingleOrDefault(x => x.GetType() == typeof(SomeOtherServiceImpl)));
+            }
+        }
 
 		public interface ISomeService
 		{

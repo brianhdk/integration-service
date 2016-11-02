@@ -84,7 +84,6 @@
     <Compile Include="ApplicationContext.cs" />
     <Compile Include="AppConfigRuntimeSettings.cs" />
     <Compile Include="ApplicationEnvironment.cs" />
-    <Compile Include="CastleWindsor.cs" />
     <Compile Include="ConfigurationBasedRuntimeSettings.cs" />
     <Compile Include="Domain\Core\ArchiveFoldersStep.cs" />
     <Compile Include="Domain\Core\CleanUpIntegrationDbStep.cs" />
@@ -132,12 +131,16 @@
     <Compile Include="IInitializable.cs" />
     <Compile Include="Infrastructure\Database\IntegrationDatabaseConfiguration.cs" />
     <Compile Include="Infrastructure\Database\IntegrationDbTable.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\M7_DbDistributedMutex - Copy.cs" />
     <Compile Include="Infrastructure\Extensions\QueueExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\RepeatExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\StringExtensions.cs" />
     <Compile Include="Infrastructure\IO\ConsoleWriter.cs" />
     <Compile Include="Infrastructure\IO\IConsoleWriter.cs" />
     <Compile Include="Infrastructure\IShutdown.cs" />
+    <Compile Include="Infrastructure\ServicesConfiguration.cs" />
+    <Compile Include="Infrastructure\ServicesConventionsConfiguration.cs" />
+    <Compile Include="Infrastructure\ServicesInterceptorsConfiguration.cs" />
     <Compile Include="Infrastructure\Threading\ActionRepeater.cs" />
     <Compile Include="Infrastructure\Archiving\ArchiveOptions.cs" />
     <Compile Include="Infrastructure\Archiving\BeginArchive.cs" />
@@ -213,7 +216,7 @@
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\TaskInstaller.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ServiceInstaller.cs" />
     <Compile Include="Infrastructure\IO\AzureWebJobShutdownRequest.cs" />
-    <Compile Include="Infrastructure\AdvancedConfiguration.cs" />
+    <Compile Include="Infrastructure\ServicesAdvancedConfiguration.cs" />
     <Compile Include="Infrastructure\IO\WaitForEscapeKey.cs" />
     <Compile Include="Infrastructure\IWaitForShutdownRequest.cs" />
     <Compile Include="Infrastructure\Logging\IReferenceErrorLog.cs" />
@@ -237,7 +240,6 @@
     <Compile Include="Infrastructure\Parsing\CsvParser.cs" />
     <Compile Include="Infrastructure\Parsing\CsvRow.cs" />
     <Compile Include="Infrastructure\Parsing\ICsvParser.cs" />
-    <Compile Include="Infrastructure\ShutdownConfiguration.cs" />
     <Compile Include="Infrastructure\Remote\Ftp\FtpClient.cs" />
     <Compile Include="Infrastructure\Remote\Ftp\FtpClientConfiguration.cs" />
     <Compile Include="Infrastructure\Remote\FtpClientFactory.cs" />

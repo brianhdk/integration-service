@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Vertica.Integration.Infrastructure.IO;
 
 namespace Vertica.Integration.Infrastructure.Extensions
 {
 	public static class ConsoleExtensions
 	{
-		public static string ReadLine(this TextWriter outputter, string message = "Enter value: ")
+		public static string ReadLine(this TextWriter writer, string message = "Enter value: ")
 		{
-			if (outputter == null) throw new ArgumentNullException(nameof(outputter));
+			if (writer == null) throw new ArgumentNullException(nameof(writer));
 
 			if (!string.IsNullOrWhiteSpace(message))
-				outputter.Write(message);
+				writer.Write(message);
 
 			if (!Environment.UserInteractive)
 				return null;
@@ -23,16 +24,16 @@ namespace Vertica.Integration.Infrastructure.Extensions
 		/// <summary>
 		/// Like System.Console.ReadLine(), only with a mask.
 		/// </summary>
-		/// <param name="outputter">Writer that outputs initial string</param>
+		/// <param name="writer">Writer that outputs initial string</param>
 		/// <param name="message">Message to show user before entering password.</param>
 		/// <param name="mask">a <c>char</c> representing your choice of console mask</param>
 		/// <returns>the string the user typed in </returns>
-		public static string ReadPassword(this TextWriter outputter, string message = "Enter password: ", char mask = '*')
+		public static string ReadPassword(this TextWriter writer, string message = "Enter password: ", char mask = '*')
 		{
-			if (outputter == null) throw new ArgumentNullException(nameof(outputter));
+			if (writer == null) throw new ArgumentNullException(nameof(writer));
 
 			if (!string.IsNullOrWhiteSpace(message))
-				outputter.Write(message);
+				writer.Write(message);
 
 			if (!Environment.UserInteractive)
 				return null;
@@ -49,7 +50,7 @@ namespace Vertica.Integration.Infrastructure.Extensions
 				{
 					if (pass.Count > 0)
 					{
-						outputter.Write("\b \b");
+						writer.Write("\b \b");
 						pass.Pop();
 					}
 				}
@@ -57,7 +58,7 @@ namespace Vertica.Integration.Infrastructure.Extensions
 				{
 					while (pass.Count > 0)
 					{
-						outputter.Write("\b \b");
+						writer.Write("\b \b");
 						pass.Pop();
 					}
 				}
@@ -67,39 +68,40 @@ namespace Vertica.Integration.Infrastructure.Extensions
 				else
 				{
 					pass.Push(c);
-					outputter.Write(mask);
+					writer.Write(mask);
 				}
 			}
 
-			outputter.WriteLine();
+			writer.WriteLine();
+
 			return new string(pass.Reverse().ToArray());
 		}
 
-		public static void RepeatUntilEscapeKeyIsHit(this TextWriter outputter, Action repeat)
+		public static void RepeatUntilEscapeKeyIsHit(this IConsoleWriter console, Action repeat)
 		{
-			if (outputter == null) throw new ArgumentNullException(nameof(outputter));
+			if (console == null) throw new ArgumentNullException(nameof(console));
 			if (repeat == null) throw new ArgumentNullException(nameof(repeat));
 
 			do
 			{
 				repeat();
 
-				outputter.WriteLine("Press ESCAPE to break or any key to continue");
-				outputter.WriteLine();
+                console.WriteLine("Press ESCAPE to break or any key to continue");
+			    console.WriteLine();
 
 			} while (WaitingForEscape());
 		}
 
-		public static void WaitUntilEscapeKeyIsHit(this TextWriter outputter, string message = "Press ESCAPE to continue...")
+		public static void WaitUntilEscapeKeyIsHit(this IConsoleWriter console, string message = "Press ESCAPE to continue...")
 		{
-			if (outputter == null) throw new ArgumentNullException(nameof(outputter));
+			if (console == null) throw new ArgumentNullException(nameof(console));
 
 			do
 			{
 				if (!string.IsNullOrWhiteSpace(message))
 				{
-					outputter.WriteLine(message);
-					outputter.WriteLine();					
+					console.WriteLine(message);
+					console.WriteLine();					
 				}
 
 			} while (WaitingForEscape());

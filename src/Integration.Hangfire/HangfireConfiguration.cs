@@ -120,7 +120,7 @@ namespace Vertica.Integration.Hangfire
 			return this;
 		}
 
-		void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
+		void IInitializable<IWindsorContainer>.Initialized(IWindsorContainer container)
 		{
 			JobActivator.Current = _configuration.ServerOptions.Activator = new WindsorJobActivator(container.Kernel);
 

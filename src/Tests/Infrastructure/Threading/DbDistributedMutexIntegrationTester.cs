@@ -15,7 +15,6 @@ using Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db;
 namespace Vertica.Integration.Tests.Infrastructure.Threading
 {
     [TestFixture(Category = "Slow,Integration")]
-    [Ignore("Threading")]
     public class DbDistributedMutexIntegrationTester
     {
         [Test]

@@ -1,22 +1,21 @@
 using System;
 using System.Text.RegularExpressions;
-using Castle.Windsor;
 using Vertica.Integration.Infrastructure.Database.Castle.Windsor;
 using Vertica.Integration.Infrastructure.Database.Migrations;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 
 namespace Vertica.Integration.Infrastructure.Database
 {
-    public class IntegrationDatabaseConfiguration : IInitializable<IWindsorContainer>
+    public class IntegrationDatabaseConfiguration : IInitializable<ApplicationConfiguration>
     {
-        private readonly Configuration _configuration;
+        private readonly ConfigurationImpl _configuration;
         private DefaultConnection _defaultConnection;
 
         internal IntegrationDatabaseConfiguration(DatabaseConfiguration database)
         {
             if (database == null) throw new ArgumentNullException(nameof(database));
 
-            _configuration = new Configuration();
+            _configuration = new ConfigurationImpl();
 
             Database = database;
         }
@@ -89,18 +88,21 @@ namespace Vertica.Integration.Infrastructure.Database
             return this;
         }
 
-        void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
+        void IInitializable<ApplicationConfiguration>.Initialized(ApplicationConfiguration application)
         {
-            container.RegisterInstance<IIntegrationDatabaseConfiguration>(_configuration, x => x.LifestyleSingleton());
-
-            container.Install(new DbInstaller(_configuration.Disabled
+            DefaultConnection connection = _configuration.Disabled
                 ? DefaultConnection.Disabled
-                : _defaultConnection ?? new DefaultConnection(ConnectionString.FromName("IntegrationDb"))));
+                : _defaultConnection ?? new DefaultConnection(ConnectionString.FromName("IntegrationDb"));
+
+            application.Services(services => services
+                .Advanced(advanced => advanced
+                    .Install(Install.Instance<IIntegrationDatabaseConfiguration>(_configuration))
+                    .Install(new DbInstaller(connection))));
         }
 
-        private class Configuration : IIntegrationDatabaseConfiguration
+        private class ConfigurationImpl : IIntegrationDatabaseConfiguration
         {
-            public Configuration()
+            public ConfigurationImpl()
             {
                 DatabaseServer = DatabaseServer.SqlServer2014;
                 CheckExistsAndCreateDatabaseIfNotFound = true;

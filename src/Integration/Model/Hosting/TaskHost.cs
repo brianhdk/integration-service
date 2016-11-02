@@ -1,8 +1,4 @@
 using System;
-using System.IO;
-using Vertica.Integration.Infrastructure;
-using Vertica.Integration.Infrastructure.Extensions;
-using Vertica.Integration.Model.Hosting.Handlers;
 
 namespace Vertica.Integration.Model.Hosting
 {
@@ -10,17 +6,11 @@ namespace Vertica.Integration.Model.Hosting
 	{
 	    private readonly ITaskFactory _factory;
 	    private readonly ITaskRunner _runner;
-	    private readonly IWindowsServiceHandler _windowsService;
-	    private readonly IShutdown _shutdown;
-	    private readonly TextWriter _textWriter;
 
-		public TaskHost(ITaskFactory factory, ITaskRunner runner, IWindowsServiceHandler windowsService, IShutdown shutdown, TextWriter textWriter)
+		public TaskHost(ITaskFactory factory, ITaskRunner runner)
 		{
 		    _factory = factory;
 			_runner = runner;
-			_windowsService = windowsService;
-		    _shutdown = shutdown;
-			_textWriter = textWriter;
 		}
 
 		public bool CanHandle(HostArguments args)
@@ -36,27 +26,7 @@ namespace Vertica.Integration.Model.Hosting
 
 			ITask task = _factory.Get(args.Command);
 
-			if (InstallOrRunAsWindowsService(args, task))
-				return;
-
 			_runner.Execute(task, args.Args);
-		}
-
-		private bool InstallOrRunAsWindowsService(HostArguments args, ITask task)
-		{
-			Func<IDisposable> onStart = () =>
-			{
-				string value;
-				args.CommandArgs.TryGetValue("interval", out value);
-
-				TimeSpan interval;
-				if (!TimeSpan.TryParse(value, out interval))
-					interval = TimeSpan.FromMinutes(1);
-
-				return interval.Repeat(() => _runner.Execute(task, args.Args), _shutdown.Token, _textWriter);
-			};
-
-			return _windowsService.Handle(args, new HandleAsWindowsService(task.Name(), task.Name(), task.Description, onStart));
 		}
 
 		public string Description => "Handles execution of Tasks.";

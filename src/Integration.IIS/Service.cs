@@ -1,19 +1,20 @@
 ﻿using System;
 using Microsoft.Web.Administration;
-using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 
 namespace Vertica.Integration.IIS
 {
     public static class IISExtensions
     {
-        public static ApplicationConfiguration UseIIS(this ApplicationConfiguration builder)
+        public static ApplicationConfiguration UseIIS(this ApplicationConfiguration application, Action<IISConfiguration> iis = null)
         {
-            if (builder == null) throw new ArgumentNullException(nameof(builder));
+            if (application == null) throw new ArgumentNullException(nameof(application));
 
-			// undone - should introduce an IISConfiguration object and use same strategy as other extensions.
-            builder.AddCustomInstallers(Install.ByConvention.AddFromAssemblyOfThis<IServerManagerFactory>());
+            return application.Extensibility(extensibility =>
+            {
+                IISConfiguration configuration = extensibility.Register(() => new IISConfiguration(application));
 
-            return builder;
+                iis?.Invoke(configuration);
+            });
         }
     }
 
@@ -26,9 +27,9 @@ namespace Vertica.Integration.IIS
     {
         public ServerManager Create()
         {
-            //return new ServerManager(); // local IIS
+            return new ServerManager(); // local IIS
 
-            return ServerManager.OpenRemote("maersk-web01.vertica.dk");
+            //return ServerManager.OpenRemote("maersk-web01.vertica.dk");
         }
     }
 }

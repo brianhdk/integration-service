@@ -73,7 +73,11 @@ using (IApplicationContext context = ApplicationContext.Create(application => ap
 
             try
             {
-                var context = new DistributedMutexContext(lockName, preventConcurrent?.Configuration ?? _defaultConfiguration, log.LogMessage);
+                var context = new DistributedMutexContext(
+                    lockName,
+                    preventConcurrent?.Configuration ?? _defaultConfiguration,
+                    log.LogMessage,
+                    $"Acquired by '{task.Name()}'. TaskLogId: {log.Id ?? "<n/a>"}.");
 
                 return _distributedMutex.Enter(context);
             }

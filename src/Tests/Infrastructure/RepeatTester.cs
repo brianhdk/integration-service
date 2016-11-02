@@ -1,11 +1,13 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NUnit.Framework;
 using Vertica.Integration.Infrastructure.Extensions;
 
 namespace Vertica.Integration.Tests.Infrastructure
 {
 	[TestFixture]
-	public class RepeatTester
+    [Obsolete("Will be removed.")]
+    public class RepeatTester
 	{
 		[Test]
 		public void Repeat_X_Times()

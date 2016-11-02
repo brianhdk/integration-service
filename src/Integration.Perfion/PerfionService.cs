@@ -12,13 +12,13 @@ namespace Vertica.Integration.Perfion
 {
 	public class PerfionService : IPerfionService
 	{
-		private readonly PerfionConfiguration _configuration;
+		private readonly IPerfionConfiguration _configuration;
 		private readonly IArchiveService _archive;
 		private readonly IKernel _kernel;
 
-		public PerfionService(PerfionConfiguration configuration, IArchiveService archive, IKernel kernel)
+		public PerfionService(IArchiveService archive, IKernel kernel)
 		{
-			_configuration = configuration;
+			_configuration = kernel.Resolve<IPerfionConfiguration>();
 			_archive = archive;
 			_kernel = kernel;
 		}
@@ -100,7 +100,7 @@ namespace Vertica.Integration.Perfion
 
 		private Uri ParseBaseUri()
 		{
-			string webServiceUri = _configuration.ConnectionStringInternal;
+			string webServiceUri = _configuration.ConnectionString;
 
 			Uri uri;
 			if (!Uri.TryCreate(webServiceUri, UriKind.Absolute, out uri))
@@ -128,7 +128,7 @@ namespace Vertica.Integration.Perfion
 
 			_configuration.ServiceClientConfiguration.BindingInternal?.Invoke(_kernel, binding);
 
-			var proxy = new GetDataSoapClient(binding, new EndpointAddress(_configuration.ConnectionStringInternal));
+			var proxy = new GetDataSoapClient(binding, new EndpointAddress(_configuration.ConnectionString));
 
 			_configuration.ServiceClientConfiguration.ClientCredentialsInternal?.Invoke(_kernel, proxy.ClientCredentials);
 

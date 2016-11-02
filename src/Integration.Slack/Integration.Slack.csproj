@@ -65,10 +65,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bot\SlackBotConfiguration.cs" />
+    <Compile Include="Bot\SlackBot.cs" />
+    <Compile Include="LiteServer\SlackMessageQueueConsumerServer.cs" />
+    <Compile Include="Messaging\ISlackMessage.cs" />
+    <Compile Include="Bot\ISlackBot.cs" />
+    <Compile Include="Messaging\Handlers\IHandleMessages.cs" />
+    <Compile Include="Messaging\Handlers\SlackChannelApi.cs" />
+    <Compile Include="Messaging\ISlackMessageHandlerFactory.cs" />
+    <Compile Include="Messaging\MessageHandlerNotFoundException.cs" />
+    <Compile Include="Messaging\Messages\SlackPostMessageInChannel.cs" />
+    <Compile Include="Messaging\SlackMessageHandlerFactory.cs" />
+    <Compile Include="Messaging\SlackMessageHandlersConfiguration.cs" />
+    <Compile Include="Messaging\Infrastructure\Castle.Windsor\MessageHandlersInstaller.cs" />
+    <Compile Include="Messaging\ISlackMessageQueue.cs" />
     <Compile Include="SlackConfiguration.cs" />
+    <Compile Include="SlackConsoleWriterInterceptor.cs" />
     <Compile Include="SlackExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SlackBackgroundServer.cs" />
+    <Compile Include="LiteServer\SlackBotWorkerServer.cs" />
+    <Compile Include="Messaging\SlackMessageQueue.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Integration\Integration.csproj">
@@ -80,6 +96,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -111,7 +111,7 @@ namespace Vertica.Integration.WebApi.SignalR
 		    return this;
 	    }
 
-		void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
+		void IInitializable<IWindsorContainer>.Initialized(IWindsorContainer container)
 		{
 			container.Install(new SignalRInstaller(_assemblies.ToArray(), _removeHubs.ToArray(), _removeModules.ToArray()));
 		}

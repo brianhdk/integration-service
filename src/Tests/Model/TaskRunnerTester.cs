@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using NSubstitute;
 using NUnit.Framework;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Extensions;
+using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Exceptions;
@@ -14,7 +13,6 @@ using Vertica.Integration.Model.Tasks;
 namespace Vertica.Integration.Tests.Model
 {
 	[TestFixture]
-	[SuppressMessage("ReSharper", "UseNullPropagation")]
 	public class TaskRunnerTester
 	{
 		[Test]
@@ -23,7 +21,7 @@ namespace Vertica.Integration.Tests.Model
             var logger = Substitute.For<ILogger>();
             var concurrentExecution = Substitute.For<IConcurrentTaskExecution>();
             var shutdown = Substitute.For<IShutdown>();
-            TextWriter outputter = TextWriter.Null;
+            var console = Substitute.For<IConsoleWriter>();
 
             var step1 = Substitute.For<IStep<SomeWorkItem>>();
             var step2 = Substitute.For<IStep<SomeWorkItem>>();
@@ -33,7 +31,7 @@ namespace Vertica.Integration.Tests.Model
 			step1.ContinueWith(workItem).Returns(Execution.Execute);
 			step2.ContinueWith(workItem).Returns(Execution.Execute);
 
-			var subject = new TaskRunner(logger, concurrentExecution, shutdown, outputter);
+			var subject = new TaskRunner(logger, concurrentExecution, shutdown, console);
 
 			subject.Execute(task);
 
@@ -53,7 +51,7 @@ namespace Vertica.Integration.Tests.Model
             var logger = Substitute.For<ILogger>();
             var concurrentExecution = Substitute.For<IConcurrentTaskExecution>();
             var shutdown = Substitute.For<IShutdown>();
-            TextWriter outputter = TextWriter.Null;
+            var console = Substitute.For<IConsoleWriter>();
 
 			var step1 = Substitute.For<IStep<SomeWorkItem>>();
 			var step2 = Substitute.For<IStep<SomeWorkItem>>();
@@ -68,7 +66,7 @@ namespace Vertica.Integration.Tests.Model
                 .When(x => x.Execute(workItem, Arg.Any<ITaskExecutionContext>()))
 				.Do(x => { throw throwingException; });
 
-            var subject = new TaskRunner(logger, concurrentExecution, shutdown, outputter);
+            var subject = new TaskRunner(logger, concurrentExecution, shutdown, console);
 
             var thrownException = Assert.Throws<TaskExecutionFailedException>(() => subject.Execute(task));
 			Assert.That(thrownException.InnerException, Is.EqualTo(throwingException));
@@ -90,7 +88,7 @@ namespace Vertica.Integration.Tests.Model
             var logger = Substitute.For<ILogger>();
             var concurrentExecution = Substitute.For<IConcurrentTaskExecution>();
             var shutdown = Substitute.For<IShutdown>();
-            TextWriter outputter = TextWriter.Null;
+            var console = Substitute.For<IConsoleWriter>();
 
 			int disposedCount = 0;
 			var step1 = Substitute.For<IStep<DisposableWorkItem>>();
@@ -103,7 +101,7 @@ namespace Vertica.Integration.Tests.Model
 			step1.ContinueWith(workItem).Returns(Execution.Execute);
 			step2.ContinueWith(workItem).Returns(Execution.Execute);
 
-            var subject = new TaskRunner(logger, concurrentExecution, shutdown, outputter);
+            var subject = new TaskRunner(logger, concurrentExecution, shutdown, console);
 
             var thrownException = Assert.Throws<TaskExecutionFailedException>(() => subject.Execute(task));
 
@@ -121,7 +119,7 @@ namespace Vertica.Integration.Tests.Model
             var logger = Substitute.For<ILogger>();
             var concurrentExecution = Substitute.For<IConcurrentTaskExecution>();
             var shutdown = Substitute.For<IShutdown>();
-            TextWriter outputter = TextWriter.Null;
+            var console = Substitute.For<IConsoleWriter>();
 
 			int disposedCount = 0;
 			var step1 = Substitute.For<IStep<DisposableWorkItem>>();
@@ -134,7 +132,7 @@ namespace Vertica.Integration.Tests.Model
 			step1.ContinueWith(workItem).Returns(Execution.Execute);
 			step2.ContinueWith(workItem).Returns(Execution.Execute);
 
-            var subject = new TaskRunner(logger, concurrentExecution, shutdown, outputter);
+            var subject = new TaskRunner(logger, concurrentExecution, shutdown, console);
 
             var thrownException = Assert.Throws<TaskExecutionFailedException>(() => subject.Execute(task));
 
@@ -153,7 +151,7 @@ namespace Vertica.Integration.Tests.Model
             var logger = Substitute.For<ILogger>();
             var concurrentExecution = Substitute.For<IConcurrentTaskExecution>();
             var shutdown = Substitute.For<IShutdown>();
-            TextWriter outputter = TextWriter.Null;
+            var console = Substitute.For<IConsoleWriter>();
 
 			int disposedCount = 0;
 			var step1 = Substitute.For<IStep<DisposableWorkItem>>();
@@ -169,7 +167,7 @@ namespace Vertica.Integration.Tests.Model
 				.When(x => x.Execute(workItem, Arg.Any<ITaskExecutionContext>()))
 				.Do(x => { throw exception; });
 
-            var subject = new TaskRunner(logger, concurrentExecution, shutdown, outputter);
+            var subject = new TaskRunner(logger, concurrentExecution, shutdown, console);
 
             var thrownException = Assert.Throws<TaskExecutionFailedException>(() => subject.Execute(task));
 
@@ -217,8 +215,7 @@ namespace Vertica.Integration.Tests.Model
 			{
 	            EndCalled = true;
 
-				if (_onEnd != null)
-					_onEnd(workItem, context);
+			    _onEnd?.Invoke(workItem, context);
 			}
 
 			public bool EndCalled { get; set; }

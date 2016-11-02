@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace Vertica.Integration.Infrastructure.Threading
 {
+    [Obsolete("This class will be removed in later versions.")]
 	public class ActionRepeater : IDisposable
     {
         private readonly TimeSpan _delay;

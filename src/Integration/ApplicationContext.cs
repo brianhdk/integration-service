@@ -1,9 +1,13 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Threading;
+using Castle.Facilities.TypedFactory;
+using Castle.MicroKernel.Registration;
+using Castle.MicroKernel.Resolvers;
 using Castle.Windsor;
 using Vertica.Integration.Infrastructure;
+using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
+using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Infrastructure.Logging.Loggers;
 using Vertica.Integration.Model.Exceptions;
@@ -19,7 +23,7 @@ namespace Vertica.Integration
 	    private readonly IWindsorContainer _container;
 	    private readonly IArgumentsParser _parser;
 	    private readonly IHost[] _hosts;
-		private readonly TextWriter _writer;
+		private readonly IConsoleWriter _console;
 
 		private readonly Lazy<Action> _disposed = new Lazy<Action>(() => () => { });
 
@@ -28,22 +32,35 @@ namespace Vertica.Integration
             _cancellation = new CancellationTokenSource();
             _configuration = new ApplicationConfiguration();
 
-			application?.Invoke(_configuration);
+            // Executes all client-specific configuration
+            application?.Invoke(_configuration);
 
+            // Will instruct all extension-points that client-specific configurations have been completed.
             _configuration.Extensibility(extensibility =>
             {
                 foreach (var subject in extensibility.OfType<IInitializable<ApplicationConfiguration>>())
-                    subject.Initialize(_configuration);
+                    subject.Initialized(_configuration);
             });
 
-            _configuration.RegisterDependency<IShutdown>(this);
+            _container = new WindsorContainer();
+            _container.Kernel.AddFacility<TypedFactoryFacility>();
+            _container.Register(Component.For<ILazyComponentLoader>().ImplementedBy<LazyOfTComponentLoader>());
+            
+            // Allows all extension-points to initialize the IoC container.
+            _configuration.Extensibility(extensibility =>
+            {
+                foreach (var subject in extensibility.OfType<IInitializable<IWindsorContainer>>())
+                    subject.Initialized(_container);
+            });
 
-		    _container = CastleWindsor.Initialize(_configuration);
-            _parser = Resolve<IArgumentsParser>();
-            _hosts = Resolve<IHostFactory>().GetAll();
-		    _writer = Resolve<TextWriter>();
+            // Ensures that we are registrered as the IShutdown implementation
+            _container.Install(Install.Instance<IShutdown>(this));
 
-		    _writer.WriteLine("[Integration Service]: Started.");
+            _parser = _container.Resolve<IArgumentsParser>();
+            _hosts = _container.Resolve<IHostFactory>().GetAll();
+		    _console = _container.Resolve<IConsoleWriter>();
+
+		    _console.WriteLine("[Integration Service]: Started.");
         }
 
         public static IApplicationContext Create(Action<ApplicationConfiguration> application = null)
@@ -110,7 +127,7 @@ namespace Vertica.Integration
         {
             Resolve<IWaitForShutdownRequest>().Wait();
 
-            _writer.WriteLine("[Integration Service]: Shutdown requested.");
+            _console.WriteLine("[Integration Service]: Shutdown requested.");
 
             _cancellation.Cancel();
         }
@@ -124,7 +141,7 @@ namespace Vertica.Integration
 
             _disposed.Value();
 
-            _writer.WriteLine("[Integration Service]: Shutting down.");
+            _console.WriteLine("[Integration Service]: Shutting down.");
 
             if (!_cancellation.IsCancellationRequested)
             {
@@ -154,7 +171,7 @@ namespace Vertica.Integration
 				}
 			});
 
-            _writer.WriteLine("[Integration Service]: Shut down");
+            _console.WriteLine("[Integration Service]: Shut down");
 
             _cancellation.Dispose();
 			_container.Dispose();

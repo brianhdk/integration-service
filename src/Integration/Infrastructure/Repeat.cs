@@ -5,7 +5,8 @@ using System.Linq;
 
 namespace Vertica.Integration.Infrastructure
 {
-	public struct Repeat : IEnumerable<int>
+    [Obsolete("Will be removed.")]
+    public struct Repeat : IEnumerable<int>
 	{
 		private readonly int _times;
 
@@ -31,7 +32,8 @@ namespace Vertica.Integration.Infrastructure
 
 		public static readonly Repeat Twice = (Repeat)2;
 
-		public static Repeat Times(uint value)
+        [Obsolete("Will be removed.")]
+        public static Repeat Times(uint value)
 		{
 			return (Repeat)value;
 		}

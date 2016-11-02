@@ -2,32 +2,29 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Castle.Windsor;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Model.Hosting;
 using Vertica.Integration.Model.Tasks;
 
 namespace Vertica.Integration.Model
 {
-    public class TasksConfiguration : IInitializable<IWindsorContainer>
+    public class TasksConfiguration : IInitializable<ApplicationConfiguration>
     {
         private readonly List<Assembly> _scan;
         private readonly List<Type> _simpleTasks; 
         private readonly List<Type> _removeTasks;
         private readonly List<TaskConfiguration> _complexTasks;
-
-        private ConcurrentTaskExecutionConfiguration _concurrentTaskExecution;
+        private readonly ConcurrentTaskExecutionConfiguration _concurrentTaskExecution;
 
         internal TasksConfiguration(ApplicationConfiguration application)
         {
             if (application == null) throw new ArgumentNullException(nameof(application));
 
-			Application = application
-				.Hosts(hosts => hosts.Host<TaskHost>())
-                .Extensibility(extensibility =>
-                {
-                    _concurrentTaskExecution = extensibility.Register(() => new ConcurrentTaskExecutionConfiguration(this));
-                });
+            Application = application
+                .Hosts(hosts => hosts.Host<TaskHost>());
+
+            _concurrentTaskExecution = new ConcurrentTaskExecutionConfiguration(this);
+            Application.Extensibility(extensibility => extensibility.Register(() => _concurrentTaskExecution));
 
 			_scan = new List<Assembly>();
             _simpleTasks = new List<Type>();
@@ -39,6 +36,13 @@ namespace Vertica.Integration.Model
 		}
 
         public ApplicationConfiguration Application { get; }
+
+        public TasksConfiguration Change(Action<TasksConfiguration> change)
+        {
+            change?.Invoke(this);
+
+            return this;
+        }
 
         /// <summary>
         /// Scans the assembly of the defined <typeparamref name="T"></typeparamref> for public classes inheriting <see cref="Task"/>.
@@ -124,14 +128,19 @@ namespace Vertica.Integration.Model
             return this;
         }
 
-        void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
+        void IInitializable<ApplicationConfiguration>.Initialized(ApplicationConfiguration configuration)
         {
-            container.Install(new TaskInstaller(_scan.ToArray(), _simpleTasks.ToArray(), _removeTasks.ToArray()));
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
-            foreach (TaskConfiguration task in _complexTasks.Distinct())
-                container.Install(task.GetInstaller());
+            Application.Services(services => services.Advanced(advanced =>
+            {
+                advanced.Install(new TaskInstaller(_scan.ToArray(), _simpleTasks.ToArray(), _removeTasks.ToArray()));
 
-            container.Install(new TaskFactoryInstaller());
+                foreach (TaskConfiguration task in _complexTasks.Distinct())
+                    advanced.Install(task.GetInstaller());
+
+                advanced.Install(new TaskFactoryInstaller());
+            }));
         }
     }
 }

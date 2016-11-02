@@ -67,6 +67,7 @@
     <Compile Include="Infrastructure\ParsingExtensions.cs" />
     <Compile Include="Infrastructure\PerfionXmlExtensions.cs" />
     <Compile Include="Infrastructure\XElementExtensions.cs" />
+    <Compile Include="IPerfionConfiguration.cs" />
     <Compile Include="IPerfionService.cs" />
     <Compile Include="PerfionXml.cs" />
     <Compile Include="PerfionConfiguration.cs" />

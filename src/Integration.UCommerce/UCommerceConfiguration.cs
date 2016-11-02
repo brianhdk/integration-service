@@ -1,16 +1,12 @@
 ﻿using System;
-using Castle.Windsor;
 using FluentMigrator;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Database.Migrations;
-using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.UCommerce.Database;
 
 namespace Vertica.Integration.UCommerce
 {
-	public class UCommerceConfiguration :
-        IInitializable<ApplicationConfiguration>,
-        IInitializable<IWindsorContainer>
+	public class UCommerceConfiguration : IInitializable<ApplicationConfiguration>
 	{
 	    private UCommerceDb _connection;
 	    private Action<ConnectionString> _migration;
@@ -19,10 +15,7 @@ namespace Vertica.Integration.UCommerce
 		{
 			if (application == null) throw new ArgumentNullException(nameof(application));
 
-			Application = application
-				.AddCustomInstaller(Install.ByConvention
-					.AddFromAssemblyOfThis<UCommerceConfiguration>()
-					.Ignore<UCommerceConfiguration>());
+	        Application = application;
 		}
 
 		public UCommerceConfiguration Change(Action<UCommerceConfiguration> change)
@@ -61,7 +54,7 @@ namespace Vertica.Integration.UCommerce
             };
         }
 
-        void IInitializable<ApplicationConfiguration>.Initialize(ApplicationConfiguration application)
+        void IInitializable<ApplicationConfiguration>.Initialized(ApplicationConfiguration application)
         {
             if (_connection == null)
                 Connection(ConnectionString.FromName("uCommerceDb"));
@@ -73,9 +66,5 @@ namespace Vertica.Integration.UCommerce
                 _migration?.Invoke(_connection.ConnectionString);
             }
         }
-
-	    void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
-        {
-		}
 	}
 }

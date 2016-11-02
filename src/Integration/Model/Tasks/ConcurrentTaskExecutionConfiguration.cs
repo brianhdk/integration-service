@@ -1,10 +1,9 @@
 using System;
-using Castle.Windsor;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 
 namespace Vertica.Integration.Model.Tasks
 {
-    public class ConcurrentTaskExecutionConfiguration : IInitializable<IWindsorContainer>
+    public class ConcurrentTaskExecutionConfiguration
     {
         private readonly ScanAddRemoveInstaller<IPreventConcurrentTaskExecutionRuntimeEvaluator> _evaluators;
         private readonly ScanAddRemoveInstaller<IPreventConcurrentTaskExecutionCustomLockName> _customLockNames;
@@ -18,7 +17,15 @@ namespace Vertica.Integration.Model.Tasks
 
             // scan own assembly
             AddFromAssemblyOfThis<ConcurrentTaskExecutionConfiguration>();
+
+            Tasks = tasks.Change(t => t.Application
+                .Services(services => services
+                    .Advanced(advanced => advanced
+                        .Install(_evaluators)
+                        .Install(_customLockNames))));
         }
+
+        public TasksConfiguration Tasks { get; }
 
         /// <summary>
         /// Scans the assembly of the defined <typeparamref name="T"></typeparamref> for public classes inheriting <see cref="IPreventConcurrentTaskExecutionRuntimeEvaluator"/>./>
@@ -34,25 +41,25 @@ namespace Vertica.Integration.Model.Tasks
         }
 
         /// <summary>
-        /// Adds the specified <typeparamref name="TEvaluator"/>.
+        /// Adds the specified <typeparamref name="TRuntimeEvaluator"/>.
         /// </summary>
-        /// <typeparam name="TEvaluator">Specifies the <see cref="IPreventConcurrentTaskExecutionRuntimeEvaluator"/> to be added.</typeparam>
-        public ConcurrentTaskExecutionConfiguration AddEvaluator<TEvaluator>()
-            where TEvaluator : IPreventConcurrentTaskExecutionRuntimeEvaluator
+        /// <typeparam name="TRuntimeEvaluator">Specifies the <see cref="IPreventConcurrentTaskExecutionRuntimeEvaluator"/> to be added.</typeparam>
+        public ConcurrentTaskExecutionConfiguration AddRuntimeEvaluator<TRuntimeEvaluator>()
+            where TRuntimeEvaluator : IPreventConcurrentTaskExecutionRuntimeEvaluator
         {
-            _evaluators.Add<TEvaluator>();
+            _evaluators.Add<TRuntimeEvaluator>();
 
             return this;
         }
 
         /// <summary>
-        /// Skips the specified <typeparamref name="TEvaluator" />.
+        /// Skips the specified <typeparamref name="TRuntimeEvaluators" />.
         /// </summary>
-        /// <typeparam name="TEvaluator">Specifies the <see cref="IPreventConcurrentTaskExecutionRuntimeEvaluator"/> that will be skipped.</typeparam>
-        public ConcurrentTaskExecutionConfiguration RemoveEvaluator<TEvaluator>()
-            where TEvaluator : IPreventConcurrentTaskExecutionRuntimeEvaluator
+        /// <typeparam name="TRuntimeEvaluators">Specifies the <see cref="IPreventConcurrentTaskExecutionRuntimeEvaluator"/> that will be skipped.</typeparam>
+        public ConcurrentTaskExecutionConfiguration RemoveRuntimeEvaluator<TRuntimeEvaluators>()
+            where TRuntimeEvaluators : IPreventConcurrentTaskExecutionRuntimeEvaluator
         {
-            _evaluators.Remove<TEvaluator>();
+            _evaluators.Remove<TRuntimeEvaluators>();
 
             return this;
         }
@@ -90,12 +97,6 @@ namespace Vertica.Integration.Model.Tasks
             _customLockNames.Clear();
 
             return this;
-        }
-
-        void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
-        {
-            container.Install(_evaluators);
-            container.Install(_customLockNames);
         }
     }
 }

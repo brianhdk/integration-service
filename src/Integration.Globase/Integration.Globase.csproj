@@ -89,6 +89,7 @@
     <Compile Include="Ftp\IFtpUploader.cs" />
     <Compile Include="GlobaseConfiguration.cs" />
     <Compile Include="GlobaseExtensions.cs" />
+    <Compile Include="IGlobaseConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

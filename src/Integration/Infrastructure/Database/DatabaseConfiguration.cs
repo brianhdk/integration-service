@@ -93,8 +93,10 @@ namespace Vertica.Integration.Infrastructure.Database
             return this;
         }
 
-        void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
+        void IInitializable<IWindsorContainer>.Initialized(IWindsorContainer container)
         {
+            if (container == null) throw new ArgumentNullException(nameof(container));
+
             foreach (IWindsorInstaller installer in _connections.Values)
                 container.Install(installer);
         }

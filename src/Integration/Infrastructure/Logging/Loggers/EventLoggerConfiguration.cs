@@ -1,16 +1,23 @@
 ﻿using System;
-using Castle.Windsor;
-using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 
 namespace Vertica.Integration.Infrastructure.Logging.Loggers
 {
-    public class EventLoggerConfiguration : IInitializable<IWindsorContainer>
+    public class EventLoggerConfiguration
     {
-	    internal EventLoggerConfiguration()
-	    {
-	    }
+        internal EventLoggerConfiguration(LoggingConfiguration logging)
+        {
+            if (logging == null) throw new ArgumentNullException(nameof(logging));
 
-	    public EventLoggerConfiguration Source(string name)
+            Logging = logging.Change(l => l
+                .Application
+                    .Services(services => services
+                        .Advanced(advanced => advanced
+                            .Register(kernel => this))));
+        }
+
+        public LoggingConfiguration Logging { get; }
+
+        public EventLoggerConfiguration Source(string name)
 	    {
 		    if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
 
@@ -20,10 +27,5 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
 	    }
 
 	    internal string SourceName { get; private set; }
-
-		void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
-		{
-			container.RegisterInstance(this, x => x.LifestyleSingleton());
-		}
     }
 }

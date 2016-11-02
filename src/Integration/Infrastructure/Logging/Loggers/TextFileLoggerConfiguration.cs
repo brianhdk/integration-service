@@ -2,20 +2,27 @@
 using System.Globalization;
 using System.IO;
 using System.Threading;
-using Castle.Windsor;
-using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 
 namespace Vertica.Integration.Infrastructure.Logging.Loggers
 {
-    public class TextFileLoggerConfiguration : IInitializable<IWindsorContainer>
+    public class TextFileLoggerConfiguration
     {
         private Organizer _organizer;
 
-	    internal TextFileLoggerConfiguration()
+	    internal TextFileLoggerConfiguration(LoggingConfiguration logging)
 	    {
-	    }
+	        if (logging == null) throw new ArgumentNullException(nameof(logging));
 
-	    public TextFileLoggerConfiguration OrganizeSubFoldersBy(Func<BasedOn, Organizer> basedOn)
+            Logging = logging.Change(l => l
+                .Application
+                    .Services(services => services
+                        .Advanced(advanced => advanced
+                            .Register(kernel => this))));
+        }
+
+        public LoggingConfiguration Logging { get; }
+
+        public TextFileLoggerConfiguration OrganizeSubFoldersBy(Func<BasedOn, Organizer> basedOn)
         {
             _organizer = basedOn(new BasedOn());
 
@@ -95,10 +102,5 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
                 return date.LocalDateTime.ToString("yyyyMM");
             }
         }
-
-		void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
-		{
-			container.RegisterInstance(this, x => x.LifestyleSingleton());
-		}
     }
 }

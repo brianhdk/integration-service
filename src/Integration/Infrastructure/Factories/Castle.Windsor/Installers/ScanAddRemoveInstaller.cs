@@ -65,7 +65,7 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 			_scan.Clear();
 		}
 
-		public virtual void Install(IWindsorContainer container, IConfigurationStore store)
+	    void IWindsorInstaller.Install(IWindsorContainer container, IConfigurationStore store)
 		{
 			foreach (Assembly assembly in _scan.Distinct())
 			{

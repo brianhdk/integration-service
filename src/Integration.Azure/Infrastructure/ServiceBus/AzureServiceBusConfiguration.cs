@@ -1,27 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using Castle.MicroKernel.Registration;
-using Castle.Windsor;
 using Vertica.Integration.Azure.Infrastructure.Castle.Windsor;
 using Vertica.Integration.Infrastructure;
 
 namespace Vertica.Integration.Azure.Infrastructure.ServiceBus
 {
-	public class AzureServiceBusConfiguration : IInitializable<IWindsorContainer>
+	public class AzureServiceBusConfiguration : IInitializable<ApplicationConfiguration>
 	{
 		private IWindsorInstaller _defaultConnection;
-		private readonly List<IWindsorInstaller> _installers;
+		private readonly List<IWindsorInstaller> _connections;
 
 		internal AzureServiceBusConfiguration(ApplicationConfiguration application)
         {
             if (application == null) throw new ArgumentNullException(nameof(application));
 
-			Application = application;
+		    _connections = new List<IWindsorInstaller>();
 
-            _installers = new List<IWindsorInstaller>();
+		    Application = application;
         }
 
-        public ApplicationConfiguration Application { get; private set; }
+        public ApplicationConfiguration Application { get; }
 
 		public AzureServiceBusConfiguration DefaultConnection(ConnectionString connectionString)
 		{
@@ -46,18 +45,20 @@ namespace Vertica.Integration.Azure.Infrastructure.ServiceBus
 		{
 			if (connection == null) throw new ArgumentNullException(nameof(connection));
 
-			_installers.Add(new AzureServiceBusInstaller<TConnection>(connection));
+			_connections.Add(new AzureServiceBusInstaller<TConnection>(connection));
 
 			return this;
 		}
 
-        void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
+        void IInitializable<ApplicationConfiguration>.Initialized(ApplicationConfiguration application)
         {
-			if (_defaultConnection != null)
-				container.Install(_defaultConnection);
+            Application.Services(services => services.Advanced(advanced =>
+            {
+                if (_defaultConnection != null)
+                    advanced.Install(_defaultConnection);
 
-            foreach (IWindsorInstaller installer in _installers)
-                container.Install(installer);
+                advanced.Install(_connections.ToArray());
+            }));
         }
-	}
+    }
 }

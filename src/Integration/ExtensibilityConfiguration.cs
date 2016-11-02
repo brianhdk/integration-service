@@ -31,11 +31,6 @@ namespace Vertica.Integration
 			return value;
 		}
 
-		internal T Get<T>() where T : class
-		{
-			return _extensions[typeof (T)] as T;
-		}
-
 		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return GetEnumerator();

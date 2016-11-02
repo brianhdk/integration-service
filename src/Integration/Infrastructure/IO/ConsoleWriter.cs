@@ -15,5 +15,10 @@ namespace Vertica.Integration.Infrastructure.IO
         {
             _writer.WriteLine(format, args);
         }
+
+        public void WriteLine()
+        {
+            _writer.WriteLine();
+        }
     }
 }

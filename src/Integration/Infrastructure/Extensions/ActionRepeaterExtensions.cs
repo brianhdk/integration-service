@@ -5,6 +5,7 @@ using Vertica.Integration.Infrastructure.Threading;
 
 namespace Vertica.Integration.Infrastructure.Extensions
 {
+    [Obsolete("This will be removed in later versions.")]
 	public static class ActionRepeaterExtensions
     {
 		public static ActionRepeater Repeat(this TimeSpan delay, Action action, CancellationToken cancellationToken, TextWriter outputter = null)

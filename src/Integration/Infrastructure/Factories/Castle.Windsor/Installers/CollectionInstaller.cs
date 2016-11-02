@@ -8,7 +8,7 @@ using Castle.Windsor;
 
 namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 {
-	public class CollectionInstaller<TService> : IWindsorInstaller
+	public sealed class CollectionInstaller<TService> : IWindsorInstaller
 	{
 		private readonly List<Assembly> _assemblies;
 		private readonly List<Type> _ignoreTypes;
@@ -33,17 +33,17 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 			return this;
 		}
 
-		public void Install(IWindsorContainer container, IConfigurationStore store)
-		{
-			foreach (Assembly assembly in _assemblies.Distinct())
-			{
-				container.Register(Classes.FromAssembly(assembly)
-					.BasedOn<TService>().WithServiceFromInterface(typeof(TService))
-					.If(classType => !_ignoreTypes.Any(ignoreType => ignoreType.IsAssignableFrom(classType))));
-			}
+	    void IWindsorInstaller.Install(IWindsorContainer container, IConfigurationStore store)
+	    {
+            foreach (Assembly assembly in _assemblies.Distinct())
+            {
+                container.Register(Classes.FromAssembly(assembly)
+                    .BasedOn<TService>().WithServiceFromInterface(typeof(TService))
+                    .If(classType => !_ignoreTypes.Any(ignoreType => ignoreType.IsAssignableFrom(classType))));
+            }
 
-			container.Register(Component.For<IEnumerable<TService>>().UsingFactoryMethod(kernel => kernel.ResolveAll<TService>()));
-			container.Register(Component.For<TService[]>().UsingFactoryMethod(kernel => kernel.ResolveAll<TService>()));
-		}
-	}
+            container.Register(Component.For<IEnumerable<TService>>().UsingFactoryMethod(kernel => kernel.ResolveAll<TService>()));
+            container.Register(Component.For<TService[]>().UsingFactoryMethod(kernel => kernel.ResolveAll<TService>()));
+        }
+    }
 }

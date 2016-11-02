@@ -20,7 +20,7 @@ namespace Vertica.Integration.Domain.LiteServer
 	    private readonly IKernel _kernel;
 	    private readonly IShutdown _shutdown;
 	    private readonly ILogger _logger;
-	    private readonly IConsoleWriter _writer;
+	    private readonly IConsoleWriter _console;
 	    private readonly InternalConfiguration _configuration;
 
 	    private readonly Scheduler _scheduler;
@@ -35,7 +35,7 @@ namespace Vertica.Integration.Domain.LiteServer
 
 		    _kernel = kernel;
 		    _shutdown = kernel.Resolve<IShutdown>();
-		    _writer = kernel.Resolve<IConsoleWriter>();
+		    _console = kernel.Resolve<IConsoleWriter>();
 		    _logger = kernel.Resolve<ILogger>();
 		    _configuration = configuration;
 
@@ -46,17 +46,17 @@ namespace Vertica.Integration.Domain.LiteServer
 			Execute(_configuration.OnStartup);
 
 			_tasks = kernel.ResolveAll<IBackgroundWorker>()
-				.Select(worker => new BackgroundWorkServer(worker, _scheduler, _writer))
+				.Select(worker => new BackgroundWorkServer(worker, _scheduler, _console))
 				.Concat(kernel.ResolveAll<IBackgroundServer>())
 				.Select(Create)
 				.ToList();
 
-			_houseKeeping = Create(new BackgroundWorkServer(this, _scheduler, _writer));
+			_houseKeeping = Create(new BackgroundWorkServer(this, _scheduler, _console));
 		}
 
 		private void Output(string message)
 		{
-			_writer.WriteLine($"[LiteServer]: {message}");
+			_console.WriteLine($"[LiteServer]: {message}");
 		}
 
 		private Task Create(IBackgroundServer server)

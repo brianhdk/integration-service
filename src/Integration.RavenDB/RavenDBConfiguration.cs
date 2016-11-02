@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using Castle.MicroKernel.Registration;
-using Castle.Windsor;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.RavenDB.Infrastructure;
 using Vertica.Integration.RavenDB.Infrastructure.Castle.Windsor;
 
 namespace Vertica.Integration.RavenDB
 {
-    public class RavenDbConfiguration : IInitializable<IWindsorContainer>
+    public class RavenDbConfiguration : IInitializable<ApplicationConfiguration>
     {
 		private IWindsorInstaller _defaultConnection;
         private readonly List<IWindsorInstaller> _connections;
@@ -52,13 +51,15 @@ namespace Vertica.Integration.RavenDB
             return this;
         }
 
-        void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
+        void IInitializable<ApplicationConfiguration>.Initialized(ApplicationConfiguration application)
         {
-	        if (_defaultConnection != null)
-		        container.Install(_defaultConnection);
+            Application.Services(services => services.Advanced(advanced =>
+            {
+                if (_defaultConnection != null)
+                    advanced.Install(_defaultConnection);
 
-	        foreach (IWindsorInstaller installer in _connections)
-		        container.Install(installer);
+                advanced.Install(_connections.ToArray());
+            }));
         }
     }
 }

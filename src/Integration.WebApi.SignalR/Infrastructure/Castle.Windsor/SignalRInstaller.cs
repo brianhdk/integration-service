@@ -6,7 +6,7 @@ using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using Microsoft.AspNet.SignalR.Hubs;
-using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
+using Installer = Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers.Install;
 
 namespace Vertica.Integration.WebApi.SignalR.Infrastructure.Castle.Windsor
 {
@@ -50,7 +50,10 @@ namespace Vertica.Integration.WebApi.SignalR.Infrastructure.Castle.Windsor
 						.WithService.FromInterface());
 			}
 
-			container.RegisterInstance<IHubsProvider>(new SignalRHubs(hubs.ToArray()), x => x.LifestyleSingleton());
+            IWindsorInstaller installer = Installer
+                .Instance<IHubsProvider>(new SignalRHubs(hubs.ToArray()));
+
+            container.Install(installer);
         }
 
 		private class SignalRHubs : IHubsProvider

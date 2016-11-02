@@ -1,21 +1,29 @@
 ﻿using System;
 using System.IO;
-using Castle.Windsor;
-using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 
 namespace Vertica.Integration.Infrastructure.Logging.Loggers
 {
-    public class TextWriterLoggerConfiguration : IInitializable<IWindsorContainer>
+    public class TextWriterLoggerConfiguration
     {
 	    private bool _detailed;
 
-	    internal TextWriterLoggerConfiguration()
+	    internal TextWriterLoggerConfiguration(LoggingConfiguration logging)
 	    {
+	        if (logging == null) throw new ArgumentNullException(nameof(logging));
+
+	        Logging = logging.Change(l => l
+                .Application
+                    .Services(services => services
+                        .Advanced(advanced => advanced
+                            .Register(kernel => this))));
 	    }
 
-	    public TextWriterLoggerConfiguration Detailed()
+        public LoggingConfiguration Logging { get; }
+
+        public TextWriterLoggerConfiguration Detailed()
 	    {
 		    _detailed = true;
+
 		    return this;
 	    }
 
@@ -43,11 +51,6 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
 				log.Message,
 				string.Empty,
 				log.FormattedMessage));
-	    }
-
-	    void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
-	    {
-		    container.RegisterInstance(this, x => x.LifestyleSingleton());
 	    }
     }
 }

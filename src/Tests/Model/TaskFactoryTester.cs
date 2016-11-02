@@ -124,23 +124,20 @@ namespace Vertica.Integration.Tests.Model
             return tasks
 				.Clear()
 				.AddFromAssemblyOfThis<TaskFactoryTester>()
-				.Remove<SQLiteTester.TestMigrationsTask>();
+				.Remove<SQLiteTester.TestMigrationsTask>()
+                .Remove<TaskDistributedMutexTester.SomeTask>();
         }
 
         private static IDisposable CreateSubject(out ITaskFactory subject, Action<TasksConfiguration> tasks)
         {
-            var configuration = new ApplicationConfiguration()
+            var context = ApplicationContext.Create(application => application
                 .Logging(logging => logging.Disable())
-                .Database(database => database.IntegrationDb(
-                    integrationDb => integrationDb.Disable()));
+                .Database(database => database.IntegrationDb(integrationDb => integrationDb.Disable()))
+                .Tasks(tasks));
 
-            configuration.Tasks(tasks);
+            subject = context.Resolve<ITaskFactory>();
 
-            var container = CastleWindsor.Initialize(configuration);
-
-            subject = container.Resolve<ITaskFactory>();
-
-            return container;
+            return context;
         }
 
         public class TestTask : Task, IEquatable<TestTask>

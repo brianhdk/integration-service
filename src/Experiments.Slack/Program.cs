@@ -10,7 +10,12 @@ namespace Experiments.Slack
 		static void Main(string[] args)
 		{
 			using (IApplicationContext context = ApplicationContext.Create(application => application
+                .Database(database => database.IntegrationDb(integrationDb => integrationDb.Disable()))
+                .Logging(logging => logging.Disable())
+                .UseLiteServer(liteServer => liteServer
+                    .AddFromAssemblyOfThis<Program>())
 				.UseSlack(slack => slack
+                    .AttachToConsoleWriter()
 					.AddToLiteServer())))
 			{
 				context.Execute(typeof(LiteServerHost).HostName());

@@ -24,6 +24,7 @@ namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db
         public DateTimeOffset CreatedAt { get; set; }
 
         public string MachineName { get; set; }
+        public string Description { get; set; }
 
         public bool Equals(DbDistributedMutexLock other)
         {
@@ -50,7 +51,7 @@ namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db
 
         public override string ToString()
         {
-            return $"Lock '{Name}' is currently acquired by '{MachineName}' at {CreatedAt}.";
+            return $"Lock '{Name}' is currently acquired by '{MachineName}' at {CreatedAt}. Description: {Description ?? "<null>"}.";
         }
     }
 }

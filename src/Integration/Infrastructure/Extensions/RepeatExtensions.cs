@@ -1,13 +1,18 @@
-﻿namespace Vertica.Integration.Infrastructure.Extensions
+﻿using System;
+
+namespace Vertica.Integration.Infrastructure.Extensions
 {
+    [Obsolete("Will be removed.")]
 	public static class RepeatExtensions
 	{
-		public static Repeat Times(this uint number)
+        [Obsolete("Will be removed.")]
+        public static Repeat Times(this uint number)
 		{
 			return Repeat.Times(number);
 		}
 
-		public static Repeat Times(this int number)
+        [Obsolete("Will be removed.")]
+        public static Repeat Times(this int number)
 		{
 			return Repeat.Times((uint)number);
 		}

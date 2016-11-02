@@ -2,13 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Castle.Windsor;
 using FluentMigrator;
-using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
-    public class MigrationConfiguration : IInitializable<IWindsorContainer>
+    public class MigrationConfiguration
     {
 	    private readonly MigrationDbs _dbs;
 
@@ -16,7 +14,10 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
         {
             if (application == null) throw new ArgumentNullException(nameof(application));
 
-			Application = application;
+			Application = application
+                .Services(services => services
+                    .Advanced(advanced => advanced
+                        .Register<IMigrationDbs>(kernel => _dbs)));
 
             _dbs = new MigrationDbs();
         }
@@ -82,13 +83,8 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
             return this;
         }
-
-        void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
-        {
-            container.RegisterInstance<IMigrationDbs>(_dbs, x => x.LifestyleSingleton());
-        }
-
-	    private class MigrationDbs : IMigrationDbs
+        
+        private class MigrationDbs : IMigrationDbs
 	    {
 		    private readonly List<MigrationDb> _dbs;
 		    private readonly List<Tuple<Type, string>> _types;

@@ -2,14 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Web.Http;
-using Castle.Windsor;
 using Vertica.Integration.Domain.LiteServer;
 using Vertica.Integration.WebApi.Infrastructure;
 using Vertica.Integration.WebApi.Infrastructure.Castle.Windsor;
 
 namespace Vertica.Integration.WebApi
 {
-    public class WebApiConfiguration : IInitializable<IWindsorContainer>
+    public class WebApiConfiguration : IInitializable<ApplicationConfiguration>
     {
         private readonly List<Assembly> _scan;
         private readonly List<Type> _add;
@@ -100,9 +99,18 @@ namespace Vertica.Integration.WebApi
 		    return this;
 	    }
 
-	    void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
+	    void IInitializable<ApplicationConfiguration>.Initialized(ApplicationConfiguration application)
 	    {
-			container.Install(new WebApiInstaller(_scan.ToArray(), _add.ToArray(), _remove.ToArray(), _httpServerConfiguration));
+	        var installer = new WebApiInstaller(
+	            _scan.ToArray(),
+	            _add.ToArray(),
+	            _remove.ToArray(),
+	            _httpServerConfiguration);
+
+            Application
+	            .Services(services => services
+	                .Advanced(advanced => advanced
+	                    .Install(installer)));
 	    }
     }
 }

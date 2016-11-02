@@ -18,13 +18,17 @@ namespace Vertica.Integration.Domain.LiteServer
 		{
 			if (application == null) throw new ArgumentNullException(nameof(application));
 
-			Application = application
-				.Hosts(hosts => hosts.Host<LiteServerHost>());
+		    _configuration = new InternalConfiguration();
 
-			_configuration = new InternalConfiguration();
+		    _servers = new ScanAddRemoveInstaller<IBackgroundServer>(configure: x => x.LifeStyle.Is(LifestyleType.Transient));
+		    _workers = new ScanAddRemoveInstaller<IBackgroundWorker>(configure: x => x.LifeStyle.Is(LifestyleType.Transient));
 
-			_servers = new ScanAddRemoveInstaller<IBackgroundServer>(configure: x => x.LifeStyle.Is(LifestyleType.Transient));
-			_workers = new ScanAddRemoveInstaller<IBackgroundWorker>(configure: x => x.LifeStyle.Is(LifestyleType.Transient));
+		    Application = application
+		        .Hosts(hosts => hosts.Host<LiteServerHost>())
+                .Services(services => services
+                    .Advanced(advanced => advanced
+                        .Install(_servers)
+                        .Install(_workers)));
 		}
 
 		public ApplicationConfiguration Application { get; }
@@ -129,11 +133,8 @@ namespace Vertica.Integration.Domain.LiteServer
 			return this;
 		}
 
-		void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
+		void IInitializable<IWindsorContainer>.Initialized(IWindsorContainer container)
 		{
-			container.Install(_servers);
-			container.Install(_workers);
-
 			container.Register(
 				Component.For<ILiteServerFactory>()
 					.UsingFactoryMethod(kernel => new LiteServerFactory(kernel, _configuration)));

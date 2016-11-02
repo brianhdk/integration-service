@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using Castle.Windsor;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 
 namespace Vertica.Integration.Model.Hosting
 {
-    public class HostsConfiguration : IInitializable<IWindsorContainer>
+    public class HostsConfiguration : IInitializable<ApplicationConfiguration>
     {
         private readonly List<Type> _add; 
         private readonly List<Type> _remove;
@@ -20,7 +19,7 @@ namespace Vertica.Integration.Model.Hosting
             _remove = new List<Type>();
         }
 
-        public ApplicationConfiguration Application { get; private set; }
+        public ApplicationConfiguration Application { get; }
 
         /// <summary>
         /// Adds the specified <typeparamref name="THost" />.
@@ -46,10 +45,13 @@ namespace Vertica.Integration.Model.Hosting
             return this;
         }
 
-        void IInitializable<IWindsorContainer>.Initialize(IWindsorContainer container)
+        void IInitializable<ApplicationConfiguration>.Initialized(ApplicationConfiguration configuration)
         {
-            container.Install(new HostsInstaller(_add.ToArray(), _remove.ToArray()));
-			container.Install(new HostFactoryInstaller());
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+
+            Application.Services(services => services.Advanced(advanced => advanced
+                .Install(new HostsInstaller(_add.ToArray(), _remove.ToArray()))
+			    .Install(new HostFactoryInstaller())));
         }
 
         /// <summary>

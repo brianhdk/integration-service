@@ -6,16 +6,16 @@ namespace Vertica.Integration.Infrastructure.IO
 {
 	internal class WaitForEscapeKey : IWaitForShutdownRequest
 	{
-		private readonly TextWriter _outputter;
+		private readonly IConsoleWriter _console;
 
-		public WaitForEscapeKey(TextWriter outputter)
+		public WaitForEscapeKey(IConsoleWriter console)
 		{
-			_outputter = outputter;
+			_console = console;
 		}
 
 		public void Wait()
 		{
-			_outputter.WaitUntilEscapeKeyIsHit();
+			_console.WaitUntilEscapeKeyIsHit();
 		}
 	}
 }

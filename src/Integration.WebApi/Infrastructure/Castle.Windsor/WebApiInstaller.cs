@@ -10,7 +10,7 @@ using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor;
-using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
+using Installer = Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers.Install;
 
 namespace Vertica.Integration.WebApi.Infrastructure.Castle.Windsor
 {
@@ -67,7 +67,10 @@ namespace Vertica.Integration.WebApi.Infrastructure.Castle.Windsor
                     .WithServiceSelf()
                     .LifestyleTransient());
 
-            container.RegisterInstance<IWebApiControllers>(new ControllerTypes(types.ToArray()), x => x.LifestyleSingleton());
+            IWindsorInstaller installer = Installer
+                .Instance<IWebApiControllers>(new ControllerTypes(types.ToArray()));
+
+            container.Install(installer);
         }
 
 	    private class HttpServerFactory : IHttpServerFactory
