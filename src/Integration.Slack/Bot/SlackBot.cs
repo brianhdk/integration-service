@@ -10,25 +10,28 @@ namespace Vertica.Integration.Slack.Bot
     {
         private readonly CancellationToken _token;
 
-        public SlackBot(IShutdown shutdown)
+        public SlackBot(ISlackConfiguration configuration, IShutdown shutdown)
         {
+            if (!configuration.Enabled)
+                return;
+
             _token = shutdown.Token;
 
             Worker = Task.Run(() =>
             {
                 SlackConnector.SlackConnector connector = new SlackConnector.SlackConnector();
 
-                ISlackConnection client = connector.Connect("xoxb-63343022768-V6GIejWL2hIgM3dWkxt7tYS5").Result;
+                ISlackConnection client = connector.Connect(configuration.BotUserToken).Result;
 
                 client.OnMessageReceived += message =>
                 {
-                    //_writer.WriteLine(message.Text);
-
                     var response = new BotMessage
                     {
                         Text = message.Text,
                         ChatHub = message.ChatHub
                     };
+
+                    Thread.Sleep(1000);
 
                     return client.Say(response);
                 };

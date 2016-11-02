@@ -1,0 +1,8 @@
+﻿<?xml version="1.0"?>
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+  <appSettings xdt:Transform="InsertIfMissing">
+    <add key="Slack.Enabled" value="false" xdt:Transform="InsertIfMissing" />
+    <add key="Slack.BotUserToken" value="" xdt:Transform="InsertIfMissing" />
+    <add key="Slack.DefaultChannel" value="" xdt:Transform="InsertIfMissing" />
+  </appSettings>
+</configuration>

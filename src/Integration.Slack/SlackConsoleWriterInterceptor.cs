@@ -8,26 +8,31 @@ namespace Vertica.Integration.Slack
     internal class SlackConsoleWriterInterceptor : IInterceptor
     {
         private readonly ISlackMessageQueue _queue;
+        private readonly ISlackConfiguration _configuration;
 
-        public SlackConsoleWriterInterceptor(ISlackMessageQueue queue)
+        public SlackConsoleWriterInterceptor(ISlackMessageQueue queue, ISlackConfiguration configuration)
         {
             _queue = queue;
+            _configuration = configuration;
         }
 
         public void Intercept(IInvocation invocation)
         {
             invocation.Proceed();
 
-            var message = (string)invocation.Arguments.FirstOrDefault();
-
-            if (message != null)
+            if (_configuration.Enabled)
             {
-                var args = (object[])invocation.Arguments.ElementAtOrDefault(1);
+                var message = (string)invocation.Arguments.FirstOrDefault();
 
-                if (args != null)
-                    message = string.Format(message, args);
+                if (message != null)
+                {
+                    var args = (object[])invocation.Arguments.ElementAtOrDefault(1);
 
-                _queue.Add(new SlackPostMessageInChannel(message));
+                    if (args != null)
+                        message = string.Format(message, args);
+
+                    _queue.Add(new SlackPostMessageInChannel(message));
+                }
             }
         }
     }

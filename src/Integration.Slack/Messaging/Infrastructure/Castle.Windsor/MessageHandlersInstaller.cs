@@ -2,7 +2,7 @@
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Slack.Messaging.Handlers;
 
-namespace Vertica.Integration.Slack.Infrastructure.Castle.Windsor
+namespace Vertica.Integration.Slack.Messaging.Infrastructure.Castle.Windsor
 {
     internal class MessageHandlersInstaller : ScanAddRemoveInstaller<IHandleMessages>
     {

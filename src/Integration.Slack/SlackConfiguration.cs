@@ -2,8 +2,9 @@
 using Vertica.Integration.Domain.LiteServer;
 using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Slack.Bot;
-using Vertica.Integration.Slack.Infrastructure.LiteServer;
+using Vertica.Integration.Slack.LiteServer;
 using Vertica.Integration.Slack.Messaging;
+using Vertica.Utilities_v4.Extensions.StringExt;
 
 namespace Vertica.Integration.Slack
 {
@@ -20,6 +21,8 @@ namespace Vertica.Integration.Slack
 
 		    Application = application
                 .Services(services => services
+                    .Advanced(advanced => advanced
+                        .Register<ISlackConfiguration, ConfigurationImpl>())
                     .Conventions(conventions => conventions
                         .AddFromAssemblyOfThis<SlackConfiguration>()));
 
@@ -44,7 +47,7 @@ namespace Vertica.Integration.Slack
 		/// </summary>
 		public SlackConfiguration AddToLiteServer()
 		{
-			Application.UseLiteServer(server => server
+			Application.UseLiteServer(liteServer => liteServer
                 .AddServer<SlackMessageQueueConsumerServer>()
                 .AddServer<SlackBotWorkerServer>());
 
@@ -81,5 +84,44 @@ namespace Vertica.Integration.Slack
 	                    .InterceptService<IConsoleWriter, SlackConsoleWriterInterceptor>()));
 	        }
 	    }
-	}
+
+        internal class ConfigurationImpl : ISlackConfiguration
+        {
+            private readonly IRuntimeSettings _runtimeSettings;
+
+            public ConfigurationImpl(IRuntimeSettings runtimeSettings)
+            {
+                _runtimeSettings = runtimeSettings;
+            }
+
+            public bool Enabled
+            {
+                get
+                {
+                    bool enabled;
+                    bool.TryParse(_runtimeSettings[$"Slack.{nameof(Enabled)}"], out enabled);
+
+                    return enabled;
+                }
+            }
+
+            public string BotUserToken
+            {
+                get
+                {
+                    string key = $"Slack.{nameof(BotUserToken)}";
+
+                    string token = _runtimeSettings[key];
+
+                    if (string.IsNullOrWhiteSpace(token) && Enabled)
+                        throw new InvalidOperationException($@"Token for Bot User has not been specified. 
+Make sure that you've created a Slack Bot User, and then copy the token into the following setting: {key}");
+
+                    return token;
+                }
+            }
+
+            public string DefaultChannel => _runtimeSettings[$"Slack.{nameof(DefaultChannel)}"].NullIfEmpty() ?? "#general";
+        }
+    }
 }

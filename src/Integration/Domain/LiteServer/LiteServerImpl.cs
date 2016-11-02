@@ -49,6 +49,7 @@ namespace Vertica.Integration.Domain.LiteServer
 				.Select(worker => new BackgroundWorkServer(worker, _scheduler, _console))
 				.Concat(kernel.ResolveAll<IBackgroundServer>())
 				.Select(Create)
+                .SkipNulls()
 				.ToList();
 
 			_houseKeeping = Create(new BackgroundWorkServer(this, _scheduler, _console));

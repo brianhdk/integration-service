@@ -1,6 +1,6 @@
 using System;
-using Vertica.Integration.Slack.Infrastructure.Castle.Windsor;
 using Vertica.Integration.Slack.Messaging.Handlers;
+using Vertica.Integration.Slack.Messaging.Infrastructure.Castle.Windsor;
 
 namespace Vertica.Integration.Slack.Messaging
 {

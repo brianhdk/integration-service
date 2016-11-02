@@ -10,15 +10,20 @@ namespace Vertica.Integration.Slack.Messaging
 {
     public class SlackMessageQueue : ISlackMessageQueue
     {
-        private readonly CancellationToken _token;
         private readonly ISlackMessageHandlerFactory _factory;
         private readonly ILogger _logger;
+
+        private readonly CancellationToken _token;
         private readonly BlockingCollection<Func<Task>> _queue;
 
-        public SlackMessageQueue(ISlackMessageHandlerFactory factory, IShutdown shutdown, ILogger logger)
+        public SlackMessageQueue(ISlackMessageHandlerFactory factory, IShutdown shutdown, ILogger logger, ISlackConfiguration configuration)
         {
             _factory = factory;
             _logger = logger;
+
+            if (!configuration.Enabled)
+                return;
+
             _token = shutdown.Token;
             _queue = new BlockingCollection<Func<Task>>();
 

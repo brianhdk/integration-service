@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Vertica.Integration.Domain.LiteServer;
 using Vertica.Integration.Slack.Bot;
 
-namespace Vertica.Integration.Slack.Infrastructure.LiteServer
+namespace Vertica.Integration.Slack.LiteServer
 {
     internal class SlackBotWorkerServer : IBackgroundServer
     {

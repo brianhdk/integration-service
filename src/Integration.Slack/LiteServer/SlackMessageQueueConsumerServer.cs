@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Vertica.Integration.Domain.LiteServer;
 using Vertica.Integration.Slack.Messaging;
 
-namespace Vertica.Integration.Slack.Infrastructure.LiteServer
+namespace Vertica.Integration.Slack.LiteServer
 {
     internal class SlackMessageQueueConsumerServer : IBackgroundServer
     {

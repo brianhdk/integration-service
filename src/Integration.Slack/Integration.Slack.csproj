@@ -59,14 +59,20 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="Vertica.Utilities_v4, Version=4.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Vertica.Utilities_v4.4.0.65.0\lib\net40\Vertica.Utilities_v4.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="websocket-sharp-with-proxy-support, Version=1.0.2.28248, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
       <HintPath>..\..\packages\websocket-sharp-with-proxy-support.1.9.1\lib\net35-client\websocket-sharp-with-proxy-support.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bot\Commands\IBotCommand.cs" />
     <Compile Include="Bot\SlackBotConfiguration.cs" />
     <Compile Include="Bot\SlackBot.cs" />
+    <Compile Include="ISlackConfiguration.cs" />
     <Compile Include="LiteServer\SlackMessageQueueConsumerServer.cs" />
     <Compile Include="Messaging\ISlackMessage.cs" />
     <Compile Include="Bot\ISlackBot.cs" />
@@ -94,6 +100,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Integration.Slack.nuspec" />
+    <None Include="NuGet-app.config.install.xdt" />
+    <None Include="NuGet-app.config.uninstall.xdt" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
