@@ -6,9 +6,9 @@ namespace Experiments.Slack
 {
     public class WriteMessages : IBackgroundWorker
     {
-        public BackgroundWorkerContinuation Work(CancellationToken token, BackgroundWorkerContext context)
+        public BackgroundWorkerContinuation Work(BackgroundWorkerContext context, CancellationToken token)
         {
-            context.Console.WriteLine("Hello {0}", context.InvocationCount);
+            //context.Console.WriteLine("Hello {0}", context.InvocationCount);
 
             return context.Wait(TimeSpan.FromSeconds(5));
         }

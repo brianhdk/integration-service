@@ -69,8 +69,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bot\Commands\IBotCommand.cs" />
-    <Compile Include="Bot\SlackBotConfiguration.cs" />
+    <Compile Include="Bot\Commands\DumpArchiveCommand.cs" />
+    <Compile Include="Bot\Commands\Infrastructure\Castle.Windsor\SlackBotCommandsInstaller.cs" />
+    <Compile Include="Bot\Commands\ISlackBotCommand.cs" />
+    <Compile Include="Bot\Commands\PingCommand.cs" />
+    <Compile Include="Bot\Commands\RunTaskCommand.cs" />
+    <Compile Include="Bot\Commands\SlackBotCommandContext.cs" />
+    <Compile Include="Bot\SlackBotCommandsConfiguration.cs" />
     <Compile Include="Bot\SlackBot.cs" />
     <Compile Include="ISlackConfiguration.cs" />
     <Compile Include="LiteServer\SlackMessageQueueConsumerServer.cs" />

@@ -14,7 +14,7 @@ namespace Vertica.Integration.Slack.LiteServer
             _bot = bot;
         }
 
-        public Task Create(CancellationToken token, BackgroundServerContext context)
+        public Task Create(BackgroundServerContext context, CancellationToken token)
         {
             return _bot.Worker;
         }

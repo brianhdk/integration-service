@@ -14,7 +14,7 @@ namespace Vertica.Integration.Slack.LiteServer
             _queue = queue;
         }
 
-        public Task Create(CancellationToken token, BackgroundServerContext context)
+        public Task Create(BackgroundServerContext context, CancellationToken token)
         {
             return _queue.Consumer;
         }

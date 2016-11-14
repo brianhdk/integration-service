@@ -1,21 +1,20 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using SlackConnector;
-using SlackConnector.Models;
 using Vertica.Integration.Infrastructure;
+using Vertica.Integration.Slack.Bot.Commands;
 
 namespace Vertica.Integration.Slack.Bot
 {
     public class SlackBot : ISlackBot
     {
-        private readonly CancellationToken _token;
-
-        public SlackBot(ISlackConfiguration configuration, IShutdown shutdown)
+        public SlackBot(ISlackBotCommand[] commands, ISlackConfiguration configuration, IShutdown shutdown)
         {
             if (!configuration.Enabled)
                 return;
 
-            _token = shutdown.Token;
+            CancellationToken token = shutdown.Token;
 
             Worker = Task.Run(() =>
             {
@@ -25,22 +24,25 @@ namespace Vertica.Integration.Slack.Bot
 
                 client.OnMessageReceived += message =>
                 {
-                    var response = new BotMessage
+                    var tasks = new List<Task>();
+
+                    Parallel.ForEach(commands, command =>
                     {
-                        Text = message.Text,
-                        ChatHub = message.ChatHub
-                    };
+                        var context = new SlackBotCommandContext(client.Say, message);
 
-                    Thread.Sleep(1000);
+                        Task task;
+                        if (command.TryHandle(context, token, out task))
+                            tasks.Add(task);
+                    });
 
-                    return client.Say(response);
+                    return Task.WhenAll(tasks);
                 };
 
-                _token.WaitHandle.WaitOne();
+                token.WaitHandle.WaitOne();
 
                 client.Disconnect();
 
-            }, _token);
+            }, token);
         }
 
         public Task Worker { get; }

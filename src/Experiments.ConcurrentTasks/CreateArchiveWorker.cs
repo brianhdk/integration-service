@@ -15,7 +15,7 @@ namespace Experiments.ConcurrentTasks
             _archive = archive;
         }
 
-        public BackgroundWorkerContinuation Work(CancellationToken token, BackgroundWorkerContext context)
+        public BackgroundWorkerContinuation Work(BackgroundWorkerContext context, CancellationToken token)
         {
             var archive = _archive.ArchiveFile(new FileInfo(@"c:\tmp\Archive-478.zip"), options => options
                 .ExpiresAfter(TimeSpan.FromHours(1)));

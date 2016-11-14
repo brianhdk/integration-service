@@ -26,7 +26,7 @@ namespace Experiments.ConcurrentTasks
             configuration.Save(monitorConfiguration, nameof(RunMonitorTask));
         }
 
-        public BackgroundWorkerContinuation Work(CancellationToken token, BackgroundWorkerContext context)
+        public BackgroundWorkerContinuation Work(BackgroundWorkerContext context, CancellationToken token)
         {
             if (context.InvocationCount > 1)
                 _taskRunner.Execute(_taskFactory.Get<MonitorTask>());

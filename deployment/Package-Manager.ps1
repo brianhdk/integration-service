@@ -98,7 +98,7 @@ Get-ChildItem $script_directory | Where-Object { $_.Extension -eq ".nupkg" } | F
 	} 
     Else {
 
-		Get-ChildItem $projectDirectory | Where-Object { $_.Extension -eq ".nupkg" } | Move-Item -Destination "D:\Dropbox\Development\NuGet.Packages" -Force
+		Move-Item -Path $_.FullName -Destination "C:\Users\bhk\Dropbox\Development\NuGet.Packages" -Force
 	}
 }
 

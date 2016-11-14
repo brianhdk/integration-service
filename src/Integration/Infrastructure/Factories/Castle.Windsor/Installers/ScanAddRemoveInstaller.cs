@@ -67,26 +67,31 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 
 	    void IWindsorInstaller.Install(IWindsorContainer container, IConfigurationStore store)
 		{
-			foreach (Assembly assembly in _scan.Distinct())
-			{
+	        Install(container, store);
+		}
+
+	    protected virtual void Install(IWindsorContainer container, IConfigurationStore store)
+	    {
+            foreach (Assembly assembly in _scan.Distinct())
+            {
                 container.Register(
                     Locate(Classes.FromAssembly(assembly))
                         .Unless(x =>
                         {
                             if (_add.Contains(x) || _remove.Contains(x))
                                 return true;
-    
+
                             return false;
                         })
                         .Configure(x => _configure?.Invoke(x)));
-			}
+            }
 
-		    container.Register(
-				Locate(Classes.From(_add.Except(_remove).Distinct()))
-					.Configure(x => _configure?.Invoke(x)));
-		}
+            container.Register(
+                Locate(Classes.From(_add.Except(_remove).Distinct()))
+                    .Configure(x => _configure?.Invoke(x)));
+        }
 
-	    private BasedOnDescriptor Locate(FromDescriptor fromDescriptor)
+        private BasedOnDescriptor Locate(FromDescriptor fromDescriptor)
 	    {
 	        return _serviceDescriptor(fromDescriptor.BasedOn<T>().WithService);
 	    }

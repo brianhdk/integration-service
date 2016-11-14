@@ -16,7 +16,9 @@ namespace Experiments.Slack
                     .AddFromAssemblyOfThis<Program>())
 				.UseSlack(slack => slack
                     .AttachToConsoleWriter()
-					.AddToLiteServer())))
+					.AddToLiteServer()
+                    .MessageHandlers(messageHandlers => messageHandlers.AddFromAssemblyOfThis<Program>())
+                    .BotCommands(botCommands => botCommands.AddFromAssemblyOfThis<Program>()))))
 			{
 				context.Execute(typeof(LiteServerHost).HostName());
 			}

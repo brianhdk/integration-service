@@ -8,6 +8,6 @@ namespace Vertica.Integration.Domain.LiteServer
 	/// </summary>
 	public interface IBackgroundWorker
 	{
-		BackgroundWorkerContinuation Work(CancellationToken token, BackgroundWorkerContext context);
+		BackgroundWorkerContinuation Work(BackgroundWorkerContext context, CancellationToken token);
 	}
 }

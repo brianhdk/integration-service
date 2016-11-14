@@ -62,7 +62,7 @@ namespace Vertica.Integration.Domain.LiteServer
 
 		private Task Create(IBackgroundServer server)
 		{
-			return server.Create(_shutdown.Token, new BackgroundServerContext());
+			return server.Create(new BackgroundServerContext(), _shutdown.Token);
 		}
 
 		public void Dispose()
@@ -128,7 +128,7 @@ namespace Vertica.Integration.Domain.LiteServer
 			}
 		}
 
-		public BackgroundWorkerContinuation Work(CancellationToken token, BackgroundWorkerContext context)
+		public BackgroundWorkerContinuation Work(BackgroundWorkerContext context, CancellationToken token)
 		{
 			// Ensure all tasks are started.
 			foreach (Task nonStartedTask in _tasks.Where(x => x.Status == TaskStatus.Created))

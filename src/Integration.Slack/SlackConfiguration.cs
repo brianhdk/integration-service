@@ -11,7 +11,7 @@ namespace Vertica.Integration.Slack
 	public class SlackConfiguration : IInitializable<ApplicationConfiguration>
 	{
 	    private readonly SlackMessageHandlersConfiguration _messageHandlers;
-	    private readonly SlackBotConfiguration _bot;
+	    private readonly SlackBotCommandsConfiguration _botCommands;
 
 	    private bool _attachToConsoleWriter;
 
@@ -29,8 +29,8 @@ namespace Vertica.Integration.Slack
             _messageHandlers = new SlackMessageHandlersConfiguration(this);
 		    Application.Extensibility(extensibility => extensibility.Register(() => _messageHandlers));
 
-            _bot = new SlackBotConfiguration(this);
-            Application.Extensibility(extensibility => extensibility.Register(() => _bot));
+            _botCommands = new SlackBotCommandsConfiguration(this);
+            Application.Extensibility(extensibility => extensibility.Register(() => _botCommands));
         }
 
 	    public ApplicationConfiguration Application { get; }
@@ -68,9 +68,9 @@ namespace Vertica.Integration.Slack
 	        return this;
 	    }
 
-        public SlackConfiguration Bot(Action<SlackBotConfiguration> bot)
+        public SlackConfiguration BotCommands(Action<SlackBotCommandsConfiguration> botCommands)
         {
-            bot?.Invoke(_bot);
+            botCommands?.Invoke(_botCommands);
 
             return this;
         }

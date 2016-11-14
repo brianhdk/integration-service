@@ -23,7 +23,7 @@ namespace Vertica.Integration.Domain.LiteServer
 		    _writer = writer;
 		}
 
-		public Task Create(CancellationToken token, BackgroundServerContext context)
+		public Task Create(BackgroundServerContext context, CancellationToken token)
 		{	
 			return Task.Factory.StartNew(() =>
 			{
@@ -31,7 +31,7 @@ namespace Vertica.Integration.Domain.LiteServer
 
 				while (!token.IsCancellationRequested)
 				{
-					BackgroundWorkerContinuation continuation = _worker.Work(token, new BackgroundWorkerContext(++iterations, _writer));
+					BackgroundWorkerContinuation continuation = _worker.Work(new BackgroundWorkerContext(++iterations, _writer), token);
 
 				    TimeSpan waitTime = continuation.WaitTime.GetValueOrDefault();
 

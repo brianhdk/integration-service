@@ -14,7 +14,7 @@ namespace Vertica.Integration.WebApi
 			_factory = factory;
 		}
 
-		public Task Create(CancellationToken token, BackgroundServerContext context)
+		public Task Create(BackgroundServerContext context, CancellationToken token)
 		{
 			return Task.Run(() =>
 			{

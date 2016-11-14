@@ -8,7 +8,7 @@ namespace Vertica.Integration.Domain.LiteServer.Servers.IO
 {
 	public abstract class FileWatcherServer : IBackgroundServer
 	{
-		public Task Create(CancellationToken token, BackgroundServerContext context)
+		public Task Create(BackgroundServerContext context, CancellationToken token)
 		{
 			DirectoryInfo path = PathToMonitor();
 

@@ -30,7 +30,7 @@ namespace Experiments.ConcurrentTasks
             configuration.Save(maintenanceConfiguration, nameof(RunMaintenanceTask));
         }
 
-        public BackgroundWorkerContinuation Work(CancellationToken token, BackgroundWorkerContext context)
+        public BackgroundWorkerContinuation Work(BackgroundWorkerContext context, CancellationToken token)
         {
             //if (context.InvocationCount == 1)
             //    return context.Wait(TimeSpan.FromSeconds(30));

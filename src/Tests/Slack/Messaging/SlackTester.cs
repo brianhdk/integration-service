@@ -109,7 +109,7 @@ namespace Vertica.Integration.Tests.Slack.Messaging
                 _writer = writer;
             }
 
-            public BackgroundWorkerContinuation Work(CancellationToken token, BackgroundWorkerContext context)
+            public BackgroundWorkerContinuation Work(BackgroundWorkerContext context, CancellationToken token)
             {
                 _writer.WriteLine("Adding message");
                 _queue.Add(_factory.Message);
