@@ -26,6 +26,7 @@ $settings = @{
 		"integration_perfion" = Resolve-Path $script_directory\..\src\Integration.Perfion
         "integration_hangfire" = Resolve-Path $script_directory\..\src\Integration.Hangfire
 		"integration_globase" = Resolve-Path $script_directory\..\src\Integration.Globase
+        "integration_slack" = Resolve-Path $script_directory\..\src\Integration.Slack
         "integration_ucommerce" = Resolve-Path $script_directory\..\src\Integration.UCommerce
     }
     "tools" = @{
