@@ -26,7 +26,9 @@ namespace Vertica.Integration.Tests.Slack.Messaging
             using (var context = ApplicationContext.Create(application => application
                 .Services(services => services
                     .Advanced(advanced => advanced
-                        .Register(kernel => messageQueue)))
+                        .Register(kernel => messageQueue)
+                        .Register<IRuntimeSettings>(kernel => new InMemoryRuntimeSettings()
+                            .Set("Slack.Enabled", "true"))))
                 .UseSlack(slack => slack.AttachToConsoleWriter())))
             {
                 var writer = context.Resolve<IConsoleWriter>();
@@ -52,7 +54,8 @@ namespace Vertica.Integration.Tests.Slack.Messaging
                     .Logging(logging => logging.Disable())
                     .Services(services => services
                         .Advanced(advanced => advanced
-                            // ReSharper disable once AccessToDisposedClosure
+                            .Register<IRuntimeSettings>(kernel => new InMemoryRuntimeSettings()
+                                .Set("Slack.Enabled", "true"))
                             .Register<IWaitForShutdownRequest>(kernel => shutdown)
                             .Register(kernel => factory)))
                     .UseLiteServer(liteServer => liteServer

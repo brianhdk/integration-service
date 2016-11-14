@@ -71,6 +71,9 @@ namespace Vertica.Integration.Slack.Messaging
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
 
+            if (_queue == null)
+                throw new InvalidOperationException("Queue is null. Slack is not enabled.");
+
             if (!_token.IsCancellationRequested)
             {
                 _queue.Add(() =>
