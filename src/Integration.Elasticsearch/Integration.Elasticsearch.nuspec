@@ -3,7 +3,8 @@
 <package>
   <metadata>
     <id>$id$</id>
-    <version>$version$</version>
+    <!--<version>$version$</version>-->
+    <version>5.0.0-rc1</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
