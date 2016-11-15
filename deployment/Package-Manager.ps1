@@ -28,6 +28,7 @@ $settings = @{
 		"integration_globase" = Resolve-Path $script_directory\..\src\Integration.Globase
         "integration_slack" = Resolve-Path $script_directory\..\src\Integration.Slack
         "integration_ucommerce" = Resolve-Path $script_directory\..\src\Integration.UCommerce
+        "integration_elasticsearch" = Resolve-Path $script_directory\..\src\Integration.Elasticsearch
     }
     "tools" = @{
         "nuget" = Resolve-Path $script_directory\..\.nuget\NuGet.exe

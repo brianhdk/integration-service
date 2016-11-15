@@ -84,6 +84,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Experiments.ConcurrentTasks
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Experiments.MaintenanceTask", "src\Experiments.MaintenanceTask\Experiments.MaintenanceTask.csproj", "{1A983103-BBBD-47BC-9258-83E437DF4751}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Elasticsearch", "src\Integration.Elasticsearch\Integration.Elasticsearch.csproj", "{D755AB1A-90E7-4E81-9F86-C574E1695A71}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -194,6 +196,10 @@ Global
 		{1A983103-BBBD-47BC-9258-83E437DF4751}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A983103-BBBD-47BC-9258-83E437DF4751}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A983103-BBBD-47BC-9258-83E437DF4751}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D755AB1A-90E7-4E81-9F86-C574E1695A71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D755AB1A-90E7-4E81-9F86-C574E1695A71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D755AB1A-90E7-4E81-9F86-C574E1695A71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D755AB1A-90E7-4E81-9F86-C574E1695A71}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

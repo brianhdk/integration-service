@@ -2,6 +2,7 @@
 using Vertica.Integration.Domain.LiteServer;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Slack;
+using Vertica.Integration.Slack.Messaging.Handlers;
 
 namespace Experiments.Slack
 {
