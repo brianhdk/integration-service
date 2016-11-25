@@ -85,6 +85,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\LiteServer\LiteServerTester.cs" />
     <Compile Include="Domain\Monitoring\MessageContainsTextTester.cs" />
     <Compile Include="Domain\Monitoring\MonitorWorkItemTester.cs" />
     <Compile Include="Domain\Monitoring\PingUrlsStepIntegrationTester.cs" />

@@ -7,7 +7,6 @@ using Castle.MicroKernel;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Infrastructure.Logging;
-using Vertica.Utilities_v4;
 using Vertica.Utilities_v4.Extensions.EnumerableExt;
 using Scheduler = System.Threading.Tasks.TaskScheduler;
 
@@ -15,8 +14,6 @@ namespace Vertica.Integration.Domain.LiteServer
 {
 	internal class LiteServerImpl : IDisposable, IBackgroundWorker
 	{
-		private readonly DateTimeOffset _started;
-
 	    private readonly IKernel _kernel;
 	    private readonly IShutdown _shutdown;
 	    private readonly ILogger _logger;
@@ -30,8 +27,6 @@ namespace Vertica.Integration.Domain.LiteServer
 		public LiteServerImpl(IKernel kernel, InternalConfiguration configuration)
 		{
 			if (kernel == null) throw new ArgumentNullException(nameof(kernel));
-
-			_started = Time.UtcNow;
 
 		    _kernel = kernel;
 		    _shutdown = kernel.Resolve<IShutdown>();
@@ -53,11 +48,13 @@ namespace Vertica.Integration.Domain.LiteServer
 				.ToList();
 
 			_houseKeeping = Create(new BackgroundWorkServer(this, _scheduler, _console));
-		}
 
-		private void Output(string message)
+            Output("Started");
+        }
+
+        private void Output(string message)
 		{
-			_console.WriteLine($"[LiteServer]: {message}");
+			_console.WriteLine($"[LiteServer]: {message}.");
 		}
 
 		private Task Create(IBackgroundServer server)
@@ -67,7 +64,7 @@ namespace Vertica.Integration.Domain.LiteServer
 
 		public void Dispose()
 		{
-			Output("Stopping.");
+			Output("Stopping");
 
 			Exception[] exceptions = _tasks
 				.Where(x => x.IsFaulted && x.Exception != null)
@@ -94,56 +91,29 @@ namespace Vertica.Integration.Domain.LiteServer
 			foreach (Exception ex in exceptions)
 				LogError(ex);
 
-			_houseKeeping.Dispose();
+            // Look into what to do if a task fails - can it be disposed?
+            _houseKeeping.Dispose();
 
 			Execute(_configuration.OnShutdown);
 
-			Output($"Stopped. Uptime: {Uptime}.");
-		}
-
-		private string Uptime
-		{
-			get
-			{
-				TimeSpan span = Time.UtcNow - _started;
-
-				if (span.TotalSeconds < 1)
-					return $"{span.TotalSeconds} seconds";
-
-				var segments = new List<string>(4);
-
-				if (span.Days > 0)
-					segments.Add($"{span.Days} day{(span.Days == 1 ? string.Empty : "s")}");
-
-				if (span.Hours > 0)
-					segments.Add($"{span.Hours} hour{(span.Hours == 1 ? string.Empty : "s")}");
-
-				if (span.Minutes > 0)
-					segments.Add($"{span.Minutes} minute{(span.Minutes == 1 ? string.Empty : "s")}");
-
-				if (span.Seconds > 0)
-					segments.Add($"{span.Seconds} second{(span.Seconds == 1 ? string.Empty : "s")}");
-
-				return string.Join(" ", segments);
-			}
+			Output("Stopped");
 		}
 
 		public BackgroundWorkerContinuation Work(BackgroundWorkerContext context, CancellationToken token)
 		{
-			// Ensure all tasks are started.
-			foreach (Task nonStartedTask in _tasks.Where(x => x.Status == TaskStatus.Created))
-				nonStartedTask.Start(_scheduler);
-
 			if (context.InvocationCount == 1)
-				return context.Wait(TimeSpan.FromSeconds(1));
+			{
+                // Ensure all tasks are started.
+                foreach (Task nonStartedTask in _tasks.Where(x => x.Status == TaskStatus.Created))
+                    nonStartedTask.Start(_scheduler);
+
+                return context.Wait(TimeSpan.FromSeconds(1));
+			}
 
 			Task[] failedTasks = _tasks.Where(x => x.IsFaulted).ToArray();
 
 			foreach (Task failedTask in failedTasks)
 			{
-				if (token.IsCancellationRequested)
-					break;
-
 				if (failedTask.Exception != null)
 				{
 					foreach (Exception ex in failedTask.Exception.InnerExceptions)
@@ -153,9 +123,12 @@ namespace Vertica.Integration.Domain.LiteServer
 				_tasks.Remove(failedTask);
 			}
 
-			if (_tasks.All(x => x.IsCompleted))
+		    if (token.IsCancellationRequested)
+		        return context.Exit();
+
+            if (_tasks.All(x => x.IsCompleted))
 			{
-				Output("Exiting housekeeping (no more tasks to monitor).");
+				Output("Exiting housekeeping (no more tasks to monitor)");
 				return context.Exit();
 			}
 

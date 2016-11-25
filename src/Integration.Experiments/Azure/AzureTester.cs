@@ -8,7 +8,6 @@ using Vertica.Integration.Azure.Infrastructure.BlobStorage;
 using Vertica.Integration.Azure.Infrastructure.ServiceBus;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Extensions;
-using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Hosting;
 
@@ -99,12 +98,12 @@ namespace Vertica.Integration.Experiments.Azure
 	public class AzureServiceBusHost : IHost
 	{
 		private readonly IAzureServiceBusClientFactory _serviceBusClientFactory;
-		private readonly IConsoleWriter _console;
+	    private readonly TextWriter _writer;
 
-		public AzureServiceBusHost(IAzureServiceBusClientFactory serviceBusClientFactory, IConsoleWriter console)
+		public AzureServiceBusHost(IAzureServiceBusClientFactory serviceBusClientFactory, TextWriter writer)
 		{
 			_serviceBusClientFactory = serviceBusClientFactory;
-			_console = console;
+		    _writer = writer;
 		}
 
 		public bool CanHandle(HostArguments args)
@@ -127,9 +126,9 @@ namespace Vertica.Integration.Experiments.Azure
 			{
 				QueueClient queueClient = _serviceBusClientFactory.CreateQueueClient(queueName);
 
-				_console.RepeatUntilEscapeKeyIsHit(() =>
+				_writer.RepeatUntilEscapeKeyIsHit(() =>
 				{
-					_console.WriteLine("Message: ");
+                    _writer.WriteLine("Message: ");
 
 					queueClient.Send(new BrokeredMessage(Console.ReadLine()));
 				});
@@ -151,7 +150,7 @@ namespace Vertica.Integration.Experiments.Azure
 						{
 							using (message)
 							{
-								_console.WriteLine(message.GetBody<string>());
+                                _writer.WriteLine(message.GetBody<string>());
 
 								message.Complete();
 							}							
@@ -159,7 +158,7 @@ namespace Vertica.Integration.Experiments.Azure
 					}
 					catch (Exception ex)
 					{
-						_console.WriteLine(ex.Message);
+                        _writer.WriteLine(ex.Message);
 					}
 				}
 			});

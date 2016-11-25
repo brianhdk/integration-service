@@ -138,6 +138,7 @@
     <Compile Include="Infrastructure\IO\ConsoleWriter.cs" />
     <Compile Include="Infrastructure\IO\IConsoleWriter.cs" />
     <Compile Include="Infrastructure\IShutdown.cs" />
+    <Compile Include="Infrastructure\IUptime.cs" />
     <Compile Include="Infrastructure\ServicesConfiguration.cs" />
     <Compile Include="Infrastructure\ServicesConventionsConfiguration.cs" />
     <Compile Include="Infrastructure\ServicesInterceptorsConfiguration.cs" />
@@ -301,9 +302,6 @@
     <Compile Include="Infrastructure\Logging\Target.cs" />
     <Compile Include="Infrastructure\Logging\TaskLog.cs" />
     <Compile Include="Infrastructure\Templating\InMemoryRazorEngine.cs" />
-    <Compile Include="Infrastructure\Windows\WindowsServiceRunner.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Infrastructure\Windows\WindowsUtils.cs" />
     <Compile Include="Model\EmptyWorkItem.cs" />
     <Compile Include="Model\Exceptions\TaskExecutionFailedException.cs" />

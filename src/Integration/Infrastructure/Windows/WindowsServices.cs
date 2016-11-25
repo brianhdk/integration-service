@@ -6,11 +6,12 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.ServiceProcess;
+using Vertica.Integration.Model.Hosting.Handlers;
 using Vertica.Utilities_v4;
 
 namespace Vertica.Integration.Infrastructure.Windows
 {
-	internal class WindowsServices : IWindowsServices
+    internal class WindowsServices : IWindowsServices
 	{
 		private readonly string _machineName;
 
@@ -51,12 +52,14 @@ namespace Vertica.Integration.Infrastructure.Windows
 			{
 				if (windowsService.Args != null)
 				{
+				    ServiceInstaller[] installerCopy = { installer };
+
 					installer.AfterInstall += (sender, installArgs) =>
 					{
 						ServiceController[] services = GetServices();
 
 						ServiceController controller = services
-							.SingleOrDefault(x => x.ServiceName.Equals(installer.ServiceName));
+							.SingleOrDefault(x => x.ServiceName.Equals(installerCopy[0].ServiceName));
 
 						if (controller != null)
 							Win32Service.SetServiceArguments(controller, windowsService.ExePath, windowsService.Args);
@@ -89,19 +92,15 @@ namespace Vertica.Integration.Infrastructure.Windows
 			});
 		}
 
-		public void Run(string serviceName, Func<IDisposable> onStartFactory)
+        [Obsolete("No longer supported. Use '" + nameof(IWindowsServiceHandler) + "'.")]
+        public void Run(string serviceName, Func<IDisposable> onStartFactory)
 		{
-			if (string.IsNullOrWhiteSpace(serviceName)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(serviceName));
-
-			using (var runner = new WindowsServiceRunner(serviceName, onStartFactory))
-			{
-				ServiceBase.Run(runner);
-			}
+			throw new NotSupportedException($"Don't use. Replaced by functionality in '{nameof(IWindowsServiceHandler)}'.");
 		}
 
 		private static void Dispose(ServiceController[] services)
 		{
-			foreach (var service in services)
+			foreach (ServiceController service in services)
 				service.Dispose();
 		}
 

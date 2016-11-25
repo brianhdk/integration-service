@@ -68,17 +68,17 @@ namespace Vertica.Integration.Experiments.Rebus
 	public class RebusTask : Model.Task
 	{
 		private readonly Func<IBus> _bus;
-		private readonly IConsoleWriter _console;
+		private readonly TextWriter _textWriter;
 
-		public RebusTask(Func<IBus> bus, IConsoleWriter writer)
+		public RebusTask(Func<IBus> bus, TextWriter writer)
 		{
 			_bus = bus;
-			_console = writer;
+			_textWriter = writer;
 		}
 
 		public override void StartTask(ITaskExecutionContext context)
 		{
-			_console.RepeatUntilEscapeKeyIsHit(() =>
+			_textWriter.RepeatUntilEscapeKeyIsHit(() =>
 			{
 				_bus().Send(Console.ReadLine()).Wait();
 			});

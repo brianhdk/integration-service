@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ServiceProcess;
+using Vertica.Integration.Model.Hosting.Handlers;
 
 namespace Vertica.Integration.Infrastructure.Windows
 {
@@ -14,6 +15,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 		void Install(WindowsServiceConfiguration windowsService);
 		void Uninstall(string serviceName);
 
+        [Obsolete("No longer supported. Use '" + nameof(IWindowsServiceHandler) + "'.")]
 		void Run(string serviceName, Func<IDisposable> onStartFactory);
 	}
 }

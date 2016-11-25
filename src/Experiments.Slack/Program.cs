@@ -1,8 +1,6 @@
 ﻿using Vertica.Integration;
 using Vertica.Integration.Domain.LiteServer;
-using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Slack;
-using Vertica.Integration.Slack.Messaging.Handlers;
 
 namespace Experiments.Slack
 {
@@ -21,7 +19,7 @@ namespace Experiments.Slack
                     .MessageHandlers(messageHandlers => messageHandlers.AddFromAssemblyOfThis<Program>())
                     .BotCommands(botCommands => botCommands.AddFromAssemblyOfThis<Program>()))))
 			{
-				context.Execute(typeof(LiteServerHost).HostName());
+				context.Execute(args);
 			}
 		}
 	}

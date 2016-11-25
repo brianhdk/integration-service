@@ -992,6 +992,7 @@ TBD.
 
 ## Archives
 
+In short: You need 
 TODO: Document the "DbArchiveService.DeleteBatchSize" setting that defines the batch size when deleting archives. Default batchsize is 20.
 
 TBD. 

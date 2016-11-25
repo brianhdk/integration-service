@@ -33,7 +33,7 @@ namespace Vertica.Integration.Domain.LiteServer
 			if (args == null) throw new ArgumentNullException(nameof(args));
 
 			if (InstallOrRunAsWindowsService(args, Create))
-				return;
+			    return;
 
 			using (Create())
 			{

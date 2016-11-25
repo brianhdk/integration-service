@@ -1,21 +1,20 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Vertica.Integration.Infrastructure.Extensions;
 
 namespace Vertica.Integration.Infrastructure.IO
 {
 	internal class WaitForEscapeKey : IWaitForShutdownRequest
 	{
-		private readonly IConsoleWriter _console;
+		private readonly TextWriter _writer;
 
-		public WaitForEscapeKey(IConsoleWriter console)
+		public WaitForEscapeKey(TextWriter writer)
 		{
-			_console = console;
+			_writer = writer;
 		}
 
 		public void Wait()
 		{
-			_console.WaitUntilEscapeKeyIsHit();
+			_writer.WaitUntilEscapeKeyIsHit();
 		}
 	}
 }

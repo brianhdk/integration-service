@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Castle.Facilities.TypedFactory;
@@ -12,12 +13,15 @@ using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Infrastructure.Logging.Loggers;
 using Vertica.Integration.Model.Exceptions;
 using Vertica.Integration.Model.Hosting;
+using Vertica.Utilities_v4;
 
 namespace Vertica.Integration
 {
-	public sealed class ApplicationContext : IApplicationContext, IShutdown
+	public sealed class ApplicationContext : IApplicationContext, IShutdown, IUptime
     {
-	    private readonly CancellationTokenSource _cancellation;
+        private readonly DateTimeOffset _startedAt;
+
+        private readonly CancellationTokenSource _cancellation;
 	    private readonly ApplicationConfiguration _configuration;
 
 	    private readonly IWindsorContainer _container;
@@ -29,6 +33,8 @@ namespace Vertica.Integration
 
 		internal ApplicationContext(Action<ApplicationConfiguration> application)
 		{
+            _startedAt = Time.UtcNow;
+
             _cancellation = new CancellationTokenSource();
             _configuration = new ApplicationConfiguration();
 
@@ -53,14 +59,15 @@ namespace Vertica.Integration
                     subject.Initialized(_container);
             });
 
-            // Ensures that we are registrered as the IShutdown implementation
-            _container.Install(Install.Instance<IShutdown>(this));
+            // Ensures that we "own" these specific service interfaces
+            _container.Install(Install.Instance<IShutdown>(this, registration => registration.NamedAutomatically("Shutdown_23a911175572418588e212253a2dcf98")));
+		    _container.Install(Install.Instance<IUptime>(this, registration => registration.NamedAutomatically("Uptime_d097752484954f1cb727633cdefc87a4")));
 
             _parser = _container.Resolve<IArgumentsParser>();
             _hosts = _container.Resolve<IHostFactory>().GetAll();
 		    _console = _container.Resolve<IConsoleWriter>();
 
-		    _console.WriteLine("[Integration Service]: Started.");
+		    _console.WriteLine("[Integration Service]: Started UTC @ {0}.", _startedAt);
         }
 
         public static IApplicationContext Create(Action<ApplicationConfiguration> application = null)
@@ -129,7 +136,7 @@ namespace Vertica.Integration
 
             _console.WriteLine("[Integration Service]: Shutdown requested.");
 
-            _cancellation.Cancel();
+            EnsureCancelled(TimeSpan.FromMilliseconds(500));
         }
 
         public CancellationToken Token => _cancellation.Token;
@@ -143,18 +150,7 @@ namespace Vertica.Integration
 
             _console.WriteLine("[Integration Service]: Shutting down.");
 
-            if (!_cancellation.IsCancellationRequested)
-            {
-                try
-                {
-                    // if anything is running, we need to signal a cancellation
-                    _cancellation.Cancel();
-                }
-                catch (Exception ex)
-                {
-                    LogException(ex);
-                }
-            }
+            EnsureCancelled();
 
             _configuration.Extensibility(extensibility => 
 			{
@@ -171,13 +167,63 @@ namespace Vertica.Integration
 				}
 			});
 
-            _console.WriteLine("[Integration Service]: Shut down");
+            _console.WriteLine("[Integration Service]: Shut down. Uptime: {0}", UptimeText);
 
             _cancellation.Dispose();
 			_container.Dispose();
         }
 
-        private void LogException(Exception exception)
+        public string UptimeText
+        {
+            get
+            {
+                TimeSpan span = Time.UtcNow - _startedAt;
+
+                if (span.TotalSeconds < 1)
+                    return $"{span.TotalSeconds} seconds";
+
+                var segments = new List<string>(4);
+
+                if (span.Days > 0)
+                    segments.Add($"{span.Days} day{(span.Days == 1 ? string.Empty : "s")}");
+
+                if (span.Hours > 0)
+                    segments.Add($"{span.Hours} hour{(span.Hours == 1 ? string.Empty : "s")}");
+
+                if (span.Minutes > 0)
+                    segments.Add($"{span.Minutes} minute{(span.Minutes == 1 ? string.Empty : "s")}");
+
+                if (span.Seconds > 0)
+                    segments.Add($"{span.Seconds} second{(span.Seconds == 1 ? string.Empty : "s")}");
+
+                return string.Join(" ", segments);
+            }
+        }
+
+        private void EnsureCancelled(TimeSpan? cancelAfter = null)
+	    {
+	        if (!_cancellation.IsCancellationRequested)
+	        {
+	            try
+	            {
+	                // if anything is running, we need to signal a cancellation
+	                if (cancelAfter.HasValue)
+	                {
+	                    _cancellation.CancelAfter(cancelAfter.Value);
+	                }
+	                else
+	                {
+	                    _cancellation.Cancel();
+	                }
+	            }
+	            catch (Exception ex)
+	            {
+	                LogException(ex);
+	            }
+	        }
+	    }
+
+	    private void LogException(Exception exception)
         {
             if (exception == null) throw new ArgumentNullException(nameof(exception));
 

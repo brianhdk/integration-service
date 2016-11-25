@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Vertica.Integration.Infrastructure.IO;
 
 namespace Vertica.Integration.Infrastructure.Extensions
 {
@@ -77,42 +76,51 @@ namespace Vertica.Integration.Infrastructure.Extensions
 			return new string(pass.Reverse().ToArray());
 		}
 
-		public static void RepeatUntilEscapeKeyIsHit(this IConsoleWriter console, Action repeat)
+		public static void RepeatUntilEscapeKeyIsHit(this TextWriter writer, Action repeat)
 		{
-			if (console == null) throw new ArgumentNullException(nameof(console));
+			if (writer == null) throw new ArgumentNullException(nameof(writer));
 			if (repeat == null) throw new ArgumentNullException(nameof(repeat));
 
-			do
-			{
+            // We can't do anything but to just return immediately.
+            if (!HasUser())
+                return;
+
+            do
+            {
 				repeat();
 
-                console.WriteLine("Press ESCAPE to break or any key to continue");
-			    console.WriteLine();
+                writer.WriteLine("Press ESCAPE to break or any key to continue");
+			    writer.WriteLine();
 
 			} while (WaitingForEscape());
 		}
 
-		public static void WaitUntilEscapeKeyIsHit(this IConsoleWriter console, string message = "Press ESCAPE to continue...")
+		public static void WaitUntilEscapeKeyIsHit(this TextWriter writer, string message = "Press ESCAPE to continue...")
 		{
-			if (console == null) throw new ArgumentNullException(nameof(console));
+			if (writer == null) throw new ArgumentNullException(nameof(writer));
+
+            // We can't do anything but to just return immediately.
+            if (!HasUser())
+		        return;
 
 			do
 			{
 				if (!string.IsNullOrWhiteSpace(message))
 				{
-					console.WriteLine(message);
-					console.WriteLine();					
+					writer.WriteLine(message);
+					writer.WriteLine();					
 				}
 
 			} while (WaitingForEscape());
 		}
 
+	    private static bool HasUser()
+	    {
+            return Environment.UserInteractive;
+        }
+
 		private static bool WaitingForEscape()
 		{
-			// We can't do anything but to return true.
-			if (!Environment.UserInteractive)
-				return true;
-
 			return Console.ReadKey(intercept: true /* don't display */).Key != ConsoleKey.Escape;
 		}
 	}

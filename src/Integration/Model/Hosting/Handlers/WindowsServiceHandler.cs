@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.ServiceProcess;
 using System.Text.RegularExpressions;
+using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Windows;
 using Vertica.Utilities_v4.Extensions.EnumerableExt;
 
@@ -20,13 +21,13 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 
 	    private readonly IRuntimeSettings _runtimeSettings;
 		private readonly IWindowsServices _windowsServices;
+	    private readonly IShutdown _shutdown;
 	    
-	    public WindowsServiceHandler(IRuntimeSettings runtimeSettings, IWindowsFactory windows)
+	    public WindowsServiceHandler(IRuntimeSettings runtimeSettings, IWindowsFactory windows, IShutdown shutdown)
 	    {
-		    if (runtimeSettings == null) throw new ArgumentNullException(nameof(runtimeSettings));
-
 		    _runtimeSettings = runtimeSettings;
-			_windowsServices = windows.WindowsServices();
+	        _shutdown = shutdown;
+	        _windowsServices = windows.WindowsServices();
 	    }
 
         public bool Handle(HostArguments args, HandleAsWindowsService service)
@@ -81,8 +82,16 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 			}
 			else
 			{
-				_windowsServices.Run(GetServiceName(service), service.OnStartFactory);
-			}		        
+                using (service.OnStartFactory())
+                using (var serviceBase = new ServiceBase())
+                {
+                    serviceBase.ServiceName = GetServiceName(service);
+
+                    ServiceBase.Run(serviceBase);
+
+                    _shutdown.WaitForShutdown();
+                }
+			}
 
             return true;
         }
