@@ -24,7 +24,7 @@ namespace Vertica.Integration.Logging.Elmah
         {
             ElmahConfiguration configuration = _configuration.GetElmahConfiguration();
 
-            if (string.IsNullOrWhiteSpace(configuration.ConnectionStringName))
+            if (configuration.GetConnectionString() == null)
                 return Execution.StepOver;
 
             if (configuration.Disabled)
@@ -41,13 +41,18 @@ namespace Vertica.Integration.Logging.Elmah
 
             workItem.AddMessageGroupingPatterns(MessageGroupingPattern);
 
-            using (var connection = new SqlConnection(configuration.ToConnectionString()))
+            using (var connection = new SqlConnection(configuration.GetConnectionString()))
             using (SqlCommand command = connection.CreateCommand())
             {
                 connection.Open();
 
 				command.CommandTimeout = (int)configuration.CommandTimeout.TotalSeconds;
-				command.CommandText = @"
+
+                command.CommandText = @"
+UPDATE [ELMAH_Error] SET 
+    [AllXml] = REPLACE(CAST([AllXml] AS NVARCHAR(MAX)), '&#x', '')
+WHERE [TimeUtc] BETWEEN @l AND @u;
+
 SELECT TOP 1000
 	errorId     = [ErrorId], 
 	application = [Application],

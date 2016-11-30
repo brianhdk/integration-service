@@ -11,25 +11,31 @@ namespace Vertica.Integration.Logging.Elmah
         {
             LogName = "Elmah";
             ConnectionStringName = "Logging.ElmahDb";
+            ConnectionStringText = string.Empty;
 
             CommandTimeout = TimeSpan.FromMinutes(5);
             CleanUpEntriesOlderThan = TimeSpan.FromDays(60);
         }
 
         public string LogName { get; set; }
+
         public string ConnectionStringName { get; set; }
+        public string ConnectionStringText { get; set; }
 
         public TimeSpan CommandTimeout { get; set; }
         public TimeSpan CleanUpEntriesOlderThan { get; set; }
         
         public bool Disabled { get; set; }
 
-        public ConnectionString ToConnectionString()
+        public ConnectionString GetConnectionString()
         {
-            if (string.IsNullOrWhiteSpace(ConnectionStringName))
-                return null;
+            if (!string.IsNullOrWhiteSpace(ConnectionStringName))
+                return ConnectionString.FromName(ConnectionStringName);
 
-            return ConnectionString.FromName(ConnectionStringName);
+            if (!string.IsNullOrWhiteSpace(ConnectionStringText))
+                return ConnectionString.FromText(ConnectionStringText);
+
+            return null;
         }
     }
 }

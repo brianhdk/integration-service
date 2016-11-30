@@ -20,9 +20,6 @@ namespace Vertica.Integration.Infrastructure.Archiving
 		public FileBasedArchiveService(IRuntimeSettings settings, ILogger logger)
 		{
 		    _baseDirectory = new DirectoryInfo(settings[BaseDirectoryKey].NullIfEmpty() ?? "Data\\Archives");
-
-			EnsureBaseDirectory();
-
 			_logger = logger;
 		}
 
@@ -32,9 +29,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 			{
 				string archiveId = CreateNewArchiveId();
 
-				EnsureBaseDirectory();
-
-				FileInfo filePath = new FileInfo(Path.Combine(_baseDirectory.FullName, $"{archiveId}.zip"));
+				FileInfo filePath = new FileInfo(Path.Combine(EnsureBaseDirectory().FullName, $"{archiveId}.zip"));
 
 				File.WriteAllBytes(filePath.FullName, stream.ToArray());
 				File.WriteAllText(MetaFilePath(filePath).FullName, new MetaFile(options).ToString());
@@ -97,10 +92,12 @@ namespace Vertica.Integration.Infrastructure.Archiving
 			return deleted;
 		}
 
-        private void EnsureBaseDirectory()
+        private DirectoryInfo EnsureBaseDirectory()
         {
             if (!_baseDirectory.Exists)
                 _baseDirectory.Create();
+
+            return _baseDirectory;
         }
 
         private static void DeleteArchive(FileInfo archiveFile)
@@ -115,9 +112,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
 		private IEnumerable<FileInfo> Archives()
 		{
-            EnsureBaseDirectory();
-
-			return _baseDirectory.EnumerateFiles("*.zip", SearchOption.AllDirectories);
+			return EnsureBaseDirectory().EnumerateFiles("*.zip", SearchOption.AllDirectories);
 		}
 
 		private Archive Map(FileInfo archiveFile)

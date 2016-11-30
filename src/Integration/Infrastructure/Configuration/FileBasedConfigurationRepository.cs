@@ -10,24 +10,20 @@ namespace Vertica.Integration.Infrastructure.Configuration
 {
 	internal class FileBasedConfigurationRepository : IConfigurationRepository
 	{
-		private readonly string _baseDirectory;
-		private readonly ILogger _logger;
+        private readonly DirectoryInfo _baseDirectory;
+        private readonly ILogger _logger;
 
 		public const string BaseDirectoryKey = "FileBasedConfigurationRepository.BaseDirectory";
 
 		public FileBasedConfigurationRepository(IRuntimeSettings settings, ILogger logger)
 		{
-			_baseDirectory = settings[BaseDirectoryKey].NullIfEmpty() ?? "Data\\Configurations";
-
-			if (!Directory.Exists(_baseDirectory))
-				Directory.CreateDirectory(_baseDirectory);
-
+            _baseDirectory = new DirectoryInfo(settings[BaseDirectoryKey].NullIfEmpty() ?? "Data\\Configurations");
 			_logger = logger;
 		}
 
 		public Configuration[] GetAll()
 		{
-			return new DirectoryInfo(_baseDirectory)
+			return EnsureBaseDirectory()
 				.EnumerateFiles("*.json")
 				.Select(Map)
 				.ToArray();
@@ -74,9 +70,17 @@ namespace Vertica.Integration.Infrastructure.Configuration
 			}
 		}
 
-		private FileInfo ConfigurationFilePath(string id)
+        private DirectoryInfo EnsureBaseDirectory()
+        {
+            if (!_baseDirectory.Exists)
+                _baseDirectory.Create();
+
+            return _baseDirectory;
+        }
+
+        private FileInfo ConfigurationFilePath(string id)
 		{
-			return new FileInfo(Path.Combine(_baseDirectory, $"{id}.json"));
+			return new FileInfo(Path.Combine(EnsureBaseDirectory().FullName, $"{id}.json"));
 		}
 
 		private Configuration Map(FileInfo configurationFile)
@@ -90,8 +94,8 @@ namespace Vertica.Integration.Infrastructure.Configuration
 				Created = configurationFile.CreationTimeUtc,
 				Updated = configurationFile.LastWriteTimeUtc,
 				Name = metaFile != null ? metaFile.Name : configurationFile.Name,
-				Description = metaFile != null ? metaFile.Description : null,
-				UpdatedBy = metaFile != null ? metaFile.UpdatedBy : null
+				Description = metaFile?.Description,
+				UpdatedBy = metaFile?.UpdatedBy
 			};
 		}
 

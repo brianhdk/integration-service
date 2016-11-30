@@ -21,7 +21,7 @@ namespace Vertica.Integration.Logging.Elmah
         {
             ElmahConfiguration configuration = _configuration.GetElmahConfiguration();
 
-            if (string.IsNullOrWhiteSpace(configuration.ConnectionStringName))
+            if (configuration.GetConnectionString() == null)
                 return Execution.StepOver;
 
             if (configuration.Disabled)
@@ -38,7 +38,7 @@ namespace Vertica.Integration.Logging.Elmah
 
             DateTime lowerBound = DateTime.UtcNow.Date.Subtract(configuration.CleanUpEntriesOlderThan);
 
-            using (var connection = new SqlConnection(configuration.ToConnectionString()))
+            using (var connection = new SqlConnection(configuration.GetConnectionString()))
             using (SqlCommand command = connection.CreateCommand())
             {
                 connection.Open();
