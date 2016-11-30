@@ -19,7 +19,7 @@ namespace Vertica.Integration.Infrastructure.Database
 		IEnumerable<TReturn> Query<TFirst, TSecond, TThird, TReturn>(string sql, Func<TFirst, TSecond, TThird, TReturn> map, object param = null, string splitOn = "Id");
 		IEnumerable<TReturn> Query<TFirst, TSecond, TThird, TFourth, TReturn>(string sql, Func<TFirst, TSecond, TThird, TFourth, TReturn> map, object param = null, string splitOn = "Id");
 
-		SqlMapper.GridReader QueryMultiple(string sql, dynamic param = null);
+		SqlMapper.GridReader QueryMultiple(string sql, dynamic param = null, int? commandTimeout = null, CommandType? commandType = null);
 
         IDbConnection Connection { get; }
         IDbTransaction CurrentTransaction { get; }
