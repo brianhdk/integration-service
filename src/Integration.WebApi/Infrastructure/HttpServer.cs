@@ -34,7 +34,7 @@ namespace Vertica.Integration.WebApi.Infrastructure
 	        _kernel = kernel;
 	        _console = kernel.Resolve<IConsoleWriter>();
 
-            Output($"Starting HttpServer listening on URL: {url}.");
+            Output($"Starting HttpServer listening on URL: {url}");
 
 			// TODO: Make it possible to add multiple URL's to listen on
 	        _httpServer = WebApp.Start(new StartOptions(url), builder =>
@@ -115,15 +115,17 @@ namespace Vertica.Integration.WebApi.Infrastructure
         {
             if (_httpServer != null)
             {
-	            Output("Shutting down.");
+	            Output("Stopping");
 
 	            _httpServer.Dispose();
+
+                Output("Stopped");
             }
         }
         
         private void Output(string message)
         {
-            _console.WriteLine($"[HttpServer]: {message}");
+            _console.WriteLine($"[HttpServer]: {message}.");
         }
 
         private class OwinConfiguration : IOwinConfiguration

@@ -67,7 +67,7 @@ namespace Vertica.Integration
             _hosts = _container.Resolve<IHostFactory>().GetAll();
 		    _console = _container.Resolve<IConsoleWriter>();
 
-		    _console.WriteLine("[Integration Service]: Started UTC @ {0}.", _startedAt);
+		    _console.WriteLine("[Integration Service]: Started at {0} (UTC).", _startedAt);
         }
 
         public static IApplicationContext Create(Action<ApplicationConfiguration> application = null)
@@ -195,6 +195,8 @@ namespace Vertica.Integration
 
                 if (span.Seconds > 0)
                     segments.Add($"{span.Seconds} second{(span.Seconds == 1 ? string.Empty : "s")}");
+
+                segments.Add($"(started at {_startedAt} (UTC))");
 
                 return string.Join(" ", segments);
             }

@@ -10,49 +10,54 @@ using Vertica.Utilities_v4.Extensions.StringExt;
 
 namespace Vertica.Integration.Infrastructure.Archiving
 {
-	internal class FileBasedArchiveService : IArchiveService
+    public class FileBasedArchiveService : IArchiveService
 	{
-		private readonly string _baseDirectory;
+		private readonly DirectoryInfo _baseDirectory;
 		private readonly ILogger _logger;
 
-		public const string BaseDirectoryKey = "FileBasedArchiveService.BaseDirectory";
+        internal const string BaseDirectoryKey = "FileBasedArchiveService.BaseDirectory";
 
 		public FileBasedArchiveService(IRuntimeSettings settings, ILogger logger)
 		{
-			_baseDirectory = settings[BaseDirectoryKey].NullIfEmpty() ?? "Data\\Archives";
+		    _baseDirectory = new DirectoryInfo(settings[BaseDirectoryKey].NullIfEmpty() ?? "Data\\Archives");
 
-			if (!Directory.Exists(_baseDirectory))
-				Directory.CreateDirectory(_baseDirectory);
+			EnsureBaseDirectory();
 
 			_logger = logger;
 		}
 
-		public BeginArchive Create(string name, Action<ArchiveCreated> onCreated = null)
+	    public BeginArchive Create(string name, Action<ArchiveCreated> onCreated = null)
 		{
 			return new BeginArchive(name, (stream, options) =>
 			{
-				string archiveId = Guid.NewGuid().ToString("N");
+				string archiveId = CreateNewArchiveId();
 
-				Directory.CreateDirectory(_baseDirectory);
+				EnsureBaseDirectory();
 
-				FileInfo filePath = new FileInfo(Path.Combine(_baseDirectory, $"{archiveId}.zip"));
+				FileInfo filePath = new FileInfo(Path.Combine(_baseDirectory.FullName, $"{archiveId}.zip"));
 
 				File.WriteAllBytes(filePath.FullName, stream.ToArray());
 				File.WriteAllText(MetaFilePath(filePath).FullName, new MetaFile(options).ToString());
 
-				if (onCreated != null)
-					onCreated(new ArchiveCreated(archiveId));
-			});
+                onCreated?.Invoke(new ArchiveCreated(archiveId));
+            });
 		}
 
-		public Archive[] GetAll()
+	    protected virtual string CreateNewArchiveId()
+	    {
+	        return Guid.NewGuid().ToString("N");
+	    }
+
+	    public Archive[] GetAll()
 		{
 			return Archives().Select(Map).ToArray();
 		}
 
 		public byte[] Get(string id)
 		{
-			string filePath = Path.Combine(_baseDirectory, $"{id}.zip");
+		    if (string.IsNullOrWhiteSpace(id)) throw new ArgumentException(@"Value cannot be null or empty", nameof(id));
+		    
+			string filePath = Path.Combine(_baseDirectory.FullName, $"{id}.zip");
 
 			if (!File.Exists(filePath))
 				return null;
@@ -92,7 +97,13 @@ namespace Vertica.Integration.Infrastructure.Archiving
 			return deleted;
 		}
 
-		private static void DeleteArchive(FileInfo archiveFile)
+        private void EnsureBaseDirectory()
+        {
+            if (!_baseDirectory.Exists)
+                _baseDirectory.Create();
+        }
+
+        private static void DeleteArchive(FileInfo archiveFile)
 		{
 			FileInfo metaFile = MetaFilePath(archiveFile);
 
@@ -104,7 +115,9 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
 		private IEnumerable<FileInfo> Archives()
 		{
-			return new DirectoryInfo(_baseDirectory).EnumerateFiles("*.zip", SearchOption.AllDirectories);
+            EnsureBaseDirectory();
+
+			return _baseDirectory.EnumerateFiles("*.zip", SearchOption.AllDirectories);
 		}
 
 		private Archive Map(FileInfo archiveFile)
@@ -117,8 +130,8 @@ namespace Vertica.Integration.Infrastructure.Archiving
 				Created = archiveFile.CreationTimeUtc,
 				ByteSize = archiveFile.Length,
 				Name = metaFile != null ? metaFile.Name : archiveFile.Name,
-				GroupName = metaFile != null ? metaFile.GroupName : null,
-				Expires = metaFile != null ? metaFile.Expires : null
+				GroupName = metaFile?.GroupName,
+				Expires = metaFile?.Expires
 			};
 		}
 
