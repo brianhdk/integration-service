@@ -16,7 +16,7 @@ namespace Vertica.Integration.WebApi.Controllers
 
         public virtual HttpResponseMessage Get()
         {
-            return Request.CreateResponse(HttpStatusCode.OK, $"Running. {_uptime}");
+            return Request.CreateResponse(HttpStatusCode.OK, $"Running. {_uptime.UptimeText}");
         }
     }
 }
