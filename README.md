@@ -2061,7 +2061,96 @@ dependency of
 
 ## How to Change Logger
 
-TBD. 
+You can easily change the logger implementation, by following the example below:
+
+```c#
+namespace ConsoleApplication16
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            IntegrationStartup.Run(args, application => application
+                .Logging(logging => logging.EventLogger()));
+        }
+    }
+}
+```
+
+Built-in there are a number of implementations, e.g. EventLogger and TextFileLogger, but it's also possible to provide custom implementations of the **Vertica.Integration.Infrastructure.Logging.ILogger**-interface:
+
+```c#
+namespace ConsoleApplication16
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            IntegrationStartup.Run(args, application => application
+                .Logging(logging => logging
+                    .Use<MyCustomLogger>())
+                .Services(services => services
+                    .Advanced(advanced => advanced
+                        .Register<ILogger, MyCustomLogger>())));
+        }
+    }
+
+    public class MyCustomLogger : Logger
+    {
+        protected override string Insert(TaskLog log)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected override string Insert(MessageLog log)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected override string Insert(StepLog log)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected override string Insert(ErrorLog log)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected override void Update(TaskLog log)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected override void Update(StepLog log)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+}
+```
+
+In the example above, we actually derive from base class **Vertica.Integration.Infrastructure.Logging.Loggers.Logger**, which is adviced.
+
+Also remember to register the implementation, as shown above.
+
+You can also disable the logger entirely:
+
+
+```c#
+namespace ConsoleApplication16
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            IntegrationStartup.Run(args, application => application
+                .Logging(logging => logging.Disable()));
+        }
+    }
+}
+```
+
 [Back to Table of Contents](#table-of-contents)
 
 ## How to Register Custom dependencies/services
