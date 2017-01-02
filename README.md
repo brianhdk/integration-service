@@ -2083,7 +2083,9 @@ namespace ConsoleApplication16
         static void Main(string[] args)
         {
             IntegrationStartup.Run(args, application => application
-                .AddCustomInstaller(Install.ByConvention.AddFromAssemblyOfThis<ISomeService>())
+                .Services(services => services
+                    .Conventions(conventions => conventions
+                        .AddFromAssemblyOfThis<ISomeService>()))
                 .Tasks(tasks => tasks.Task<UseSomeServiceTask>()));
         }
     }
@@ -2140,7 +2142,9 @@ namespace ConsoleApplication16
         static void Main(string[] args)
         {
             IntegrationStartup.Run(args, application => application
-                .AddCustomInstaller(new CustomInstaller())
+                .Services(services => services
+                    .Advanced(advanced => advanced
+                        .Install(new CustomInstaller())))
                 .Tasks(tasks => tasks
                     .Task<UseComplexFactoryTask>()));
         }
