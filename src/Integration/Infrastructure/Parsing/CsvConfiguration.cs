@@ -1,10 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
+using Vertica.Utilities_v4.Extensions.EnumerableExt;
 
 namespace Vertica.Integration.Infrastructure.Parsing
 {
     public class CsvConfiguration
     {
+        private static readonly HashSet<string> AllowedDelimiters = new[]
+        {
+            "\t"
+        }.ToHashSet(StringComparer.OrdinalIgnoreCase);
+
         public const string DefaultDelimiter = ";";
 
         public CsvConfiguration()
@@ -32,7 +39,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
         public CsvConfiguration ChangeDelimiter(string delimiter)
         {
-            if (string.IsNullOrWhiteSpace(delimiter)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(delimiter));
+            if (string.IsNullOrWhiteSpace(delimiter) && !AllowedDelimiters.Contains(delimiter)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(delimiter));
 
             Delimiter = delimiter;
 

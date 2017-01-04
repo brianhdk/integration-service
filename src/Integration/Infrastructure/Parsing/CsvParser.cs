@@ -8,14 +8,23 @@ namespace Vertica.Integration.Infrastructure.Parsing
 {
     public class CsvParser : ICsvParser
 	{
+        public IEnumerable<CsvRow> ParseFromFile(FileInfo file, Action<CsvConfiguration> csv = null)
+        {
+            if (file == null) throw new ArgumentNullException(nameof(file));
+
+            using (FileStream stream = file.OpenRead())
+            {
+                return Parse(stream, csv);
+            }
+        }
+
         public IEnumerable<CsvRow> Parse(Stream stream, Action<CsvConfiguration> csv = null)
 		{
 	        if (stream == null) throw new ArgumentNullException(nameof(stream));
 
 			var configuration = new CsvConfiguration();
 
-			if (csv != null)
-				csv(configuration);
+            csv?.Invoke(configuration);
 
             string[][] lines = Read(stream, configuration).ToArray();
 

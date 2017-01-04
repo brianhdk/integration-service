@@ -28,6 +28,24 @@ namespace Vertica.Integration.Tests.Infrastructure.Parsing
         }
 
         [Test]
+        public void Parse_Tab_Delimiter()
+        {
+            CsvRow[] rows = Parse($"Row1-Field1\tRow1-Field2{Environment.NewLine}Row2-LongerField1\tRow2-Field2",
+                csv => csv
+                    .NoHeaders()
+                    .ChangeDelimiter("\t"));
+
+            Assert.That(rows.Length, Is.EqualTo(2));
+            Assert.That(rows[0][0], Is.EqualTo("Row1-Field1"));
+            Assert.That(rows[0][1], Is.EqualTo("Row1-Field2"));
+            Assert.That(rows[1][0], Is.EqualTo("Row2-LongerField1"));
+            Assert.That(rows[1][1], Is.EqualTo("Row2-Field2"));
+
+            Assert.That(rows[0].ToString(), Is.EqualTo("Row1-Field1\tRow1-Field2"));
+            Assert.That(rows[1].ToString(), Is.EqualTo("Row2-LongerField1\tRow2-Field2"));
+        }
+
+        [Test]
         public void Parse_Header_Default_Delimiter()
         {
             CsvRow[] rows = Parse(string.Join(Environment.NewLine, 

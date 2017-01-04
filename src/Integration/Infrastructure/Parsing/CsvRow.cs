@@ -70,8 +70,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
         private int GetIndexByName(string name)
         {
             if (_headers == null)
-                throw new InvalidOperationException(
-					string.Format("Row was not initialized with headers."));
+                throw new InvalidOperationException("Row was not initialized with headers.");
 
             int index;
             if (!_headers.TryGetValue(name, out index))
@@ -114,7 +113,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
         public override bool TrySetMember(SetMemberBinder binder, object value)
         {
-            this[binder.Name] = value != null ? value.ToString() : null;
+            this[binder.Name] = value?.ToString();
 
             return true;
         }
@@ -136,7 +135,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
             {
                 builder.Add(headers
                     .Select(x => x.GetValue(element))
-                    .Select(x => x != null ? x.ToString() : null)
+                    .Select(x => x?.ToString())
                     .ToArray());
             }
 
