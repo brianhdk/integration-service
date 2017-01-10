@@ -2609,7 +2609,48 @@ Only tasks that have been explicity marked as "AllowConcurrentExecution" will th
   </appSettings>
 ```
 
-TODO: Document the IPreventConcurrentExecutionRuntimeEvaluator feature.
+If you need to decide at runtime whether to use Distributed Mutex or not, e.g. if it depends on specific conditions or configuration, you can use utilize the **IPreventConcurrentTaskExecutionRuntimeEvaluator**-feature.
+Implementing this interface requires you to implement just one single method, which returns a true/false on whether to enable it or not.
+
+Below is an example of such a class:
+
+```c#
+public class MyCustomEvaluator : IPreventConcurrentTaskExecutionRuntimeEvaluator
+{
+    private readonly DisabledIfIntegrationDbIsDisabled _inner;
+
+    public MyCustomEvaluator(DisabledIfIntegrationDbIsDisabled inner)
+    {
+        _inner = inner;
+    }
+
+    public bool Disabled(ITask currentTask, Arguments arguments)
+    {
+        return
+            _inner.Disabled(currentTask, arguments) ||
+            arguments.Contains("AllowConcurrentExecution");
+    }
+}
+```
+
+When implementing your own custom classes, you need to make sure that these classes are registred. Below is an example on how to do that:
+
+```c#
+using (IApplicationContext context = ApplicationContext.Create(application => application
+    .Tasks(tasks => tasks
+        .AddFromAssemblyOfThis<Program>()
+        .ConcurrentTaskExecution(concurrentTaskExecution =>
+            concurrentTaskExecution.AddFromAssemblyOfThis<Program>()))))
+{
+    // 
+}
+```
+
+The example above will register all public classes, in the same assembly as Program, that implements the **IPreventConcurrentTaskExecutionRuntimeEvaluator**-interface.
+
+ - DisabledIfEnvironmentIsDevelopment
+ - DisabledIfIntegrationDbIsDisabled
+
 TODO: Document the IPreventConcurrentTaskExecutionCustomLockName feature.
 
 [Back to Table of Contents](#table-of-contents)

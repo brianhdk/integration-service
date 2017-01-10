@@ -1,9 +1,5 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Vertica.Integration;
+﻿using Vertica.Integration;
 using Vertica.Integration.Domain.LiteServer;
-using Vertica.Integration.Infrastructure.Parsing;
 using Vertica.Integration.Slack;
 
 namespace Experiments.Slack
@@ -23,7 +19,7 @@ namespace Experiments.Slack
                     .MessageHandlers(messageHandlers => messageHandlers.AddFromAssemblyOfThis<Program>())
                     .BotCommands(botCommands => botCommands.AddFromAssemblyOfThis<Program>()))))
 			{
-				//context.Execute(args);
+				context.Execute(args);
 			}
 		}
 	}

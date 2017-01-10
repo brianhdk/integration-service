@@ -11,11 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Logging.Elmah",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Experiments", "src\Integration.Experiments\Integration.Experiments.csproj", "{A418FF22-74E1-42EB-A0BF-97DA7993647B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".misc", ".misc", "{E76306EF-7D01-40B8-A822-33BA4C4249DA}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".git", ".git", "{E76306EF-7D01-40B8-A822-33BA4C4249DA}"
 	ProjectSection(SolutionItems) = preProject
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
-		Invoke-Test.ps1 = Invoke-Test.ps1
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Portal", "src\Integration.Portal\Integration.Portal.csproj", "{BE14DA0E-31C6-4417-8EC6-ED1658B51FA9}"

@@ -21,48 +21,11 @@ namespace Experiments.ConcurrentTasks
             var db = ConnectionString.FromText("Server=.\\SQLExpress;Database=IS_ConcurrentTasks;Trusted_Connection=True;");
 
             using (IApplicationContext context = ApplicationContext.Create(application => application
-                .Database(database => database
-                    .IntegrationDb(integrationDb => integrationDb
-                        .Connection(db)
-                        .PrefixTables("IntegrationService6.")))
-                .UseLiteServer(server => server
-                    .AddFromAssemblyOfThis<Program>()
-                    .OnStartup(startup => startup.RunMigrateTask()))
-                .UseWebApi(webApi => webApi
-                    .AddToLiteServer()
-                    .WithPortal())
-                .UseUCommerce(uCommerce => uCommerce
-                    .Connection(new CustomUCommerceDb()))
-                .UseHangfire(hangfire => hangfire
-                    .AddFromAssemblyOfThis<Program>()
-                    .AddToLiteServer()
-                    .Configuration(configuration => configuration
-                        .UseSqlServerStorage(db, new SqlServerStorageOptions
-                        {
-                            QueuePollInterval = TimeSpan.FromSeconds(1),
-                        })))
                 .Tasks(tasks => tasks
                     .AddFromAssemblyOfThis<Program>()
-                    .MaintenanceTask(task => task
-                        //.IncludeElmah()
-                        .IncludeUCommerce())
-                    .MonitorTask(task => task
-                        .IncludeElmah())
-                    .ConcurrentTaskExecution(concurrentTaskExecution => concurrentTaskExecution.AddFromAssemblyOfThis<Program>()))
-                .Services(services => services
-                    .Conventions(conventions => conventions
-                        .AddFromAssemblyOfThis<Program>()))))
+                    .ConcurrentTaskExecution(concurrentTaskExecution =>
+                        concurrentTaskExecution.AddFromAssemblyOfThis<Program>()))))
             {
-                var shutdown = context.Resolve<IShutdown>();
-                var liteServer = context.Resolve<ILiteServerFactory>();
-
-                RecurringJob.AddOrUpdate<ITaskByNameRunner>(nameof(ConcurrentExecutableTask), x => x.Run(nameof(ConcurrentExecutableTask)), Cron.Minutely);
-                RecurringJob.AddOrUpdate<ITaskByNameRunner>(nameof(SynchronousOnlyTask), x => x.Run(nameof(SynchronousOnlyTask)), Cron.Minutely);
-
-                using (liteServer.Create())
-                {
-                    shutdown.WaitForShutdown();
-                }
             }
         }
     }
