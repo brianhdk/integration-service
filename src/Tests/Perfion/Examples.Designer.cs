@@ -64,8 +64,8 @@ namespace Vertica.Integration.Tests.Perfion {
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;
         ///&lt;Data totalExecutionTime=&quot;00:00:00.1682599&quot;&gt;
         ///	&lt;Features&gt;
-        ///		&lt;Category id=&quot;102&quot; language=&quot;dan&quot; caption=&quot;Kategori&quot; captionAlternative=&quot;&quot; unit=&quot;&quot; abbr=&quot;&quot; group=&quot;Generelt&quot; groupOrder=&quot;0&quot; viewGroup=&quot;&quot; viewGroupOrder=&quot;0&quot; viewOrder=&quot;2147483647&quot; form=&quot;Complex&quot; dataType=&quot;String&quot; /&gt;
-        ///		&lt;Category id=&quot;102&quot; language=&quot;en&quot; caption=&quot;Category&quot; captionAlternative=&quot;&quot; unit=&quot;&quot; abbr=&quot;&quot; group=&quot;General&quot; groupOrder=&quot;0&quot; viewGroup=&quot;&quot; viewGroupOrder=&quot;0&quot; viewOrder=&quot;2147483647&quot; form=&quot;Complex&quot; da [rest of string was truncated]&quot;;.
+        ///		&lt;Category id=&quot;102&quot; language=&quot;dan&quot; caption=&quot;Kategori&quot; captionAlternative=&quot;&quot; unit=&quot;UnitDAN&quot; abbr=&quot;&quot; group=&quot;Generelt&quot; groupOrder=&quot;0&quot; viewGroup=&quot;&quot; viewGroupOrder=&quot;0&quot; viewOrder=&quot;2147483647&quot; form=&quot;Complex&quot; dataType=&quot;String&quot; /&gt;
+        ///		&lt;Category id=&quot;102&quot; language=&quot;en&quot; caption=&quot;Category&quot; captionAlternative=&quot;&quot; unit=&quot;UnitEN&quot; abbr=&quot;&quot; group=&quot;General&quot; groupOrder=&quot;0&quot; viewGroup=&quot;&quot; viewGroupOrder=&quot;0&quot; viewOrder=&quot;2147483647&quot; form [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Example1 {
             get {
