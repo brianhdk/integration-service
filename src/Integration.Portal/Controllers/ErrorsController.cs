@@ -50,7 +50,7 @@ ORDER BY TimeStamp DESC
             if (_configuration.Disabled)
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Not found.");
 
-            string sql = @"
+            string sql = $@"
 SELECT [Id]
       ,[MachineName]
       ,[IdentityName]
