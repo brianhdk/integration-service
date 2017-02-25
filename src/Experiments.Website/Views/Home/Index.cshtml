@@ -1,0 +1,22 @@
+﻿@model Vertica.Integration.Model.TaskExecutionResult
+
+@{
+    ViewBag.Title = "Home";
+}
+
+<h2>Home</h2>
+
+<ul>
+    @foreach (var line in Model.Output)
+    {
+        <li>@line</li>
+    }
+</ul>
+
+
+<ul>
+    @foreach (var exception in StaticLogger.Exceptions)
+    {
+        <li>@exception.Message</li>
+    }
+</ul>

@@ -13,6 +13,7 @@ using Microsoft.Owin.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Owin;
+using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.WebApi.Infrastructure.Castle.Windsor;
@@ -50,7 +51,10 @@ namespace Vertica.Integration.WebApi.Infrastructure
 
 				MapRoutes(httpConfiguration);
 
-				builder.UseWebApi(httpConfiguration);
+                var properties = httpConfiguration.Properties;
+                properties["host.OnAppDisposing"] = kernel.Resolve<IShutdown>().Token;
+                
+                builder.UseWebApi(httpConfiguration);
             });
         }
 

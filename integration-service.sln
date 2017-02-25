@@ -85,6 +85,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Experiments.MaintenanceTask
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Elasticsearch", "src\Integration.Elasticsearch\Integration.Elasticsearch.csproj", "{D755AB1A-90E7-4E81-9F86-C574E1695A71}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.WebHost", "src\Integration.WebHost\Integration.WebHost.csproj", "{317D57D1-6A15-4D13-A789-1381817A7E6F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Experiments.Website", "src\Experiments.Website\Experiments.Website.csproj", "{E7DE3E0A-BCEC-419C-BBE7-6F9645CAEB87}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -199,6 +203,14 @@ Global
 		{D755AB1A-90E7-4E81-9F86-C574E1695A71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D755AB1A-90E7-4E81-9F86-C574E1695A71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D755AB1A-90E7-4E81-9F86-C574E1695A71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{317D57D1-6A15-4D13-A789-1381817A7E6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{317D57D1-6A15-4D13-A789-1381817A7E6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{317D57D1-6A15-4D13-A789-1381817A7E6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{317D57D1-6A15-4D13-A789-1381817A7E6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7DE3E0A-BCEC-419C-BBE7-6F9645CAEB87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7DE3E0A-BCEC-419C-BBE7-6F9645CAEB87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7DE3E0A-BCEC-419C-BBE7-6F9645CAEB87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7DE3E0A-BCEC-419C-BBE7-6F9645CAEB87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -212,5 +224,6 @@ Global
 		{8216C2D0-33F6-442C-99F8-D566ACCE37E5} = {960ECE29-BE4A-4CB8-A7FA-91F696811BA5}
 		{11A1D3ED-75A6-4596-A791-9FB98D9B7105} = {960ECE29-BE4A-4CB8-A7FA-91F696811BA5}
 		{1A983103-BBBD-47BC-9258-83E437DF4751} = {960ECE29-BE4A-4CB8-A7FA-91F696811BA5}
+		{E7DE3E0A-BCEC-419C-BBE7-6F9645CAEB87} = {960ECE29-BE4A-4CB8-A7FA-91F696811BA5}
 	EndGlobalSection
 EndGlobal

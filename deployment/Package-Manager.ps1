@@ -12,6 +12,7 @@ $settings = @{
     "src" = @{
         "integration" = Resolve-Path $script_directory\..\src\Integration
         "integration_host" = Resolve-Path $script_directory\..\src\Integration.Host
+        "integration_webhost" = Resolve-Path $script_directory\..\src\Integration.WebHost
 		"integration_webapi" = Resolve-Path $script_directory\..\src\Integration.WebApi
 		"integration_webapi_signalr" = Resolve-Path $script_directory\..\src\Integration.WebApi.SignalR
         #"integration_windowstaskscheduler" = Resolve-Path $script_directory\..\src\Integration.WindowsTaskScheduler
