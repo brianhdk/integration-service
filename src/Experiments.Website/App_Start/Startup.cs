@@ -18,14 +18,13 @@ namespace Experiments.Website
         public void Configuration(IAppBuilder app)
         {
             app.UseIntegrationService(application => application
-                .Database(database => database.IntegrationDb(integrationDb => integrationDb.Disable()))
-                .Logging(logging => logging.Use<StaticLogger>())
                 .Tasks(tasks => tasks.AddFromAssemblyOfThis<Startup>())
                 .Services(services => services.Conventions(conventions => conventions.AddFromAssemblyOfThis<Startup>()))
                 .UseSlack(slack => slack
-                    //.AttachToConsoleWriter()
+                    .AddToLiteServer()
+                    .AttachToConsoleWriter()
                     .BotCommands(botCommands => botCommands.AddFromAssemblyOfThis<Startup>())
-                    .AddToLiteServer())
+                )
                 .UseHangfire(hangfire => hangfire
                     .AddToLiteServer()
                     .Configuration(configuration => configuration
@@ -37,6 +36,7 @@ namespace Experiments.Website
                 )
                 .UseLiteServer(liteServer => liteServer.AddFromAssemblyOfThis<Startup>()));
 
+            // Will run the LiteServer feature "in the background"
             app.RunIntegrationService(nameof(LiteServerHost));
 
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
