@@ -2,7 +2,6 @@
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
-using System.ServiceModel;
 using System.Xml.Linq;
 using Castle.MicroKernel;
 using Vertica.Integration.Infrastructure.Archiving;
@@ -23,24 +22,30 @@ namespace Vertica.Integration.Perfion
 			_kernel = kernel;
 		}
 
-		public PerfionXml Query(string query)
+		public PerfionXml Query(string query, Action<QueryArchiveOptions> archive = null)
 		{
 			return Client(client =>
 			{
-				string xml = client.ExecuteQuery(query);
+				string xml = client.ExecuteQuery(new ExecuteQueryRequest { Body = new ExecuteQueryRequestBody(query) }).Body.ExecuteQueryResult;
 
-				ArchiveCreated archive = null;
+				ArchiveCreated archiveCreated = null;
 
-				ArchiveOptions archiveOptions = _configuration.ArchiveOptions;
+                ArchiveOptions globalArchiveOptions = _configuration.ArchiveOptions;
+                QueryArchiveOptions localArchiveOptions = GetLocalArchiveOptions(archive, globalArchiveOptions);
 
-				if (archiveOptions != null)
+			    ArchiveOptions finalArchiveOptions = localArchiveOptions ?? globalArchiveOptions;
+
+			    if (localArchiveOptions != null && localArchiveOptions.Disabled)
+			        finalArchiveOptions = null;
+
+				if (finalArchiveOptions != null)
 				{
-					archive = _archive.Archive(archiveOptions.Name, newArchive =>
+					archiveCreated = _archive.Archive(finalArchiveOptions.Name, newArchive =>
 					{
-						newArchive.Options.GroupedBy(archiveOptions.GroupName);
+						newArchive.Options.GroupedBy(finalArchiveOptions.GroupName);
 
-						if (archiveOptions.Expires.HasValue)
-							newArchive.Options.ExpiresOn(archiveOptions.Expires.Value);
+						if (finalArchiveOptions.Expires.HasValue)
+							newArchive.Options.ExpiresOn(finalArchiveOptions.Expires.Value);
 
 						newArchive
 							.IncludeContent("Query.xml", query)
@@ -50,12 +55,37 @@ namespace Vertica.Integration.Perfion
 
 				return new PerfionXml(this, XDocument.Parse(xml))
 				{
-					Archive = archive
+					Archive = archiveCreated
 				};
 			});
 		}
 
-		public byte[] DownloadFile(Guid id)
+	    private static QueryArchiveOptions GetLocalArchiveOptions(Action<QueryArchiveOptions> archive, ArchiveOptions archiveOptions)
+	    {
+	        if (archive == null)
+	            return null;
+
+	        var result = new QueryArchiveOptions(archiveOptions?.Name ?? "Data");
+
+            result.GroupedBy(archiveOptions?.GroupName ?? "Perfion");
+
+	        if (archiveOptions != null)
+	        {
+	            if (archiveOptions.Expires.HasValue)
+	            {
+	                result.ExpiresOn(archiveOptions.Expires.Value);
+	            }
+	        }
+	        else
+	        {
+	            result.ExpiresAfterMonths(1);
+	        }
+
+	        archive(result);
+	        return result;
+	    }
+
+	    public byte[] DownloadFile(Guid id)
 		{
 			return Download("File.aspx", id);
 		}
@@ -114,40 +144,11 @@ namespace Vertica.Integration.Perfion
 			return builder.Uri;
 		}
 
-		private T Client<T>(Func<GetDataSoapClient, T> client)
+		private T Client<T>(Func<GetDataSoap, T> client)
 		{
 			if (client == null) throw new ArgumentNullException(nameof(client));
 
-			var binding = new BasicHttpBinding
-			{
-				Name = "PerfionService",
-				MaxReceivedMessageSize = _configuration.ServiceClientConfiguration.MaxReceivedMessageSize,
-				ReceiveTimeout = _configuration.ServiceClientConfiguration.ReceiveTimeout,
-				SendTimeout = _configuration.ServiceClientConfiguration.SendTimeout
-			};
-
-			_configuration.ServiceClientConfiguration.BindingInternal?.Invoke(_kernel, binding);
-
-			var proxy = new GetDataSoapClient(binding, new EndpointAddress(_configuration.ConnectionString));
-
-			_configuration.ServiceClientConfiguration.ClientCredentialsInternal?.Invoke(_kernel, proxy.ClientCredentials);
-
-			try
-			{
-				return client(proxy);
-			}
-			finally
-			{
-				try
-				{
-					proxy.Close();
-				}
-				catch
-				{
-					proxy.Abort();
-					throw;
-				}
-			}
+		    return _configuration.WithProxy(_kernel, client);
 		}
 	}
 }

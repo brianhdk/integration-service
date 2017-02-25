@@ -1924,6 +1924,7 @@ namespace ConsoleApplication16
 					// ... or just simply add a connection-string element in app.config, name it "Perfion.APIService.Url" and we'll auto-wire it up.
 
 					// Enable archiving lets us create an entry in the archive with the data retrieved from Perfion
+                    //  - you can also specify archiving options individually on each query
 					.EnableArchiving()
 
 					// Allows you to modify the behaviour of the WCF service - e.g. setting credentials, timeouts and more
@@ -1952,6 +1953,7 @@ namespace ConsoleApplication16
 
 		public override void StartTask(ITaskExecutionContext context)
 		{
+            // See overload on this method, to be able to enable/disable archiving for this particular query
 			PerfionXml xml = _perfion.Query(@"
 <Query>
 	<Select languages='EN'>

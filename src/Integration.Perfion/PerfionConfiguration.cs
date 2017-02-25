@@ -1,6 +1,9 @@
 ﻿using System;
+using System.ServiceModel;
+using Castle.MicroKernel;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Archiving;
+using Vertica.Integration.Perfion.PerfionAPIService;
 
 namespace Vertica.Integration.Perfion
 {
@@ -91,6 +94,42 @@ namespace Vertica.Integration.Perfion
             public ArchiveOptions ArchiveOptions { get; set; }
             public ServiceClientConfiguration ServiceClientConfiguration { get; }
             public WebClientConfiguration WebClientConfiguration { get; }
+
+            public T WithProxy<T>(IKernel kernel, Func<GetDataSoap, T> client)
+            {
+                if (kernel == null) throw new ArgumentNullException(nameof(kernel));
+
+                var binding = new BasicHttpBinding
+                {
+                    Name = "PerfionService",
+                    MaxReceivedMessageSize = ServiceClientConfiguration.MaxReceivedMessageSize,
+                    ReceiveTimeout = ServiceClientConfiguration.ReceiveTimeout,
+                    SendTimeout = ServiceClientConfiguration.SendTimeout
+                };
+
+                ServiceClientConfiguration.BindingInternal?.Invoke(kernel, binding);
+
+                GetDataSoapClient proxy = new GetDataSoapClient(binding, new EndpointAddress(ConnectionString));
+
+                ServiceClientConfiguration.ClientCredentialsInternal?.Invoke(kernel, proxy.ClientCredentials);
+                
+                try
+                {
+                    return client(proxy);
+                }
+                finally
+                {
+                    try
+                    {
+                        proxy.Close();
+                    }
+                    catch
+                    {
+                        proxy.Abort();
+                        throw;
+                    }
+                }
+            }
         }
 
         void IInitializable<ApplicationConfiguration>.Initialized(ApplicationConfiguration application)
