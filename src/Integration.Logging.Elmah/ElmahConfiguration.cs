@@ -15,6 +15,7 @@ namespace Vertica.Integration.Logging.Elmah
 
             CommandTimeout = TimeSpan.FromMinutes(5);
             CleanUpEntriesOlderThan = TimeSpan.FromDays(60);
+            BatchSize = 20;
         }
 
         public string LogName { get; set; }
@@ -24,6 +25,7 @@ namespace Vertica.Integration.Logging.Elmah
 
         public TimeSpan CommandTimeout { get; set; }
         public TimeSpan CleanUpEntriesOlderThan { get; set; }
+        public int BatchSize { get; set; }
         
         public bool Disabled { get; set; }
 

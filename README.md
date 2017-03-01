@@ -1417,7 +1417,8 @@ Integration Elmah is easy.
   Install-Package Vertica.Integration.Logging.Elmah
   ```
   
-2. Invoke the Extension Method *IncludeElmah()* part of registering **MonitorTask**
+2. Invoke the Extension Method *IncludeElmah()* part of registering **MonitorTask**. The same can be done for the **MaintenanceTask** for cleanup during maintenance. 
+
   ```c#
 using Vertica.Integration.Domain.Monitoring;
 using Vertica.Integration.Logging.Elmah;
@@ -1431,6 +1432,9 @@ namespace ConsoleApplication16
 			IntegrationStartup.Run(args, application => application
 				.Tasks(tasks => tasks
 					.MonitorTask(task => task
+						.IncludeElmah())
+
+					.MaintenanceTask(task => task
 						.IncludeElmah())));
 		}
 	}
