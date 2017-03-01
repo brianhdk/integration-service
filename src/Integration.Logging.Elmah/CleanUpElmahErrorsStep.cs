@@ -37,17 +37,20 @@ namespace Vertica.Integration.Logging.Elmah
             ElmahConfiguration configuration = workItem.Context<ElmahConfiguration>(ConfigurationName);
 
             DateTime lowerBound = DateTime.UtcNow.Date.Subtract(configuration.CleanUpEntriesOlderThan);
+            int batchSize = configuration.BatchSize;
 
             using (var connection = new SqlConnection(configuration.GetConnectionString()))
             using (SqlCommand command = connection.CreateCommand())
             {
                 connection.Open();
 
-                command.CommandTimeout = (int)configuration.CommandTimeout.TotalSeconds;
-                command.CommandText = "DELETE FROM [ELMAH_Error] WHERE [TimeUtc] <= @t";
-                command.Parameters.AddWithValue("t", lowerBound);
+                command.CommandTimeout = 0;
+                command.CommandText = DeleteSql;
 
-                int count = command.ExecuteNonQuery();
+                command.Parameters.AddWithValue("time", lowerBound);
+                command.Parameters.AddWithValue("batchSize", batchSize);
+
+                var count = (int) command.ExecuteScalar();
 
                 if (count > 0)
                     context.Log.Message("Deleted {0} entries older than '{1}'.", count, lowerBound);
@@ -56,5 +59,22 @@ namespace Vertica.Integration.Logging.Elmah
 
         public override string Description =>
 	        $"Deletes Elmah entries older than {_configuration.GetElmahConfiguration().CleanUpEntriesOlderThan.TotalDays} days";
+
+        private const string DeleteSql = @"
+DECLARE @DELETEDCOUNT INT
+SET @DELETEDCOUNT = 0
+
+DECLARE @BATCHCOUNT INT
+SET @BATCHCOUNT = @batchSize
+
+WHILE @BATCHCOUNT > 0
+BEGIN
+   DELETE TOP(@BATCHCOUNT) FROM [ELMAH_Error] WHERE TimeUtc <= @time
+   SET @BATCHCOUNT = @@ROWCOUNT
+   SET @DELETEDCOUNT = @DELETEDCOUNT + @BATCHCOUNT
+   WAITFOR DELAY '00:00:02' -- wait 2 secs to allow other processes access to the table
+END
+
+SELECT @DELETEDCOUNT";
     }
 }
