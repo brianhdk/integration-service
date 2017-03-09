@@ -5,12 +5,12 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
  - [How to Get Started](#how-to-get-started)
  - [Basics of Tasks](#basics-of-tasks)
  - [Bootstrapping Tasks](#bootstrapping-tasks)
- - [Built-in Tasks](#built-in-tasks) 
- - [Task Execution Flow](#task-execution-flow)  
- - [Scheduling Tasks](#scheduling-tasks)   
- - [Basics of LiteServer](#basics-of-liteserver)   
+ - [Built-in Tasks](#built-in-tasks)
+ - [Task Execution Flow](#task-execution-flow)
+ - [Scheduling Tasks](#scheduling-tasks)
+ - [Basics of LiteServer](#basics-of-liteserver)
  - [Basics of WebApi](#basics-of-webapi)
- - [Logging and Exceptions](#logging-and-exceptions) 
+ - [Logging and Exceptions](#logging-and-exceptions)
  - [Command Line Reference](#command-line-reference)
  - [Migrations](#migrations)
  - [Built-in Services](#built-in-services)
@@ -23,17 +23,17 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
  - [Setting up Portal](#setting-up-portal)
  - [Integrating Elmah](#integrating-elmah)
  - [Integrating Azure Blob Storage](#integrating-azure-blob-storage)
- - [Integrating Azure Service Bus Queue](#integrating-azure-service-bus-queue) 
+ - [Integrating Azure Service Bus Queue](#integrating-azure-service-bus-queue)
  - [Integrating Payment Service](#integrating-payment-service)
  - [Integrating RavenDB](#integrating-ravendb)
  - [Integrating MongoDB](#integrating-mongodb)
- - [Integrating SQLite](#integrating-sqlite) 
- - [Integrating Perfion PIM](#integrating-perfion-pim)  
- - [Integrating Hangfire](#integrating-hangfire)  
+ - [Integrating SQLite](#integrating-sqlite)
+ - [Integrating Perfion PIM](#integrating-perfion-pim)
+ - [Integrating Hangfire](#integrating-hangfire)
  - [How to Disable IntegrationDb](#how-to-disable-integrationdb)
- - [How to Change Logger](#how-to-change-logger) 
+ - [How to Change Logger](#how-to-change-logger)
  - [How to Register Custom dependencies/services](#how-to-register-custom-dependenciesservices)
- - [How to Setup connection to a custom database](#how-to-setup-connection-to-a-custom-database) 
+ - [How to Setup connection to a custom database](#how-to-setup-connection-to-a-custom-database)
  - [How to Setup MonitorFoldersStep](#how-to-setup-monitorfoldersstep)
  - [How to Extend MonitorTask](#how-to-extend-monitortask)
  - [How to Setup ArchiveFoldersStep](#how-to-setup-archivefoldersstep)
@@ -45,14 +45,14 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
 
 1. Choosing a Host for Integration Service.
 
-	Typically Integration Service is hosted through a simple .NET Console Application (.exe). Add a new "Console Application" project to your existing (or new solution). 
+	Typically Integration Service is hosted through a simple .NET Console Application (.exe). Add a new "Console Application" project to your existing (or new solution).
 
   **NOTE:** Later you'll add a Class Library project where all your actual implementation code will be placed.
 
 2. Install Integration Service via NuGet
 
 	**NOTE:** Make sure that you have a NuGet Package Source configured for URL: http://nuget.vertica.dk/nuget
-	
+
   ```
   Install-Package Vertica.Integration.Host
   ```
@@ -69,25 +69,25 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
           }
       }
   }
- 
+
   ```
 4. Open file app.config, and fill-out the [Placeholder]'s with actual values:
- 
+
   ### Database configuration
   *By default Integration Service requires a database - but this can be disabled. See section [How to Disable IntegrationDb](#how-to-disable-integrationdb) to read more about the option of running Integration Service without a database.*
 
   TODO: Document how to setup a table-prefix.
-  
+
   ```xml
   <connectionStrings>
       <add name="IntegrationDb" connectionString="Integrated Security=SSPI;Data Source=[NAME-OF-SQL-SERVER];Database=[NAME-OF-INTEGRATION-DATABASE]" />
-  </connectionStrings>  
+  </connectionStrings>
   ```
 
   Azure example:
   ```xml
   <add name="IntegrationDb" connectionString="Server=tcp:xxxx.database.windows.net,1433;Database=IntegrationDb;User ID=xxxx@xxxx;Password=xxxx;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" />
-  ```  
+  ```
 
   ### SMTP
   ```xml
@@ -97,31 +97,31 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
       </smtp>
   </mailSettings>
   ```
-  
+
   Mandrill example:
   ```xml
   <smtp from="xxxx@yyyy.zzzz">
         <network host="smtp.mandrillapp.com" userName="xxxx" password="xxxx" port="587" />
   </smtp>
-  ```    
+  ```
 
   Vertica example:
   ```xml
-  <smtp from="your-email@vertica.dk">
-        <network host="mail01.vertica.dk" />
+  <smtp deliveryMethod="Network" from="your-email@vertica.dk">
+        <network defaultCredentials="false" enableSsl="true" host="smtp.office365.com" port="587" password="askForPassword" userName="no-reply@vertica.dk" />
   </smtp>
-  ```    
-  
+  ```
+
 4. Run **MigrateTask** to ensure an up-to-date-schema
  - From Visual Studio, open Project Properties of your Console Application project, navigate to the "Debug"-tab, and write "MigrateTask" (without quotes) in the multi-line textbox "Command line arguments".
  - Make sure your project is "Set as StartUp Project" and then Start it: CTRL+F5 or F5
  - If the MigrateTask fails, you need to make sure that you have all necessary permissions to the database specified earlier (effectively we're changing the Db schema, and potentially creating a new database - so you need a lot of permission!).
 5. Next step is to create a new Class Library project which will contain your actual code/implementations. This is recommended to enforce separation, but it's not required. After creating your new Class Library project, install the following NuGet package to that project:
-  
+
   ```
   Install-Package Vertica.Integration
   ```
-  
+
   Finally make sure to add a reference from your Console Application project to this new Class Library project.
 6. You're now up and running with the Integration Service. Search the documentation to find examples on how to start using it, e.g. how to Tasks, how to setup custom Migrations, expose HTTP services, setup the Management Portal and much more. Good luck! Remember - any feedback is very much appreciated.
 
@@ -129,7 +129,7 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
 
 ## Basics of Tasks
 
-A Task is, in it's simplest form, a .NET class that inherits from **Vertica.Integration.Model.Task**. 
+A Task is, in it's simplest form, a .NET class that inherits from **Vertica.Integration.Model.Task**.
 A Task must implement two members:
 
 1. **Description** (Property)
@@ -181,7 +181,7 @@ namespace ConsoleApplication16
 
 See section [Bootstrapping Tasks](#bootstrapping-tasks) for more examples about bootstrapping tasks.
 
-The Integration Service also offers the possibility to create Tasks where the [Task Execution Flow](#task-execution-flow) can be divided into logical Steps. 
+The Integration Service also offers the possibility to create Tasks where the [Task Execution Flow](#task-execution-flow) can be divided into logical Steps.
 To implement a Task that has Steps, you need to define a class, refered to as a _WorkItem_, which will be passed from the Task to all Steps part of the [Task Execution Flow](#task-execution-flow).
 
 The example below creates a Task "MakeDeploymentTask" with a WorkItem-class named "MakeDeploymentWorkItem". Next three different Steps are created, specifying the same WorkItem-class.
@@ -294,14 +294,14 @@ namespace ConsoleApplication16
 }
 ```
 
-Steps will be executed sequentially and as previously mentioned in the exact same sequence/order as they are registered. 
+Steps will be executed sequentially and as previously mentioned in the exact same sequence/order as they are registered.
 An async flavour _might_ be added later, _if_ there's a demand for it.
 
 If your _WorkItem_ implements IDisposable Integration Service will make sure to call the Dispose()-method even if methods on Steps fail or if Task.End() fails.
 
 ### Tasks Behaviour and Lifetime
-Tasks are _Singletons_. You should therefore never keep any state within the lifetime of this object. 
-To ensure a nice decoupled architecture the Integration Service provides Constructor Injection for any dependency you should need in your Tasks. 
+Tasks are _Singletons_. You should therefore never keep any state within the lifetime of this object.
+To ensure a nice decoupled architecture the Integration Service provides Constructor Injection for any dependency you should need in your Tasks.
 By itself the Integration Service offers a number of services (see section [Built-in Services](#built-in-services)
 for more information about this) but you can of course register your own classes to be resolved by the IoC container (read more about this here [How to Register Custom dependencies/services](#how-to-register-custom-dependenciesservices)).
 
@@ -329,7 +329,7 @@ namespace ConsoleApplication16
     }
 }
 ```
-**NOTE** The example above will not compile. 
+**NOTE** The example above will not compile.
 
 From the TasksConfiguration you can:
 
@@ -417,7 +417,7 @@ IntegrationStartup.Run(args, application => application
 ```
 
 And you can of course combine these two examples, e.g. by moving the entire Tasks registration/configuration to an Extension Method (first example), and use another Extension Method for configuring the "MakeDeploymentTask".
-  
+
 [Back to Table of Contents](#table-of-contents)
 
 ## Built-in Tasks
@@ -441,7 +441,7 @@ And you can of course combine these two examples, e.g. by moving the entire Task
 	* **CleanUpIntegrationDbStep** - Deletes entries from Task- and ErrorLog that are older than a predefined period
 	* **CleanUpArchivesStep** - Deletes archives that are expired.
   * Requires registration to be available
-    * Use **MaintenanceTask(...)** extension method on the **TasksConfiguration** instance	
+    * Use **MaintenanceTask(...)** extension method on the **TasksConfiguration** instance
   * Can easily be extended with additional Steps to perform maintenance of other parts of the solution
 	* E.g. extended by the Elmah-package [Integrating Elmah](#integrating-elmah)
 	* See [How to Extend MaintenanceTask](#how-to-extend-maintenancetask)
@@ -453,15 +453,15 @@ And you can of course combine these two examples, e.g. by moving the entire Task
 	* ```.exe WriteDocumentationTask ToFile```
 4. **MigrateTask**
   * Task that internally uses FluentMigrator (https://github.com/schambers/fluentmigrator) to ensure up-to-date schema of the Integration Service.
-	* ```.exe MigrateTask```  
+	* ```.exe MigrateTask```
   * Can easily be extended with custom Migrations, only requirement is that the VersionInfo table can be stored in a SQL server
 	* See [Migrations](#migrations) for much more information about this and examples
-	
+
 [Back to Table of Contents](#table-of-contents)
 
 ## Task Execution Flow
 
-All Tasks are executed from **ITaskRunner**. 
+All Tasks are executed from **ITaskRunner**.
 
 ```c#
 namespace Vertica.Integration.Model
@@ -470,7 +470,7 @@ namespace Vertica.Integration.Model
 	{
         TaskExecutionResult Execute(ITask task, params string[] arguments);
 	}
-}  
+}
 ```
 
 The flow is:
@@ -481,7 +481,7 @@ The flow is:
 3. *task.Start(...)*-method is invoked and a specific *WorkItem* instance is created (if *task* has Steps)
 4. If *task* has Steps, this will happen:
   * In the order Steps are registred, they will sequentially be executed:
-    * Steps will first be asked if they require execution: 
+    * Steps will first be asked if they require execution:
 	   * *step.ContinueWith(workItem)* will be called
 	     * **Execution.StepOut** will break the execution of all steps
 		 * **Execution.StepOver** will skip this particular step but continue execution
@@ -495,7 +495,7 @@ As stated earlier, if an exception is thrown, this will abort the flow and assoc
 
 ## Scheduling Tasks
 
-TBD. 
+TBD.
  - Include desciption of WindowsTaskScheduler + WindowsService
 
 [Back to Table of Contents](#table-of-contents)
@@ -508,12 +508,12 @@ In LiteServer there's basically two components:
 
 1. **IBackgroundServer**
   * ... which is an interface, that you implement to create a long-running Task.
-2. **IBackgroundWorker** 
+2. **IBackgroundWorker**
   * ... which is an interface, that you implement to have specific code run on specific intervals, e.g. every 1 minute.
 
 You can use the built-in **LiteServerHost** to run it.
 
-TBD. 
+TBD.
 [Back to Table of Contents](#table-of-contents)
 
 ## Basics of WebApi
@@ -535,12 +535,12 @@ If you leave out the "url" argument, it will use the one specified in app.config
 
 ## Logging and Exceptions
 
-TBD. 
+TBD.
 [Back to Table of Contents](#table-of-contents)
 
 ## Command Line Reference
 
-TBD. 
+TBD.
 [Back to Table of Contents](#table-of-contents)
 
 ## Migrations
@@ -577,7 +577,7 @@ namespace ConsoleApplication16
 }
 ```
 
-The code above will ensure that all public classes in the same namespace as "M1434483770_AddCustomTableToIntegrationDb" will have the *Up()*-method invoked, if the migration has not already been executed previously. 
+The code above will ensure that all public classes in the same namespace as "M1434483770_AddCustomTableToIntegrationDb" will have the *Up()*-method invoked, if the migration has not already been executed previously.
 
 ```c#
 using System;
@@ -767,7 +767,7 @@ Finally the code above shows how to interact with the newly created table.
 
 ### Non DB related Migration - Running a Task
 
-This example shows that you can custom migrations are not always about updating a database schema. This simple migration illustrates how to run a specific task. This is useful if you need to run a specific task after a deployment to stage/production environment. E.g. if you need to re-import and re-index the catalog. 
+This example shows that you can custom migrations are not always about updating a database schema. This simple migration illustrates how to run a specific task. This is useful if you need to run a specific task after a deployment to stage/production environment. E.g. if you need to re-import and re-index the catalog.
 
 ```c#
 using ConsoleApplication16.Migrations.IntegrationDb;
@@ -868,7 +868,7 @@ TBD
 
 ### Migration of MonitorConfiguration
 
-Before you can run the **MonitorTask** you need to setup **MonitorConfiguration**. 
+Before you can run the **MonitorTask** you need to setup **MonitorConfiguration**.
 If you forget to do this, you'll end up getting warnings like the one below:
 
 *[WARNING] No recipients found for target 'Service'.*
@@ -977,25 +977,25 @@ namespace ClassLibrary2
 
 ### Migration of MaintenanceConfiguration
 
-TBD. 
+TBD.
 [Back to Table of Contents](#table-of-contents)
 
 ## Built-in Services
 
-TBD. 
+TBD.
 [Back to Table of Contents](#table-of-contents)
 
 ## Configurations
 
-TBD. 
+TBD.
 [Back to Table of Contents](#table-of-contents)
 
 ## Archives
 
-In short: You need 
+In short: You need
 TODO: Document the "DbArchiveService.DeleteBatchSize" setting that defines the batch size when deleting archives. Default batchsize is 20.
 
-TBD. 
+TBD.
 [Back to Table of Contents](#table-of-contents)
 
 ## CSV
@@ -1127,7 +1127,7 @@ TODO
 
 There is a built-in client for FTP - here are the steps to get you started:
 
-1. Create a constructor dependency on *IFtpClientFactory*. 
+1. Create a constructor dependency on *IFtpClientFactory*.
 2. Use the *Create(...)* method to have an instance of *IFtpClient* created.
 
 ### Example
@@ -1180,12 +1180,12 @@ namespace ConsoleApplication16
 
 ## HTTP
 
-Integration Service has a built-in factory that makes it easy to perform HTTP-requests. 
+Integration Service has a built-in factory that makes it easy to perform HTTP-requests.
 
-1. Create a constructor dependency on *IHttpClientFactory*. 
+1. Create a constructor dependency on *IHttpClientFactory*.
 2. Use the *Create()* method to have an instance of *HttpClient* created.
 3. Optionally install the "Microsoft.AspNet.WebApi.Client" NuGet package for a richer API:
-  
+
   ```
   Install-Package Microsoft.AspNet.WebApi.Client
   ```
@@ -1216,13 +1216,13 @@ namespace ConsoleApplication16
 			{
 				var request = new Request();
 
-				HttpResponseMessage httpResponse = 
+				HttpResponseMessage httpResponse =
 					httpClient.PutAsJsonAsync("http://localhost:8123/Service", request)
 						.Result;
 
 				httpResponse.EnsureSuccessStatusCode();
 
-				Response response = 
+				Response response =
 					httpResponse.Content.ReadAsAsync<Response>()
 						.Result;
 
@@ -1253,10 +1253,10 @@ namespace ConsoleApplication16
 ## Sending out e-mails
 
 
-Integration Service has a built-in service *IEmailService* to send out e-mails. 
+Integration Service has a built-in service *IEmailService* to send out e-mails.
 The default implementation of *IEmailService* uses the SMTP configuration, so before you use it, [make sure SMTP is configured correct](#smtp).
 
-*IEmailService* has a *Send(...)* method, which requires an instance of a class that inherits from the abstract class *EmailTemplate*. 
+*IEmailService* has a *Send(...)* method, which requires an instance of a class that inherits from the abstract class *EmailTemplate*.
 
 You can easily implement your own classes inheriting from *EmailTemplate* but in most cases the built-in *TextBasedEmailTemplate* is sufficient. Below is an example of a Task that sends an e-mail using the *TextBasedEmailTemplate* class:
 
@@ -1356,7 +1356,7 @@ using (var memoryStream = new MemoryStream())
 
 	var email = new TextBasedEmailTemplate("Some subject")
 		.AddAttachment(new Attachment(memoryStream, blob.Name));
-		
+
 	_emailService.Send(email, "bhk@vertica.dk");
 }
 ```
@@ -1374,7 +1374,7 @@ Setting up the Portal is easy.
   ```
   Install-Package Vertica.Integration.Portal
   ```
-  
+
 2. Invoke the Extension Method *UsePortal()* that effectively initializes the Portal
   ```c#
 using Vertica.Integration.Portal;
@@ -1399,7 +1399,7 @@ namespace ConsoleApplication16
 
   ... you can of course choose any Host Name and any Port Number other than localhost:8123 as mentioned above.
 4. Open your browser and navigate to http://localhost:8123
-  
+
 [Back to Table of Contents](#table-of-contents)
 
 ## Integrating Elmah
@@ -1416,7 +1416,7 @@ Integration Elmah is easy.
   ```
   Install-Package Vertica.Integration.Logging.Elmah
   ```
-  
+
 2. Invoke the Extension Method *IncludeElmah()* part of registering **MonitorTask**
   ```c#
 using Vertica.Integration.Domain.Monitoring;
@@ -1441,11 +1441,11 @@ namespace ConsoleApplication16
   ```xml
   <connectionStrings>
       <add name="Logging.ElmahDb" connectionString="Integrated Security=SSPI;Data Source=[NAME-OF-SQL-SERVER];Database=[NAME-OF-ELMAH-DATABASE]" />
-  </connectionStrings>  
-  ``` 
-  
+  </connectionStrings>
+  ```
+
 4. Create a Migration to setup **ElmahConfiguration** if you need to change any default options
-5. Execute **MonitorTask** to see it working  
+5. Execute **MonitorTask** to see it working
 	* ```.exe MonitorTask```
 
 [Back to Table of Contents](#table-of-contents)
@@ -1485,7 +1485,7 @@ namespace ConsoleApplication16
 
 	public class SecondaryAccount : Connection
 	{
-		public SecondaryAccount() 
+		public SecondaryAccount()
 			: base(ConnectionString.FromName("AnotherBlobStorageAccount"))
 		{
 		}
@@ -1558,7 +1558,7 @@ namespace ConsoleApplication16
 
 	public class SecondaryAccount : Connection
 	{
-		public SecondaryAccount() 
+		public SecondaryAccount()
 			: base(ConnectionString.FromName("AnotherServiceBusAccount"))
 		{
 		}
@@ -1605,7 +1605,7 @@ namespace ConsoleApplication16
 
 ## Integrating Payment Service
 
-TBD. 
+TBD.
 [Back to Table of Contents](#table-of-contents)
 
 ## Integrating RavenDB
@@ -1928,9 +1928,9 @@ namespace ConsoleApplication16
 					.EnableArchiving()
 
 					// Allows you to modify the behaviour of the WCF service - e.g. setting credentials, timeouts and more
-					.ServiceClient(client => 
+					.ServiceClient(client =>
 					{
-						client.Binding((kernel, binding) => 
+						client.Binding((kernel, binding) =>
 						{
 						});
 					})
@@ -1990,11 +1990,11 @@ namespace ConsoleApplication16
 				if (image != null)
 				{
 					// download RAW
-					File.WriteAllBytes(Path.Combine(@"C:\tmp\perfion\", image.Name), 
+					File.WriteAllBytes(Path.Combine(@"C:\tmp\perfion\", image.Name),
 						image.Download());
 
 					// download thumb (100x100)
-					File.WriteAllBytes(Path.Combine(@"c:\tmp\perfion\thumbs\", image.Name), 
+					File.WriteAllBytes(Path.Combine(@"c:\tmp\perfion\thumbs\", image.Name),
 						image.Download(new NameValueCollection { { "size", "100x100" }}));
 				}
 			}
@@ -2022,7 +2022,7 @@ To setup a Hangfire integration, start by adding the following package:
 
 ## How to Disable IntegrationDb
 
-It is possible to disable the IntegrationDb entirely, if you are using the Integration Service in a way where the requirement on an underlying database seems overkill. 
+It is possible to disable the IntegrationDb entirely, if you are using the Integration Service in a way where the requirement on an underlying database seems overkill.
 Maybe you're using it to expose some few HTTP services or maybe you're using it as a "Run-Once" Legacy Migration platform.
 
 Disabling the IntegrationDb is easy. Use the **.Database(...)** method to access the IntegrationDbConfiguration. See below:
@@ -2303,7 +2303,7 @@ First you'll create an entry in your configuration file, app.config, with your c
 ```xml
 <connectionStrings>
   <add name="CustomDb" connectionString="Integrated Security=SSPI;Data Source=[NAME-OF-SQL-SERVER];Database=[NAME-OF-CUSTOM-DATABASE]" />
-</connectionStrings>  
+</connectionStrings>
 ```
 
 Next step is to create a **public class** that inherits from *Vertica.Integration.Infrastructure.Database.Connection*.
@@ -2344,7 +2344,7 @@ namespace ConsoleApplication16
     }
 }
 ```
-You can now access the database connection, through the generic **IDbFactory<>** interface. 
+You can now access the database connection, through the generic **IDbFactory<>** interface.
 
 The following example shows how to do that from a Task.
 
@@ -2389,7 +2389,7 @@ namespace ClassLibrary2
 ###IDbFactory<<TConnection>>
 This factory gives you access to any custom connection that you register.
 
-The Factory exposes the underlying IDbConnection but more importantly it allows you to create an **IDbSession** against that connection. 
+The Factory exposes the underlying IDbConnection but more importantly it allows you to create an **IDbSession** against that connection.
 The **IDbSession** is a very thin Adapter on top of Dapper (https://github.com/StackExchange/dapper-dot-net), giving you few but powerful options to work against your database. If you need to open up the full capabilities of Dapper, then you can simply use it's extension methods, see example below:
 
 ```c#
@@ -2413,12 +2413,12 @@ From the **IDbSession** you can also create an **IDbTransaction**-scope. Use the
 
 ## How to setup MonitorFoldersStep
 
-TBD. 
+TBD.
 [Back to Table of Contents](#table-of-contents)
 
 ## How to Extend MonitorTask
 
-This example shows how you can add a custom step to the existing **MonitorTask**. You can read more about **MonitorTask** [here](#built-in-tasks). 
+This example shows how you can add a custom step to the existing **MonitorTask**. You can read more about **MonitorTask** [here](#built-in-tasks).
 
 In this complete example, a new Step "MonitorLowDiscSpaceStep" is created which will monitor low drive space:
 
@@ -2489,12 +2489,12 @@ Other examples of customizing the **MonitorTask** could be to:
 IIS log file archiving.
 Sitecore log file archiving.
 
-TBD. 
+TBD.
 [Back to Table of Contents](#table-of-contents)
 
 ## How to Extend MaintenanceTask
 
-This example shows how you can add a custom step to the existing **MaintenanceTask**. You can read more about **MaintenanceTask** [here](#built-in-tasks). 
+This example shows how you can add a custom step to the existing **MaintenanceTask**. You can read more about **MaintenanceTask** [here](#built-in-tasks).
 
 In this complete example, a new Step "UCommerceIndexMaintenanceStep" is created which will perform index maintenance using a [custom database connection](#how-to-setup-connection-to-custom-database) to uCommerce database (http://www.ucommerce.net).
 
@@ -2644,7 +2644,7 @@ using (IApplicationContext context = ApplicationContext.Create(application => ap
         .ConcurrentTaskExecution(concurrentTaskExecution =>
             concurrentTaskExecution.AddFromAssemblyOfThis<Program>()))))
 {
-    // 
+    //
 }
 ```
 
@@ -2660,5 +2660,5 @@ TODO: Document the IPreventConcurrentTaskExecutionCustomLockName feature.
 
 ## How to Use Feature Toggler
 
-TBD. 
+TBD.
 [Back to Table of Contents](#table-of-contents)
