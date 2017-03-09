@@ -69,10 +69,14 @@ SET @BATCHCOUNT = @batchSize
 
 WHILE @BATCHCOUNT > 0
 BEGIN
-   DELETE TOP(@BATCHCOUNT) FROM [ELMAH_Error] WHERE TimeUtc <= @time
-   SET @BATCHCOUNT = @@ROWCOUNT
-   SET @DELETEDCOUNT = @DELETEDCOUNT + @BATCHCOUNT
-   WAITFOR DELAY '00:00:02' -- wait 2 secs to allow other processes access to the table
+    DELETE TOP(@BATCHCOUNT) FROM [ELMAH_Error] WHERE TimeUtc <= @time
+    SET @BATCHCOUNT = @@ROWCOUNT
+    SET @DELETEDCOUNT = @DELETEDCOUNT + @BATCHCOUNT
+    
+    IF @BATCHCOUNT > 0
+	BEGIN
+		WAITFOR DELAY '00:00:02' -- wait 2 secs to allow other processes access to the table
+	END
 END
 
 SELECT @DELETEDCOUNT";
