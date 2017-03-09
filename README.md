@@ -107,9 +107,6 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
 
   Vertica example:
   ```xml
-  <smtp from="your-email@vertica.dk">
-        <network host="mail01.vertica.dk" />
-  </smtp>
   <smtp deliveryMethod="Network" from="your-email@vertica.dk">
         <network defaultCredentials="false" enableSsl="true" host="smtp.office365.com" port="587" password="askForPassword" userName="no-reply@vertica.dk" />
   </smtp>
