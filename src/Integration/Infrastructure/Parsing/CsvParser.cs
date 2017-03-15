@@ -52,6 +52,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
 			using (var parser = new TextFieldParser(stream, configuration.Encoding))
 			{
 				parser.SetDelimiters(configuration.Delimiter);
+			    parser.HasFieldsEnclosedInQuotes = configuration.HasFieldsEnclosedInQuotes;
 
 				while (!parser.EndOfData)
 				{
