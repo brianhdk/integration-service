@@ -148,6 +148,23 @@ Row2-Field1;Row2-Field2");
 			Assert.That(rows[2]["LongDescription"], Is.EqualTo("A new chapter in the Flowerbomb story. A true bouquet of flowers that are good enough to eat! With crispy buds that evoke the “morning dew”. This Fragrance is multi-faceted like the bottle it comes in: a mille-feuille of Flowerbomb flowers around freesia, centifolia rose and Sambac jasmine, refreshed by crispy green notes and a touch of mandarin and bergamot."));
 		}
 
+        [Test]
+        public void Parse_Lines_Starting_With_Quote()
+        {
+            CsvRow[] rows = Parse($"WEB2100\t000000000060062774\t\"2.5\" SATA SSD Innodisk\t000000000012430001\t",
+                csv => csv
+                    .NoHeaders()
+                    .ChangeDelimiter("\t")
+                    .ChangeHasFieldsEnclosedInQuotes(false));
+
+            Assert.That(rows.Length, Is.EqualTo(1));
+            Assert.That(rows[0][0], Is.EqualTo("WEB2100"));
+            Assert.That(rows[0][1], Is.EqualTo("000000000060062774"));
+            Assert.That(rows[0][2], Is.EqualTo("\"2.5\" SATA SSD Innodisk"));
+            Assert.That(rows[0][3], Is.EqualTo("000000000012430001"));
+
+        }
+
         private CsvRow[] Parse(string data, Action<CsvConfiguration> csv = null)
         {
             using (var stream = new MemoryStream())

@@ -19,6 +19,7 @@ namespace Vertica.Integration.Infrastructure.Parsing
 	        FirstLineIsHeader = true;
             Encoding = Encoding.UTF8;
             Delimiter = DefaultDelimiter;
+            HasFieldsEnclosedInQuotes = true;
         }
 
 	    public CsvConfiguration NoHeaders()
@@ -46,8 +47,16 @@ namespace Vertica.Integration.Infrastructure.Parsing
             return this;
         }
 
+        public CsvConfiguration ChangeHasFieldsEnclosedInQuotes(bool hasFieldsEnclosedInQuotes)
+        {
+            HasFieldsEnclosedInQuotes = hasFieldsEnclosedInQuotes;
+
+            return this;
+        }
+
 	    internal bool FirstLineIsHeader { get; private set; }
 	    internal Encoding Encoding { get; private set; }
 	    internal string Delimiter { get; private set; }
+	    internal bool HasFieldsEnclosedInQuotes { get; private set; }
     }
 }
