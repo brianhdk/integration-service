@@ -19,7 +19,6 @@ namespace Vertica.Integration.Infrastructure.Parsing
 	        FirstLineIsHeader = true;
             Encoding = Encoding.UTF8;
             Delimiter = DefaultDelimiter;
-            HasFieldsEnclosedInQuotes = true;
         }
 
 	    public CsvConfiguration NoHeaders()
