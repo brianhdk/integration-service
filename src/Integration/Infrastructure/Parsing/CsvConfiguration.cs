@@ -57,6 +57,6 @@ namespace Vertica.Integration.Infrastructure.Parsing
 	    internal bool FirstLineIsHeader { get; private set; }
 	    internal Encoding Encoding { get; private set; }
 	    internal string Delimiter { get; private set; }
-	    internal bool HasFieldsEnclosedInQuotes { get; private set; }
+	    internal bool? HasFieldsEnclosedInQuotes { get; private set; }
     }
 }
