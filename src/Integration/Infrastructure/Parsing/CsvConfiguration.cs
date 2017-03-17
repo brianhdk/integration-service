@@ -46,9 +46,17 @@ namespace Vertica.Integration.Infrastructure.Parsing
             return this;
         }
 
+        [Obsolete("You should simply use the DisableHasFieldsEnclosedInQuotes()-method, as the default behaviour is that HasFieldsEnclosedInQuotes is true.")]
         public CsvConfiguration ChangeHasFieldsEnclosedInQuotes(bool hasFieldsEnclosedInQuotes)
         {
             HasFieldsEnclosedInQuotes = hasFieldsEnclosedInQuotes;
+
+            return this;
+        }
+
+        public CsvConfiguration DisableHasFieldsEnclosedInQuotes()
+        {
+            HasFieldsEnclosedInQuotes = false;
 
             return this;
         }

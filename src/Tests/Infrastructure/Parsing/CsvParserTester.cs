@@ -155,7 +155,7 @@ Row2-Field1;Row2-Field2");
                 csv => csv
                     .NoHeaders()
                     .ChangeDelimiter("\t")
-                    .ChangeHasFieldsEnclosedInQuotes(false));
+                    .DisableHasFieldsEnclosedInQuotes());
 
             Assert.That(rows.Length, Is.EqualTo(1));
             Assert.That(rows[0][0], Is.EqualTo("WEB2100"));
