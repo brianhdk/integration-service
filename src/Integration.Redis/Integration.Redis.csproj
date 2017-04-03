@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8216C2D0-33F6-442C-99F8-D566ACCE37E5}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{D59B4610-F4EB-495A-9012-C4767BBA9B38}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Experiments.Slack</RootNamespace>
-    <AssemblyName>Experiments.Slack</AssemblyName>
+    <RootNamespace>Vertica.Integration.Redis</RootNamespace>
+    <AssemblyName>Vertica.Integration.Redis</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -33,16 +30,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\RestSharp.105.2.3\lib\net46\RestSharp.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SlackConnector, Version=3.1.151.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SlackConnector.3.1.151\lib\net46\SlackConnector.dll</HintPath>
+    <Reference Include="Castle.Windsor, Version=3.4.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Castle.Windsor.3.4.0\lib\net45\Castle.Windsor.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="StackExchange.Redis, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -57,30 +50,28 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="websocket-sharp-with-proxy-support, Version=1.0.2.28248, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\websocket-sharp-with-proxy-support.1.9.1\lib\net35-client\websocket-sharp-with-proxy-support.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomBotCommand.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="RedisConfiguration.cs" />
+    <Compile Include="RedisExtensions.cs" />
+    <Compile Include="Infrastructure\Client\Castle.Windsor\RedisClientInstaller.cs" />
+    <Compile Include="Infrastructure\Client\Connection.cs" />
+    <Compile Include="Infrastructure\Client\DefaultConnection.cs" />
+    <Compile Include="Infrastructure\Client\RedisClientConfiguration.cs" />
+    <Compile Include="Infrastructure\Client\IRedisClientFactory.cs" />
+    <Compile Include="Infrastructure\Client\RedisClientFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WriteMessages.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <Content Include="App_Readme\Integration.Redis-readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Integration.Redis.nuspec" />
+    <None Include="NuGet-app.config.install.xdt" />
+    <None Include="NuGet-app.config.uninstall.xdt" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Integration.Redis\Integration.Redis.csproj">
-      <Project>{D59B4610-F4EB-495A-9012-C4767BBA9B38}</Project>
-      <Name>Integration.Redis</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Integration.Slack\Integration.Slack.csproj">
-      <Project>{2E86F586-A386-4E65-8241-BA6E0C24F4B6}</Project>
-      <Name>Integration.Slack</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Integration\Integration.csproj">
       <Project>{460F774F-2C89-47F4-84BD-B97653060E68}</Project>
       <Name>Integration</Name>

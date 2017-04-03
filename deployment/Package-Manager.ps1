@@ -30,6 +30,7 @@ $settings = @{
         "integration_slack" = Resolve-Path $script_directory\..\src\Integration.Slack
         "integration_ucommerce" = Resolve-Path $script_directory\..\src\Integration.UCommerce
         "integration_elasticsearch" = Resolve-Path $script_directory\..\src\Integration.Elasticsearch
+		"integration_redis" = Resolve-Path $script_directory\..\src\Integration.Redis
     }
     "tools" = @{
         "nuget" = Resolve-Path $script_directory\..\.nuget\NuGet.exe
