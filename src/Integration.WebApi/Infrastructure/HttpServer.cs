@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.Http;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Web.Http;
-using System.Web.Http.Controllers;
+using System.Web.Http.Dependencies;
 using System.Web.Http.Dispatcher;
 using System.Web.Http.ExceptionHandling;
 using Castle.MicroKernel;
+using Castle.MicroKernel.Lifestyle;
 using Microsoft.Owin.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -17,6 +18,7 @@ using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.WebApi.Infrastructure.Castle.Windsor;
+using IDependencyResolver = System.Web.Http.Dependencies.IDependencyResolver;
 
 namespace Vertica.Integration.WebApi.Infrastructure
 {
@@ -67,28 +69,24 @@ namespace Vertica.Integration.WebApi.Infrastructure
 			if (Regex.IsMatch(url ?? string.Empty, @"^http(?:s)?://\+(?:\:\d+)?/?$", RegexOptions.IgnoreCase))
 				return;
 
-			throw new ArgumentOutOfRangeException(nameof(url), url, $"'{url}' is not a valid absolute url.");
+			throw new ArgumentOutOfRangeException(nameof(url), url, $@"'{url}' is not a valid absolute url.");
 		}
 
 		private void ConfigureServices(HttpConfiguration configuration)
         {
-            var resolver = new CustomResolver(GetControllerTypes, CreateController);
+            var resolver = new CustomResolver(GetControllerTypes);
 
             configuration.Services.Replace(typeof (IAssembliesResolver), resolver);
             configuration.Services.Replace(typeof (IHttpControllerTypeResolver), resolver);
-            configuration.Services.Replace(typeof (IHttpControllerActivator), resolver);
 
 			configuration.Services.Add(typeof(IExceptionLogger), new ExceptionLogger(_kernel.Resolve<ILogger>()));
+
+            configuration.DependencyResolver = new CustomDependencyResolver(_kernel, configuration.DependencyResolver);
         }
 
         private ICollection<Type> GetControllerTypes()
         {
             return _kernel.Resolve<IWebApiControllers>().Controllers;
-        }
-
-        private IHttpController CreateController(HttpRequestMessage request, Type controllerType)
-        {
-            return _kernel.Resolve(controllerType) as IHttpController;
         }
 
         private void MapRoutes(HttpConfiguration configuration)
@@ -150,18 +148,13 @@ namespace Vertica.Integration.WebApi.Infrastructure
 			public IKernel Kernel { get; }
 		}
 
-        private class CustomResolver : IAssembliesResolver, IHttpControllerTypeResolver, IHttpControllerActivator
+        private class CustomResolver : IAssembliesResolver, IHttpControllerTypeResolver
         {
             private readonly Func<ICollection<Type>> _controllerTypes;
-            private readonly Func<HttpRequestMessage, Type, IHttpController> _createController;
 
-            public CustomResolver(Func<ICollection<Type>> controllerTypes, Func<HttpRequestMessage, Type, IHttpController> createController)
+            public CustomResolver(Func<ICollection<Type>> controllerTypes)
             {
-                if (controllerTypes == null) throw new ArgumentNullException(nameof(controllerTypes));
-                if (createController == null) throw new ArgumentNullException(nameof(createController));
-
                 _controllerTypes = controllerTypes;
-                _createController = createController;
             }
 
             public ICollection<Assembly> GetAssemblies()
@@ -173,10 +166,88 @@ namespace Vertica.Integration.WebApi.Infrastructure
             {
                 return _controllerTypes();
             }
+        }
 
-            public IHttpController Create(HttpRequestMessage request, HttpControllerDescriptor controllerDescriptor, Type controllerType)
+        private class CustomDependencyResolver : IDependencyResolver
+        {
+            private readonly IKernel _kernel;
+            private readonly IDependencyResolver _currentResolver;
+
+            public CustomDependencyResolver(IKernel kernel, IDependencyResolver currentResolver)
             {
-                return _createController(request, controllerType);
+                _kernel = kernel;
+                _currentResolver = currentResolver;
+            }
+
+            public void Dispose()
+            {
+                _currentResolver.Dispose();
+            }
+
+            public IDependencyScope BeginScope()
+            {
+                return new CustomDependencyScope(_kernel, _currentResolver);
+            }
+
+            public object GetService(Type serviceType)
+            {
+                bool hasComponent = _kernel.HasComponent(serviceType);
+
+                return hasComponent
+                    ? _kernel.Resolve(serviceType)
+                    : _currentResolver.GetService(serviceType);
+            }
+
+            public IEnumerable<object> GetServices(Type serviceType)
+            {
+                bool hasComponent = _kernel.HasComponent(serviceType);
+
+                return hasComponent
+                    ? _kernel.ResolveAll(serviceType).OfType<object>().ToArray()
+                    : _currentResolver.GetServices(serviceType);
+            }
+        }
+
+        internal sealed class CustomDependencyScope : IDependencyScope
+        {
+            private readonly IKernel _kernel;
+
+            private readonly IDisposable _windsorScope;
+            private readonly IDependencyScope _currentResolverScope;
+
+            public CustomDependencyScope(IKernel kernel, IDependencyResolver currentResolver)
+            {
+                if (kernel == null) throw new ArgumentNullException(nameof(kernel));
+                if (currentResolver == null) throw new ArgumentNullException(nameof(currentResolver));
+
+                _kernel = kernel;
+
+                _windsorScope = kernel.BeginScope();
+                _currentResolverScope = currentResolver.BeginScope();
+            }
+
+            public void Dispose()
+            {
+                _currentResolverScope.Dispose();
+                _windsorScope.Dispose();
+            }
+
+            public object GetService(Type serviceType)
+            {
+                bool hasComponent = _kernel.HasComponent(serviceType);
+
+                return hasComponent
+                    ? _kernel.Resolve(serviceType)
+                    : _currentResolverScope.GetService(serviceType);
+            }
+
+            public IEnumerable<object> GetServices(Type serviceType)
+            {
+                bool hasComponent = _kernel.HasComponent(serviceType);
+
+                return hasComponent
+                    ? _kernel.ResolveAll(serviceType).OfType<object>()
+                    : _currentResolverScope.GetServices(serviceType);
             }
         }
     }

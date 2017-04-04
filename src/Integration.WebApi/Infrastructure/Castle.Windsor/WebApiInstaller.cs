@@ -57,7 +57,7 @@ namespace Vertica.Integration.WebApi.Infrastructure.Castle.Windsor
                             return false;
                         })
                         .WithServiceSelf()
-                        .LifestyleTransient());
+                        .LifestyleScoped());
             }
 
             container.Register(
@@ -65,7 +65,7 @@ namespace Vertica.Integration.WebApi.Infrastructure.Castle.Windsor
                     .BasedOn<ApiController>()
                     .Expose(types.Add)
                     .WithServiceSelf()
-                    .LifestyleTransient());
+                    .LifestyleScoped());
 
             IWindsorInstaller installer = Installer
                 .Instance<IWebApiControllers>(new ControllerTypes(types.ToArray()));
