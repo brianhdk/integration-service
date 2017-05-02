@@ -9,6 +9,7 @@ using Castle.Windsor;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Tracing;
+using Microsoft.Owin;
 using Owin;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.WebApi.Infrastructure;
@@ -30,7 +31,10 @@ namespace Vertica.Integration.WebApi.SignalR
 	    private bool _enableJavaScriptProxies;
 	    private bool _enableJSONP;
 
-	    internal SignalRConfiguration(ApplicationConfiguration application)
+        private PathString _path;
+        private Action<IAppBuilder> _onMap;
+
+        internal SignalRConfiguration(ApplicationConfiguration application)
         {
             if (application == null) throw new ArgumentNullException(nameof(application));
 
@@ -43,11 +47,14 @@ namespace Vertica.Integration.WebApi.SignalR
 		    AddFromAssemblyOfThis<SignalRConfiguration>();
 
 			_traceLevel = SourceLevels.Warning;
+
 		    _enableDetailedErrors = true;
 		    _enableJavaScriptProxies = true;
 
-			// Register configuration
-		    Application.UseWebApi(webApi => webApi.HttpServer(httpServer => httpServer.Configure(Configure)));
+            _path = new PathString("/signalr");
+
+            // Register configuration
+            Application.UseWebApi(webApi => webApi.HttpServer(httpServer => httpServer.Configure(Configure)));
         }
 
         public ApplicationConfiguration Application { get; }
@@ -76,20 +83,39 @@ namespace Vertica.Integration.WebApi.SignalR
 	    public SignalRConfiguration DisableDetailedErrors()
 	    {
 		    _enableDetailedErrors = false;
+
 		    return this;
 	    }
 
 	    public SignalRConfiguration DisableJavaScriptProxies()
 	    {
 		    _enableJavaScriptProxies = false;
+
 		    return this;
 	    }
 
 	    public SignalRConfiguration EnableJSONP()
 	    {
 		    _enableJSONP = true;
+
 		    return this;
 	    }
+
+        public SignalRConfiguration Path(PathString path)
+        {
+            _path = path;
+
+            return this;
+        }
+
+        public SignalRConfiguration OnMap(Action<IAppBuilder> subApp)
+        {
+            if (subApp == null) throw new ArgumentNullException(nameof(subApp));
+
+            _onMap = subApp;
+
+            return this;
+        }
 
 		/// <summary>
 		/// Call this method if you're using app.config / system.diagnostics to setup SignalR tracing.
@@ -142,8 +168,13 @@ namespace Vertica.Integration.WebApi.SignalR
 			foreach (var pipelineModule in owin.Kernel.ResolveAll<IHubPipelineModule>())
 				hubPipeline.AddModule(pipelineModule);
 
-			owin.App.MapSignalR(hubConfiguration);
+	        owin.App.Map(_path, subApp =>
+	        {
+                _onMap?.Invoke(subApp);
 
+                subApp.RunSignalR(hubConfiguration);
+	        });
+            
 			// TODO: Look at the possibility to add custom trace sources programatically
 			// https://msdn.microsoft.com/en-us/library/ms228984(v=vs.110).aspx
 
