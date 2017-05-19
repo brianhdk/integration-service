@@ -17,7 +17,9 @@ namespace Vertica.Integration
 
 		public ApplicationEnvironment Environment => this[RuntimeSettings.Environment];
 
-		public string this[string name]
+	    public string ApplicationName => this[RuntimeSettings.ApplicationName];
+
+	    public string this[string name]
 		{
 			get
 			{
@@ -36,12 +38,16 @@ namespace Vertica.Integration
 		[Description("General purpose configuration used by various tasks, services etc.")]
 		public class RuntimeSettings
 		{
-			internal const string Environment = "Environment";
+		    internal const string Environment = nameof(Environment);
+		    internal const string ApplicationName = nameof(ApplicationName);
 
 			public RuntimeSettings()
 			{
-				Values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-				Values[Environment] = string.Empty;
+			    Values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+			    {
+			        [Environment] = string.Empty,
+                    [ApplicationName] = string.Empty
+			    };
 			}
 
 			public Dictionary<string,string> Values { get; set; }

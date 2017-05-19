@@ -7,7 +7,9 @@ namespace Vertica.Integration
 	{
 		public ApplicationEnvironment Environment => this["Environment"];
 
-		public string this[string name]
+	    public string ApplicationName => this["ApplicationName"];
+
+	    public string this[string name]
 		{
 			get
 			{

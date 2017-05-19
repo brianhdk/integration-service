@@ -21,7 +21,9 @@ namespace Vertica.Integration
 			return this;
 		}
 
-		public ApplicationEnvironment Environment => this["Environment"];
+	    public ApplicationEnvironment Environment => this[nameof(Environment)];
+
+	    public string ApplicationName => this[nameof(ApplicationName)];
 
 		public string this[string name]
 		{

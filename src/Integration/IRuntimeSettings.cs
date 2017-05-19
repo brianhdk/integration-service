@@ -10,6 +10,11 @@
 		/// </summary>
 		ApplicationEnvironment Environment { get; }
 
+        /// <summary>
+        /// Name of the Application
+        /// </summary>
+        string ApplicationName { get; }
+
 		/// <summary>
 		/// Reads any custom setting based on it's name.
 		/// </summary>

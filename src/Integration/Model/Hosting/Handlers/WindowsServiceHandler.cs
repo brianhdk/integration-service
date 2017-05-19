@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Windows;
 using Vertica.Utilities_v4.Extensions.EnumerableExt;
+using Vertica.Utilities_v4.Extensions.StringExt;
 
 namespace Vertica.Integration.Model.Hosting.Handlers
 {
@@ -111,9 +112,13 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 			if (dontPrefix)
 				return value;
 
-			ApplicationEnvironment environment = _runtimeSettings.Environment;
+		    var prefixes = new[]
+		    {
+		        _runtimeSettings.ApplicationName.NullIfEmpty(),
+                _runtimeSettings.Environment?.ToString()
+		    }.SkipNulls().Select(prefix => $"[{prefix}]");
 
-			return $"Integration Service{(environment != null ? $" [{environment}]" : string.Empty)}: {value}";
+			return $"Integration Service{string.Join("", prefixes)}: {value}";
 		}
 
 		private static string ExePath => Assembly.GetEntryAssembly().Location;
