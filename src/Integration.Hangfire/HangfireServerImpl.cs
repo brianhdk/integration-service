@@ -25,7 +25,7 @@ namespace Vertica.Integration.Hangfire
 
 			IBackgroundProcess[] backgroundProcesses = kernel.ResolveAll<IBackgroundProcess>();
 
-			_server = new BackgroundJobServer(configuration.ServerOptions, JobStorage.Current, backgroundProcesses);
+            _server = new BackgroundJobServer(configuration.ServerOptions, JobStorage.Current, backgroundProcesses);
 		}
 
 		public void Dispose()

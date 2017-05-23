@@ -1,18 +1,21 @@
 using System;
+using System.Collections.Generic;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Hangfire;
 using Hangfire.Server;
 using Vertica.Integration.Domain.LiteServer;
+using Vertica.Integration.Hangfire.Console;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 
 namespace Vertica.Integration.Hangfire
 {
 	public class HangfireConfiguration : IInitializable<IWindsorContainer>
 	{
-		private readonly IInternalConfiguration _configuration;
+		private readonly InternalConfiguration _configuration;
 		private readonly ScanAddRemoveInstaller<IBackgroundProcess> _backgroundProcesses;
+        private readonly List<Action<IGlobalConfiguration, IKernel>> _globalConfigurations;
 		
 		internal HangfireConfiguration(ApplicationConfiguration application)
 		{
@@ -22,8 +25,8 @@ namespace Vertica.Integration.Hangfire
 				.Hosts(hosts => hosts.Host<HangfireHost>());
 
 			_configuration = new InternalConfiguration();
-
 			_backgroundProcesses = new ScanAddRemoveInstaller<IBackgroundProcess>();
+            _globalConfigurations = new List<Action<IGlobalConfiguration, IKernel>>();
 		}
 
 		public ApplicationConfiguration Application { get; }
@@ -32,10 +35,32 @@ namespace Vertica.Integration.Hangfire
 		{
 			if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
-			configuration(GlobalConfiguration.Configuration);
-
-			return this;
+            return Configuration((innerConfiguration, kernel) => 
+            {
+                configuration(innerConfiguration);
+            });
 		}
+
+	    public HangfireConfiguration Configuration(Action<IGlobalConfiguration, IKernel> configuration)
+	    {
+	        if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+
+	        _globalConfigurations.Add(configuration);
+
+	        return this;
+	    }
+
+	    public HangfireConfiguration EnableConsole(Action<HangfireConsoleConfiguration> console = null)
+	    {
+            Application.Extensibility(extensibility =>
+            {
+                var configuration = extensibility.Register(() => new HangfireConsoleConfiguration(this));
+
+                console?.Invoke(configuration);
+            });
+
+            return this;
+	    }
 
 		public HangfireConfiguration WithServerOptions(Action<BackgroundJobServerOptions> serverOptions)
 		{
@@ -122,9 +147,12 @@ namespace Vertica.Integration.Hangfire
 
 		void IInitializable<IWindsorContainer>.Initialized(IWindsorContainer container)
 		{
-			JobActivator.Current = _configuration.ServerOptions.Activator = new WindsorJobActivator(container.Kernel);
+            foreach (Action<IGlobalConfiguration, IKernel> globalConfiguration in _globalConfigurations)
+                globalConfiguration(GlobalConfiguration.Configuration, container.Kernel);
 
-			container.Install(_backgroundProcesses);
+            JobActivator.Current = _configuration.ServerOptions.Activator = new WindsorJobActivator(container.Kernel);
+
+            container.Install(_backgroundProcesses);
 
 			container.Register(
 				Component.For<IHangfireServerFactory>()

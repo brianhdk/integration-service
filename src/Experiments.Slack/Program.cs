@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
-using Castle.DynamicProxy;
 using Hangfire;
-using Hangfire.Common;
 using Hangfire.Console;
-using Hangfire.Server;
 using Hangfire.SqlServer;
 using Vertica.Integration;
 using Vertica.Integration.Domain.LiteServer;
 using Vertica.Integration.Domain.LiteServer.Servers.IO;
 using Vertica.Integration.Hangfire;
 using Vertica.Integration.Infrastructure;
+using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
@@ -21,7 +18,7 @@ using Vertica.Integration.WebApi;
 
 namespace Experiments.Slack
 {
-	class Program
+    class Program
 	{
 		static void Main(string[] args)
 		{
@@ -33,14 +30,12 @@ namespace Experiments.Slack
                         .PrefixTables("IntegrationService_")))
                 .UseHangfire(hangfire => hangfire
                     .AddToLiteServer()
-                    .Configuration(configuration => configuration
+                    .EnableConsole()
+                    .Configuration((configuration, kernel) => configuration
                         .UseSqlServerStorage(ConnectionString.FromName("IntegrationDb"), new SqlServerStorageOptions
                         {
                             QueuePollInterval = TimeSpan.FromSeconds(15)
                         })
-                        //.UseColouredConsoleLogProvider()
-                        .UseConsole()
-                        .UseFilter(new GetContext())
                     )
                 )
                 .Tasks(tasks => tasks
@@ -55,12 +50,7 @@ namespace Experiments.Slack
                     .AddFromAssemblyOfThis<Program>())
                 .Services(services => services
                     .Conventions(conventions => conventions
-                        .AddFromAssemblyOfThis<Program>())
-                    .Interceptors(interceptors => interceptors
-                        .InterceptService<IConsoleWriter, HangfireConsoleWriterInterceptor>()
-                        .InterceptService<ILogger, HangfireLoggerInterceptor>()
-                    )
-                )
+                        .AddFromAssemblyOfThis<Program>()))
                 //.UseSlack(slack => slack
                 //    .AttachToConsoleWriter()
                 //    .AddToLiteServer()
@@ -73,26 +63,47 @@ namespace Experiments.Slack
 		}
 	}
 
-    public interface IJobRunner
+    public class AddHangfireJob : FileWatcherServer
     {
-        void Run(string fileName);
+        protected override DirectoryInfo PathToMonitor()
+        {
+            return new DirectoryInfo(@"c:\tmp\hangfire");
+        }
+
+        protected override void ProcessFile(FileInfo file, FileSystemEventArgs args)
+        {
+            BackgroundJob.Enqueue<IRunTask>(x => x.Run("SomeTask", file.FullName));
+        }
+
+        protected override void ProcessDirectory(DirectoryInfo directory, FileSystemEventArgs args)
+        {
+        }
+
+        protected override void AddManualFileSystemEventArgs(DirectoryInfo path, string filter, bool includeSubDirectories, NotifyFilters notifyFilters, Action<ManualFileSystemEventArgs> adder)
+        {
+        }
     }
 
-    public class JobRunner : IJobRunner
+    public interface IRunTask
+    {
+        void Run(string taskName, string fileName);
+    }
+
+    public class RunTask : IRunTask
     {
         private readonly ITaskFactory _factory;
         private readonly ITaskRunner _taskRunner;
 
-        public JobRunner(ITaskFactory factory, ITaskRunner taskRunner)
+        public RunTask(ITaskFactory factory, ITaskRunner taskRunner)
         {
             _factory = factory;
             _taskRunner = taskRunner;
         }
 
-        public void Run(string fileName)
+        public void Run(string taskName, string fileName)
         {
             _taskRunner.Execute(
-                _factory.Get<SomeTask>(), 
+                _factory.Get(taskName), 
                 new Arguments(new KeyValuePair<string, string>("FileName", fileName)));
         }
     }
@@ -122,93 +133,5 @@ namespace Experiments.Slack
         }
 
         public override string Description => "Test";
-    }
-
-    public class AddHangfireJob : FileWatcherServer
-    {
-        protected override DirectoryInfo PathToMonitor()
-        {
-            return new DirectoryInfo(@"c:\tmp\hangfire");
-        }
-
-        protected override void ProcessFile(FileInfo file, FileSystemEventArgs args)
-        {
-            BackgroundJob.Enqueue<IJobRunner>(x => x.Run(file.FullName));
-        }
-
-        protected override void ProcessDirectory(DirectoryInfo directory, FileSystemEventArgs args)
-        {
-        }
-
-        protected override void AddManualFileSystemEventArgs(DirectoryInfo path, string filter, bool includeSubDirectories, NotifyFilters notifyFilters, Action<ManualFileSystemEventArgs> adder)
-        {
-        }
-    }
-
-    public class GetContext : JobFilterAttribute, IServerFilter
-    {
-        [ThreadStatic]
-        private static PerformingContext _context;
-
-        public static PerformingContext Context => _context;
-
-        public void OnPerforming(PerformingContext filterContext)
-        {
-            _context = filterContext;
-        }
-
-        public void OnPerformed(PerformedContext filterContext)
-        {
-        }
-    }
-
-    internal class HangfireLoggerInterceptor : IInterceptor
-    {
-        public void Intercept(IInvocation invocation)
-        {
-            invocation.Proceed();
-
-            if (invocation.Method.Name.Equals(nameof(ILogger.LogEntry)))
-            {
-                //var logEntry = invocation.Arguments[0] as LogEntry;
-
-                //if (logEntry != null)
-                //{
-                //    GetContext.Context.WriteLine(logEntry.ToString());
-                //}
-            }
-            else
-            {
-                var errorLog = invocation.ReturnValue as ErrorLog;
-
-                if (errorLog != null)
-                {
-                    GetContext.Context.SetTextColor(ConsoleTextColor.Red);
-                    GetContext.Context.WriteLine(" ID: {0}", errorLog.Id);
-                    GetContext.Context.ResetTextColor();
-                }
-            }
-        }
-    }
-
-    internal class HangfireConsoleWriterInterceptor : IInterceptor
-    {
-        public void Intercept(IInvocation invocation)
-        {
-            invocation.Proceed();
-
-            var message = (string)invocation.Arguments.FirstOrDefault();
-
-            if (message != null)
-            {
-                var args = (object[])invocation.Arguments.ElementAtOrDefault(1);
-
-                if (args != null)
-                    message = string.Format(message, args);
-
-                PerformingContext context = GetContext.Context;
-                context.WriteLine($" {message}");
-            }
-        }
     }
 }
