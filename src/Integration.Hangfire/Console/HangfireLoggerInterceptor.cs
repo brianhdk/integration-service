@@ -18,17 +18,21 @@ namespace Vertica.Integration.Hangfire.Console
         {
             invocation.Proceed();
 
-            if (invocation.Method.ReturnType == typeof(ErrorLog))
+            PerformContext context = _factory.Current.Get();
+
+            if (context != null)
             {
-                var errorLog = invocation.ReturnValue as ErrorLog;
-
-                if (errorLog != null)
+                if (invocation.Method.ReturnType == typeof(ErrorLog))
                 {
-                    PerformContext context = _factory.Current.Get();
+                    var errorLog = invocation.ReturnValue as ErrorLog;
 
-                    context.SetTextColor(errorLog.Severity == Severity.Error ? ConsoleTextColor.Red : ConsoleTextColor.Yellow);
-                    context.WriteLine(" - ID: {0}", errorLog.Id);
-                    context.ResetTextColor();
+                    if (errorLog != null)
+                    {
+
+                        context.SetTextColor(errorLog.Severity == Severity.Error ? ConsoleTextColor.Red : ConsoleTextColor.Yellow);
+                        context.WriteLine(" - ID: {0}", errorLog.Id);
+                        context.ResetTextColor();
+                    }
                 }
             }
         }

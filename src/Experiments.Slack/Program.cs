@@ -129,7 +129,8 @@ namespace Experiments.Slack
                 Thread.Sleep(100);
             }
 
-            file.Delete();
+            if (file.Exists)
+                file.Delete();
         }
 
         public override string Description => "Test";

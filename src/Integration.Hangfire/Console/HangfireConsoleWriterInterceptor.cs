@@ -18,28 +18,31 @@ namespace Vertica.Integration.Hangfire.Console
         {
             invocation.Proceed();
 
-            var message = (string) invocation.Arguments.FirstOrDefault();
+            PerformContext context = _factory.Current.Get();
 
-            if (message != null)
+            if (context != null)
             {
-                var args = (object[]) invocation.Arguments.ElementAtOrDefault(1);
+                var message = (string)invocation.Arguments.FirstOrDefault();
 
-                if (args != null)
-                    message = string.Format(message, args);
-
-                PerformContext context = _factory.Current.Get();
-
-                if (message.Contains("[WARNING]"))
+                if (message != null)
                 {
-                    context.SetTextColor(ConsoleTextColor.Yellow);
-                }
-                else if (message.Contains("[ERROR]"))
-                {
-                    context.SetTextColor(ConsoleTextColor.Red);
-                }
+                    var args = (object[])invocation.Arguments.ElementAtOrDefault(1);
 
-                context.WriteLine(message);
-                context.ResetTextColor();
+                    if (args != null)
+                        message = string.Format(message, args);
+
+                    if (message.Contains("[WARNING]"))
+                    {
+                        context.SetTextColor(ConsoleTextColor.Yellow);
+                    }
+                    else if (message.Contains("[ERROR]"))
+                    {
+                        context.SetTextColor(ConsoleTextColor.Red);
+                    }
+
+                    context.WriteLine(message);
+                    context.ResetTextColor();
+                }
             }
         }
     }
