@@ -7,18 +7,18 @@ namespace Vertica.Integration.Hangfire.Console
 {
     internal class HangfireConsoleWriterInterceptor : IInterceptor
     {
-        private readonly HangfirePerformContextFactory _factory;
+        private readonly IHangfirePerformContextProvider _provider;
 
-        public HangfireConsoleWriterInterceptor(HangfirePerformContextFactory factory)
+        public HangfireConsoleWriterInterceptor(IHangfirePerformContextProvider provider)
         {
-            _factory = factory;
+            _provider = provider;
         }
 
         public void Intercept(IInvocation invocation)
         {
             invocation.Proceed();
 
-            PerformContext context = _factory.Current.Get();
+            PerformContext context = _provider.Current;
 
             if (context != null)
             {

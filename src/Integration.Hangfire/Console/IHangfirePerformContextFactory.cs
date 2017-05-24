@@ -1,16 +1,25 @@
 ﻿using Castle.MicroKernel;
+using Hangfire.Server;
 
 namespace Vertica.Integration.Hangfire.Console
 {
-    internal class HangfirePerformContextFactory
+    internal class HangfirePerformContextProvider : IHangfirePerformContextProvider
     {
         private readonly IKernel _kernel;
 
-        public HangfirePerformContextFactory(IKernel kernel)
+        public HangfirePerformContextProvider(IKernel kernel)
         {
             _kernel = kernel;
         }
 
-        public HangfirePerThreadPerformContext Current => _kernel.Resolve<HangfirePerThreadPerformContext>();
+        public PerformContext Current
+        {
+            get
+            {
+                var context = _kernel.Resolve<HangfirePerThreadPerformContext>();
+
+                return context.Value;
+            }
+        }
     }
 }

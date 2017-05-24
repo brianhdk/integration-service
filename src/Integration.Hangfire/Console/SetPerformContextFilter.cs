@@ -1,19 +1,25 @@
-﻿using Hangfire.Server;
+﻿using Castle.MicroKernel;
+using Hangfire.Server;
 
 namespace Vertica.Integration.Hangfire.Console
 {
     internal class SetPerformContextFilter : IServerFilter
     {
-        private readonly HangfirePerformContextFactory _factory;
+        private readonly IKernel _kernel;
 
-        public SetPerformContextFilter(HangfirePerformContextFactory factory)
+        public SetPerformContextFilter(IKernel kernel)
         {
-            _factory = factory;
+            _kernel = kernel;
         }
 
         public void OnPerforming(PerformingContext filterContext)
         {
-            _factory.Current.Set(filterContext);
+            if (filterContext == null)
+                return;
+
+            var context = _kernel.Resolve<HangfirePerThreadPerformContext>();
+
+            context.Value = filterContext;
         }
 
         public void OnPerformed(PerformedContext filterContext)

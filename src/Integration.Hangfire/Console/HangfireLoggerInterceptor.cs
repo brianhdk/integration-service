@@ -7,18 +7,18 @@ namespace Vertica.Integration.Hangfire.Console
 {
     internal class HangfireLoggerInterceptor : IInterceptor
     {
-        private readonly HangfirePerformContextFactory _factory;
+        private readonly IHangfirePerformContextProvider _provider;
 
-        public HangfireLoggerInterceptor(HangfirePerformContextFactory factory)
+        public HangfireLoggerInterceptor(IHangfirePerformContextProvider provider)
         {
-            _factory = factory;
+            _provider = provider;
         }
 
         public void Intercept(IInvocation invocation)
         {
             invocation.Proceed();
 
-            PerformContext context = _factory.Current.Get();
+            PerformContext context = _provider.Current;
 
             if (context != null)
             {
@@ -28,7 +28,6 @@ namespace Vertica.Integration.Hangfire.Console
 
                     if (errorLog != null)
                     {
-
                         context.SetTextColor(errorLog.Severity == Severity.Error ? ConsoleTextColor.Red : ConsoleTextColor.Yellow);
                         context.WriteLine(" - ID: {0}", errorLog.Id);
                         context.ResetTextColor();

@@ -30,7 +30,7 @@ namespace Experiments.Slack
                         .PrefixTables("IntegrationService_")))
                 .UseHangfire(hangfire => hangfire
                     .AddToLiteServer()
-                    .EnableConsole()
+                    .EnableConsole(console => console.WithOptions(options => options.ExpireIn = TimeSpan.FromDays(14)))
                     .Configuration((configuration, kernel) => configuration
                         .UseSqlServerStorage(ConnectionString.FromName("IntegrationDb"), new SqlServerStorageOptions
                         {

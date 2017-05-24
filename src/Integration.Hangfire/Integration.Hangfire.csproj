@@ -69,6 +69,7 @@
     <Compile Include="Console\HangfireLoggerInterceptor.cs" />
     <Compile Include="Console\HangfirePerThreadPerformContext.cs" />
     <Compile Include="Console\IHangfirePerformContextFactory.cs" />
+    <Compile Include="Console\IHangfirePerformContextProvider.cs" />
     <Compile Include="Console\SetPerformContextFilter.cs" />
     <Compile Include="HangfireBackgroundServer.cs" />
     <Compile Include="HangfireConfiguration.cs" />
