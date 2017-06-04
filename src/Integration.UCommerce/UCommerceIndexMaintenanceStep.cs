@@ -1,4 +1,6 @@
-﻿using Vertica.Integration.Domain.Core;
+﻿using System;
+using System.Linq;
+using Vertica.Integration.Domain.Core;
 using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Model;
 using Vertica.Integration.UCommerce.Database;
@@ -16,13 +18,23 @@ namespace Vertica.Integration.UCommerce
 
         public override void Execute(MaintenanceWorkItem workItem, ITaskExecutionContext context)
         {
+            string[] indexNames =
+            {
+                "IX_uCommerce_PurchaseOrder_BasketId",
+                "IX_uCommerce_PurchaseOrder_BillingAddressId",
+                "IX_uCommerce_PurchaseOrder_CurrencyId",
+                "IX_uCommerce_PurchaseOrder_CustomerId",
+                "IX_uCommerce_PurchaseOrder_OrderGuid",
+                "IX_uCommerce_PurchaseOrder_OrderNumber",
+                "IX_uCommerce_PurchaseOrder_OrderStatusId",
+                "IX_uCommerce_PurchaseOrder_ProductCatalogGroupId",
+                "uCommerce_PK_Order"
+            };
+
             using (IDbSession session = _uCommerceDb.OpenSession())
             {
-                session.Execute(@"
-ALTER INDEX [uCommerce_PK_Order] ON [dbo].[uCommerce_PurchaseOrder] REORGANIZE
-ALTER INDEX [IX_Order] ON [dbo].[uCommerce_PurchaseOrder] REORGANIZE
-ALTER INDEX [IX_uCommerce_PurchaseOrder_BasketId] ON [dbo].[uCommerce_PurchaseOrder] REORGANIZE
-");
+                session.Execute(string.Join(Environment.NewLine, indexNames.Select(indexName => $@"
+ALTER INDEX [{indexName}] ON [dbo].[uCommerce_PurchaseOrder] REORGANIZE;")));
             }
         }
 

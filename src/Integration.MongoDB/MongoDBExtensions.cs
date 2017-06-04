@@ -1,6 +1,7 @@
 ﻿using System;
 using Vertica.Integration.Domain.Core;
 using Vertica.Integration.Model;
+using Vertica.Integration.MongoDB.Infrastructure;
 using Vertica.Integration.MongoDB.Maintenance;
 
 namespace Vertica.Integration.MongoDB
@@ -25,6 +26,12 @@ namespace Vertica.Integration.MongoDB
             if (task == null) throw new ArgumentNullException(nameof(task));
 
             return task.Step<LogRotatorStep>();
+        }
+
+        public static TaskConfiguration<MaintenanceWorkItem> IncludeLogRotator<TConnection>(this TaskConfiguration<MaintenanceWorkItem> task)
+            where TConnection : Connection
+        {
+            return task.Step<LogRotatorStep<TConnection>>();
         }
     }
 }
