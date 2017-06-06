@@ -3,6 +3,7 @@ using FluentMigrator;
 using Vertica.Integration.Domain.Core;
 using Vertica.Integration.Infrastructure.Database.Migrations;
 using Vertica.Integration.Model;
+using Vertica.Integration.UCommerce.Maintenance;
 
 namespace Vertica.Integration.UCommerce
 {
