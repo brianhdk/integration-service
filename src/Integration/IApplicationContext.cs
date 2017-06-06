@@ -30,16 +30,16 @@ namespace Vertica.Integration
 		/// <typeparam name="T">The service type</typeparam>
 	    T[] ResolveAll<T>();
 
-		/// <summary>
-		/// Executes the IHost implementation that is suited for the specified arguments.
-		/// </summary>
-		/// <param name="args">The arguments to be passed to the IHost implementation</param>
+        /// <summary>
+        /// Executes the <see cref="IHost"/> implementation that is eligible for the specified arguments.
+        /// </summary>
+        /// <param name="args">The "raw" arguments to be parsed and passed to the <see cref="IHost"/> implementations.</param>
         void Execute(params string[] args);
 
-		/// <summary>
-		/// Executes the IHost implementation that is suited for the specified arguments.
-		/// </summary>
-		/// <param name="args">The arguments to be passed to the IHost implementation</param>
-		void Execute(HostArguments args);
+        /// <summary>
+        /// Executes the <see cref="IHost"/> implementation that is eligible for the specified arguments.
+        /// </summary>
+        /// <param name="args">The arguments to be passed to the <see cref="IHost"/> implementations.</param>
+        void Execute(HostArguments args);
     }
 }

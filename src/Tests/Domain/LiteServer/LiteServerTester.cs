@@ -78,6 +78,5 @@ namespace Vertica.Integration.Tests.Domain.LiteServer
                 _resetEvent.WaitOne(_maxWaitTime);
             }
         }
-
     }
 }

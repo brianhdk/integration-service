@@ -22,7 +22,7 @@ namespace Vertica.Integration.Slack
 
             if (_configuration.Enabled)
             {
-                var message = (string)invocation.Arguments.FirstOrDefault();
+                var message = (string) invocation.Arguments.FirstOrDefault();
 
                 if (message != null)
                 {

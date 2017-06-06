@@ -26,7 +26,19 @@ namespace Vertica.Integration.Model.Hosting
 
 			ITask task = _factory.Get(args.Command);
 
-			_runner.Execute(task, args.Args);
+            // TODO: Consider running in the background
+            //  - to be able to cancel it
+            //  - or consider listen to: 
+
+            /*
+                Console.CancelKeyPress += (sender, e) =>             
+                {                 
+                    Console.WriteLine("Cancelling");                 
+                    e.Cancel = true;             };              
+                    var k = Console.ReadKey(true);              
+                    k = Console.ReadKey(true); 
+            */
+            _runner.Execute(task, args.Args);
 		}
 
 		public string Description => "Handles execution of Tasks.";

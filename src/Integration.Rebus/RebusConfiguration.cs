@@ -2,7 +2,6 @@
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Rebus.Bus;
-using Rebus.CastleWindsor;
 using Rebus.Config;
 using Rebus.Logging;
 
@@ -14,10 +13,12 @@ namespace Vertica.Integration.Rebus
 	    {
 		    if (application == null) throw new ArgumentNullException(nameof(application));
 
-		    Application = application.Extensibility(extensibility =>
-		    {
-				HandlersConfiguration = extensibility.Register(() => new RebusHandlersConfiguration(application));
-		    });
+            Application = application
+                .Hosts(x => x.Host<RebusHost>())
+                .Extensibility(extensibility =>
+		        {
+				    HandlersConfiguration = extensibility.Register(() => new RebusHandlersConfiguration(application));
+		        });
 	    }
 
 		public ApplicationConfiguration Application { get; private set; }

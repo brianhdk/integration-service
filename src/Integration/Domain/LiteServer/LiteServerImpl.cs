@@ -38,8 +38,17 @@ namespace Vertica.Integration.Domain.LiteServer
 
 			Output("Starting");
 
+            // TODO:
+            // Først placer startup-tasks i én kø
+            //  - eksekver denne kø først
+            //  - dernæst eksekver "alm" servers and "workers"
+            //      - brug housekeeping til at holde styr på disse
+            //  - dernæst eksekver shutdown-tasks
+
 			Execute(_configuration.OnStartup);
 
+            // TODO: Allow for tasks to be restartable
+            //  - should be the housekeeping-task that keeps other tasks alive
 			_tasks = kernel.ResolveAll<IBackgroundWorker>()
 				.Select(worker => new BackgroundWorkServer(worker, _scheduler, _console))
 				.Concat(kernel.ResolveAll<IBackgroundServer>())
@@ -144,7 +153,17 @@ namespace Vertica.Integration.Domain.LiteServer
 		private void Execute(IEnumerable<Action<IKernel>> actions)
 		{
 			foreach (Action<IKernel> action in actions)
-				action(_kernel);
+			{
+                //var task = Task.Factory.StartNew(() =>
+                //{
+                //    action(_kernel);
+
+                //}, _shutdown.Token, TaskCreationOptions.LongRunning, _scheduler);
+
+                //task.Wait(_shutdown.Token);
+
+			    action(_kernel);
+			}
 		}
 	}
 }

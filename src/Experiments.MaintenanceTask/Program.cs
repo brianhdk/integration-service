@@ -1,45 +1,74 @@
 ﻿using System;
-using Experiments.MaintenanceTask.Migrations.UCommerce;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using Castle.Core.Internal;
+using Castle.MicroKernel;
 using Vertica.Integration;
-using Vertica.Integration.Domain.Core;
+using Vertica.Integration.ConsoleHost;
+using Vertica.Integration.Domain.LiteServer;
 using Vertica.Integration.Infrastructure;
-using Vertica.Integration.Infrastructure.Configuration;
-using Vertica.Integration.Infrastructure.Database.Migrations;
-using Vertica.Integration.Model;
-using Vertica.Integration.MongoDB;
-using Vertica.Integration.MongoDB.Commands;
-using Vertica.Integration.UCommerce;
 
 namespace Experiments.MaintenanceTask
 {
+    public static class IntegrationStartup
+    {
+        public static void Run(string[] args, Action<ApplicationConfiguration> application = null)
+        {
+            using (IApplicationContext context = ApplicationContext.Create(cfg => cfg
+                .UseConsoleHost()
+                .Change(application)))
+            {
+                context.Execute(args);
+            }
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
+            //Debugger.Launch();
+
+            IntegrationStartup.Run(args, application => application
+                .Database(database => database
+                    .IntegrationDb(integrationDb => integrationDb
+                        .Disable()))
+                .UseLiteServer(liteServer => liteServer
+                    .AddWorker<SomeWorker>()
+                    .OnStartup(startup => startup.Add(SomeHeavyStartup))
+                    .OnShutdown(shutdown => shutdown.Add(SomeHeavyShutdown))));
+
+            return;
+
             using (IApplicationContext context = ApplicationContext.Create(application => application
                 .Database(database => database
                     .IntegrationDb(integrationDb => integrationDb
                 //        .Connection(ConnectionString.FromText("Server=.\\SQLExpress;Database=IS_MaintenanceTask;Trusted_Connection=True;"))
                         .Disable()
                 ))
-                .UseMongoDb(mongoDB => mongoDB
-                    // http://docs.mongodb.org/manual/reference/connection-string/#connections-connection-options
-                    .DefaultConnection(ConnectionString.FromText("mongodb://localhost"))
-                    //.AddConnection(new CustomMongoDb(ConnectionString.FromText("mongodb://localhost")))
-                )
-                .UseUCommerce(uCommerce => uCommerce
-                    .Connection(ConnectionString.FromText("Integrated Security=SSPI;Data Source=hoka-sql01.vertica.dk;Database=Hoka_Sitecore_uCommerce")))
-                //.Migration(migration => migration.AddUCommerceFromNamespaceOfThis<M1_UCommerce>(DatabaseServer.SqlServer2014))
-                .Tasks(tasks => tasks
-                    .MaintenanceTask(m => m
-                        //.IncludeLogRotator()
-                        //.IncludeLogRotator<CustomMongoDb>()
-                        .IncludeUCommerce()
-                    )
-                )))
+                .UseLiteServer(liteServer => liteServer
+                    .OnStartup(startup => startup.Add(SomeHeavyStartup))
+                    .AddWorker<SomeWorker>())
+                //.UseMongoDb(mongoDB => mongoDB
+                //    // http://docs.mongodb.org/manual/reference/connection-string/#connections-connection-options
+                //    .DefaultConnection(ConnectionString.FromText("mongodb://localhost"))
+                //    //.AddConnection(new CustomMongoDb(ConnectionString.FromText("mongodb://localhost")))
+                //)
+                //.UseUCommerce(uCommerce => uCommerce
+                //    .Connection(ConnectionString.FromText("Integrated Security=SSPI;Data Source=hoka-sql01.vertica.dk;Database=Hoka_Sitecore_uCommerce")))
+                ////.Migration(migration => migration.AddUCommerceFromNamespaceOfThis<M1_UCommerce>(DatabaseServer.SqlServer2014))
+                //.Tasks(tasks => tasks
+                //    .MaintenanceTask(m => m
+                //        //.IncludeLogRotator()
+                //        //.IncludeLogRotator<CustomMongoDb>()
+                //        .IncludeUCommerce()
+                //    )
+                //)
+            ))
             {
-                var factory = context.Resolve<ITaskFactory>();
-                var runner = context.Resolve<ITaskRunner>();
+                //var factory = context.Resolve<ITaskFactory>();
+                //var runner = context.Resolve<ITaskRunner>();
 
                 //var mongoDb = context.Resolve<IMongoDbClientFactory>();
                 //var rotator = context.Resolve<ILogRotatorCommand>();
@@ -68,8 +97,38 @@ namespace Experiments.MaintenanceTask
                 //configuration.Save(maintenanceConfiguration, "BHK");
 
                 // run the maintenance task
-                runner.Execute(factory.Get<Vertica.Integration.Domain.Core.MaintenanceTask>());
+                //runner.Execute(factory.Get<Vertica.Integration.Domain.Core.MaintenanceTask>());
             }
+        }
+
+        private class SomeWorker : IBackgroundWorker
+        {
+            public BackgroundWorkerContinuation Work(BackgroundWorkerContext context, CancellationToken token)
+            {
+                if (context.InvocationCount == 5)
+                    return context.Exit();
+
+                File.WriteAllText($@"c:\tmp\integrationservice\worker-{DateTime.Now.Ticks}.txt", string.Empty);
+
+                return context.Wait(TimeSpan.FromSeconds(5));
+            }
+        }
+
+        private static void SomeHeavyStartup(IKernel kernel)
+        {
+            Directory.EnumerateFiles(@"C:\tmp\integrationservice").ForEach(File.Delete);
+            File.WriteAllText($@"c:\tmp\integrationservice\startup-{DateTime.Now.Ticks}.txt", string.Empty);
+            //Debugger.Launch();
+
+            //Thread.Sleep(TimeSpan.FromSeconds(60));
+        }
+
+        private static void SomeHeavyShutdown(IKernel kernel)
+        {
+            File.WriteAllText($@"c:\tmp\integrationservice\shutdown-{DateTime.Now.Ticks}.txt", string.Empty);
+            //Debugger.Launch();
+
+            //Thread.Sleep(TimeSpan.FromSeconds(30));
         }
 
         private class CustomMongoDb : Vertica.Integration.MongoDB.Infrastructure.Connection

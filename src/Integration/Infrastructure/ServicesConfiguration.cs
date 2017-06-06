@@ -17,8 +17,10 @@ namespace Vertica.Integration.Infrastructure
             _conventions = new ServicesConventionsConfiguration(this);
 
             Application = application
-                .Extensibility(extensibility => extensibility.Register(() => _interceptors)) // <- NOTE: it's important to register this first
-                .Extensibility(extensibility => extensibility.Register(() => _advanced)) // <- NOTE: it's important to register this second
+                // NOTE: Interceptors has to go first.
+                .Extensibility(extensibility => extensibility.Register(() => _interceptors))
+                // NOTE: Advanced has to go second as they take precedence over the conventional registrations.
+                .Extensibility(extensibility => extensibility.Register(() => _advanced))
                 .Extensibility(extensibility => extensibility.Register(() => _conventions));
         }
 

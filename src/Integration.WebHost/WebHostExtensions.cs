@@ -30,6 +30,7 @@ namespace Vertica.Integration.WebHost
                             new WebHostShutdownRequest(cancellationToken))));
             });
 
+            // Make sure to dispose when Owin is shutting down.
             cancellationToken.Register(() => applicationContext.Dispose());
 
             // Make the application context instance available on each request

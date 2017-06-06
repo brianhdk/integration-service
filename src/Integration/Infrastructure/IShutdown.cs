@@ -5,7 +5,7 @@ namespace Vertica.Integration.Infrastructure
     public interface IShutdown
     {
         /// <summary>
-        /// Provides access to the CancellationToken which can be passed to any async operation, or it can be used to be notified once we're shutting down.
+        /// Provides access to the CancellationToken which can be passed to any async operation.
         /// </summary>
         CancellationToken Token { get; }
 

@@ -37,7 +37,7 @@ namespace Vertica.Integration.Infrastructure
 
 		    Register(kernel => Environment.UserInteractive ? Console.Out : TextWriter.Null);
 
-            if (AzureWebJobShutdownRequest.IsRunningOnAzure())
+            if (AzureWebJobShutdownRequest.IsRunningInAzure())
             {
                 Register<IWaitForShutdownRequest, AzureWebJobShutdownRequest>();
             }

@@ -34,7 +34,7 @@ namespace Vertica.Integration.Infrastructure.IO
 	        _waitHandle.WaitOne();
 	    }
 
-	    public static bool IsRunningOnAzure()
+	    public static bool IsRunningInAzure()
 		{
 			return !string.IsNullOrEmpty(ShutdownFile());
 		}

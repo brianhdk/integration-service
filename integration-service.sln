@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration", "src\Integration\Integration.csproj", "{460F774F-2C89-47F4-84BD-B97653060E68}"
 EndProject
@@ -90,6 +90,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Experiments.Website", "src\Experiments.Website\Experiments.Website.csproj", "{E7DE3E0A-BCEC-419C-BBE7-6F9645CAEB87}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Redis", "src\Integration.Redis\Integration.Redis.csproj", "{D59B4610-F4EB-495A-9012-C4767BBA9B38}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.ConsoleHost", "src\Integration.ConsoleHost\Integration.ConsoleHost.csproj", "{90969277-DE56-47C0-940D-34C0871E1D6E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -217,6 +219,10 @@ Global
 		{D59B4610-F4EB-495A-9012-C4767BBA9B38}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D59B4610-F4EB-495A-9012-C4767BBA9B38}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D59B4610-F4EB-495A-9012-C4767BBA9B38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90969277-DE56-47C0-940D-34C0871E1D6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90969277-DE56-47C0-940D-34C0871E1D6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90969277-DE56-47C0-940D-34C0871E1D6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90969277-DE56-47C0-940D-34C0871E1D6E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -83,21 +83,17 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 			}
 			else
 			{
-                using (service.OnStartFactory())
-                using (var serviceBase = new ServiceBase())
+                using (var serviceBase = new CustomService(GetServiceName(service), service.OnStartFactory, _shutdown))
                 {
-                    serviceBase.ServiceName = GetServiceName(service);
-
+                    // This blocks the code until ServiceBase returns.
                     ServiceBase.Run(serviceBase);
-
-                    _shutdown.WaitForShutdown();
                 }
 			}
 
             return true;
         }
 
-		private string GetServiceName(HandleAsWindowsService service)
+	    private string GetServiceName(HandleAsWindowsService service)
 		{
 			if (service == null) throw new ArgumentNullException(nameof(service));
 
@@ -148,5 +144,31 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 
 		public static KeyValuePair<string, string> InstallCommand => new KeyValuePair<string, string>(Command, "install");
 		public static KeyValuePair<string, string> UninstallCommand => new KeyValuePair<string, string>(Command, "uninstall");
-	}
+
+        private class CustomService : ServiceBase
+        {
+            private readonly Func<IDisposable> _onStartFactory;
+            private readonly IShutdown _shutdown;
+            private IDisposable _current;
+
+            public CustomService(string serviceName, Func<IDisposable> onStartFactory, IShutdown shutdown)
+            {
+                _onStartFactory = onStartFactory;
+                _shutdown = shutdown;
+                ServiceName = serviceName;
+            }
+
+            protected override void OnStart(string[] args)
+            {
+                _current = _onStartFactory();
+            }
+
+            protected override void OnStop()
+            {
+                _shutdown.WaitForShutdown();
+
+                _current?.Dispose();
+            }
+        }
+    }
 }
