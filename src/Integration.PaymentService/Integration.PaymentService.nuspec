@@ -15,6 +15,9 @@
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>Vertica Integration Service IntegrationService Payment Service</tags>
+    <dependencies>
+      <dependency id="Vertica.Integration" version="[1.12,2.0)" />
+    </dependencies>
   </metadata>
   <files>
     <file src="App_Readme/Integration.PaymentService-readme.txt" target="readme.txt" />

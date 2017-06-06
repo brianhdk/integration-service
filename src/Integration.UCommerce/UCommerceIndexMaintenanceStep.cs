@@ -18,6 +18,9 @@ namespace Vertica.Integration.UCommerce
 
         public override void Execute(MaintenanceWorkItem workItem, ITaskExecutionContext context)
         {
+            // TODO: Configurable - allow external configuration of indexes
+            // Parse index names - only allow chars/digits/_-
+
             string[] indexNames =
             {
                 "IX_uCommerce_PurchaseOrder_BasketId",

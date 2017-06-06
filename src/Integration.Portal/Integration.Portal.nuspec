@@ -15,6 +15,10 @@
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>Vertica Integration Service IntegrationService Portal</tags>
+    <dependencies>
+      <dependency id="Vertica.Integration" version="[1.12,2.0)" />
+      <dependency id="Vertica.Integration.WebApi" version="[1.12,2.0)" />
+    </dependencies>
   </metadata>
   <files>
     <file src="App_Readme/Integration.Portal-readme.txt" target="readme.txt" />

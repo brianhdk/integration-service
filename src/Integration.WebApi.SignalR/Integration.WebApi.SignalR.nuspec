@@ -15,7 +15,11 @@
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>Vertica Integration Service WebApi Owin SignalR</tags>
-	</metadata>
+    <dependencies>
+      <dependency id="Vertica.Integration" version="[1.12,2.0)" />
+      <dependency id="Vertica.Integration.WebApi" version="[1.12,2.0)" />
+    </dependencies>
+  </metadata>
 	<files>
 		<file src="App_Readme/Integration.WebApi.SignalR-readme.txt" target="readme.txt" />
 	</files>
