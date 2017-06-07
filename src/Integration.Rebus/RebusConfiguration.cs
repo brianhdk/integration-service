@@ -21,7 +21,7 @@ namespace Vertica.Integration.Rebus
 		        });
 	    }
 
-		public ApplicationConfiguration Application { get; private set; }
+		public ApplicationConfiguration Application { get; }
 
 		private RebusHandlersConfiguration HandlersConfiguration { get; set; }
 

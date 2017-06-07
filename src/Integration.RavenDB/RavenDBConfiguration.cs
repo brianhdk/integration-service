@@ -21,7 +21,7 @@ namespace Vertica.Integration.RavenDB
 			_connections = new List<IWindsorInstaller>();
         }
 
-        public ApplicationConfiguration Application { get; private set; }
+        public ApplicationConfiguration Application { get; }
 
 	    public RavenDbConfiguration DefaultConnection(ConnectionString connectionString)
 	    {

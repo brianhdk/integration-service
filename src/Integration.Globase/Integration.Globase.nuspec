@@ -21,5 +21,7 @@
   </metadata>
   <files>
     <file src="App_Readme\Integration.Globase-readme.txt" target="readme.txt" />
+    <file src="NuGet-app.config.install.xdt" target="content\App.config.install.xdt" />
+    <file src="NuGet-app.config.uninstall.xdt" target="content\App.config.uninstall.xdt" />
   </files>
 </package>

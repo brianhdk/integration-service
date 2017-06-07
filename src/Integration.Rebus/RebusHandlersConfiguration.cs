@@ -23,7 +23,7 @@ namespace Vertica.Integration.Rebus
             _handlers = new List<Type>();
 		}
 
-		public ApplicationConfiguration Application { get; private set; }
+		public ApplicationConfiguration Application { get; }
 
 		public RebusHandlersConfiguration AddFromAssemblyOfThis<T>()
 		{

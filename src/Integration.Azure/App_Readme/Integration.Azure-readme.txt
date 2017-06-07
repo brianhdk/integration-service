@@ -10,7 +10,7 @@ class Program
 		IntegrationStartup.Run(args, application => application
             .UseAzure(azure => azure
                 .BlobStorage(blobStorage => blobStorage
-					.DefaultConnection(ConnectionString.FromText("...")))
+					.DefaultConnection(ConnectionString.FromName("Azure.Blobstorage")))
 				.ServiceBus(serviceBus => serviceBus
 					.DefaultConnection(ConnectionString.FromText("...")))));
     }

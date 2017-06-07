@@ -24,7 +24,7 @@ namespace Vertica.Integration.MongoDB
             _connections = new List<IWindsorInstaller>();
         }
 
-        public ApplicationConfiguration Application { get; private set; }
+        public ApplicationConfiguration Application { get; }
 
 		public MongoDbConfiguration DefaultConnection(ConnectionString connectionString)
 		{
