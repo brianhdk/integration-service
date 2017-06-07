@@ -22,10 +22,6 @@ namespace Vertica.Integration.Slack.Bot.Commands
 
             string taskName = context.IncomingMessage.Text;
 
-            // afvikler en task inkl. argumenter
-            //  - fortæller at tasken er sat i gang (og at der logges i default-kanalen)
-            //  - fortæller igen når tasken er kørt færdig - og hvis der er sket fejl, fortælles der om dette
-
             ITask taskToExecute;
             if (!string.IsNullOrWhiteSpace(taskName) && _factory.TryGet(taskName, out taskToExecute))
             {

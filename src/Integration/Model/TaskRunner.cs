@@ -40,9 +40,6 @@ namespace Vertica.Integration.Model
 
 			var output = new List<string>();
 
-            // TODO: Kig på at outputte beskeder hvor TaskName+StepName indgår (samt tidspunktet)
-                // i TaskExecutionResult skal TaskName ikke indgå, blot StepName
-
 			Action<string> outputter = message =>
 			{
 				message = $"[{Time.Now:HH:mm:ss}] {message}";

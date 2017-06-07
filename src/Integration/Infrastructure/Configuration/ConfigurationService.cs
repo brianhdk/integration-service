@@ -122,14 +122,12 @@ namespace Vertica.Integration.Infrastructure.Configuration
             {
                 _logger.LogWarning(Target.Service,
 @"Class '{0}' used for configuration should have been decorated with a [Guid(""[insert-new-Guid-here]"")]-attribute.
-This is to ensure a unique and Refactor-safe Global ID.
+This is to ensure a unique and refactor-safe Global ID.
 
-Remember when (or if) you add this Guid-attribute, that you (manually) have to merge the data to the new instance.
-If you don't like to do it manually, you can of course use a Migration.
+Remember when (or if) you add this Guid-attribute, that you have to (manually) merge the data to the new instance.
+If you don't like to do it manually, you can of course use a Migration (inherit from IntegrationMigration and use the MergeConfiguration<T>()-method).
 
 IMPORTANT: Remember to use the ""D"" format for Guids, e.g. 1EB3F675-C634-412F-A76F-FC3F9A4A68D5", id);
-
-                // TODO: Create an example for this on GitHub and link to that example.
             }
 
             return id;
