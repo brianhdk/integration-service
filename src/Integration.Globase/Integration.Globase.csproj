@@ -87,6 +87,8 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Integration.Globase.nuspec" />
+    <None Include="NuGet-app.config.install.xdt" />
+    <None Include="NuGet-app.config.uninstall.xdt" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
