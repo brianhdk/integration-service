@@ -1,13 +1,14 @@
 ﻿<?xml version="1.0"?>
 <configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
   <connectionStrings xdt:Transform="InsertIfMissing">
-    <add name="IntegrationDb" connectionString="Integrated Security=SSPI;Data Source=[NAME-OF-SQL-SERVER];Database=[NAME-OF-INTEGRATION-DATABASE]" xdt:Transform="InsertIfMissing" />
+    <add name="IntegrationDb" connectionString="Integrated Security=SSPI;Data Source=[NAME-OF-SQL-SERVER];Database=[NAME-OF-INTEGRATION-DATABASE]" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)" />
   </connectionStrings>
 
   <appSettings xdt:Transform="InsertIfMissing">
-    <add key="ConcurrentTaskExecution.PreventConcurrentTaskExecutionOnAllTasks" value="false" xdt:Transform="InsertIfMissing" />
-    <add key="ConcurrentTaskExecution.DefaultWaitTime" value="00:01:00" xdt:Transform="InsertIfMissing" />
-    <add key="DbDistributedMutex.QueryLockInterval" value="00:00:10" xdt:Transform="InsertIfMissing" />
+    <add key="Environment" value="Development" xdt:Transform="InsertIfMissing" />
+    <add key="ConcurrentTaskExecution.PreventConcurrentTaskExecutionOnAllTasks" value="false" xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" />
+    <add key="ConcurrentTaskExecution.DefaultWaitTime" value="00:01:00" xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" />
+    <add key="DbDistributedMutex.QueryLockInterval" value="00:00:10" xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" />
   </appSettings>
 
   <system.net xdt:Transform="InsertIfMissing">

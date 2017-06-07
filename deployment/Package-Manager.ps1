@@ -12,7 +12,7 @@ $settings = @{
     "src" = @{
         "integration" = Resolve-Path $script_directory\..\src\Integration
         "integration_host" = Resolve-Path $script_directory\..\src\Integration.Host
-		#"integration_consolehost" = Resolve-Path $script_directory\..\src\Integration.ConsoleHost
+		"integration_consolehost" = Resolve-Path $script_directory\..\src\Integration.ConsoleHost
         "integration_webhost" = Resolve-Path $script_directory\..\src\Integration.WebHost
 		"integration_webapi" = Resolve-Path $script_directory\..\src\Integration.WebApi
 		"integration_webapi_signalr" = Resolve-Path $script_directory\..\src\Integration.WebApi.SignalR
@@ -31,6 +31,7 @@ $settings = @{
         "integration_ucommerce" = Resolve-Path $script_directory\..\src\Integration.UCommerce
         "integration_elasticsearch" = Resolve-Path $script_directory\..\src\Integration.Elasticsearch
 		"integration_redis" = Resolve-Path $script_directory\..\src\Integration.Redis
+		"integration_iis" = Resolve-Path $script_directory\..\src\Integration.IIS
     }
     "tools" = @{
         "nuget" = Resolve-Path $script_directory\..\.nuget\NuGet.exe
@@ -41,6 +42,12 @@ $settings = @{
 Get-ChildItem $script_directory | Where-Object { $_.Extension -eq ".nupkg" } | Remove-Item
 
 foreach ($project in $settings.src.Keys) {
+
+	Write-Host
+	Write-Host "----------------------------------" -ForegroundColor Green
+	Write-Host "--- $project" -ForegroundColor Green
+	Write-Host "----------------------------------" -ForegroundColor Green
+	Write-Host
 
     $projectDirectory = Resolve-Path $settings.src[$project]
 
@@ -64,7 +71,7 @@ foreach ($project in $settings.src.Keys) {
     }
 
 	# https://docs.nuget.org/consume/command-line-reference
-    &$settings.tools.nuget pack $csproj -Build -Properties Configuration=Release -IncludeReferencedProjects -Exclude "Assets/**/*.*" -Exclude "Default.html" -MSBuildVersion 14
+    &$settings.tools.nuget pack $csproj -Verbosity "quiet" -Build -Properties Configuration=Release -Symbols -IncludeReferencedProjects -Exclude "Assets/**/*.*" -Exclude "Default.html" -MSBuildVersion 14
 	
 	if (Test-Path (Join-Path $projectDirectory "NuGet-After-Pack.ps1")) {
 		

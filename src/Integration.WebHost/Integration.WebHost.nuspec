@@ -20,8 +20,8 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="App_Readme/Integration.WebHost-readme.txt" target="readme.txt" />
-    <file src="NuGet-web.config.install.xdt" target="content/Web.config.install.xdt" />
-    <file src="NuGet-web.config.uninstall.xdt" target="content/Web.config.uninstall.xdt" />
+    <file src="App_Readme\Integration.WebHost-readme.txt" target="readme.txt" />
+    <file src="NuGet-web.config.install.xdt" target="content\Web.config.install.xdt" />
+    <file src="NuGet-web.config.uninstall.xdt" target="content\Web.config.uninstall.xdt" />
   </files>
 </package>

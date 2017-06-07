@@ -20,6 +20,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="App_Readme/Integration.RavenDB-readme.txt" target="readme.txt" />
+    <file src="App_Readme\Integration.RavenDB-readme.txt" target="readme.txt" />
   </files>
 </package>

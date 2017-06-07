@@ -21,8 +21,8 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="App_Readme/Integration.Portal-readme.txt" target="readme.txt" />
+    <file src="App_Readme\Integration.Portal-readme.txt" target="readme.txt" />
     <file src="Portal.Html5.zip" exclude="assets/**/*.*" target="content" />
-    <file src="NuGet-install.ps1" target="tools/install.ps1" />
+    <file src="NuGet-install.ps1" target="tools\install.ps1" />
   </files>
 </package>

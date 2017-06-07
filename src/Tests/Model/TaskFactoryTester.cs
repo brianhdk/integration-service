@@ -5,6 +5,7 @@ using NUnit.Framework;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Exceptions;
+using Vertica.Integration.Tests.Infrastructure;
 using Vertica.Integration.Tests.SQLite;
 
 namespace Vertica.Integration.Tests.Model
@@ -131,8 +132,7 @@ namespace Vertica.Integration.Tests.Model
         private static IDisposable CreateSubject(out ITaskFactory subject, Action<TasksConfiguration> tasks)
         {
             var context = ApplicationContext.Create(application => application
-                .Logging(logging => logging.Disable())
-                .Database(database => database.IntegrationDb(integrationDb => integrationDb.Disable()))
+                .ConfigureForUnitTest()
                 .Tasks(tasks));
 
             subject = context.Resolve<ITaskFactory>();

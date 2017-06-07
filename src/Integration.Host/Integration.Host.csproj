@@ -45,9 +45,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Integration.Host.nuspec" />
-    <None Include="NuGet-app.config.install.xdt" />
-    <None Include="NuGet-app.config.uninstall.xdt" />
-    <None Include="NuGet-IntegrationStartup.cs.pp" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Readme\Integration.Host-readme.txt" />

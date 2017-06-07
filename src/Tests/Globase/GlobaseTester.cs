@@ -10,6 +10,7 @@ using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Archiving;
 using Vertica.Integration.Infrastructure.Remote;
 using Vertica.Integration.Infrastructure.Remote.Ftp;
+using Vertica.Integration.Tests.Infrastructure;
 
 namespace Vertica.Integration.Tests.Globase
 {
@@ -20,6 +21,7 @@ namespace Vertica.Integration.Tests.Globase
         public void Write_Csv_VerifyText()
         {
             using (IApplicationContext context = ApplicationContext.Create(application => application
+                .ConfigureForUnitTest()
                 .UseGlobase()))
             {
                 var records = Enumerable.Range(1, 5).Select(x => new CsvCustomRecord(x));
@@ -56,8 +58,7 @@ namespace Vertica.Integration.Tests.Globase
                 .Returns("done");
 
             using (IApplicationContext context = ApplicationContext.Create(application => application
-                .Database(database => database
-                    .IntegrationDb(integrationDb => integrationDb.Disable()))
+                .ConfigureForUnitTest()
                 .Services(services => services
                     .Advanced(advanced => advanced
                         .Register(kernel => archiveService)

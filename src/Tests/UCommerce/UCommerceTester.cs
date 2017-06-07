@@ -5,6 +5,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Database;
+using Vertica.Integration.Tests.Infrastructure;
 using Vertica.Integration.UCommerce;
 using Vertica.Integration.UCommerce.Database;
 
@@ -19,6 +20,7 @@ namespace Vertica.Integration.Tests.UCommerce
             var connection = Substitute.For<IDbConnection>();
 
             using (IApplicationContext context = ApplicationContext.Create(application => application
+                .ConfigureForUnitTest()
                 .UseUCommerce(uCommerce => uCommerce
                     .Connection(new CustomUCommerceDb(connection)))))
             {
@@ -32,6 +34,7 @@ namespace Vertica.Integration.Tests.UCommerce
         public void Connection_ConnectionStringFromText_CanBeResolved()
         {
             using (IApplicationContext context = ApplicationContext.Create(application => application
+                .ConfigureForUnitTest()
                 .UseUCommerce(uCommerce => uCommerce
                     .Connection(ConnectionString.FromText(".")))))
             {
@@ -43,6 +46,7 @@ namespace Vertica.Integration.Tests.UCommerce
         public void Connection_DefaultConnection_ThrowsConnectionStringNameNotFound()
         {
             using (IApplicationContext context = ApplicationContext.Create(application => application
+                .ConfigureForUnitTest()
                 .UseUCommerce()))
             {
                 var factory = context.Resolve<IDbFactory<UCommerceDb>>();
@@ -57,6 +61,7 @@ namespace Vertica.Integration.Tests.UCommerce
         public void Connection_CustomConnectionStringFromName_ThrowsConnectionStringNameNotFound()
         {
             using (IApplicationContext context = ApplicationContext.Create(application => application
+                .ConfigureForUnitTest()
                 .UseUCommerce(uCommerce => uCommerce
                     .Connection(ConnectionString.FromName("CustomConn")))))
             {

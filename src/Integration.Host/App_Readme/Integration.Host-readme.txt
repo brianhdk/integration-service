@@ -1,12 +1,19 @@
-﻿Hi, and thanks for trying out the Integration Service platform.
-To get started, modify your Program.cs as shown below to begin working with this.
+﻿_________ _______  _______  _______  _______ _________ _______  _       _________
+\__   __/(       )(  ____ )(  ___  )(  ____ )\__   __/(  ___  )( (    /|\__   __/
+   ) (   | () () || (    )|| (   ) || (    )|   ) (   | (   ) ||  \  ( |   ) (   
+   | |   | || || || (____)|| |   | || (____)|   | |   | (___) ||   \ | |   | |   
+   | |   | |(_)| ||  _____)| |   | ||     __)   | |   |  ___  || (\ \) |   | |   
+   | |   | |   | || (      | |   | || (\ (      | |   | (   ) || | \   |   | |   
+___) (___| )   ( || )      | (___) || ) \ \__   | |   | )   ( || )  \  |   | |   
+\_______/|/     \||/       (_______)|/   \__/   )_(   |/     \||/    )_)   )_(   
+                                                                                 
+--------------------------------------------------------------------------------
 
-Also make sure to visit the Project Home on https://github.com/vertica-as/integration-service for further documentation.
+This package is now obsolete - and should be replaced by "Vertica.Integration.ConsoleHost"
 
-class Program
-{
-    static void Main(string[] args)
-    {
-        IntegrationStartup.Run(args);
-    }
-}
+1) Remove IntegrationStartup.cs
+2) Uninstall-Package "Vertica.Integration.Host"
+3) Install-Package "Vertica.Integration.ConsoleHost"
+
+If have a custom IHost implementation, that uses "IWindowsServiceHandler" to support Windows Service execution, you also need to make some adjustments.
+Basically you need to remove the dependency on "IWindowsServiceHandler" - but there might be dragons. Reach out to me: bhk@vertica.dk 

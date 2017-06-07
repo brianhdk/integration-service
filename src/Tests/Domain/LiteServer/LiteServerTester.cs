@@ -5,6 +5,7 @@ using NUnit.Framework;
 using Vertica.Integration.Domain.LiteServer;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Logging;
+using Vertica.Integration.Tests.Infrastructure;
 
 namespace Vertica.Integration.Tests.Domain.LiteServer
 {
@@ -20,6 +21,7 @@ namespace Vertica.Integration.Tests.Domain.LiteServer
                 var logger = Substitute.For<ILogger>();
 
                 using (var context = ApplicationContext.Create(application => application
+                    .ConfigureForUnitTest()
                     .UseLiteServer(liteServer => liteServer.OnStartup(startup => { }))
                     .Services(services => services
                         .Advanced(advanced => advanced
@@ -40,6 +42,7 @@ namespace Vertica.Integration.Tests.Domain.LiteServer
                 var logger = Substitute.For<ILogger>();
 
                 using (var context = ApplicationContext.Create(application => application
+                    .ConfigureForUnitTest()
                     .UseLiteServer(liteServer => liteServer
                         .AddWorker<FailingWorker>())
                     .Services(services => services

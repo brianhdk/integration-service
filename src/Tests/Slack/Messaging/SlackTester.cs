@@ -6,12 +6,12 @@ using NSubstitute;
 using NUnit.Framework;
 using Vertica.Integration.Domain.LiteServer;
 using Vertica.Integration.Infrastructure;
-using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Slack;
 using Vertica.Integration.Slack.Messaging;
 using Vertica.Integration.Slack.Messaging.Handlers;
 using Vertica.Integration.Slack.Messaging.Messages;
+using Vertica.Integration.Tests.Infrastructure;
 
 namespace Vertica.Integration.Tests.Slack.Messaging
 {
@@ -24,6 +24,7 @@ namespace Vertica.Integration.Tests.Slack.Messaging
             var messageQueue = Substitute.For<ISlackMessageQueue>();
 
             using (var context = ApplicationContext.Create(application => application
+                .ConfigureForUnitTest()
                 .Services(services => services
                     .Advanced(advanced => advanced
                         .Register(kernel => messageQueue)
@@ -49,9 +50,7 @@ namespace Vertica.Integration.Tests.Slack.Messaging
                 var shutdown = new ShutdownHandler(resetEvent, TimeSpan.FromSeconds(5));
 
                 using (var context = ApplicationContext.Create(application => application
-                    .Database(database => database
-                        .IntegrationDb(integrationDb => integrationDb.Disable()))
-                    .Logging(logging => logging.Disable())
+                    .ConfigureForUnitTest()
                     .Services(services => services
                         .Advanced(advanced => advanced
                             .Register<IRuntimeSettings>(kernel => new InMemoryRuntimeSettings()

@@ -6,6 +6,7 @@ using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Database.Migrations;
 using Vertica.Integration.Model;
 using Vertica.Integration.SQLite;
+using Vertica.Integration.Tests.Infrastructure;
 
 namespace Vertica.Integration.Tests.SQLite
 {
@@ -23,8 +24,8 @@ namespace Vertica.Integration.Tests.SQLite
 			var connection = new TestSqliteConnection(_fileName);
 
 			_context = ApplicationContext.Create(application => application
+                .ConfigureForUnitTest()
 				.Database(database => database
-                    .IntegrationDb(integrationDb => integrationDb.Disable())
                     .SQLite(sqlite => sqlite.AddConnection(connection)))
 				.Migration(migration => migration.AddFromNamespaceOfThis<M1_CreateMyTable>(DatabaseServer.Sqlite, connection.ConnectionString))
 				.Tasks(tasks => tasks.Clear().Task<MigrateTask>().AddFromAssemblyOfThis<SQLiteTester>()));

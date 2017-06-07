@@ -12,6 +12,7 @@ namespace Vertica.Integration.Tests.Infrastructure.Factories
 		public void Resolve_As_DifferentDataStructures()
 		{
 		    using (IApplicationContext context = ApplicationContext.Create(application => application
+                .ConfigureForUnitTest()
 		        .Services(services => services
 		            .Advanced(advanced => advanced
 		                .Install(Install
@@ -39,6 +40,7 @@ namespace Vertica.Integration.Tests.Infrastructure.Factories
 		public void Ignore_Service_Gets_Ignored()
 		{
 		    using (IApplicationContext context = ApplicationContext.Create(application => application
+                .ConfigureForUnitTest()
 		        .Services(services => services
 		            .Advanced(advanced => advanced
 		                .Install(Install

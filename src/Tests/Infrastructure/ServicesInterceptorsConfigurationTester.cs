@@ -14,6 +14,7 @@ namespace Vertica.Integration.Tests.Infrastructure
 		    var stack = new Stack<object>();
 
             using (var context = ApplicationContext.Create(application => application
+                .ConfigureForUnitTest()
                 .Services(services => services
                     .Interceptors(interceptors => interceptors
                         .InterceptService<SomeService, SomeServiceInterceptor>())
@@ -44,6 +45,7 @@ namespace Vertica.Integration.Tests.Infrastructure
             var stack = new Stack<object>();
 
             using (var context = ApplicationContext.Create(application => application
+                .ConfigureForUnitTest()
                 .Services(services => services
                     .Interceptors(interceptors => interceptors
                         .AddInterceptor<SomeServiceInterceptor>(model => model.Implementation.Namespace == GetType().Namespace))

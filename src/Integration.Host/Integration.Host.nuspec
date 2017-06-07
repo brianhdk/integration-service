@@ -20,9 +20,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="App_Readme/Integration.Host-readme.txt" target="readme.txt" />
-    <file src="NuGet-app.config.install.xdt" target="content/App.config.install.xdt" />
-    <file src="NuGet-app.config.uninstall.xdt" target="content/App.config.uninstall.xdt" />
-    <file src="NuGet-IntegrationStartup.cs.pp" target="content/IntegrationStartup.cs.pp" />
+    <file src="App_Readme\Integration.Host-readme.txt" target="readme.txt" />
   </files>
 </package>

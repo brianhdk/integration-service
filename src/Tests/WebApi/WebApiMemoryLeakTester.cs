@@ -12,6 +12,7 @@ using NUnit.Framework;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Infrastructure.Remote;
+using Vertica.Integration.Tests.Infrastructure;
 using Vertica.Integration.WebApi;
 using Vertica.Integration.WebApi.Infrastructure;
 
@@ -30,7 +31,7 @@ namespace Vertica.Integration.Tests.WebApi
             var referenceCounter = new ReferenceCounter();
 
             using (var context = ApplicationContext.Create(application => application
-                .Database(database => database.IntegrationDb(integrationDb => integrationDb.Disable()))
+                .ConfigureForUnitTest()
                 .Tasks(tasks => tasks.Clear())
                 .Services(services => services
                     .Advanced(advanced => advanced

@@ -10,6 +10,7 @@ using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Threading.DistributedMutex;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Tasks;
+using Vertica.Integration.Tests.Infrastructure;
 using Vertica.Utilities_v4;
 using Task = Vertica.Integration.Model.Task;
 
@@ -26,8 +27,7 @@ namespace Vertica.Integration.Tests.Model
             var synchronizationContext = new SynchronizationContext(cancellationTokenSource);
 
             using (var context = ApplicationContext.Create(application => application
-                .Database(database => database.IntegrationDb(integrationDb => integrationDb.Disable()))
-                .Logging(logging => logging.Disable())
+                .ConfigureForUnitTest()
                 .Services(services => services
                     .Advanced(advanced => advanced
                         .Register(kernel => synchronizationContext)
@@ -74,8 +74,7 @@ namespace Vertica.Integration.Tests.Model
             var distributedMutex = Substitute.For<IDistributedMutex>();
 
             using (var context = ApplicationContext.Create(application => application
-                .Database(database => database.IntegrationDb(integrationDb => integrationDb.Disable()))
-                .Logging(logging => logging.Disable())
+                .ConfigureForUnitTest()
                 .Services(services => services
                     .Advanced(advanced => advanced
                         .Register<IRuntimeSettings>(kernel => new InMemoryRuntimeSettings()
@@ -101,8 +100,7 @@ namespace Vertica.Integration.Tests.Model
             var distributedMutex = Substitute.For<IDistributedMutex>();
 
             using (var context = ApplicationContext.Create(application => application
-                .Database(database => database.IntegrationDb(integrationDb => integrationDb.Disable()))
-                .Logging(logging => logging.Disable())
+                .ConfigureForUnitTest()
                 .Services(services => services
                     .Advanced(advanced => advanced
                         .Register<IRuntimeSettings>(kernel => new InMemoryRuntimeSettings()
@@ -130,8 +128,7 @@ namespace Vertica.Integration.Tests.Model
             var distributedMutex = Substitute.For<IDistributedMutex>();
 
             using (var context = ApplicationContext.Create(application => application
-                .Database(database => database.IntegrationDb(integrationDb => integrationDb.Disable()))
-                .Logging(logging => logging.Disable())
+                .ConfigureForUnitTest()
                 .Services(services => services
                     .Advanced(advanced => advanced
                         .Register<IRuntimeSettings>(kernel => new InMemoryRuntimeSettings()

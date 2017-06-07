@@ -56,6 +56,10 @@
     <Reference Include="Microsoft.Owin.Hosting, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Owin.Hosting.3.1.0\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\IIS.Microsoft.Web.Adminstration.8.5.9600.16384\lib\Microsoft.Web.Administration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -102,6 +106,7 @@
     <Compile Include="Domain\Monitoring\MonitorWorkItemTester.cs" />
     <Compile Include="Domain\Monitoring\PingUrlsStepIntegrationTester.cs" />
     <Compile Include="Globase\GlobaseTester.cs" />
+    <Compile Include="Infrastructure\ApplicationConfigurationTestingExtensions.cs" />
     <Compile Include="Infrastructure\ServicesInterceptorsConfigurationTester.cs" />
     <Compile Include="Infrastructure\ServicesConventionsConfigurationTester.cs" />
     <Compile Include="Infrastructure\ServicesAdvancedConfigurationTester.cs" />
@@ -143,6 +148,10 @@
     <ProjectReference Include="..\Integration.Globase\Integration.Globase.csproj">
       <Project>{B66C0A0E-BE2C-4B8A-8080-19141BCB41C4}</Project>
       <Name>Integration.Globase</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration.IIS\Integration.IIS.csproj">
+      <Project>{4273E246-5F7D-4385-8451-AFA8E2680441}</Project>
+      <Name>Integration.IIS</Name>
     </ProjectReference>
     <ProjectReference Include="..\Integration.Logging.Elmah\Integration.Logging.Elmah.csproj">
       <Project>{6D28C1CE-7EAE-44A2-8624-A879F7AF7021}</Project>

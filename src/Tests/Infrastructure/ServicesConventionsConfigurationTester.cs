@@ -10,6 +10,7 @@ namespace Vertica.Integration.Tests.Infrastructure
 		public void Following_NamingConvention_CanBeResolved()
 		{
             using (var context = ApplicationContext.Create(application => application
+                .ConfigureForUnitTest()
                 .Services(services => services
                     .Conventions(conventions => conventions
                         .AddFromAssemblyOfThis<ServicesConventionsConfigurationTester>()))))
@@ -24,6 +25,7 @@ namespace Vertica.Integration.Tests.Infrastructure
         public void NotFollowing_NamingConvention_Throws()
         {
             using (var context = ApplicationContext.Create(application => application
+                .ConfigureForUnitTest()
                 .Services(services => services
                     .Conventions(conventions => conventions
                         .AddFromAssemblyOfThis<ServicesConventionsConfigurationTester>()))))
@@ -36,6 +38,7 @@ namespace Vertica.Integration.Tests.Infrastructure
         public void Following_NamingConvention_ButIgnored_Throws()
         {
             using (var context = ApplicationContext.Create(application => application
+                .ConfigureForUnitTest()
                 .Services(services => services
                     .Conventions(conventions => conventions
                         .AddFromAssemblyOfThis<ServicesConventionsConfigurationTester>()

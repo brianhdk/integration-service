@@ -16,6 +16,7 @@ namespace Vertica.Integration.Tests.Infrastructure
 		public void Replace_BuiltIn_Services()
 		{
             using (var context = ApplicationContext.Create(application => application
+                .ConfigureForUnitTest()
                 .Hosts(hosts => hosts.Clear().Host<TestHost<ConfigurationRepositoryStub>>())
                 .Services(services => services.Advanced(advanced => advanced
                     .Register<IConfigurationRepository, ConfigurationRepositoryStub>()
@@ -30,6 +31,7 @@ namespace Vertica.Integration.Tests.Infrastructure
 	    public void Replace_ConventionBased_Service()
 	    {
             using (var context = ApplicationContext.Create(application => application
+                .ConfigureForUnitTest()
                 .Services(services => services
                     .Conventions(conventions => conventions
                         .AddFromAssemblyOfThis<ServicesAdvancedConfigurationTester>())
@@ -46,6 +48,7 @@ namespace Vertica.Integration.Tests.Infrastructure
         public void Replace_ConventionBased_Service_WithInstance_Decorator()
         {
             using (var context = ApplicationContext.Create(application => application
+                .ConfigureForUnitTest()
                 .Services(services => services
                     .Conventions(conventions => conventions
                         .AddFromAssemblyOfThis<ServicesAdvancedConfigurationTester>())
@@ -67,7 +70,7 @@ namespace Vertica.Integration.Tests.Infrastructure
 		public void Replace_Services_With_Specific_Disabled_Service()
 		{
             using (var context = ApplicationContext.Create(application => application
-                .Database(database => database.IntegrationDb(integrationDb => integrationDb.Disable()))
+                .ConfigureForUnitTest()
                 .Hosts(hosts => hosts.Clear().Host<TestHost<DisabledConfigurationRepositoryStub>>())
                 .Services(services => services.Advanced(advanced => advanced
                     .Register<IConfigurationRepository, ConfigurationRepositoryStub, DisabledConfigurationRepositoryStub>()
@@ -82,6 +85,7 @@ namespace Vertica.Integration.Tests.Infrastructure
 		public void Replace_Service_With_Instance()
 		{
             using (var context = ApplicationContext.Create(application => application
+                .ConfigureForUnitTest()
                 .Hosts(hosts => hosts.Clear().Host<TestHost<InstanceConfigurationRepositoryStub>>())
                 .Services(services => services.Advanced(advanced => advanced
                     .Register<IConfigurationRepository>(InstanceConfigurationRepositoryStub.Create)
