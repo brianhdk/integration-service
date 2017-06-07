@@ -50,7 +50,7 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
 
             string fileName = $"{timestamp.LocalDateTime:yyyyMMddHHmmss-fff}-{string.Format(postFixFormat, args)}.txt";
 
-            string subdirectory = _organizer != null ? _organizer.SubdirectoryName(timestamp) : null;
+            string subdirectory = _organizer?.SubdirectoryName(timestamp);
 
             return new FileInfo(Path.Combine(baseDirectory, subdirectory ?? string.Empty, fileName));
         }

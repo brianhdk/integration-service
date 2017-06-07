@@ -28,7 +28,7 @@ namespace Vertica.Integration.Domain.LiteServer
 		{
 			if (kernel == null) throw new ArgumentNullException(nameof(kernel));
 
-		    _kernel = kernel;
+            _kernel = kernel;
 		    _shutdown = kernel.Resolve<IShutdown>();
 		    _console = kernel.Resolve<IConsoleWriter>();
 		    _logger = kernel.Resolve<ILogger>();
@@ -37,13 +37,6 @@ namespace Vertica.Integration.Domain.LiteServer
 		    _scheduler = Scheduler.Current;
 
 			Output("Starting");
-
-            // TODO:
-            // Først placer startup-tasks i én kø
-            //  - eksekver denne kø først
-            //  - dernæst eksekver "alm" servers and "workers"
-            //      - brug housekeeping til at holde styr på disse
-            //  - dernæst eksekver shutdown-tasks
 
 			Execute(_configuration.OnStartup);
 
@@ -73,7 +66,7 @@ namespace Vertica.Integration.Domain.LiteServer
 
 		public void Dispose()
 		{
-			Output("Stopping");
+            Output("Stopping");
 
 			Exception[] exceptions = _tasks
 				.Where(x => x.IsFaulted && x.Exception != null)
@@ -106,7 +99,7 @@ namespace Vertica.Integration.Domain.LiteServer
 			Execute(_configuration.OnShutdown);
 
 			Output("Stopped");
-		}
+        }
 
 		public BackgroundWorkerContinuation Work(BackgroundWorkerContext context, CancellationToken token)
 		{
@@ -153,17 +146,7 @@ namespace Vertica.Integration.Domain.LiteServer
 		private void Execute(IEnumerable<Action<IKernel>> actions)
 		{
 			foreach (Action<IKernel> action in actions)
-			{
-                //var task = Task.Factory.StartNew(() =>
-                //{
-                //    action(_kernel);
-
-                //}, _shutdown.Token, TaskCreationOptions.LongRunning, _scheduler);
-
-                //task.Wait(_shutdown.Token);
-
 			    action(_kernel);
-			}
 		}
 	}
 }

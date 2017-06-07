@@ -130,7 +130,7 @@ namespace Vertica.Integration.Infrastructure.Database
 
                     if (!Regex.IsMatch(prefix, pattern, RegexOptions.IgnoreCase))
                         throw new ArgumentOutOfRangeException(nameof(prefix),
-                            $"Prefix does not comply with the following pattern: {pattern}.");
+                            $@"Prefix does not comply with the following pattern: {pattern}.");
                 }
 
                 TablesPrefix = prefix;

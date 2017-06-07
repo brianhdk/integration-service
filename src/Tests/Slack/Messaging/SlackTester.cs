@@ -65,7 +65,7 @@ namespace Vertica.Integration.Tests.Slack.Messaging
                             .Add<MessageHandler>())
                         .AddToLiteServer())))
                 {
-                    context.Execute(typeof(LiteServerHost).HostName());
+                    context.Execute(nameof(LiteServerHost));
                 }
 
                 Assert.That(factory.Message.HandledCount, Is.EqualTo(1));

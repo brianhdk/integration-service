@@ -3,20 +3,17 @@ using Rebus.Bus;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Model.Hosting;
-using Vertica.Integration.Model.Hosting.Handlers;
 
 namespace Vertica.Integration.Rebus
 {
 	public class RebusHost : IHost
     {
 	    private readonly Func<IBus> _bus;
-	    private readonly IWindowsServiceHandler _windowsService;
 		private readonly IShutdown _shutdown;
 
-	    public RebusHost(Func<IBus> bus, IWindowsServiceHandler windowsService, IShutdown shutdown)
+	    public RebusHost(Func<IBus> bus, IShutdown shutdown)
 	    {
 	        _bus = bus;
-	        _windowsService = windowsService;
 	        _shutdown = shutdown;
 	    }
 
@@ -34,10 +31,7 @@ namespace Vertica.Integration.Rebus
 			// Initialize Rebus
 			_bus();
 
-	        var windowsService = new HandleAsWindowsService(this.Name(), this.Name(), Description);
-
-	        if (!_windowsService.Handle(args, windowsService))
-				_shutdown.WaitForShutdown();
+			_shutdown.WaitForShutdown();
         }
 
 		public string Description => "Hosts Rebus";

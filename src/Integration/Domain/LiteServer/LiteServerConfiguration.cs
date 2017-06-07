@@ -153,7 +153,7 @@ namespace Vertica.Integration.Domain.LiteServer
 
 			public IDisposable Create()
 			{
-				return new LiteServerImpl(_kernel, _configuration);
+                return new LiteServerImpl(_kernel, _configuration);
 			}
 		}
 	}

@@ -522,14 +522,18 @@ TBD.
 Install-Package Vertica.Integration.WebApi
 ```
 
-.exe WebApiHost url:http://localhost:8123 -service:install
-.exe WebApiHost url:http://+:8080/ -service:install
+Specifiy the URL-binding in app.config: <add key="WebApi.Url" value="http://localhost:8400" />
 
-If you leave out the "url" argument, it will use the one specified in app.config: <add key="WebApi.Url" value="http://localhost:8400" />
+You can use the following syntax:
+http://+:8080/ 
 
+.exe WebApiHost -service:install
 .exe WebApiHost -service:install -startmode:Automatic
 .exe WebApiHost -service:install -startmode:Automatic -account:NetworkService
 .exe WebApiHost -service:install -startmode:Automatic -username:[user] -password:[password]
+
+It is recommended to use the LiteServer-feature to host WebAPI. 
+(TODO: add more notes to this section)
 
 [Back to Table of Contents](#table-of-contents)
 

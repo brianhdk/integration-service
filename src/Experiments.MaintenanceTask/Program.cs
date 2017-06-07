@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -8,6 +9,11 @@ using Vertica.Integration;
 using Vertica.Integration.ConsoleHost;
 using Vertica.Integration.Domain.LiteServer;
 using Vertica.Integration.Infrastructure;
+using Vertica.Integration.Infrastructure.Windows;
+using Vertica.Integration.Model.Hosting;
+using Vertica.Integration.Model.Hosting.Handlers;
+using Vertica.Integration.WebApi;
+using Vertica.Utilities_v4;
 
 namespace Experiments.MaintenanceTask
 {
@@ -30,10 +36,33 @@ namespace Experiments.MaintenanceTask
         {
             //Debugger.Launch();
 
+            //var handler = new WindowsServiceHandler(new InMemoryRuntimeSettings(), new WindowsFactory());
+
+            //string name = "IntegrationServiceExperimentsMaintenanceTaskLiteServerHost";
+            //var handle = new HandleAsWindowsService(name, name, name, () =>
+            //{
+            //    Vertica.Integration.DeleteMeLogger.WriteAllText($"program-onstartfactory");
+            //    System.Threading.Thread.Sleep(1000);
+
+            //    return new DisposableAction(() =>
+            //    {
+            //        Vertica.Integration.DeleteMeLogger.WriteAllText($"program-dispose");
+            //        System.Threading.Thread.Sleep(1000);
+            //    });
+            //});
+
+            //handler.Handle(new ArgumentsParser().Parse(args), handle);
+
+            //return;
+
             IntegrationStartup.Run(args, application => application
                 .Database(database => database
                     .IntegrationDb(integrationDb => integrationDb
                         .Disable()))
+                .Logging(logging => logging
+                    .TextFileLogger())
+                .UseWebApi(webApi => webApi
+                    .AddToLiteServer())
                 .UseLiteServer(liteServer => liteServer
                     .AddWorker<SomeWorker>()
                     .OnStartup(startup => startup.Add(SomeHeavyStartup))
@@ -108,7 +137,7 @@ namespace Experiments.MaintenanceTask
                 if (context.InvocationCount == 5)
                     return context.Exit();
 
-                File.WriteAllText($@"c:\tmp\integrationservice\worker-{DateTime.Now.Ticks}.txt", string.Empty);
+                File.WriteAllText($@"c:\tmp\integrationservice\worker-{context.InvocationCount}.txt", string.Empty);
 
                 return context.Wait(TimeSpan.FromSeconds(5));
             }
@@ -116,19 +145,20 @@ namespace Experiments.MaintenanceTask
 
         private static void SomeHeavyStartup(IKernel kernel)
         {
-            Directory.EnumerateFiles(@"C:\tmp\integrationservice").ForEach(File.Delete);
-            File.WriteAllText($@"c:\tmp\integrationservice\startup-{DateTime.Now.Ticks}.txt", string.Empty);
+            //Directory.EnumerateFiles(@"C:\tmp\integrationservice").ForEach(File.Delete);
             //Debugger.Launch();
 
-            //Thread.Sleep(TimeSpan.FromSeconds(60));
+            File.WriteAllText(@"c:\tmp\integrationservice\1-startup.txt", string.Empty);
+            Thread.Sleep(TimeSpan.FromSeconds(10));
+            File.WriteAllText(@"c:\tmp\integrationservice\2-startup.txt", string.Empty);
         }
 
         private static void SomeHeavyShutdown(IKernel kernel)
         {
-            File.WriteAllText($@"c:\tmp\integrationservice\shutdown-{DateTime.Now.Ticks}.txt", string.Empty);
             //Debugger.Launch();
-
-            //Thread.Sleep(TimeSpan.FromSeconds(30));
+            //File.WriteAllText(@"c:\tmp\integrationservice\1-shutdown.txt", string.Empty);
+            //Thread.Sleep(TimeSpan.FromSeconds(60));
+            //File.WriteAllText(@"c:\tmp\integrationservice\2-shutdown.txt", string.Empty);
         }
 
         private class CustomMongoDb : Vertica.Integration.MongoDB.Infrastructure.Connection

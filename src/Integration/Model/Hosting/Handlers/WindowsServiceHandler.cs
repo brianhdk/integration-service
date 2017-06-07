@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.ServiceProcess;
 using System.Text.RegularExpressions;
-using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Windows;
 using Vertica.Utilities_v4.Extensions.EnumerableExt;
 using Vertica.Utilities_v4.Extensions.StringExt;
@@ -22,12 +21,10 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 
 	    private readonly IRuntimeSettings _runtimeSettings;
 		private readonly IWindowsServices _windowsServices;
-	    private readonly IShutdown _shutdown;
 	    
-	    public WindowsServiceHandler(IRuntimeSettings runtimeSettings, IWindowsFactory windows, IShutdown shutdown)
+	    public WindowsServiceHandler(IRuntimeSettings runtimeSettings, IWindowsFactory windows)
 	    {
 		    _runtimeSettings = runtimeSettings;
-	        _shutdown = shutdown;
 	        _windowsServices = windows.WindowsServices();
 	    }
 
@@ -83,9 +80,8 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 			}
 			else
 			{
-                using (var serviceBase = new CustomService(GetServiceName(service), service.OnStartFactory, _shutdown))
+                using (var serviceBase = new CustomService(GetServiceName(service), service.OnStartFactory))
                 {
-                    // This blocks the code until ServiceBase returns.
                     ServiceBase.Run(serviceBase);
                 }
 			}
@@ -148,13 +144,11 @@ namespace Vertica.Integration.Model.Hosting.Handlers
         private class CustomService : ServiceBase
         {
             private readonly Func<IDisposable> _onStartFactory;
-            private readonly IShutdown _shutdown;
             private IDisposable _current;
 
-            public CustomService(string serviceName, Func<IDisposable> onStartFactory, IShutdown shutdown)
+            public CustomService(string serviceName, Func<IDisposable> onStartFactory)
             {
                 _onStartFactory = onStartFactory;
-                _shutdown = shutdown;
                 ServiceName = serviceName;
             }
 
@@ -165,8 +159,6 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 
             protected override void OnStop()
             {
-                _shutdown.WaitForShutdown();
-
                 _current?.Dispose();
             }
         }

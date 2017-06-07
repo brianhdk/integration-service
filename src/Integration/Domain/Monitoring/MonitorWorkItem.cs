@@ -15,8 +15,7 @@ namespace Vertica.Integration.Domain.Monitoring
     {
         private static readonly CultureInfo English = CultureInfo.GetCultureInfo("en-US");
 
-        private readonly Range<DateTimeOffset> _checkRange;
-	    private readonly List<Tuple<Target, MonitorEntry>> _entries;
+        private readonly List<Tuple<Target, MonitorEntry>> _entries;
         private readonly List<ISpecification<MonitorEntry>> _ignore;
         private readonly ChainOfResponsibilityLink<MonitorEntry, Target[]> _redirects;
         private readonly List<Regex> _messageGrouping; 
@@ -30,7 +29,7 @@ namespace Vertica.Integration.Domain.Monitoring
 	        if (configuration.LastRun > upperBound)
                 upperBound = configuration.LastRun;
 
-	        _checkRange = new Range<DateTimeOffset>(configuration.LastRun, upperBound);
+	        CheckRange = new Range<DateTimeOffset>(configuration.LastRun, upperBound);
 	        _entries = new List<Tuple<Target, MonitorEntry>>();
 	        _ignore = new List<ISpecification<MonitorEntry>>();
 	        _redirects = ChainOfResponsibility.Empty<MonitorEntry, Target[]>();
@@ -39,9 +38,9 @@ namespace Vertica.Integration.Domain.Monitoring
 	        Configuration = configuration;
         }
 
-        public Range<DateTimeOffset> CheckRange => _checkRange;
+        public Range<DateTimeOffset> CheckRange { get; }
 
-	    public MonitorConfiguration Configuration { get; }
+        public MonitorConfiguration Configuration { get; }
 
         public MonitorWorkItem AddIgnoreFilter(ISpecification<MonitorEntry> filter)
         {

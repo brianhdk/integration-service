@@ -62,7 +62,7 @@ namespace Vertica.Integration
 		    _container.Install(Install.Instance<IUptime>(this, registration => registration.NamedAutomatically("Uptime_d097752484954f1cb727633cdefc87a4")));
 
             // Report that we're live and kicking
-		    WriteLine("[Integration Service]: Started at {0} (UTC).", _startedAt);
+            WriteLine("[Integration Service]: Started at {0} (UTC).", _startedAt);
         }
 
         public static IApplicationContext Create(Action<ApplicationConfiguration> application = null)
@@ -154,7 +154,7 @@ namespace Vertica.Integration
 
         public void Dispose()
 	    {
-	        lock (this)
+            lock (this)
 	        {
                 WriteLine("[Integration Service]: Shutting down.");
 
@@ -228,7 +228,7 @@ namespace Vertica.Integration
 	    {
 	        if (!_cancellation.IsCancellationRequested)
 	        {
-	            try
+                try
 	            {
 	                if (cancelAfter.HasValue)
 	                {
@@ -240,10 +240,10 @@ namespace Vertica.Integration
                         // Close down now.
 	                    _cancellation.Cancel();
 	                }
-	            }
+                }
 	            catch (Exception ex)
 	            {
-	                LogException(ex);
+                    LogException(ex);
 	            }
 	        }
 	    }
