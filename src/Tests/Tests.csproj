@@ -101,6 +101,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleHost\WindowsServiceInterceptorTester.cs" />
     <Compile Include="Domain\LiteServer\LiteServerTester.cs" />
     <Compile Include="Domain\Monitoring\MessageContainsTextTester.cs" />
     <Compile Include="Domain\Monitoring\MonitorWorkItemTester.cs" />
@@ -145,6 +146,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Integration.ConsoleHost\Integration.ConsoleHost.csproj">
+      <Project>{90969277-DE56-47C0-940D-34C0871E1D6E}</Project>
+      <Name>Integration.ConsoleHost</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Integration.Globase\Integration.Globase.csproj">
       <Project>{B66C0A0E-BE2C-4B8A-8080-19141BCB41C4}</Project>
       <Name>Integration.Globase</Name>
