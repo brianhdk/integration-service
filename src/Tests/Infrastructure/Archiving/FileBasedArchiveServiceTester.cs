@@ -5,7 +5,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Vertica.Integration.Infrastructure.Archiving;
 using Vertica.Integration.Infrastructure.Logging;
-using Vertica.Utilities_v4.Testing;
+using Vertica.Utilities.Testing;
 
 namespace Vertica.Integration.Tests.Infrastructure.Archiving
 {

@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 using Vertica.Integration.Domain.Monitoring;
-using Vertica.Utilities_v4;
+using Vertica.Utilities;
 
 namespace Vertica.Integration.Tests.Domain.Monitoring
 {

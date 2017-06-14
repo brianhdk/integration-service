@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Vertica.Utilities_v4.Comparisons;
+using Vertica.Utilities.Comparisons;
 
 namespace Vertica.Integration.Model
 {

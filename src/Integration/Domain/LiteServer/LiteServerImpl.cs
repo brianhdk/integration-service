@@ -7,7 +7,7 @@ using Castle.MicroKernel;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Infrastructure.Logging;
-using Vertica.Utilities_v4.Extensions.EnumerableExt;
+using Vertica.Utilities.Extensions.EnumerableExt;
 using Scheduler = System.Threading.Tasks.TaskScheduler;
 
 namespace Vertica.Integration.Domain.LiteServer

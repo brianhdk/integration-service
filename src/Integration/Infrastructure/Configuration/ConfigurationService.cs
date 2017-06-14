@@ -1,11 +1,11 @@
 using System;
 using System.ComponentModel;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 using Vertica.Integration.Infrastructure.Archiving;
 using Vertica.Integration.Infrastructure.Logging;
-using Vertica.Utilities_v4.Extensions.AttributeExt;
-using Vertica.Utilities_v4.Extensions.StringExt;
+using Vertica.Utilities.Extensions.StringExt;
 
 namespace Vertica.Integration.Infrastructure.Configuration
 {
@@ -102,9 +102,9 @@ namespace Vertica.Integration.Infrastructure.Configuration
                 return null;
 
             DescriptionAttribute attribute = 
-                configurationType.GetAttribute<DescriptionAttribute>();
+                configurationType.GetCustomAttribute<DescriptionAttribute>();
 
-            return attribute != null ? attribute.Description.NullIfEmpty() : null;
+            return attribute?.Description.NullIfEmpty();
         }
 
         private string GetId<TConfiguration>(bool warnIfMissingGuid = false)
@@ -137,7 +137,7 @@ IMPORTANT: Remember to use the ""D"" format for Guids, e.g. 1EB3F675-C634-412F-A
         {
             Type type = typeof(TConfiguration);
 
-            GuidAttribute attribute = type.GetAttribute<GuidAttribute>();
+            GuidAttribute attribute = type.GetCustomAttribute<GuidAttribute>();
 
             Guid guid;
             if (attribute != null && Guid.TryParse(attribute.Value, out guid))

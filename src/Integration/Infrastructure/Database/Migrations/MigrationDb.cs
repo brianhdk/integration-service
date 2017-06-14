@@ -3,7 +3,7 @@ using System.Reflection;
 using Castle.MicroKernel;
 using FluentMigrator.Runner;
 using Vertica.Integration.Model;
-using Vertica.Utilities_v4.Extensions.StringExt;
+using Vertica.Utilities.Extensions.StringExt;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {

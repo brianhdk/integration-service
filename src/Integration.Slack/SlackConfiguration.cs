@@ -4,7 +4,7 @@ using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Slack.Bot;
 using Vertica.Integration.Slack.LiteServer;
 using Vertica.Integration.Slack.Messaging;
-using Vertica.Utilities_v4.Extensions.StringExt;
+using Vertica.Utilities.Extensions.StringExt;
 
 namespace Vertica.Integration.Slack
 {

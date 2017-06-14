@@ -7,7 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.ServiceProcess;
 using Vertica.Integration.Model.Hosting.Handlers;
-using Vertica.Utilities_v4;
+using Vertica.Utilities;
 
 namespace Vertica.Integration.Infrastructure.Windows
 {

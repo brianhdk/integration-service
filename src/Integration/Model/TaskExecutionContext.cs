@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using Vertica.Utilities_v4;
+using Vertica.Utilities;
 
 namespace Vertica.Integration.Model
 {

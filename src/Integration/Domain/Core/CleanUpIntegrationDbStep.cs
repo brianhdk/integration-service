@@ -5,7 +5,7 @@ using Vertica.Integration.Infrastructure.Configuration;
 using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Database.Extensions;
 using Vertica.Integration.Model;
-using Vertica.Utilities_v4;
+using Vertica.Utilities;
 
 namespace Vertica.Integration.Domain.Core
 {

@@ -8,7 +8,7 @@ using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model.Hosting;
 using Vertica.Integration.Model.Hosting.Handlers;
-using Vertica.Utilities_v4.Patterns;
+using Vertica.Utilities.Patterns;
 
 namespace Vertica.Integration.ConsoleHost
 {

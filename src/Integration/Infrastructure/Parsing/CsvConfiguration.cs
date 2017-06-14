@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Vertica.Utilities_v4.Extensions.EnumerableExt;
+using Vertica.Utilities.Extensions.EnumerableExt;
 
 namespace Vertica.Integration.Infrastructure.Parsing
 {

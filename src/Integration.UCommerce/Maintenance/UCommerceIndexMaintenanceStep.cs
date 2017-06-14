@@ -5,7 +5,7 @@ using Vertica.Integration.Infrastructure.Configuration;
 using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Model;
 using Vertica.Integration.UCommerce.Database;
-using Vertica.Utilities_v4.Extensions.EnumerableExt;
+using Vertica.Utilities.Extensions.EnumerableExt;
 
 namespace Vertica.Integration.UCommerce.Maintenance
 {

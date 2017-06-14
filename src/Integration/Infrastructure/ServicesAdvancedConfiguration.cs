@@ -12,7 +12,7 @@ using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Infrastructure.Logging.Loggers;
 using Vertica.Integration.Infrastructure.Threading.DistributedMutex;
 using Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db;
-using Vertica.Utilities_v4.Extensions.EnumerableExt;
+using Vertica.Utilities.Extensions.EnumerableExt;
 using Installer = Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers.Install;
 
 namespace Vertica.Integration.Infrastructure

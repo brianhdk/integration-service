@@ -3,7 +3,7 @@ using System.Data;
 using Vertica.Integration.Domain.Core;
 using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Model;
-using Vertica.Utilities_v4;
+using Vertica.Utilities;
 
 namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db
 {

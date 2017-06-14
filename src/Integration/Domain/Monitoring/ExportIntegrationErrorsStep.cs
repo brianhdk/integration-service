@@ -7,7 +7,7 @@ using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Exceptions;
-using Vertica.Utilities_v4.Extensions.EnumerableExt;
+using Vertica.Utilities.Extensions.EnumerableExt;
 
 namespace Vertica.Integration.Domain.Monitoring
 {

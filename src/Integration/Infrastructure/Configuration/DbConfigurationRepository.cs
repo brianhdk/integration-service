@@ -3,7 +3,7 @@ using System.Data;
 using System.Linq;
 using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Extensions;
-using Vertica.Utilities_v4;
+using Vertica.Utilities;
 
 namespace Vertica.Integration.Infrastructure.Configuration
 {

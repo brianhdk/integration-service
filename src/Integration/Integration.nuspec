@@ -18,5 +18,8 @@
 		<frameworkAssemblies>
 			<frameworkAssembly assemblyName="System.Net.Http" />
 		</frameworkAssemblies>
-	</metadata>
+    <dependencies>
+      <dependency id="Vertica.Utilities" version="[5,6.0)" />
+    </dependencies>
+  </metadata>
 </package>

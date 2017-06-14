@@ -15,7 +15,7 @@ using Vertica.Integration.Infrastructure.Database.Migrations.Features;
 using Vertica.Integration.Infrastructure.Features;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
-using Vertica.Utilities_v4.Extensions.AttributeExt;
+using Vertica.Utilities.Extensions.AttributeExt;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {

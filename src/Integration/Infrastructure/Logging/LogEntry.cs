@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using Vertica.Utilities_v4;
+using Vertica.Utilities;
 
 namespace Vertica.Integration.Infrastructure.Logging
 {

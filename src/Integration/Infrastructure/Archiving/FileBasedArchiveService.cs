@@ -5,8 +5,8 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using Vertica.Integration.Infrastructure.Logging;
-using Vertica.Utilities_v4;
-using Vertica.Utilities_v4.Extensions.StringExt;
+using Vertica.Utilities;
+using Vertica.Utilities.Extensions.StringExt;
 
 namespace Vertica.Integration.Infrastructure.Archiving
 {

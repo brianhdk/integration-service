@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Vertica.Utilities_v4.Patterns;
+using Vertica.Utilities.Patterns;
 
 namespace Vertica.Integration.Domain.Monitoring
 {

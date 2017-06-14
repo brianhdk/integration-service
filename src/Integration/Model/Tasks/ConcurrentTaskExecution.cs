@@ -4,7 +4,7 @@ using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Infrastructure.Threading.DistributedMutex;
 using Vertica.Integration.Model.Exceptions;
-using Vertica.Utilities_v4.Extensions.AttributeExt;
+using Vertica.Utilities.Extensions.AttributeExt;
 
 namespace Vertica.Integration.Model.Tasks
 {

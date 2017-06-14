@@ -11,7 +11,7 @@ using Vertica.Integration.Infrastructure.Threading.DistributedMutex;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Tasks;
 using Vertica.Integration.Tests.Infrastructure;
-using Vertica.Utilities_v4;
+using Vertica.Utilities;
 using Task = Vertica.Integration.Model.Task;
 
 namespace Vertica.Integration.Tests.Model

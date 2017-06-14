@@ -8,7 +8,7 @@ using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Infrastructure.Remote;
 using Vertica.Integration.Model;
-using Vertica.Utilities_v4;
+using Vertica.Utilities;
 using Response = System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage>;
 
 namespace Vertica.Integration.Domain.Monitoring

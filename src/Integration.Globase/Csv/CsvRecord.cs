@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using Vertica.Utilities_v4.Extensions.AttributeExt;
 
 namespace Vertica.Integration.Globase.Csv
 {
@@ -34,9 +33,9 @@ namespace Vertica.Integration.Globase.Csv
 		internal static Field[] GetFields()
 		{
 			return typeof(TEntity)
-				.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-				.Where(x => x.PropertyType == typeof(string))
-				.Select(x => Tuple.Create(x, x.GetAttribute<CsvFieldAttribute>()))
+				.GetProperties()
+				.Where(x => Attribute.IsDefined(x, typeof(CsvFieldAttribute)))
+				.Select(x => Tuple.Create(x, x.GetCustomAttribute<CsvFieldAttribute>()))
 				.Where(x => x.Item2 != null)
 				.Select(x => new Field(x.Item1, x.Item2))
 				.ToArray();

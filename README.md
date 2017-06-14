@@ -1911,8 +1911,8 @@ using System.Text;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Model;
 using Vertica.Integration.Perfion;
-using Vertica.Utilities_v4.Collections;
-using Vertica.Utilities_v4.Extensions.EnumerableExt;
+using Vertica.Utilities.Collections;
+using Vertica.Utilities.Extensions.EnumerableExt;
 
 namespace ConsoleApplication16
 {
@@ -2437,7 +2437,7 @@ using System.Linq;
 using Vertica.Integration.Domain.Monitoring;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
-using Vertica.Utilities_v4;
+using Vertica.Utilities;
 
 namespace ConsoleApplication16
 {

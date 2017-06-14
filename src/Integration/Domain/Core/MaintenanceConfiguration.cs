@@ -9,8 +9,8 @@ using Newtonsoft.Json;
 using Vertica.Integration.Infrastructure.Archiving;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Logging;
-using Vertica.Utilities_v4;
-using Vertica.Utilities_v4.Extensions.EnumerableExt;
+using Vertica.Utilities;
+using Vertica.Utilities.Extensions.EnumerableExt;
 
 namespace Vertica.Integration.Domain.Core
 {

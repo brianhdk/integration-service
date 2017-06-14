@@ -3,9 +3,9 @@ using NSubstitute;
 using NUnit.Framework;
 using Vertica.Integration.Domain.Monitoring;
 using Vertica.Integration.Infrastructure.Logging;
-using Vertica.Utilities_v4;
-using Vertica.Utilities_v4.Patterns;
-using Vertica.Utilities_v4.Testing;
+using Vertica.Utilities;
+using Vertica.Utilities.Patterns;
+using Vertica.Utilities.Testing;
 
 namespace Vertica.Integration.Tests.Domain.Monitoring
 {

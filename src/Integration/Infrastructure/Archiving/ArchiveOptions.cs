@@ -1,6 +1,6 @@
 using System;
 using Newtonsoft.Json;
-using Vertica.Utilities_v4;
+using Vertica.Utilities;
 
 namespace Vertica.Integration.Infrastructure.Archiving
 {

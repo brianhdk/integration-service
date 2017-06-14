@@ -6,7 +6,7 @@ using Castle.DynamicProxy;
 using Castle.MicroKernel;
 using Castle.MicroKernel.ModelBuilder;
 using Castle.Windsor;
-using Vertica.Utilities_v4.Patterns;
+using Vertica.Utilities.Patterns;
 
 namespace Vertica.Integration.Infrastructure
 {

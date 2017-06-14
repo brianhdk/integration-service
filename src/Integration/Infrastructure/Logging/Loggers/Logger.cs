@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Vertica.Utilities_v4.Patterns;
+using Vertica.Utilities.Patterns;
 
 namespace Vertica.Integration.Infrastructure.Logging.Loggers
 {

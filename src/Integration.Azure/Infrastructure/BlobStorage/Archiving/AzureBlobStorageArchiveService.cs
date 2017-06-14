@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Vertica.Integration.Infrastructure.Archiving;
-using Vertica.Utilities_v4;
+using Vertica.Utilities;
 
 namespace Vertica.Integration.Azure.Infrastructure.BlobStorage.Archiving
 {

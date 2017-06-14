@@ -6,7 +6,7 @@ using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model.Exceptions;
 using Vertica.Integration.Model.Tasks;
-using Vertica.Utilities_v4;
+using Vertica.Utilities;
 
 namespace Vertica.Integration.Model
 {

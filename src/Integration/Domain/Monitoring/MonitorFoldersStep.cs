@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Model;
-using Vertica.Utilities_v4;
+using Vertica.Utilities;
 
 namespace Vertica.Integration.Domain.Monitoring
 {

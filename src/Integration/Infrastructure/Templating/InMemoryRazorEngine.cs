@@ -10,7 +10,7 @@ using System.Web;
 using System.Web.Razor;
 using Microsoft.CSharp;
 using Vertica.Integration.Infrastructure.Templating.AttributeParsing;
-using Vertica.Utilities_v4.Extensions.EnumerableExt;
+using Vertica.Utilities.Extensions.EnumerableExt;
 
 namespace Vertica.Integration.Infrastructure.Templating
 {

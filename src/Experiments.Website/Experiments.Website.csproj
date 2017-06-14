@@ -100,10 +100,6 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
-    <Reference Include="Vertica.Utilities_v4, Version=4.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Vertica.Utilities_v4.4.0.72.0\lib\net40\Vertica.Utilities_v4.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="websocket-sharp-with-proxy-support, Version=1.0.2.28248, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
       <HintPath>..\..\packages\websocket-sharp-with-proxy-support.1.9.1\lib\net35-client\websocket-sharp-with-proxy-support.dll</HintPath>
       <Private>True</Private>

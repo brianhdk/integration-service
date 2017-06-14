@@ -5,8 +5,8 @@ using System.Linq;
 using System.Xml.Linq;
 using Vertica.Integration.Infrastructure.Archiving;
 using Vertica.Integration.Perfion.Infrastructure;
-using Vertica.Utilities_v4.Collections;
-using Vertica.Utilities_v4.Extensions.EnumerableExt;
+using Vertica.Utilities.Collections;
+using Vertica.Utilities.Extensions.EnumerableExt;
 
 namespace Vertica.Integration.Perfion
 {

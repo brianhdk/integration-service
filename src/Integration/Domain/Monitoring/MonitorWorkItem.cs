@@ -6,8 +6,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
-using Vertica.Utilities_v4;
-using Vertica.Utilities_v4.Patterns;
+using Vertica.Utilities;
+using Vertica.Utilities.Patterns;
 
 namespace Vertica.Integration.Domain.Monitoring
 {

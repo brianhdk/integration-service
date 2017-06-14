@@ -5,7 +5,7 @@ using Raven.Abstractions.Data;
 using Raven.Client;
 using Raven.Client.Indexes;
 using Raven.Client.Linq;
-using Vertica.Utilities_v4.Extensions.StringExt;
+using Vertica.Utilities.Extensions.StringExt;
 
 namespace Vertica.Integration.RavenDB.Extensions
 {

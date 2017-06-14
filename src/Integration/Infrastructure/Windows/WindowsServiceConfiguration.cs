@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Configuration.Install;
 using System.ServiceProcess;
-using Vertica.Utilities_v4.Extensions.StringExt;
+using Vertica.Utilities.Extensions.StringExt;
 
 namespace Vertica.Integration.Infrastructure.Windows
 {

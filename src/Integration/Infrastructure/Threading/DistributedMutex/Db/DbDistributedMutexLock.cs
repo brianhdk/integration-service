@@ -1,5 +1,5 @@
 using System;
-using Vertica.Utilities_v4;
+using Vertica.Utilities;
 
 namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db
 {

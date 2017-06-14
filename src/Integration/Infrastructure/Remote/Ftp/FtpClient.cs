@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using Vertica.Utilities_v4;
+using Vertica.Utilities;
 
 namespace Vertica.Integration.Infrastructure.Remote.Ftp
 {

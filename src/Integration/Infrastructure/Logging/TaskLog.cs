@@ -5,7 +5,7 @@ using System.Linq;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Windows;
 using Vertica.Integration.Model;
-using Vertica.Utilities_v4.Extensions.EnumerableExt;
+using Vertica.Utilities.Extensions.EnumerableExt;
 
 namespace Vertica.Integration.Infrastructure.Logging
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Windows;
-using Vertica.Utilities_v4;
+using Vertica.Utilities;
 
 namespace Vertica.Integration.Infrastructure.Logging
 {

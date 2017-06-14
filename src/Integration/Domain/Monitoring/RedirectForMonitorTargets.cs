@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Vertica.Integration.Infrastructure.Logging;
-using Vertica.Utilities_v4.Patterns;
+using Vertica.Utilities.Patterns;
 
 namespace Vertica.Integration.Domain.Monitoring
 {

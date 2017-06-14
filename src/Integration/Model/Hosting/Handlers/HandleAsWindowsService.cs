@@ -1,6 +1,6 @@
 using System;
-using Vertica.Utilities_v4;
-using Vertica.Utilities_v4.Extensions.StringExt;
+using Vertica.Utilities;
+using Vertica.Utilities.Extensions.StringExt;
 
 namespace Vertica.Integration.Model.Hosting.Handlers
 {

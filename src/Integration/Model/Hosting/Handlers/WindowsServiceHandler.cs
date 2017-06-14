@@ -5,8 +5,8 @@ using System.Reflection;
 using System.ServiceProcess;
 using System.Text.RegularExpressions;
 using Vertica.Integration.Infrastructure.Windows;
-using Vertica.Utilities_v4.Extensions.EnumerableExt;
-using Vertica.Utilities_v4.Extensions.StringExt;
+using Vertica.Utilities.Extensions.EnumerableExt;
+using Vertica.Utilities.Extensions.StringExt;
 
 namespace Vertica.Integration.Model.Hosting.Handlers
 {

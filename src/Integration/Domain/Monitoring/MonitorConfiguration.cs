@@ -5,8 +5,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using Vertica.Integration.Infrastructure.Logging;
-using Vertica.Utilities_v4;
-using Vertica.Utilities_v4.Extensions.EnumerableExt;
+using Vertica.Utilities;
+using Vertica.Utilities.Extensions.EnumerableExt;
 
 namespace Vertica.Integration.Domain.Monitoring
 {
