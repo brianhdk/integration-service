@@ -47,12 +47,11 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Vertica.PaymentService.Clients.Dibs">
-      <HintPath>..\..\packages\Vertica.PaymentService.Clients.Dibs.1.1.5665.14650\lib\net451\Vertica.PaymentService.Clients.Dibs.dll</HintPath>
+    <Reference Include="Vertica.PaymentService.Clients.Dibs, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Vertica.PaymentService.Clients.Dibs.1.2.0\lib\net461\Vertica.PaymentService.Clients.Dibs.dll</HintPath>
     </Reference>
-    <Reference Include="Vertica.Utilities_v4, Version=4.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Vertica.Utilities_v4.4.0.72.0\lib\net40\Vertica.Utilities_v4.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Vertica.Utilities, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Vertica.Utilities.5.0.0\lib\net45\Vertica.Utilities.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -61,9 +60,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Integration.PaymentService.nuspec" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Readme\Integration.PaymentService-readme.txt" />
