@@ -1,5 +1,6 @@
 ﻿using Castle.MicroKernel;
 using NUnit.Framework;
+using Vertica.Integration.Tests.Infrastructure.Testing;
 
 namespace Vertica.Integration.Tests.Infrastructure
 {

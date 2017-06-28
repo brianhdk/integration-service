@@ -10,8 +10,8 @@ using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Threading.DistributedMutex;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Tasks;
-using Vertica.Integration.Tests.Infrastructure;
 using Vertica.Utilities;
+using Vertica.Integration.Tests.Infrastructure.Testing;
 using Task = Vertica.Integration.Model.Task;
 
 namespace Vertica.Integration.Tests.Model

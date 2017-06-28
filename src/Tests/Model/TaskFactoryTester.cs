@@ -6,6 +6,7 @@ using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Exceptions;
 using Vertica.Integration.Tests.Infrastructure;
+using Vertica.Integration.Tests.Infrastructure.Testing;
 using Vertica.Integration.Tests.SQLite;
 
 namespace Vertica.Integration.Tests.Model

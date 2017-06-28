@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Castle.DynamicProxy;
 using NUnit.Framework;
+using Vertica.Integration.Tests.Infrastructure.Testing;
 
 namespace Vertica.Integration.Tests.Infrastructure
 {

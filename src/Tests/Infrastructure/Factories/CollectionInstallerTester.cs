@@ -2,6 +2,7 @@
 using System.Linq;
 using NUnit.Framework;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
+using Vertica.Integration.Tests.Infrastructure.Testing;
 
 namespace Vertica.Integration.Tests.Infrastructure.Factories
 {

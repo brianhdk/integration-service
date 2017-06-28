@@ -100,13 +100,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\Testing\ConsoleWriterQueue.cs" />
     <Compile Include="ConsoleHost\WindowsServiceInterceptorTester.cs" />
     <Compile Include="Domain\LiteServer\LiteServerTester.cs" />
     <Compile Include="Domain\Monitoring\MessageContainsTextTester.cs" />
     <Compile Include="Domain\Monitoring\MonitorWorkItemTester.cs" />
     <Compile Include="Domain\Monitoring\PingUrlsStepIntegrationTester.cs" />
     <Compile Include="Globase\GlobaseTester.cs" />
-    <Compile Include="Infrastructure\ApplicationConfigurationTestingExtensions.cs" />
+    <Compile Include="Infrastructure\Testing\ApplicationConfigurationTestingExtensions.cs" />
     <Compile Include="Infrastructure\ServicesInterceptorsConfigurationTester.cs" />
     <Compile Include="Infrastructure\ServicesConventionsConfigurationTester.cs" />
     <Compile Include="Infrastructure\ServicesAdvancedConfigurationTester.cs" />
@@ -119,6 +120,8 @@
     <Compile Include="Infrastructure\Parsing\CsvRowTester.cs" />
     <Compile Include="Infrastructure\RazorEngine\RazorEngineTester.cs" />
     <Compile Include="Infrastructure\RepeatTester.cs" />
+    <Compile Include="Infrastructure\Testing\WaitForWaitBlockToFinish.cs" />
+    <Compile Include="Infrastructure\Testing\WaitBlock.cs" />
     <Compile Include="Infrastructure\Threading\DbDistributedMutexIntegrationTester.cs" />
     <Compile Include="Model\ArgumentsTester.cs" />
     <Compile Include="Model\Hosting\ArgumentsParserTester.cs" />

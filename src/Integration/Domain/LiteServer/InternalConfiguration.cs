@@ -11,6 +11,7 @@ namespace Vertica.Integration.Domain.LiteServer
 			OnStartup = new StartupActions();
 			OnShutdown = new ShutdownActions();
 			ShutdownTimeout = TimeSpan.FromSeconds(5);
+		    HouseKeepingInterval = TimeSpan.FromSeconds(5);
 		}
 
 		public StartupActions OnStartup { get; }
@@ -18,8 +19,8 @@ namespace Vertica.Integration.Domain.LiteServer
 
 		public TimeSpan ShutdownTimeout
 		{
-			get { return _shutdownTimeout; }
-			set
+			get => _shutdownTimeout;
+		    set
 			{
 				if (value < TimeSpan.Zero)
 					throw new ArgumentOutOfRangeException(nameof(value), @"Value must be zero or greater than zero.");
@@ -27,5 +28,7 @@ namespace Vertica.Integration.Domain.LiteServer
 				_shutdownTimeout = value;
 			}
 		}
+
+        internal TimeSpan HouseKeepingInterval { get; set; }
 	}
 }

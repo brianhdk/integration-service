@@ -61,6 +61,13 @@ namespace Vertica.Integration.Domain.LiteServer
 			return this;
 		}
 
+	    internal LiteServerConfiguration HouseKeepingInterval(TimeSpan interval)
+	    {
+	        _configuration.HouseKeepingInterval = interval;
+
+	        return this;
+	    }
+
 		/// <summary>
 		/// Scans the assembly of the defined <typeparamref name="T"></typeparamref> for public classes inheriting <see cref="IBackgroundServer"/> and/or <see cref="IBackgroundWorker"/>
 		/// <para />

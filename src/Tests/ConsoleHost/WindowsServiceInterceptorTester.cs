@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
-using Castle.DynamicProxy;
 using NUnit.Framework;
 using Vertica.Integration.ConsoleHost;
 using Vertica.Integration.Infrastructure;
-using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Model.Hosting;
 using Vertica.Integration.Model.Hosting.Handlers;
-using Vertica.Integration.Tests.Infrastructure;
+using Vertica.Integration.Tests.Infrastructure.Testing;
 
 namespace Vertica.Integration.Tests.ConsoleHost
 {
@@ -21,12 +17,10 @@ namespace Vertica.Integration.Tests.ConsoleHost
         {
             var consoleWriterQueue = new ConsoleWriterQueue();
 
-            using (var testContext = new TestContext(shouldHandleAsWindowsService: false))
+            using (var waitBlock = new WaitBlock())
             {
-                Execute(testContext, consoleWriterQueue);
+                Execute(waitBlock, consoleWriterQueue);
             }
-
-            Console.Write(consoleWriterQueue.ToString());
 
             StringAssert.Contains("[Integration Service]: Started", consoleWriterQueue.Dequeue());
             StringAssert.Contains("NotWindowsService", consoleWriterQueue.Dequeue());
@@ -47,12 +41,10 @@ namespace Vertica.Integration.Tests.ConsoleHost
         {
             var consoleWriterQueue = new ConsoleWriterQueue();
 
-            using (var testContext = new TestContext(shouldHandleAsWindowsService: true))
+            using (var waitBlock = new WaitBlock())
             {
-                Execute(testContext, consoleWriterQueue);
+                Execute(waitBlock, consoleWriterQueue, asWindowsService: true);
             }
-
-            Console.Write(consoleWriterQueue.ToString());
 
             StringAssert.Contains("[Integration Service]: Started", consoleWriterQueue.Dequeue());
             StringAssert.Contains("WindowsService.Starting", consoleWriterQueue.Dequeue());
@@ -68,22 +60,20 @@ namespace Vertica.Integration.Tests.ConsoleHost
             Assert.That(consoleWriterQueue.Count, Is.Zero);
         }
 
-        private static void Execute(TestContext testContext, ConsoleWriterQueue consoleWriterQueue)
+        private static void Execute(WaitBlock waitBlock, ConsoleWriterQueue consoleWriterQueue, bool asWindowsService = false)
         {
-            using (var context = ApplicationContext.Create(application => application
+            using (IApplicationContext context = ApplicationContext.Create(application => application
                 .ConfigureForUnitTest()
+                .WithWaitBlock(waitBlock, consoleWriterQueue)
                 .UseConsoleHost()
                 .Hosts(hosts => hosts
                     .Clear()
                     .Host<MyHost>())
                 .Services(services => services
-                    .Interceptors(interceptors => interceptors
-                        .InterceptService<IConsoleWriter, RedirectToQueueInterceptor>())
                     .Advanced(advanced => advanced
-                        .Register(kernel => testContext)
-                        .Register(kernel => consoleWriterQueue)
+                        .Register<IRuntimeSettings>(kernel => new InMemoryRuntimeSettings()
+                            .Set("ShouldHandleAsWindowsService", asWindowsService ? Boolean.TrueString : Boolean.FalseString))
                         .Register<IWindowsServiceHandler, FakeWindowsServiceHandler>()
-                        .Register<IWaitForShutdownRequest, ShutdownHandler>()
                     )
                 )
             ))
@@ -92,89 +82,20 @@ namespace Vertica.Integration.Tests.ConsoleHost
             }
         }
 
-        public class ShutdownHandler : IWaitForShutdownRequest
-        {
-            private readonly ConsoleWriterQueue _consoleWriterQueue;
-            private readonly TestContext _testContext;
-
-            public ShutdownHandler(ConsoleWriterQueue consoleWriterQueue, TestContext testContext)
-            {
-                _consoleWriterQueue = consoleWriterQueue;
-                _testContext = testContext;
-            }
-
-            public void Wait()
-            {
-                _consoleWriterQueue.Enqueue("Shutdown.Waiting");
-
-                _testContext.Wait();
-
-                _consoleWriterQueue.Enqueue("Shutdown.Waited");
-            }
-        }
-
-        public class RedirectToQueueInterceptor : IInterceptor
-        {
-            private readonly ConsoleWriterQueue _consoleWriterQueue;
-
-            public RedirectToQueueInterceptor(ConsoleWriterQueue consoleWriterQueue)
-            {
-                _consoleWriterQueue = consoleWriterQueue;
-            }
-
-            public void Intercept(IInvocation invocation)
-            {
-                var message = (string)invocation.Arguments.FirstOrDefault();
-
-                if (message != null)
-                {
-                    var args = (object[])invocation.Arguments.ElementAtOrDefault(1);
-
-                    if (args != null)
-                        message = string.Format(message, args);
-
-                    _consoleWriterQueue.Enqueue(message);
-                }
-            }
-        }
-
-        public class TestContext : IDisposable
-        {
-            public TestContext(bool shouldHandleAsWindowsService)
-            {
-                ShouldHandleAsWindowsService = shouldHandleAsWindowsService;
-
-                ResetEvent = new ManualResetEvent(false);
-            }
-
-            public bool ShouldHandleAsWindowsService { get; }
-            public ManualResetEvent ResetEvent { get; }
-
-            public void Wait()
-            {
-                ResetEvent.WaitOne(TimeSpan.FromSeconds(5));
-            }
-
-            public void Dispose()
-            {
-                ResetEvent.Dispose();
-            }
-        }
-
         public class FakeWindowsServiceHandler : IWindowsServiceHandler
         {
-            private readonly TestContext _testContext;
             private readonly ConsoleWriterQueue _consoleWriterQueue;
+            private readonly bool _shouldHandleAsWindowsService;
 
-            public FakeWindowsServiceHandler(ConsoleWriterQueue consoleWriterQueue, TestContext testContext)
+            public FakeWindowsServiceHandler(ConsoleWriterQueue consoleWriterQueue, IRuntimeSettings runtimeSettings)
             {
                 _consoleWriterQueue = consoleWriterQueue;
-                _testContext = testContext;
+                _shouldHandleAsWindowsService = string.Equals(Boolean.TrueString, runtimeSettings["ShouldHandleAsWindowsService"]);
             }
 
             public bool Handle(HostArguments args, HandleAsWindowsService service)
             {
-                if (_testContext.ShouldHandleAsWindowsService)
+                if (_shouldHandleAsWindowsService)
                 {
                     _consoleWriterQueue.Enqueue("WindowsService.Starting");
 
@@ -200,47 +121,19 @@ namespace Vertica.Integration.Tests.ConsoleHost
             }
         }
 
-        public class ConsoleWriterQueue
-        {
-            private readonly Queue<string> _messages;
-            private readonly List<string> _history;
-
-            public ConsoleWriterQueue()
-            {
-                _messages = new Queue<string>();
-                _history = new List<string>();
-            }
-
-            public void Enqueue(string message)
-            {
-                _messages.Enqueue(message);
-                _history.Add(message);
-            }
-
-            public string Dequeue()
-            {
-                return _messages.Dequeue();
-            }
-
-            public int Count => _messages.Count;
-
-            public override string ToString()
-            {
-                return string.Join(Environment.NewLine, _history);
-            }
-        }
-
         public class MyHost : IHost
         {
             private readonly IShutdown _shutdown;
-            private readonly TestContext _testContext;
             private readonly ConsoleWriterQueue _consoleWriterQueue;
+            private readonly WaitBlock _waitBlock;
+            private readonly bool _shouldHandleAsWindowsService;
 
-            public MyHost(IShutdown shutdown, ConsoleWriterQueue consoleWriterQueue, TestContext testContext)
+            public MyHost(IShutdown shutdown, ConsoleWriterQueue consoleWriterQueue, WaitBlock waitBlock, IRuntimeSettings runtimeSettings)
             {
                 _shutdown = shutdown;
                 _consoleWriterQueue = consoleWriterQueue;
-                _testContext = testContext;
+                _waitBlock = waitBlock;
+                _shouldHandleAsWindowsService = string.Equals(Boolean.TrueString, runtimeSettings["ShouldHandleAsWindowsService"]);
             }
 
             public bool CanHandle(HostArguments args)
@@ -252,10 +145,10 @@ namespace Vertica.Integration.Tests.ConsoleHost
             {
                 _consoleWriterQueue.Enqueue("Host.Handling");
 
-                if (!_testContext.ShouldHandleAsWindowsService)
+                if (!_shouldHandleAsWindowsService)
                 {
                     _consoleWriterQueue.Enqueue("Host.ManuallyRelease");
-                    _testContext.ResetEvent.Set();
+                    _waitBlock.Release();
                 }
 
                 _shutdown.WaitForShutdown();

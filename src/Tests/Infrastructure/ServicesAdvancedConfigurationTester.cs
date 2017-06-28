@@ -6,6 +6,7 @@ using NUnit.Framework;
 using Vertica.Integration.Infrastructure.Archiving;
 using Vertica.Integration.Infrastructure.Configuration;
 using Vertica.Integration.Model.Hosting;
+using Vertica.Integration.Tests.Infrastructure.Testing;
 
 namespace Vertica.Integration.Tests.Infrastructure
 {

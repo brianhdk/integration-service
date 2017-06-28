@@ -71,7 +71,7 @@ foreach ($project in $settings.src.Keys) {
     }
 
 	# https://docs.nuget.org/consume/command-line-reference
-    &$settings.tools.nuget pack $csproj -Verbosity "quiet" -Build -Properties Configuration=Release -Symbols -IncludeReferencedProjects -Exclude "Assets/**/*.*" -Exclude "Default.html" -MSBuildVersion 14
+    &$settings.tools.nuget pack $csproj -Verbosity "quiet" -Build -Properties Configuration=Release -IncludeReferencedProjects -Exclude "Assets/**/*.*" -Exclude "Default.html" -MSBuildVersion 14
 	
 	if (Test-Path (Join-Path $projectDirectory "NuGet-After-Pack.ps1")) {
 		
@@ -83,7 +83,6 @@ foreach ($project in $settings.src.Keys) {
     # Move .nupkg to script directory
     Get-ChildItem $projectDirectory | Where-Object { $_.Extension -eq ".nupkg" } | Move-Item -Destination $script_directory -Force
 }
-
 
 Get-ChildItem $script_directory | Where-Object { $_.Extension -eq ".nupkg" } | ForEach {
 

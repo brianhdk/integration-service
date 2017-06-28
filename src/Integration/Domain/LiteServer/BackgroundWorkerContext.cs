@@ -3,21 +3,26 @@ using Vertica.Integration.Infrastructure.IO;
 
 namespace Vertica.Integration.Domain.LiteServer
 {
-    // TODO: Tilføj en ILog ala den der findes på TaskExecutionContext
 	public class BackgroundWorkerContext
 	{
-		internal BackgroundWorkerContext(uint invocationCount, IConsoleWriter console)
+		internal BackgroundWorkerContext(IConsoleWriter console)
 		{
 		    if (console == null) throw new ArgumentNullException(nameof(console));
 
-		    InvocationCount = invocationCount;
 		    Console = console;
 		}
 
 	    /// <summary>
 		/// Specifies the number of times the method has been invoked.
 		/// </summary>
-		public uint InvocationCount { get; }
+		public uint InvocationCount { get; private set; }
+
+        internal BackgroundWorkerContext Increment()
+        {
+            InvocationCount++;
+
+            return this;
+        }
 
         /// <summary>
         /// Gives access to the <see cref="IConsoleWriter"/>.
@@ -25,7 +30,7 @@ namespace Vertica.Integration.Domain.LiteServer
 	    public IConsoleWriter Console { get; }
 
 	    /// <summary>
-		/// Use this method to signal that you want to stop having your method invoked.
+		/// Use this method to signal that you no longer want your method to be invoked.
 		/// </summary>
 		public BackgroundWorkerContinuation Exit()
 		{
@@ -33,10 +38,8 @@ namespace Vertica.Integration.Domain.LiteServer
         }
 
         /// <summary>
-        /// Use this method to signal 
+        /// Use this method to signal how long you want to wait until we invoke your method again.
         /// </summary>
-        /// <param name="time"></param>
-        /// <returns></returns>
 	    public BackgroundWorkerContinuation Wait(TimeSpan time)
         {
             return new BackgroundWorkerContinuation(time);

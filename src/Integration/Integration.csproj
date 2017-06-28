@@ -93,13 +93,17 @@
     <Compile Include="Domain\Core\MaintenanceWorkItem.cs" />
     <Compile Include="Domain\Core\WriteDocumentationTask.cs" />
     <Compile Include="Domain\LiteServer\BackgroundServerContext.cs" />
+    <Compile Include="Domain\LiteServer\BackgroundServerHost.cs" />
     <Compile Include="Domain\LiteServer\BackgroundWorkerContext.cs" />
     <Compile Include="Domain\LiteServer\BackgroundWorkerContinuation.cs" />
-    <Compile Include="Domain\LiteServer\BackgroundWorkServer.cs" />
+    <Compile Include="Domain\LiteServer\BackgroundWorkerServer.cs" />
+    <Compile Include="Domain\LiteServer\HouseKeeping.cs" />
     <Compile Include="Domain\LiteServer\IBackgroundServer.cs" />
     <Compile Include="Domain\LiteServer\IBackgroundWorker.cs" />
     <Compile Include="Domain\LiteServer\ILiteServerFactory.cs" />
     <Compile Include="Domain\LiteServer\InternalConfiguration.cs" />
+    <Compile Include="Domain\LiteServer\IRestartable.cs" />
+    <Compile Include="Domain\LiteServer\RestartableContext.cs" />
     <Compile Include="Domain\LiteServer\Servers\IO\FileWatcherServer.cs" />
     <Compile Include="Domain\LiteServer\Servers\IO\FileWatcherRunTaskServer.cs" />
     <Compile Include="Domain\LiteServer\Servers\IO\ManualFileSystemEventArgs.cs" />
@@ -139,6 +143,7 @@
     <Compile Include="Infrastructure\IO\IConsoleWriter.cs" />
     <Compile Include="Infrastructure\IShutdown.cs" />
     <Compile Include="Infrastructure\IUptime.cs" />
+    <Compile Include="Infrastructure\IUptimeTextGenerator.cs" />
     <Compile Include="Infrastructure\ServicesConfiguration.cs" />
     <Compile Include="Infrastructure\ServicesConventionsConfiguration.cs" />
     <Compile Include="Infrastructure\ServicesInterceptorsConfiguration.cs" />
@@ -261,6 +266,7 @@
     <Compile Include="Infrastructure\Threading\DistributedMutexTimeoutException.cs" />
     <Compile Include="Infrastructure\Threading\DistributedMutex\ThrowingDistributedMutex.cs" />
     <Compile Include="Infrastructure\Threading\DistributedMutex\VoidDistributedMutex.cs" />
+    <Compile Include="Infrastructure\UptimeTextGenerator.cs" />
     <Compile Include="Infrastructure\Windows\WindowsServiceConfiguration.cs" />
     <Compile Include="Infrastructure\Windows\IWindowsServices.cs" />
     <Compile Include="Infrastructure\Windows\IWindowsFactory.cs" />

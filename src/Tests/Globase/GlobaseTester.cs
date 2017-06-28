@@ -11,6 +11,7 @@ using Vertica.Integration.Infrastructure.Archiving;
 using Vertica.Integration.Infrastructure.Remote;
 using Vertica.Integration.Infrastructure.Remote.Ftp;
 using Vertica.Integration.Tests.Infrastructure;
+using Vertica.Integration.Tests.Infrastructure.Testing;
 
 namespace Vertica.Integration.Tests.Globase
 {

@@ -8,10 +8,11 @@ using Vertica.Integration.Domain.LiteServer;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Slack;
+using Vertica.Integration.Slack.Bot;
 using Vertica.Integration.Slack.Messaging;
 using Vertica.Integration.Slack.Messaging.Handlers;
 using Vertica.Integration.Slack.Messaging.Messages;
-using Vertica.Integration.Tests.Infrastructure;
+using Vertica.Integration.Tests.Infrastructure.Testing;
 
 namespace Vertica.Integration.Tests.Slack.Messaging
 {
@@ -35,27 +36,29 @@ namespace Vertica.Integration.Tests.Slack.Messaging
                 var writer = context.Resolve<IConsoleWriter>();
 
                 writer.WriteLine("Some message");
-
-                messageQueue.Received(1)
-                    .Add(Arg.Is<SlackPostMessageInChannel>(x => x.Text == "Some message"));
             }
+
+            messageQueue
+                .Received(1)
+                .Add(Arg.Is<SlackPostMessageInChannel>(x => x.Text == "Some message"));
         }
 
         [Test]
         public void SlackMessage_EndToEnd_Test()
         {
-            using (var resetEvent = new ManualResetEvent(false))
+            using (var waitBlock = new WaitBlock())
             {
-                var factory = new MessageFactory(resetEvent);
-                var shutdown = new ShutdownHandler(resetEvent, TimeSpan.FromSeconds(5));
+                var factory = new MessageFactory(waitBlock);
+                var waitBlockLocal = new[] { waitBlock };
 
-                using (var context = ApplicationContext.Create(application => application
+                using (IApplicationContext context = ApplicationContext.Create(application => application
                     .ConfigureForUnitTest()
+                    .WithWaitBlock(waitBlockLocal[0])
                     .Services(services => services
                         .Advanced(advanced => advanced
+                            .Register<ISlackBot, FakeSlackBot>()
                             .Register<IRuntimeSettings>(kernel => new InMemoryRuntimeSettings()
                                 .Set("Slack.Enabled", "true"))
-                            .Register<IWaitForShutdownRequest>(kernel => shutdown)
                             .Register(kernel => factory)))
                     .UseLiteServer(liteServer => liteServer
                         .AddWorker<AddMessageToQueueAndExit>())
@@ -71,28 +74,35 @@ namespace Vertica.Integration.Tests.Slack.Messaging
             }
         }
 
-        public class ShutdownHandler : IWaitForShutdownRequest
+        public class FakeSlackBot : ISlackBot
         {
-            private readonly ManualResetEvent _resetEvent;
-            private readonly TimeSpan _maxWaitTime;
+            private readonly IShutdown _shutdown;
 
-            public ShutdownHandler(ManualResetEvent resetEvent, TimeSpan maxWaitTime)
+            public FakeSlackBot(IShutdown shutdown)
             {
-                _resetEvent = resetEvent;
-                _maxWaitTime = maxWaitTime;
+                _shutdown = shutdown;
             }
 
-            public void Wait()
+            public Task Worker
             {
-                _resetEvent.WaitOne(_maxWaitTime);
+                get
+                {
+                    CancellationToken token = _shutdown.Token;
+
+                    return Task.Factory.StartNew(() =>
+                    {
+                        token.WaitHandle.WaitOne();
+
+                    }, token);
+                }
             }
         }
 
         internal class MessageFactory
         {
-            public MessageFactory(ManualResetEvent resetEvent)
+            public MessageFactory(WaitBlock waitBlock)
             {
-                Message = new Message(resetEvent);
+                Message = new Message(waitBlock);
             }
 
             public Message Message { get; }
@@ -141,15 +151,15 @@ namespace Vertica.Integration.Tests.Slack.Messaging
 
         internal class Message : ISlackMessage
         {
-            private readonly ManualResetEvent _resetEvent;
+            private readonly WaitBlock _waitBlock;
 
             private int _handledCount;
 
-            public Message(ManualResetEvent resetEvent)
+            public Message(WaitBlock waitBlock)
             {
-                if (resetEvent == null) throw new ArgumentNullException(nameof(resetEvent));
+                if (waitBlock == null) throw new ArgumentNullException(nameof(waitBlock));
 
-                _resetEvent = resetEvent;
+                _waitBlock = waitBlock;
             }
 
             public int HandledCount => _handledCount;
@@ -158,7 +168,7 @@ namespace Vertica.Integration.Tests.Slack.Messaging
             {
                 Interlocked.Increment(ref _handledCount);
 
-                _resetEvent.Set();
+                _waitBlock.Release();
             }
         }
     }

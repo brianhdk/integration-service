@@ -6,6 +6,7 @@ using NUnit.Framework;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Tests.Infrastructure;
+using Vertica.Integration.Tests.Infrastructure.Testing;
 using Vertica.Integration.UCommerce;
 using Vertica.Integration.UCommerce.Database;
 

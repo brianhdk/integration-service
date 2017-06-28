@@ -29,8 +29,8 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
         public string this[string name]
         {
-            get { return _data[GetIndexByName(name)]; }
-            set { _data[GetIndexByName(name)] = value; }
+            get => _data[GetIndexByName(name)];
+            set => _data[GetIndexByName(name)] = value;
         }
 
         public string this[int index]
@@ -164,9 +164,9 @@ namespace Vertica.Integration.Infrastructure.Parsing
                 LineNumber = lineNumber;
             }
 
-            public CsvRowHeaders Headers { get; private set; }
+            public CsvRowHeaders Headers { get; }
             public string Delimiter { get; }
-            public uint? LineNumber { get; private set; }
+            public uint? LineNumber { get; }
 
             public class CsvRowHeaders : IEnumerable<string>
             {

@@ -12,7 +12,7 @@ using NUnit.Framework;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Infrastructure.Remote;
-using Vertica.Integration.Tests.Infrastructure;
+using Vertica.Integration.Tests.Infrastructure.Testing;
 using Vertica.Integration.WebApi;
 using Vertica.Integration.WebApi.Infrastructure;
 
