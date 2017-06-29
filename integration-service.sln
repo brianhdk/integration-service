@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.12
+VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration", "src\Integration\Integration.csproj", "{460F774F-2C89-47F4-84BD-B97653060E68}"
 EndProject
@@ -79,6 +79,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.ConsoleHost", "src\Integration.ConsoleHost\Integration.ConsoleHost.csproj", "{90969277-DE56-47C0-940D-34C0871E1D6E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".obsolete", ".obsolete", "{A61651C1-77DA-46E1-8706-ECF75F822B64}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Experiments.Console", "src\Experiments.Console\Experiments.Console.csproj", "{44A7587A-702A-4C3B-8E03-F43913C78632}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -182,6 +184,10 @@ Global
 		{90969277-DE56-47C0-940D-34C0871E1D6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90969277-DE56-47C0-940D-34C0871E1D6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90969277-DE56-47C0-940D-34C0871E1D6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44A7587A-702A-4C3B-8E03-F43913C78632}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44A7587A-702A-4C3B-8E03-F43913C78632}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44A7587A-702A-4C3B-8E03-F43913C78632}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44A7587A-702A-4C3B-8E03-F43913C78632}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -189,5 +195,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{6BB8C3AE-1E2E-40BD-9B84-542BD2644590} = {A61651C1-77DA-46E1-8706-ECF75F822B64}
 		{E7DE3E0A-BCEC-419C-BBE7-6F9645CAEB87} = {960ECE29-BE4A-4CB8-A7FA-91F696811BA5}
+		{44A7587A-702A-4C3B-8E03-F43913C78632} = {960ECE29-BE4A-4CB8-A7FA-91F696811BA5}
 	EndGlobalSection
 EndGlobal

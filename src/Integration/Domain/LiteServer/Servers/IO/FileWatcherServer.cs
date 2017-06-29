@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Vertica.Integration.Domain.LiteServer.Servers.IO
 {
-	public abstract class FileWatcherServer : IBackgroundServer
+	public abstract class FileWatcherServer : IBackgroundServer, IRestartable
 	{
 		public Task Create(BackgroundServerContext context, CancellationToken token)
 		{
@@ -26,10 +26,7 @@ namespace Vertica.Integration.Domain.LiteServer.Servers.IO
 				{
 					using (var watcher = new FileSystemWatcher(path.FullName, filterLocal))
 					{
-						watcher.Error += (sender, args) =>
-						{
-							throw args.GetException();
-						};
+						watcher.Error += (sender, args) => throw args.GetException();
 
 						NotifyFilters notifyFiltersLocal = watcher.NotifyFilter;
 						ChangeNotifyFilters(change => notifyFiltersLocal = change);
@@ -199,5 +196,13 @@ namespace Vertica.Integration.Domain.LiteServer.Servers.IO
 					info.Name));
 			}
 		}
+
+        /// <summary>
+        /// Allows you to restart this FileWatcherServer if any uncaught exceptions are thrown. Default is false.
+        /// </summary>
+	    public virtual bool ShouldRestart(RestartableContext context)
+	    {
+	        return false;
+	    }
 	}
 }
