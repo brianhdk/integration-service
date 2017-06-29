@@ -314,7 +314,10 @@ namespace Vertica.Integration.Tests.Domain.LiteServer
 
             public Task Create(BackgroundServerContext context, CancellationToken token)
             {
-                return Task.Run(() => throw new CreateException(), token);
+                return Task.Run(() =>
+                {
+                    throw new CreateException();
+                }, token);
             }
 
             public bool ShouldRestart(RestartableContext context)
@@ -409,7 +412,10 @@ namespace Vertica.Integration.Tests.Domain.LiteServer
         {
             public Task Create(BackgroundServerContext context, CancellationToken token)
             {
-                return Task.Run(() => throw new CreateException(), token);
+                return Task.Run(() =>
+                {
+                    throw new CreateException();
+                }, token);
             }
 
             public bool ShouldRestart(RestartableContext context)
