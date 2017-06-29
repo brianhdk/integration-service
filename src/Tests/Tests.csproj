@@ -72,6 +72,9 @@
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
+    <Reference Include="Rebus, Version=3.1.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Rebus.3.1.5\lib\NET45\Rebus.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SQLite, Version=1.0.105.2, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
@@ -136,6 +139,7 @@
     <Compile Include="Perfion\PerfionServiceTester.cs" />
     <Compile Include="Perfion\PerfionXmlTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rebus\RebusTester.cs" />
     <Compile Include="Slack\Messaging\SlackTester.cs" />
     <Compile Include="SQLite\SQLiteTester.cs" />
     <Compile Include="UCommerce\UCommerceTester.cs" />
@@ -171,6 +175,10 @@
     <ProjectReference Include="..\Integration.Portal\Integration.Portal.csproj">
       <Project>{be14da0e-31c6-4417-8ec6-ed1658b51fa9}</Project>
       <Name>Integration.Portal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration.Rebus\Integration.Rebus.csproj">
+      <Project>{9078656D-7C5E-469C-BFC6-1B9AB2CE9AE1}</Project>
+      <Name>Integration.Rebus</Name>
     </ProjectReference>
     <ProjectReference Include="..\Integration.Slack\Integration.Slack.csproj">
       <Project>{2E86F586-A386-4E65-8241-BA6E0C24F4B6}</Project>

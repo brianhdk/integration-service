@@ -1,9 +1,10 @@
 ﻿using System;
+using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Rebus.Bus;
 using Rebus.Config;
-using Rebus.Logging;
+using Vertica.Integration.Domain.LiteServer;
 
 namespace Vertica.Integration.Rebus
 {
@@ -25,7 +26,7 @@ namespace Vertica.Integration.Rebus
 
 		private RebusHandlersConfiguration HandlersConfiguration { get; set; }
 
-	    public RebusConfiguration Bus(Func<RebusConfigurer, RebusConfigurer> bus)
+	    public RebusConfiguration Bus(Func<RebusConfigurer, IKernel, RebusConfigurer> bus)
 	    {
 		    if (bus == null) throw new ArgumentNullException(nameof(bus));
 
@@ -43,25 +44,33 @@ namespace Vertica.Integration.Rebus
 		    return this;
 	    }
 
-	    void IInitializable<IWindsorContainer>.Initialized(IWindsorContainer container)
+        /// <summary>
+        /// Adds Rebus to <see cref="ILiteServerFactory"/> allowing Rebus to run simultaneously with other servers.
+        /// </summary>
+        public RebusConfiguration AddToLiteServer()
+        {
+            Application.UseLiteServer(server => server.AddServer<RebusBackgroundServer>());
+
+            return this;
+        }
+
+        void IInitializable<IWindsorContainer>.Initialized(IWindsorContainer container)
 		{
 			container.Register(
 			    Component.For<IBus>()
 				    .UsingFactoryMethod(() =>
 				    {
 					    RebusConfigurer rebus =
-						    Configure.With(new CastleWindsorContainerAdapter(container))
-							    .Logging(logging => logging.ColoredConsole(LogLevel.Warn));
-
-						// TODO: Look at this, whether to support logging to our own logging infrastructure (which we don't have)
+						    Configure.With(new CastleWindsorContainerAdapter(container));
 
 					    if (BusConfiguration != null)
-						    rebus = BusConfiguration(rebus);
+						    rebus = BusConfiguration(rebus, container.Kernel);
 
+                        // This will start Rebus - allowing one single instance of Rebus for this application.
 					    return rebus.Start();
 				    }));
 		}
 
-	    private Func<RebusConfigurer, RebusConfigurer> BusConfiguration { get; set; }
+	    private Func<RebusConfigurer, IKernel, RebusConfigurer> BusConfiguration { get; set; }
     }
 }

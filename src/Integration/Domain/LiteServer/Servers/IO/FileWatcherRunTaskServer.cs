@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Domain.LiteServer.Servers.IO
@@ -34,5 +35,10 @@ namespace Vertica.Integration.Domain.LiteServer.Servers.IO
 
 			_runner.Execute(_factory.Get<TTask>(), arguments);
 		}
+
+	    public override string ToString()
+	    {
+	        return $"{base.ToString()} - {typeof(TTask).TaskName()}";
+	    }
 	}
 }

@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Castle.MicroKernel;
 using FluentMigrator;
@@ -15,7 +16,6 @@ using Vertica.Integration.Infrastructure.Database.Migrations.Features;
 using Vertica.Integration.Infrastructure.Features;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Model;
-using Vertica.Utilities.Extensions.AttributeExt;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
@@ -70,11 +70,11 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
                         x.Namespace == typeof(M1_Baseline).Namespace)
                     .Where(x =>
                     {
-                        var migration = x.GetAttribute<MigrationAttribute>();
+                        var migration = x.GetCustomAttribute<MigrationAttribute>();
 
                         return (migration?.Version ?? -1) > laterThanVersion;
                     })
-                    .SelectMany(x => x.GetAttributes<FeatureAttribute>())
+                    .SelectMany(x => x.GetCustomAttributes<FeatureAttribute>())
                     .Select(x =>
                     {
                         x.Disable(_featureToggler);

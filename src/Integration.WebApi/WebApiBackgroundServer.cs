@@ -25,5 +25,10 @@ namespace Vertica.Integration.WebApi
 
 			}, token);
 		}
+
+	    public override string ToString()
+	    {
+	        return nameof(WebApiBackgroundServer);
+	    }
 	}
 }

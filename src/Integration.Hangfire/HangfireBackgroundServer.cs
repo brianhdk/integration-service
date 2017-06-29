@@ -24,5 +24,10 @@ namespace Vertica.Integration.Hangfire
 
 			}, token);
 		}
+
+	    public override string ToString()
+	    {
+	        return nameof(HangfireBackgroundServer);
+	    }
 	}
 }

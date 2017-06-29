@@ -18,5 +18,10 @@ namespace Vertica.Integration.Slack.LiteServer
         {
             return _bot.Worker;
         }
-	}
+
+        public override string ToString()
+        {
+            return nameof(SlackBotWorkerServer);
+        }
+    }
 }

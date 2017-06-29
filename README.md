@@ -30,6 +30,7 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
  - [Integrating SQLite](#integrating-sqlite) 
  - [Integrating Perfion PIM](#integrating-perfion-pim)  
  - [Integrating Hangfire](#integrating-hangfire)  
+ - [Integrating Rebus](#integrating-rebus)  
  - [How to Disable IntegrationDb](#how-to-disable-integrationdb)
  - [How to Change Logger](#how-to-change-logger) 
  - [How to Register Custom dependencies/services](#how-to-register-custom-dependenciesservices)
@@ -496,7 +497,7 @@ As stated earlier, if an exception is thrown, this will abort the flow and assoc
 ## Scheduling Tasks
 
 TBD. 
- - Include desciption of WindowsTaskScheduler + WindowsService
+ - Include description of WindowsService, LiteServer and Hangfire.
 
 [Back to Table of Contents](#table-of-contents)
 
@@ -2028,6 +2029,19 @@ To setup a Hangfire integration, start by adding the following package:
   ```
   Install-Package Vertica.Integration.Hangfire
   ```
+
+[Back to Table of Contents](#table-of-contents)
+
+## Integrating Rebus
+
+To setup a Rebus integration, start by adding the following package:
+
+  ```
+  Install-Package Vertica.Integration.Rebus
+  ```
+
+Read more about Rebus here: https://github.com/rebus-org/Rebus
+
 
 [Back to Table of Contents](#table-of-contents)
 

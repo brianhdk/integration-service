@@ -18,5 +18,10 @@ namespace Vertica.Integration.Slack.LiteServer
         {
             return _queue.Consumer;
         }
+
+        public override string ToString()
+        {
+            return nameof(SlackMessageQueueConsumerServer);
+        }
     }
 }

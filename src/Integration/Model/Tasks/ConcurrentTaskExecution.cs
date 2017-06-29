@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Reflection;
 using Castle.MicroKernel;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Infrastructure.Threading.DistributedMutex;
 using Vertica.Integration.Model.Exceptions;
-using Vertica.Utilities.Extensions.AttributeExt;
 
 namespace Vertica.Integration.Model.Tasks
 {
@@ -32,11 +32,15 @@ namespace Vertica.Integration.Model.Tasks
             if (arguments == null) throw new ArgumentNullException(nameof(arguments));
             if (log == null) throw new ArgumentNullException(nameof(log));
 
-            var preventConcurrent = task.GetAttribute<PreventConcurrentTaskExecutionAttribute>();
+            Type taskType = task.GetType();
+
+            var preventConcurrent = taskType.GetCustomAttribute<PreventConcurrentTaskExecutionAttribute>();
 
             if (preventConcurrent == null)
             {
-                if (task.HasAttribute<AllowConcurrentTaskExecutionAttribute>())
+                var allowConcurrentTaskExecutionAttribute = taskType.GetCustomAttribute<AllowConcurrentTaskExecutionAttribute>();
+
+                if (allowConcurrentTaskExecutionAttribute != null)
                     return null;
 
                 if (!_preventConcurrentTaskExecutionOnAllTasks)
