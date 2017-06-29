@@ -513,6 +513,9 @@ In LiteServer there's basically two components:
 
 You can use the built-in **LiteServerHost** to run it.
 
+**IRestartable**
+ * Add this interface to either your **IBackgroundServer** or **IBackgroundWorker** to be able to have your tasks restarted if any uncaught exceptions occurs.
+
 TBD. 
 [Back to Table of Contents](#table-of-contents)
 
