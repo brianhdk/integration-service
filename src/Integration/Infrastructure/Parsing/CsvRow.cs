@@ -29,8 +29,8 @@ namespace Vertica.Integration.Infrastructure.Parsing
 
         public string this[string name]
         {
-            get => _data[GetIndexByName(name)];
-            set => _data[GetIndexByName(name)] = value;
+            get { return _data[GetIndexByName(name)]; }
+            set { _data[GetIndexByName(name)] = value; }
         }
 
         public string this[int index]

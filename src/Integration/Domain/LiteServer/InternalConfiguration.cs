@@ -19,7 +19,7 @@ namespace Vertica.Integration.Domain.LiteServer
 
 		public TimeSpan ShutdownTimeout
 		{
-			get => _shutdownTimeout;
+		    get { return _shutdownTimeout; }
 		    set
 			{
 				if (value < TimeSpan.Zero)
@@ -27,8 +27,8 @@ namespace Vertica.Integration.Domain.LiteServer
 
 				_shutdownTimeout = value;
 			}
-		}
+	    }
 
-        internal TimeSpan HouseKeepingInterval { get; set; }
+	    internal TimeSpan HouseKeepingInterval { get; set; }
 	}
 }
