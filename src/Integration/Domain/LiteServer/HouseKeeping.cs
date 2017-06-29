@@ -82,7 +82,7 @@ namespace Vertica.Integration.Domain.LiteServer
                     }
                 }
 
-                _output($"Started {_isRunning.Count} server(s).");
+                _output($"Started {_isRunning.Count} server(s)");
 
                 return context.Wait(_configuration.HouseKeepingInterval);
             }
