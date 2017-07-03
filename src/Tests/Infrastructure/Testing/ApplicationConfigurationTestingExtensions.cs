@@ -13,7 +13,9 @@ namespace Vertica.Integration.Tests.Infrastructure.Testing
 
             return application
                 .UseLiteServer(liteServer => liteServer
-                    .HouseKeepingInterval(TimeSpan.FromMilliseconds(50)))
+                    .HouseKeeping(houseKeeping => houseKeeping
+                        .Interval(TimeSpan.FromMilliseconds(50))
+                        .OutputStatusOnNumberOfIterations(1)))
                 .Database(database => database
                     .IntegrationDb(integrationDb => integrationDb.Disable()))
                 .Logging(logging => logging

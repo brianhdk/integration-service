@@ -210,7 +210,7 @@ namespace Vertica.Integration.Domain.LiteServer.Servers.IO
 
 	    public override string ToString()
 	    {
-	        return $"{nameof(FileWatcherServer)} on {PathToMonitor()}";
+	        return $"{nameof(FileWatcherServer)}";
 	    }
 	}
 }

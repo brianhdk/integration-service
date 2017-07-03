@@ -1,18 +1,60 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 using Rebus.Bus;
 using Rebus.Handlers;
 using Rebus.Logging;
+using Vertica.Integration;
 using Vertica.Integration.Domain.LiteServer;
+using Vertica.Integration.Domain.LiteServer.Servers.IO;
 using Vertica.Integration.Infrastructure.IO;
+using Vertica.Integration.Model;
+using ILog = Rebus.Logging.ILog;
+using Task = System.Threading.Tasks.Task;
 
 namespace Experiments.Console
 {
+    public class MyFileWatcher : FileWatcherRunTaskServer<MyTask>
+    {
+        public MyFileWatcher(ITaskFactory factory, ITaskRunner runner) : base(factory, runner)
+        {
+        }
+
+        protected override DirectoryInfo PathToMonitor()
+        {
+            return new DirectoryInfo(@"c:\tmp\tomonitor");
+        }
+
+        public override bool ShouldRestart(RestartableContext context)
+        {
+            if (context.FailedCount < 10)
+                return true;
+
+            return false;
+        }
+
+        protected override string Filter => "*.txt";
+
+        protected override void AddManualFileSystemEventArgs(DirectoryInfo path, string filter, bool includeSubDirectories, NotifyFilters notifyFilters, Action<ManualFileSystemEventArgs> adder)
+        {
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
+            using (var context = ApplicationContext.Create(application => application
+                .Tasks(tasks => tasks.AddFromAssemblyOfThis<Program>())
+                .Database(database => database.IntegrationDb(integrationDb => integrationDb.Disable()))
+                .UseLiteServer(liteServer => liteServer
+                    .AddFromAssemblyOfThis<Program>()
+                    .HouseKeeping(houseKeeping => houseKeeping
+                        .Interval(TimeSpan.FromSeconds(1))
+                        .OutputStatusOnNumberOfIterations(10)))))
+            {
+                context.Execute(nameof(LiteServerHost));
+            }
             //using (var context = ApplicationContext.Create(application => application
             //    .Database(database => database
             //        .IntegrationDb(integrationDb => integrationDb
@@ -47,59 +89,9 @@ namespace Experiments.Console
             //    context.Execute(nameof(LiteServerHost));
             //}
         }
-
-        public class RebusLoggerFactory : IRebusLoggerFactory
-        {
-            private readonly IConsoleWriter _console;
-
-            public RebusLoggerFactory(IConsoleWriter console)
-            {
-                _console = console;
-            }
-
-            public ILog GetLogger<T>()
-            {
-                return new RebusLogger(_console);
-            }
-
-            private class RebusLogger : ILog
-            {
-                private readonly IConsoleWriter _console;
-
-                public RebusLogger(IConsoleWriter console)
-                {
-                    _console = console;
-                }
-
-                public void Debug(string message, params object[] objs)
-                {
-                    _console.WriteLine(message, objs);
-                }
-
-                public void Info(string message, params object[] objs)
-                {
-                    _console.WriteLine(message, objs);
-                }
-
-                public void Warn(string message, params object[] objs)
-                {
-                    _console.WriteLine(message, objs);
-                }
-
-                public void Error(Exception exception, string message, params object[] objs)
-                {
-                    _console.WriteLine(message, objs);
-                }
-
-                public void Error(string message, params object[] objs)
-                {
-                    _console.WriteLine(message, objs);
-                }
-            }
-        }
     }
 
-    public class SomeWorker : IBackgroundWorker, IRestartable
+    internal class SomeWorker : IBackgroundWorker, IRestartable
     {
         private readonly IBus _bus;
 
@@ -125,6 +117,56 @@ namespace Experiments.Console
         public override string ToString()
         {
             return nameof(SomeWorker);
+        }
+    }
+
+    public class RebusLoggerFactory : IRebusLoggerFactory
+    {
+        private readonly IConsoleWriter _console;
+
+        public RebusLoggerFactory(IConsoleWriter console)
+        {
+            _console = console;
+        }
+
+        public ILog GetLogger<T>()
+        {
+            return new RebusLogger(_console);
+        }
+
+        private class RebusLogger : ILog
+        {
+            private readonly IConsoleWriter _console;
+
+            public RebusLogger(IConsoleWriter console)
+            {
+                _console = console;
+            }
+
+            public void Debug(string message, params object[] objs)
+            {
+                _console.WriteLine(message, objs);
+            }
+
+            public void Info(string message, params object[] objs)
+            {
+                _console.WriteLine(message, objs);
+            }
+
+            public void Warn(string message, params object[] objs)
+            {
+                _console.WriteLine(message, objs);
+            }
+
+            public void Error(Exception exception, string message, params object[] objs)
+            {
+                _console.WriteLine(message, objs);
+            }
+
+            public void Error(string message, params object[] objs)
+            {
+                _console.WriteLine(message, objs);
+            }
         }
     }
 

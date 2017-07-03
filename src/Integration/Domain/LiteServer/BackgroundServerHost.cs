@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Castle.MicroKernel;
 using Vertica.Integration.Infrastructure;
+using Vertica.Utilities;
 
 namespace Vertica.Integration.Domain.LiteServer
 {
@@ -13,9 +14,11 @@ namespace Vertica.Integration.Domain.LiteServer
         private readonly Action<string> _output;
         private readonly CancellationToken _token;
         private readonly RestartableContext _context;
+        private readonly IUptimeTextGenerator _uptime;
 
         private Task _current;
-        
+        private DateTimeOffset _startedAt;
+
         public BackgroundServerHost(IBackgroundServer server, TaskScheduler scheduler, IKernel kernel, Action<string> output)
         {
             if (server == null) throw new ArgumentNullException(nameof(server));
@@ -28,6 +31,7 @@ namespace Vertica.Integration.Domain.LiteServer
             _output = message => output($"[{this}]: {message}");
             _token = kernel.Resolve<IShutdown>().Token;
             _context = new RestartableContext(kernel);
+            _uptime = kernel.Resolve<IUptimeTextGenerator>();
         }
 
         public void Start()
@@ -42,14 +46,17 @@ namespace Vertica.Integration.Domain.LiteServer
             _output("Started");
         }
 
-        public bool IsRunning(Action<AggregateException> onException)
+        public bool IsRunning(Action<AggregateException> onException, out string statusText)
         {
             if (onException == null) throw new ArgumentNullException(nameof(onException));
 
             EnsureStarted();
 
             if (_current.Status == TaskStatus.Running)
+            {
+                statusText = $"Running for {_uptime.GetUptimeText(_startedAt)} (Failed: {_context.FailedCount} time(s))";
                 return true;
+            }
 
             AggregateException exception = _current.Exception;
 
@@ -59,12 +66,18 @@ namespace Vertica.Integration.Domain.LiteServer
                 _context.OnException(exception);
 
                 if (_token.IsCancellationRequested)
+                {
+                    statusText = "Cancelling";
                     return false;
+                }
 
                 var restartable = _server as IRestartable;
 
                 if (restartable == null)
+                {
+                    statusText = "Failed";
                     return false;
+                }
 
                 _output("Checking whether to restart");
 
@@ -75,6 +88,7 @@ namespace Vertica.Integration.Domain.LiteServer
                     _current = StartTask();
 
                     // We'll simply return true, as the next Housekeeping iteration will tell if the Task is still running.
+                    statusText = "Restarted";
                     return true;
                 }
             }
@@ -82,9 +96,9 @@ namespace Vertica.Integration.Domain.LiteServer
             // If the task completed, we'll simply dipose the task thus releasing resources.
             if (_current.IsCompleted)
             {
-                _output("Stopped");
-
                 _current.Dispose();
+
+                statusText = $"Stopped. Uptime: {_uptime.GetUptimeText(_startedAt)} (Failed: {_context.FailedCount} time(s))";
                 return false;
             }
 
@@ -117,7 +131,14 @@ namespace Vertica.Integration.Domain.LiteServer
 
         public override string ToString()
         {
-            return _server.ToString();
+            try
+            {
+                return _server.ToString();
+            }
+            catch
+            {
+                return _server.GetType().Name;
+            }
         }
 
         private void EnsureStarted()
@@ -133,6 +154,8 @@ namespace Vertica.Integration.Domain.LiteServer
             // This will ensure that the task will be run.
             if (task.Status == TaskStatus.Created)
                 task.Start(_scheduler);
+
+            _startedAt = Time.UtcNow;
 
             return task;
         }

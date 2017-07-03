@@ -27,10 +27,7 @@ namespace Vertica.Integration.Infrastructure
             if (span.Seconds > 0)
                 segments.Add($"{span.Seconds} second{(span.Seconds == 1 ? string.Empty : "s")}");
 
-            segments.Add($"(started at {startTime} (UTC))");
-
             return string.Join(" ", segments);
-
         }
     }
 }

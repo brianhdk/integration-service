@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Castle.MicroKernel;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Logging;
+using Vertica.Utilities;
 using Vertica.Utilities.Extensions.StringExt;
 
 namespace Vertica.Integration.Domain.LiteServer
@@ -13,11 +14,13 @@ namespace Vertica.Integration.Domain.LiteServer
     internal class HouseKeeping : IBackgroundWorker, IDisposable
     {
         private readonly ILogger _logger;
+        private readonly IUptimeTextGenerator _uptime;
         private readonly InternalConfiguration _configuration;
         private readonly Action<string> _output;
         private readonly BackgroundServerHost[] _servers;
         private readonly HashSet<BackgroundServerHost> _isRunning;
         private readonly Task _task;
+        private readonly DateTimeOffset _startedAt;
 
         public HouseKeeping(IKernel kernel, InternalConfiguration configuration, Action<string> output)
         {
@@ -26,6 +29,7 @@ namespace Vertica.Integration.Domain.LiteServer
             if (output == null) throw new ArgumentNullException(nameof(output));
 
             _logger = kernel.Resolve<ILogger>();
+            _uptime = kernel.Resolve<IUptimeTextGenerator>();
             _configuration = configuration;
             _output = message => output($"[{this}]: {message}");
 
@@ -48,6 +52,9 @@ namespace Vertica.Integration.Domain.LiteServer
 
             // Spin off the housekeeping background server
             _task = Start(kernel, scheduler, token);
+
+            // Keep track of when Housekeeping was started.
+            _startedAt = Time.UtcNow;
         }
 
         private Task Start(IKernel kernel, TaskScheduler scheduler, CancellationToken token)
@@ -87,7 +94,10 @@ namespace Vertica.Integration.Domain.LiteServer
                 return context.Wait(_configuration.HouseKeepingInterval);
             }
 
-            CheckIsRunning();
+            // Calculates whether to output status text or not, depending on number of iterations.
+            bool outputStatus = (context.InvocationCount - 1) % _configuration.HouseKeepingOutputStatusOnNumberOfIterations == 0;
+
+            CheckIsRunning(outputStatus);
 
             if (_isRunning.Count == 0)
             {
@@ -95,17 +105,27 @@ namespace Vertica.Integration.Domain.LiteServer
                 return context.Exit();
             }
 
+            if (outputStatus)
+                _output($"{_isRunning.Count} server(s) running. Uptime: {_uptime.GetUptimeText(_startedAt)}");
+
             return context.Wait(_configuration.HouseKeepingInterval);
         }
 
-        private void CheckIsRunning()
+        private void CheckIsRunning(bool outputStatus = true)
         {
             foreach (BackgroundServerHost host in _servers.Where(_isRunning.Contains))
             {
                 try
                 {
-                    if (!host.IsRunning(ex => LogError(host, ex)))
+                    string statusText;
+                    if (!host.IsRunning(ex => LogError(host, ex), out statusText))
+                    {
                         _isRunning.Remove(host);
+                        outputStatus = true;
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(statusText) && outputStatus)
+                        _output($"[{host}]: {statusText}");
                 }
                 catch (Exception ex)
                 {

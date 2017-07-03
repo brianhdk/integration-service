@@ -7,11 +7,49 @@ using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 
 namespace Vertica.Integration.Domain.LiteServer
 {
-	public class LiteServerConfiguration : IInitializable<IWindsorContainer>
+    public class HouseKeepingConfiguration
+    {
+        private readonly InternalConfiguration _configuration;
+
+        internal HouseKeepingConfiguration(LiteServerConfiguration liteServer, InternalConfiguration configuration)
+        {
+            if (liteServer == null) throw new ArgumentNullException(nameof(liteServer));
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+
+            LiteServer = liteServer;
+            _configuration = configuration;
+        }
+
+        public LiteServerConfiguration LiteServer { get; }
+
+        /// <summary>
+        /// Overrides how frequently the HouseKeeping thread should monitor background servers and workers.
+        /// Default is every 5th second.
+        /// </summary>
+        public HouseKeepingConfiguration Interval(TimeSpan interval)
+        {
+            _configuration.HouseKeepingInterval = interval;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Overrides the number of iterations HouseKeeping should do before outputting the current status of background servers and workers.
+        /// Default is on every 10th iteration.
+        /// </summary>
+        public HouseKeepingConfiguration OutputStatusOnNumberOfIterations(uint iteration)
+        {
+            _configuration.HouseKeepingOutputStatusOnNumberOfIterations = iteration;
+
+            return this;
+        }
+    }
+    public class LiteServerConfiguration : IInitializable<IWindsorContainer>
 	{
 		private readonly InternalConfiguration _configuration;
+	    private readonly HouseKeepingConfiguration _houseKeeping;
 
-		private readonly ScanAddRemoveInstaller<IBackgroundServer> _servers;
+        private readonly ScanAddRemoveInstaller<IBackgroundServer> _servers;
 		private readonly ScanAddRemoveInstaller<IBackgroundWorker> _workers; 
 
 		internal LiteServerConfiguration(ApplicationConfiguration application)
@@ -19,6 +57,7 @@ namespace Vertica.Integration.Domain.LiteServer
 			if (application == null) throw new ArgumentNullException(nameof(application));
 
 		    _configuration = new InternalConfiguration();
+		    _houseKeeping = new HouseKeepingConfiguration(this, _configuration);
 
 		    _servers = new ScanAddRemoveInstaller<IBackgroundServer>(configure: x => x.LifeStyle.Is(LifestyleType.Transient));
 		    _workers = new ScanAddRemoveInstaller<IBackgroundWorker>(configure: x => x.LifeStyle.Is(LifestyleType.Transient));
@@ -61,19 +100,24 @@ namespace Vertica.Integration.Domain.LiteServer
 			return this;
 		}
 
-	    internal LiteServerConfiguration HouseKeepingInterval(TimeSpan interval)
+        /// <summary>
+        /// Gives access to configure the internal "HouseKeeping" behaviour of LiteServer, e.g. monitoring background servers and workers.
+        /// </summary>
+	    public LiteServerConfiguration HouseKeeping(Action<HouseKeepingConfiguration> houseKeeping)
 	    {
-	        _configuration.HouseKeepingInterval = interval;
+	        if (houseKeeping == null) throw new ArgumentNullException(nameof(houseKeeping));
+
+	        houseKeeping(_houseKeeping);
 
 	        return this;
 	    }
 
-		/// <summary>
-		/// Scans the assembly of the defined <typeparamref name="T"></typeparamref> for public classes inheriting <see cref="IBackgroundServer"/> and/or <see cref="IBackgroundWorker"/>
-		/// <para />
-		/// </summary>
-		/// <typeparam name="T">The type in which its assembly will be scanned.</typeparam>
-		public LiteServerConfiguration AddFromAssemblyOfThis<T>()
+        /// <summary>
+        /// Scans the assembly of the defined <typeparamref name="T"></typeparamref> for public classes inheriting <see cref="IBackgroundServer"/> and/or <see cref="IBackgroundWorker"/>
+        /// <para />
+        /// </summary>
+        /// <typeparam name="T">The type in which its assembly will be scanned.</typeparam>
+        public LiteServerConfiguration AddFromAssemblyOfThis<T>()
 		{
 			_servers.AddFromAssemblyOfThis<T>();
 			_workers.AddFromAssemblyOfThis<T>();
