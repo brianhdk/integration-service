@@ -1,4 +1,8 @@
 ﻿using System;
+using Vertica.Integration.Domain.Monitoring;
+using Vertica.Integration.Model;
+using Vertica.Integration.Redis.Infrastructure.Client;
+using Vertica.Integration.Redis.Monitor;
 
 namespace Vertica.Integration.Redis
 {
@@ -15,5 +19,18 @@ namespace Vertica.Integration.Redis
 				redis?.Invoke(configuration);
 			});
 		}
-	}
+        
+	    public static TaskConfiguration<MonitorWorkItem> IncludeRedis(this TaskConfiguration<MonitorWorkItem> task)
+	    {
+	        if (task == null) throw new ArgumentNullException(nameof(task));
+
+	        return task.Step<PingRedisStep>();
+	    }
+
+	    public static TaskConfiguration<MonitorWorkItem> IncludeRedis<TConnection>(this TaskConfiguration<MonitorWorkItem> task)
+	        where TConnection : Connection
+	    {
+	        return task.Step<PingRedisStep<TConnection>>();
+	    }
+    }
 }

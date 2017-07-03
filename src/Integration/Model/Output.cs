@@ -15,7 +15,14 @@ namespace Vertica.Integration.Model
 
         public void Message(string format, params object[] args)
         {
-            _message(string.Format(format, args));
+            if (args != null && args.Length > 0)
+            {
+                _message(string.Format(format, args));
+            }
+            else
+            {
+                _message(format);
+            }
         }
     }
 }

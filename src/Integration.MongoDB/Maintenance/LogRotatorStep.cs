@@ -9,17 +9,17 @@ namespace Vertica.Integration.MongoDB.Maintenance
         where TConnection : Connection
     {
         private readonly IMongoDbClientFactory<TConnection> _db;
-        private readonly ILogRotatorCommand _command;
+        private readonly ILogRotatorCommand _logRotator;
 
-        public LogRotatorStep(IMongoDbClientFactory<TConnection> db, ILogRotatorCommand command)
+        public LogRotatorStep(IMongoDbClientFactory<TConnection> db, ILogRotatorCommand logRotator)
         {
             _db = db;
-            _command = command;
+            _logRotator = logRotator;
         }
 
         public override void Execute(MaintenanceWorkItem workItem, ITaskExecutionContext context)
         {
-            _command.Execute(_db.Client);
+            _logRotator.Execute(_db.Client, context.CancellationToken);
         }
 
         public override string Description => "Performs a logRotate command against the MongoDB server.";
@@ -27,8 +27,8 @@ namespace Vertica.Integration.MongoDB.Maintenance
 
     public class LogRotatorStep : LogRotatorStep<DefaultConnection>
     {
-        public LogRotatorStep(IMongoDbClientFactory<DefaultConnection> db, ILogRotatorCommand command)
-            : base(db, command)
+        public LogRotatorStep(IMongoDbClientFactory<DefaultConnection> db, ILogRotatorCommand logRotator)
+            : base(db, logRotator)
         {
         }
     }

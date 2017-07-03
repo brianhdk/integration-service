@@ -70,13 +70,13 @@ namespace Vertica.Integration.Tests.Infrastructure.Threading
                 {
                     int id = Thread.CurrentThread.ManagedThreadId;
 
-                    using (subject.Enter(new DistributedMutexContext(name, configuration, x => Console.WriteLine($"Thread {id} waiting: {x}"))))
+                    using (subject.Enter(new DistributedMutexContext(name, configuration, x => Console.WriteLine($@"Thread {id} waiting: {x}"))))
                     {
-                        Console.WriteLine($"Thread {id} entered {name}");
+                        Console.WriteLine($@"Thread {id} entered {name}");
 
                         Thread.Sleep(timeToExecute);
 
-                        Console.WriteLine($"Thread {id} exitting {name}");
+                        Console.WriteLine($@"Thread {id} exitting {name}");
                     }
                 });
             };
@@ -114,7 +114,7 @@ namespace Vertica.Integration.Tests.Infrastructure.Threading
                     Console.WriteLine(@"--- Exceptions ---");
                     Console.WriteLine();
 
-                    foreach (var innerException in inner)
+                    foreach (Exception innerException in inner)
                         Console.WriteLine(innerException.Message);
                 }
             }

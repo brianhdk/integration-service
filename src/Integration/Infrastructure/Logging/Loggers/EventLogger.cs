@@ -132,13 +132,13 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
         {
             var reference = log as IReferenceErrorLog;
 
-            return reference != null ? reference.ErrorLog : null;
+            return reference?.ErrorLog;
         }
 
         private string Line(LogEntry log, string text = null, params object[] args)
         {
             if (!string.IsNullOrWhiteSpace(text))
-                text = string.Concat(" ", string.Format(text, args));
+                text = string.Concat(" ", args != null && args.Length > 0 ? string.Format(text, args) : text);
 
             return Line(log.TimeStamp, $"[{log}]{text}");
         }
@@ -146,7 +146,7 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
         private string Line(DateTimeOffset timestamp, string text, params object[] args)
         {
             return string.Concat(Environment.NewLine,
-	            $"[{timestamp.LocalDateTime:HH:mm:ss}] {string.Format(text, args)}");
+	            $"[{timestamp.LocalDateTime:HH:mm:ss}] {(args != null && args.Length > 0 ? string.Format(text, args) : text)}");
         }
 
         private string ExecutionTime(LogEntry log)

@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using System.Text;
 
 namespace Vertica.Integration.Infrastructure.Extensions
 {
-    internal static class ExceptionExtensions
+    public static class ExceptionExtensions
     {
         public static string GetFullStacktrace(this Exception exception)
         {
+            if (exception == null) throw new ArgumentNullException(nameof(exception));
+
             var sb = new StringBuilder();
 
             while (exception != null)
@@ -32,8 +35,17 @@ namespace Vertica.Integration.Infrastructure.Extensions
             return sb.ToString();
         }
 
+        public static string AggregateMessages(this AggregateException exception)
+        {
+            if (exception == null) throw new ArgumentNullException(nameof(exception));
+
+            return string.Join(Environment.NewLine, exception.InnerExceptions.Select(AggregateMessages));
+        }
+
         public static string AggregateMessages(this Exception exception)
         {
+            if (exception == null) throw new ArgumentNullException(nameof(exception));
+
             var sb = new StringBuilder();
 
             int[] indents = { 0 };

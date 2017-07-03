@@ -56,6 +56,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
@@ -74,9 +77,21 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Integration.Elasticsearch\Integration.Elasticsearch.csproj">
+      <Project>{D755AB1A-90E7-4E81-9F86-C574E1695A71}</Project>
+      <Name>Integration.Elasticsearch</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration.MongoDB\Integration.MongoDB.csproj">
+      <Project>{3BCCDB4F-104A-418A-8DEE-15A655960AEA}</Project>
+      <Name>Integration.MongoDB</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Integration.Rebus\Integration.Rebus.csproj">
       <Project>{9078656D-7C5E-469C-BFC6-1B9AB2CE9AE1}</Project>
       <Name>Integration.Rebus</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration.Redis\Integration.Redis.csproj">
+      <Project>{D59B4610-F4EB-495A-9012-C4767BBA9B38}</Project>
+      <Name>Integration.Redis</Name>
     </ProjectReference>
     <ProjectReference Include="..\Integration\Integration.csproj">
       <Project>{460F774F-2C89-47F4-84BD-B97653060E68}</Project>

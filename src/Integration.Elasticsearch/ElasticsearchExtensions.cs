@@ -1,4 +1,8 @@
 ﻿using System;
+using Vertica.Integration.Domain.Monitoring;
+using Vertica.Integration.Elasticsearch.Infrastructure.Clusters;
+using Vertica.Integration.Elasticsearch.Monitor;
+using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Elasticsearch
 {
@@ -15,5 +19,18 @@ namespace Vertica.Integration.Elasticsearch
 				elasticsearch?.Invoke(configuration);
 			});
 		}
-	}
+        
+	    public static TaskConfiguration<MonitorWorkItem> IncludeElasticsearch(this TaskConfiguration<MonitorWorkItem> task)
+	    {
+	        if (task == null) throw new ArgumentNullException(nameof(task));
+
+	        return task.Step<PingElasticsearchStep>();
+	    }
+
+	    public static TaskConfiguration<MonitorWorkItem> IncludeElasticsearch<TConnection>(this TaskConfiguration<MonitorWorkItem> task)
+	        where TConnection : Connection
+	    {
+	        return task.Step<PingElasticsearchStep<TConnection>>();
+	    }
+    }
 }

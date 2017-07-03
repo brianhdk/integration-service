@@ -6,7 +6,7 @@ using MongoDB.Driver;
 
 namespace Vertica.Integration.MongoDB.Commands
 {
-    public class LogRotatorCommand : ILogRotatorCommand
+    public class PingCommand : IPingCommand
     {
         public void Execute(IMongoClient client, CancellationToken token)
         {
@@ -19,7 +19,7 @@ namespace Vertica.Integration.MongoDB.Commands
         {
             var command = new BsonDocumentCommand<dynamic>(new BsonDocument
             {
-                { "logRotate", 1}
+                { "ping", 1}
             });
 
             return database.RunCommandAsync(command, cancellationToken: token);

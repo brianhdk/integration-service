@@ -60,9 +60,14 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Vertica.Utilities, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Vertica.Utilities.5.0.0\lib\net45\Vertica.Utilities.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\IPingCommand.cs" />
     <Compile Include="Commands\ILogRotatorCommand.cs" />
+    <Compile Include="Commands\PingCommand.cs" />
     <Compile Include="Commands\LogRotatorCommand.cs" />
     <Compile Include="Infrastructure\DefaultConnection.cs" />
     <Compile Include="Maintenance\LogRotatorStep.cs" />
@@ -72,6 +77,7 @@
     <Compile Include="Infrastructure\Connection.cs" />
     <Compile Include="IMongoDbClientFactory.cs" />
     <Compile Include="Infrastructure\Castle.Windsor\MongoDbInstaller.cs" />
+    <Compile Include="Monitor\PingMongoDbStep.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

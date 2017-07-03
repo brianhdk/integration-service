@@ -31,6 +31,8 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
  - [Integrating Perfion PIM](#integrating-perfion-pim)  
  - [Integrating Hangfire](#integrating-hangfire)  
  - [Integrating Rebus](#integrating-rebus)  
+ - [Integrating Redis](#integrating-redis)  
+ - [Integrating Elasticsearch](#integrating-elasticsearch)  
  - [How to Disable IntegrationDb](#how-to-disable-integrationdb)
  - [How to Change Logger](#how-to-change-logger) 
  - [How to Register Custom dependencies/services](#how-to-register-custom-dependenciesservices)
@@ -1786,6 +1788,45 @@ namespace ConsoleApplication16
 }
 ```
 
+Optional: Monitor MongoDb when running the MonitorTask
+
+  ```c#
+namespace ConsoleApplication16
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			IntegrationStartup.Run(args, application => application
+                .Tasks(tasks => tasks
+                    .MonitorTask(monitorTask => monitorTask
+                        .IncludeMongoDb()))
+				.UseMongoDb())
+		}
+	}
+}
+  ```
+
+  Optional: Run MongoDb LogRotator command when running the MaintenanceTask
+
+  ```c#
+namespace ConsoleApplication16
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			IntegrationStartup.Run(args, application => application
+                .Tasks(tasks => tasks
+                    .MaintenanceTask(maintenanceTask => maintenanceTask
+                        .IncludeLogRotator())
+				.UseMongoDb())
+		}
+	}
+}
+  ```
+
+
 [Back to Table of Contents](#table-of-contents)
 
 ## Integrating SQLite
@@ -2041,6 +2082,106 @@ To setup a Rebus integration, start by adding the following package:
   ```
 
 Read more about Rebus here: https://github.com/rebus-org/Rebus
+
+
+[Back to Table of Contents](#table-of-contents)
+
+## Integrating Redis
+
+To setup a Redis cache integration, start by adding the following package:
+
+1. Install via NuGet to the Visual Studio Project hosting Integration Service, typically this is your Console Application (.exe)
+
+  ```
+  Install-Package Vertica.Integration.Redis
+  ```
+  
+2. Invoke the Extension Method *UseRedis()* part of bootstrapping Integration Service.
+
+  ```c#
+namespace ConsoleApplication16
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			IntegrationStartup.Run(args, application => application
+				.UseRedis())
+		}
+	}
+}
+  ```
+
+3. Optional: Monitor Redis when running the MonitorTask
+
+  ```c#
+namespace ConsoleApplication16
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			IntegrationStartup.Run(args, application => application
+                .Tasks(tasks => tasks
+                    .MonitorTask(monitorTask => monitorTask
+                        .IncludeRedis()))
+				.UseRedis())
+		}
+	}
+}
+  ```
+
+Read more about Redis here: https://stackexchange.github.io/StackExchange.Redis/
+
+
+[Back to Table of Contents](#table-of-contents)
+
+## Integrating Elasticsearch
+
+To setup a Elasticsearch integration, start by adding the following package:
+
+1. Install via NuGet to the Visual Studio Project hosting Integration Service, typically this is your Console Application (.exe)
+
+  ```
+  Install-Package Vertica.Integration.Elasticsearch
+  ```
+  
+2. Invoke the Extension Method *UseElasticsearch()* part of bootstrapping Integration Service.
+
+  ```c#
+namespace ConsoleApplication16
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			IntegrationStartup.Run(args, application => application
+				.UseElasticsearch())
+		}
+	}
+}
+  ```
+
+3. Optional: Monitor Elasticsearch when running the MonitorTask
+
+  ```c#
+namespace ConsoleApplication16
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			IntegrationStartup.Run(args, application => application
+                .Tasks(tasks => tasks
+                    .MonitorTask(monitorTask => monitorTask
+                        .IncludeElasticsearch()))
+				.UseElasticsearch())
+		}
+	}
+}
+  ```
+
+Read more about Elasticsearch and NEST here: https://github.com/elastic/elasticsearch-net
 
 
 [Back to Table of Contents](#table-of-contents)

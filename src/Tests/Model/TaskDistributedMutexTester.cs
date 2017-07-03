@@ -60,7 +60,7 @@ namespace Vertica.Integration.Tests.Model
                 var failedTasks = tasks.Where(x => x.Exception != null).ToArray();
 
                 Assert.That(failedTasks.Length, Is.EqualTo(1));
-                Assert.That(failedTasks[0].Exception.AggregateMessages(), Does.Contain("Unable to acquire lock 'SomeTask'"));
+                Assert.That(((Exception) failedTasks[0].Exception).AggregateMessages(), Does.Contain("Unable to acquire lock 'SomeTask'"));
 
                 var completedTasks = tasks.Where(x => x.Status == TaskStatus.RanToCompletion).ToArray();
 

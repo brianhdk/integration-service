@@ -23,7 +23,7 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
 
         public ErrorLog LogError(ITarget target, string message, params object[] args)
         {
-            return LogError(new ErrorLog(Severity.Error, string.Format(message, args), target));
+            return LogError(new ErrorLog(Severity.Error, args != null && args.Length > 0 ? string.Format(message, args) : message, target));
         }
 
         public ErrorLog LogError(Exception exception, ITarget target = null)
@@ -33,7 +33,7 @@ namespace Vertica.Integration.Infrastructure.Logging.Loggers
 
         public ErrorLog LogWarning(ITarget target, string message, params object[] args)
         {
-            return LogError(new ErrorLog(Severity.Warning, string.Format(message, args), target));
+            return LogError(new ErrorLog(Severity.Warning, args != null && args.Length > 0 ? string.Format(message, args) : message, target));
         }
 
         private ErrorLog LogError(ErrorLog errorLog)

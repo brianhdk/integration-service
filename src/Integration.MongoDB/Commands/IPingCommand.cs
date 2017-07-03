@@ -3,7 +3,7 @@ using MongoDB.Driver;
 
 namespace Vertica.Integration.MongoDB.Commands
 {
-    public interface ILogRotatorCommand
+    public interface IPingCommand
     {
         void Execute(IMongoClient client, CancellationToken token);
     }

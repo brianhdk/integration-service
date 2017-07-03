@@ -1,8 +1,10 @@
 ﻿using System;
 using Vertica.Integration.Domain.Core;
+using Vertica.Integration.Domain.Monitoring;
 using Vertica.Integration.Model;
 using Vertica.Integration.MongoDB.Infrastructure;
 using Vertica.Integration.MongoDB.Maintenance;
+using Vertica.Integration.MongoDB.Monitor;
 
 namespace Vertica.Integration.MongoDB
 {
@@ -32,6 +34,19 @@ namespace Vertica.Integration.MongoDB
             where TConnection : Connection
         {
             return task.Step<LogRotatorStep<TConnection>>();
+        }
+
+        public static TaskConfiguration<MonitorWorkItem> IncludeMongoDb(this TaskConfiguration<MonitorWorkItem> task)
+        {
+            if (task == null) throw new ArgumentNullException(nameof(task));
+
+            return task.Step<PingMongoDbStep>();
+        }
+
+        public static TaskConfiguration<MonitorWorkItem> IncludeMongoDb<TConnection>(this TaskConfiguration<MonitorWorkItem> task)
+            where TConnection : Connection
+        {
+            return task.Step<PingMongoDbStep<TConnection>>();
         }
     }
 }
