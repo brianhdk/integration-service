@@ -1,4 +1,5 @@
 ﻿using System;
+using Vertica.Integration.Domain.LiteServer;
 
 namespace Vertica.Integration.Rebus
 {
@@ -16,6 +17,15 @@ namespace Vertica.Integration.Rebus
 
 				rebus(configuration);
 	        });
+        }
+
+        public static LiteServerConfiguration AddRebus(this LiteServerConfiguration liteServer)
+        {
+            if (liteServer == null) throw new ArgumentNullException(nameof(liteServer));
+
+            UseRebus(liteServer.Application, rebus => rebus.AddToLiteServer());
+
+            return liteServer;
         }
     }
 }

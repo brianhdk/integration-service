@@ -13,7 +13,7 @@ namespace Vertica.Integration.Domain.LiteServer
             OnShutdown = new ShutdownActions();
             ShutdownTimeout = TimeSpan.FromSeconds(5);
             HouseKeepingInterval = TimeSpan.FromSeconds(5);
-            HouseKeepingOutputStatusOnNumberOfIterations = 1;
+            HouseKeepingOutputStatusOnNumberOfIterations = 10;
         }
 
         public StartupActions OnStartup { get; }

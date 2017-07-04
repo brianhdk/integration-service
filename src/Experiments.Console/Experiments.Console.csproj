@@ -69,9 +69,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MyTask.cs" />
+    <Compile Include="FileWatcher\FileWatcherDemo.cs" />
+    <Compile Include="FileWatcher\WatchFilesServer.cs" />
+    <Compile Include="FileWatcher\HandleFileTask.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rebus\ReceiveMessageHandler.cs" />
+    <Compile Include="Rebus\RebusDemo.cs" />
+    <Compile Include="Rebus\RebusLoggerFactory.cs" />
+    <Compile Include="Rebus\SendMessageWorker.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

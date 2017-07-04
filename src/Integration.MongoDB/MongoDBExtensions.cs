@@ -23,14 +23,14 @@ namespace Vertica.Integration.MongoDB
 			});
         }
 
-        public static TaskConfiguration<MaintenanceWorkItem> IncludeLogRotator(this TaskConfiguration<MaintenanceWorkItem> task)
+        public static TaskConfiguration<MaintenanceWorkItem> IncludeMongoDb(this TaskConfiguration<MaintenanceWorkItem> task)
         {
             if (task == null) throw new ArgumentNullException(nameof(task));
 
             return task.Step<LogRotatorStep>();
         }
 
-        public static TaskConfiguration<MaintenanceWorkItem> IncludeLogRotator<TConnection>(this TaskConfiguration<MaintenanceWorkItem> task)
+        public static TaskConfiguration<MaintenanceWorkItem> IncludeMongoDb<TConnection>(this TaskConfiguration<MaintenanceWorkItem> task)
             where TConnection : Connection
         {
             return task.Step<LogRotatorStep<TConnection>>();

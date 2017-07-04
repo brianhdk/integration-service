@@ -16,5 +16,14 @@ namespace Vertica.Integration.WebApi
 				webApi?.Invoke(configuration);
 			});
         }
+
+        public static LiteServerConfiguration AddWebApi(this LiteServerConfiguration liteServer)
+        {
+            if (liteServer == null) throw new ArgumentNullException(nameof(liteServer));
+
+            UseWebApi(liteServer.Application, webApi => webApi.AddToLiteServer());
+
+            return liteServer;
+        }
     }
 }

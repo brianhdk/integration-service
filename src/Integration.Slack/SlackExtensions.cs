@@ -1,4 +1,5 @@
 ﻿using System;
+using Vertica.Integration.Domain.LiteServer;
 
 namespace Vertica.Integration.Slack
 {
@@ -15,5 +16,14 @@ namespace Vertica.Integration.Slack
 				slack?.Invoke(configuration);
 			});
 		}
-	}
+
+	    public static LiteServerConfiguration AddSlack(this LiteServerConfiguration liteServer)
+	    {
+	        if (liteServer == null) throw new ArgumentNullException(nameof(liteServer));
+
+	        UseSlack(liteServer.Application, slack => slack.AddToLiteServer());
+
+	        return liteServer;
+	    }
+    }
 }

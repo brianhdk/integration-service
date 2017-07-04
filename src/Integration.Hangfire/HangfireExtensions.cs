@@ -1,4 +1,5 @@
 ﻿using System;
+using Vertica.Integration.Domain.LiteServer;
 
 namespace Vertica.Integration.Hangfire
 {
@@ -15,6 +16,15 @@ namespace Vertica.Integration.Hangfire
 
 				hangfire(configuration);
 			});
+        }
+
+        public static LiteServerConfiguration AddHangfire(this LiteServerConfiguration liteServer)
+        {
+            if (liteServer == null) throw new ArgumentNullException(nameof(liteServer));
+
+            UseHangfire(liteServer.Application, hangfire => hangfire.AddToLiteServer());
+
+            return liteServer;
         }
     }
 }
