@@ -35,13 +35,13 @@ namespace Vertica.Integration.Infrastructure.Logging
         }
 
         public string Id { get; internal set; }
-        public string MachineName { get; private set; }
-        public string IdentityName { get; private set; }
-        public string CommandLine { get; private set; }
-        public Severity Severity { get; private set; }
-        public string Message { get; private set; }
-        public string FormattedMessage { get; private set; }
-        public DateTimeOffset TimeStamp { get; private set; }
-        public Target Target { get; private set; }
+        public string MachineName { get; }
+        public string IdentityName { get; }
+        public string CommandLine { get; }
+        public Severity Severity { get; }
+        public string Message { get; }
+        public string FormattedMessage { get; }
+        public DateTimeOffset TimeStamp { get; }
+        public Target Target { get; }
     }
 }

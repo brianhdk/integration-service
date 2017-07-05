@@ -35,7 +35,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 
 		public TaskLog TaskLog { get; }
 		public StepLog StepLog { get; }
-        public string Message { get; private set; }
+        public string Message { get; }
 
 		public override void Dispose()
 		{

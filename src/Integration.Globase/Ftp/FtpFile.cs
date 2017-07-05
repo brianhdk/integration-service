@@ -14,8 +14,8 @@ namespace Vertica.Integration.Globase.Ftp
 			Contents = contents;
 		}
 
-		public string FileName { get; private set; }
-		public string Contents { get; private set; }
+		public string FileName { get; }
+		public string Contents { get; }
 
 		public static FtpFile Csv(string prefix, string contents)
 		{

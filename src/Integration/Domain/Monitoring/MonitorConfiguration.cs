@@ -34,8 +34,8 @@ namespace Vertica.Integration.Domain.Monitoring
         public MonitorTarget[] Targets { get; set; }
         public string SubjectPrefix { get; set; }
 
-        public MonitorFoldersConfiguration MonitorFolders { get; private set; }
-        public PingUrlsConfiguration PingUrls { get; private set; }
+        public MonitorFoldersConfiguration MonitorFolders { get; }
+        public PingUrlsConfiguration PingUrls { get; }
 
         public MonitorTarget EnsureMonitorTarget(ITarget target)
         {

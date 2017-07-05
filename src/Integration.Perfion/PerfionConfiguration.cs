@@ -25,7 +25,7 @@ namespace Vertica.Integration.Perfion
                         .AddFromAssemblyOfThis<PerfionConfiguration>()));
 		}
 
-        public ApplicationConfiguration Application { get; private set; }
+        public ApplicationConfiguration Application { get; }
 
 		public PerfionConfiguration ConnectionString(ConnectionString connectionString)
 		{

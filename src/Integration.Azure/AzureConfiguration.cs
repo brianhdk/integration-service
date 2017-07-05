@@ -20,7 +20,7 @@ namespace Vertica.Integration.Azure
 			});
         }
 
-        public ApplicationConfiguration Application { get; private set; }
+        public ApplicationConfiguration Application { get; }
 		
         public AzureConfiguration BlobStorage(Action<AzureBlobStorageConfiguration> blobStorage)
         {

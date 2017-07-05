@@ -29,7 +29,7 @@ namespace Vertica.Integration.Domain.Core
         public TimeSpan CleanUpTaskLogEntriesOlderThan { get; set; }
         public TimeSpan CleanUpErrorLogEntriesOlderThan { get; set; }
 
-        public ArchiveFoldersConfiguration ArchiveFolders { get; private set; }
+        public ArchiveFoldersConfiguration ArchiveFolders { get; }
 
         public class ArchiveFoldersConfiguration
         {

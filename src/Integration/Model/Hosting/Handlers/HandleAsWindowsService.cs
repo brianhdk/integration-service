@@ -17,10 +17,10 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 			OnStartFactory = onStartFactory ?? (() => new DisposableAction(() => { }));
 		}
 
-		public string Name { get; private set; }
-		public string DisplayName { get; private set; }
-		public string Description { get; private set; }
+		public string Name { get; }
+		public string DisplayName { get; }
+		public string Description { get; }
 
-		internal Func<IDisposable> OnStartFactory { get; private set; }
+		internal Func<IDisposable> OnStartFactory { get; }
 	}
 }

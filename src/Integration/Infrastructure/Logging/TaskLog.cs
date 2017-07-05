@@ -40,9 +40,9 @@ namespace Vertica.Integration.Infrastructure.Logging
 
 	    public string Name { get; }
 
-		public string MachineName { get; private set; }
-        public string IdentityName { get; private set; }
-        public string CommandLine { get; private set; }
+		public string MachineName { get; }
+        public string IdentityName { get; }
+        public string CommandLine { get; }
 
 		public ReadOnlyCollection<StepLog> Steps => _steps.EmptyIfNull().Any() ? new ReadOnlyCollection<StepLog>(_steps): new ReadOnlyCollection<StepLog>(new List<StepLog>());
 

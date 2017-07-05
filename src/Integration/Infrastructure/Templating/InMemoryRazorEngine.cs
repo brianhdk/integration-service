@@ -100,7 +100,7 @@ namespace Vertica.Integration.Infrastructure.Templating
 
             public StringBuilder OutputBuilder { get; }
 
-			public HtmlHelper Html { get; private set; }
+			public HtmlHelper Html { get; }
 
             public abstract void Execute();
 

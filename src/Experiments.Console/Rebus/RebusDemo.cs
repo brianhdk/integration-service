@@ -1,5 +1,4 @@
-﻿using Rebus.Logging;
-using Rebus.Routing.TypeBased;
+﻿using Rebus.Routing.TypeBased;
 using Rebus.Transport.InMem;
 using Vertica.Integration;
 using Vertica.Integration.Domain.LiteServer;

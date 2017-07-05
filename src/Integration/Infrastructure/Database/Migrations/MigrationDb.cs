@@ -22,11 +22,11 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 			IdentifyingName = identifyingName.NullIfEmpty() ?? namespaceContainingMigrations;
         }
 
-        public DatabaseServer DatabaseServer { get; private set; }
+        public DatabaseServer DatabaseServer { get; }
         public ConnectionString ConnectionString { get; }
         public Assembly Assembly { get; }
         public string NamespaceContainingMigrations { get; }
-		public string IdentifyingName { get; private set; }
+		public string IdentifyingName { get; }
 
 		public bool Equals(MigrationDb other)
 		{

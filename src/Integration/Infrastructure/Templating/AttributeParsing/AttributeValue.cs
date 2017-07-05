@@ -15,9 +15,9 @@ namespace Vertica.Integration.Infrastructure.Templating.AttributeParsing
             Literal = literal;
         }
 
-        public PositionTagged<string> Prefix { get; private set; }
-        public PositionTagged<object> Value { get; private set; }
-        public bool Literal { get; private set; }
+        public PositionTagged<string> Prefix { get; }
+        public PositionTagged<object> Value { get; }
+        public bool Literal { get; }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "We are using tuples here to avoid dependencies from Razor to WebPages")]
         public static AttributeValue FromTuple(Tuple<Tuple<string, int>, Tuple<object, int>, bool> value)

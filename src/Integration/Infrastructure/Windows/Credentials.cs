@@ -27,8 +27,8 @@ namespace Vertica.Integration.Infrastructure.Windows
 			Account = ServiceAccount.User;
 		}
 
-		public ServiceAccount Account { get; private set; }
-		public string Username { get; private set; }
-		public string Password { get; private set; }
+		public ServiceAccount Account { get; }
+		public string Username { get; }
+		public string Password { get; }
 	}
 }

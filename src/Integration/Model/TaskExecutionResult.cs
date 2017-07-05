@@ -7,6 +7,6 @@ namespace Vertica.Integration.Model
             Output = output ?? new string[0];
         }
 
-        public string[] Output { get; private set; }
+        public string[] Output { get; }
     }
 }

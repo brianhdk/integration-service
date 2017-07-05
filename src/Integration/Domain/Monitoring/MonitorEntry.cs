@@ -11,8 +11,8 @@ namespace Vertica.Integration.Domain.Monitoring
 			Message = message;
         }
 
-		public DateTimeOffset DateTime { get; private set; }
-	    public string Source { get; private set; }
-	    public string Message { get; private set; }
+		public DateTimeOffset DateTime { get; }
+	    public string Source { get; }
+	    public string Message { get; }
     }
 }

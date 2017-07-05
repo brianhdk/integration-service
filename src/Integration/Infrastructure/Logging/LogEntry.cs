@@ -20,7 +20,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 
         public string Id { get; internal set; }
         public double? ExecutionTimeSeconds { get; private set; }
-        public DateTimeOffset TimeStamp { get; private set; }
+        public DateTimeOffset TimeStamp { get; }
 
         public virtual void Dispose()
         {

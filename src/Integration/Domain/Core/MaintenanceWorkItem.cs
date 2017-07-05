@@ -12,6 +12,6 @@ namespace Vertica.Integration.Domain.Core
 	        Configuration = configuration;
 	    }
 
-	    public MaintenanceConfiguration Configuration { get; private set; }
+	    public MaintenanceConfiguration Configuration { get; }
 	}
 }

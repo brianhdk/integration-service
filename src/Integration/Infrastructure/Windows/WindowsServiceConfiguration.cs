@@ -26,7 +26,7 @@ namespace Vertica.Integration.Infrastructure.Windows
 		}
 
 		public string ExePath { get; }
-		public string Args { get; private set; }
+		public string Args { get; }
 
 		public WindowsServiceConfiguration DisplayName(string displayName)
 		{

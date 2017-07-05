@@ -53,7 +53,7 @@ namespace Vertica.Integration.Globase
 			return this;
 		}
 
-		public ApplicationConfiguration Application { get; private set; }
+		public ApplicationConfiguration Application { get; }
 
         internal class ConfigurationImpl : IGlobaseConfiguration
         {
