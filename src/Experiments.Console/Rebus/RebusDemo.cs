@@ -1,5 +1,4 @@
 ﻿using Rebus.Logging;
-using Rebus.Persistence.FileSystem;
 using Rebus.Routing.TypeBased;
 using Rebus.Transport.InMem;
 using Vertica.Integration;
@@ -21,13 +20,15 @@ namespace Experiments.Console.Rebus
                 .UseRebus(rebus => rebus
                     .Bus((bus, kernel) => bus
                         .Logging(logging => logging
-                            .ColoredConsole(LogLevel.Warn))
+                            .None())
+                            //.ColoredConsole(LogLevel.Error))
                             //.Use(kernel.Resolve<RebusLoggerFactory>()))
                         .Routing(routing => routing
                             .TypeBased()
-                            .Map<string>("inputQueue"))
-                        .Subscriptions(subscriptions => subscriptions
-                            .UseJsonFile(@"c:\tmp\rebus\json"))
+                            .Map<string>("inputQueue")
+                            .Map<long>("inputQueue"))
+                        //.Subscriptions(subscriptions => subscriptions
+                        //    .UseJsonFile(@"c:\tmp\rebus\json"))
                         .Transport(transport => transport
                             .UseInMemoryTransport(new InMemNetwork(true), "inputQueue")
                             //.UseSqlServer(kernel.Resolve<IDbFactory>().GetConnection().ConnectionString, "Rebus", "inputQueue")
@@ -36,11 +37,13 @@ namespace Experiments.Console.Rebus
                         )
                     )
                     .Handlers(handlers => handlers
-                        .Handler<ReceiveMessageHandler>()))
+                        .Handler<ReceiveMessageHandler>()
+                        .Handler<ReceiveAnotherMessageHandler>()))
                 .UseLiteServer(liteServer => liteServer
                     .OnStartup(startup => startup
                         .RunMigrateTask())
                     .AddRebus()
+                    .AddServer<SendMessageServer>()
                     .AddWorker<SendMessageWorker>())
                 .Services(services => services
                     .Advanced(advanced => advanced

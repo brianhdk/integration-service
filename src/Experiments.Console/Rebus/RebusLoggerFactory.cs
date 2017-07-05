@@ -4,7 +4,7 @@ using Vertica.Integration.Infrastructure.IO;
 
 namespace Experiments.Console.Rebus
 {
-    public class RebusLoggerFactory : IRebusLoggerFactory
+    internal class RebusLoggerFactory : IRebusLoggerFactory
     {
         private readonly IConsoleWriter _console;
 

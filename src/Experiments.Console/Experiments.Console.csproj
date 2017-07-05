@@ -70,7 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileWatcher\FileWatcherDemo.cs" />
-    <Compile Include="FileWatcher\WatchFilesServer.cs" />
+    <Compile Include="FileWatcher\WatchFiles.cs" />
     <Compile Include="FileWatcher\HandleFileTask.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

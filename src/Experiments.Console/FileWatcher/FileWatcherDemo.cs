@@ -10,12 +10,12 @@ namespace Experiments.Console.FileWatcher
         {
             using (var context = ApplicationContext.Create(application => application
                 .Tasks(tasks => tasks
-                    .AddFromAssemblyOfThis<Program>())
+                    .Task<HandleFileTask>())
                 .Database(database => database
                     .IntegrationDb(integrationDb => integrationDb
                         .Disable()))
                 .UseLiteServer(liteServer => liteServer
-                    .AddFromAssemblyOfThis<Program>()
+                    .AddServer<WatchFiles>()
                     .HouseKeeping(houseKeeping => houseKeeping
                         .Interval(TimeSpan.FromSeconds(1))
                         .OutputStatusOnNumberOfIterations(10)))))

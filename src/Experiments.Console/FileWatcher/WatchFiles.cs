@@ -8,11 +8,11 @@ using Vertica.Integration.Model;
 
 namespace Experiments.Console.FileWatcher
 {
-    public class MyFileWatcher : FileWatcherRunTaskServer<HandleFileTask>
+    internal class WatchFiles : FileWatcherRunTaskServer<HandleFileTask>
     {
         private readonly IShutdown _shutdown;
 
-        public MyFileWatcher(ITaskFactory factory, ITaskRunner runner, IShutdown shutdown) : base(factory, runner)
+        public WatchFiles(ITaskFactory factory, ITaskRunner runner, IShutdown shutdown) : base(factory, runner)
         {
             _shutdown = shutdown;
         }
