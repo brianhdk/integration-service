@@ -47,8 +47,8 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Vertica.PaymentService.Clients.Dibs, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Vertica.PaymentService.Clients.Dibs.1.2.0\lib\net461\Vertica.PaymentService.Clients.Dibs.dll</HintPath>
+    <Reference Include="Vertica.PaymentService.Clients.Dibs, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Vertica.PaymentService.Clients.Dibs.1.2.1\lib\net461\Vertica.PaymentService.Clients.Dibs.dll</HintPath>
     </Reference>
     <Reference Include="Vertica.Utilities, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Vertica.Utilities.5.0.0\lib\net45\Vertica.Utilities.dll</HintPath>
