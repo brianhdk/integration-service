@@ -17,7 +17,7 @@ namespace Vertica.Integration.Logging.Elmah
             _configuration = configuration;
         }
 
-        public override Execution ContinueWith(MaintenanceWorkItem workItem)
+        public override Execution ContinueWith(MaintenanceWorkItem workItem, ITaskExecutionContext context)
         {
             ElmahConfiguration configuration = _configuration.GetElmahConfiguration();
 

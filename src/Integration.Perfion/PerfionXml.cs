@@ -12,27 +12,25 @@ namespace Vertica.Integration.Perfion
 {
 	public class PerfionXml
 	{
-		private readonly XDocument _document;
-
-		public PerfionXml(IPerfionService service, XDocument document)
+	    public PerfionXml(IPerfionClient client, XDocument document)
 		{
-			if (service == null) throw new ArgumentNullException(nameof(service));
+			if (client == null) throw new ArgumentNullException(nameof(client));
 			if (document == null) throw new ArgumentNullException(nameof(document));
 			if (document.Root == null) throw new ArgumentException(@"Document is missing required root element.");
 
-			Service = service;
-			_document = document;
+			Client = client;
+			Document = document;
 		}
 
-		public IPerfionService Service { get; }
+		public IPerfionClient Client { get; }
 
-		public XDocument Document => _document;
+		public XDocument Document { get; }
 
-		public ArchiveCreated Archive { get; internal set; }
+	    public ArchiveCreated Archive { get; internal set; }
 
-		public XElement Root => _document.Root;
+		public XElement Root => Document.Root;
 
-		public int Length => _document.ToString().Length;
+		public int Length => Document.ToString().Length;
 
 		public Dictionary<string, Feature> Features()
 		{
@@ -75,7 +73,7 @@ namespace Vertica.Integration.Perfion
 
 		public override string ToString()
 		{
-			return _document.ToString();
+			return Document.ToString();
 		}
 
 		public class File
@@ -105,7 +103,7 @@ namespace Vertica.Integration.Perfion
 
 			public byte[] Download()
 			{
-				return _xml.Service.DownloadFile(Id);
+				return _xml.Client.DownloadFile(Id);
 			}
 		}
 
@@ -126,7 +124,7 @@ namespace Vertica.Integration.Perfion
 			{
 				if (options == null) throw new ArgumentNullException(nameof(options));
 
-				return _xml.Service.DownloadImage(Id, options);
+				return _xml.Client.DownloadImage(Id, options);
 			}
 		}
 
@@ -332,7 +330,7 @@ namespace Vertica.Integration.Perfion
 
 			public byte[] DownloadPdfReport(string reportName, string language = null, NameValueCollection options = null)
 			{
-				return _xml.Service.DownloadPdfReport(new[] { Id }, reportName, language, options);
+				return _xml.Client.DownloadPdfReport(new[] { Id }, reportName, language, options);
 			}
 		}
 	}

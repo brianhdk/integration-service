@@ -64,23 +64,28 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\Client\Connection.cs" />
+    <Compile Include="Infrastructure\Client\DefaultConnection.cs" />
+    <Compile Include="Infrastructure\Client\Castle.Windsor\PerfionClientInstaller.cs" />
     <Compile Include="Infrastructure\ParsingExtensions.cs" />
     <Compile Include="Infrastructure\PerfionXmlExtensions.cs" />
     <Compile Include="Infrastructure\XElementExtensions.cs" />
-    <Compile Include="IPerfionConfiguration.cs" />
-    <Compile Include="IPerfionService.cs" />
-    <Compile Include="PerfionXml.cs" />
+    <Compile Include="IPerfionClientFactory.cs" />
+    <Compile Include="Infrastructure\Client\IPerfionClientConfiguration.cs" />
+    <Compile Include="IPerfionClient.cs" />
+    <Compile Include="PerfionClientFactory.cs" />
     <Compile Include="PerfionConfiguration.cs" />
+    <Compile Include="PerfionXml.cs" />
+    <Compile Include="PerfionClientConfiguration.cs" />
     <Compile Include="PerfionExtensions.cs" />
-    <Compile Include="PerfionService.cs" />
+    <Compile Include="PerfionClientImpl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryArchiveOptions.cs" />
     <Compile Include="Service References\PerfionAPIService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="WebClientConfiguration.cs" />
-    <Compile Include="ServiceClientConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

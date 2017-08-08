@@ -20,14 +20,14 @@ namespace Vertica.Integration.UCommerce.Maintenance
             _configuration = configuration;
         }
 
-        public override Execution ContinueWith(MaintenanceWorkItem workItem)
+        public override Execution ContinueWith(MaintenanceWorkItem workItem, ITaskExecutionContext context)
         {
             UCommerceMaintenanceConfiguration configuration = workItem.EnsureConfiguration(_configuration);
 
             if (!configuration.IndexMaintenance.Enabled)
                 return Execution.StepOver;
 
-            return base.ContinueWith(workItem);
+            return base.ContinueWith(workItem, context);
         }
 
         public override void Execute(MaintenanceWorkItem workItem, ITaskExecutionContext context)

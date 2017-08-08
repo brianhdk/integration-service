@@ -14,9 +14,7 @@ namespace Vertica.Integration.Perfion.Infrastructure
 
 			int value;
 			if (!Int32.TryParse(attribute.Value, out value))
-				throw new ArgumentException(
-					$"Attribute '{attribute.Name}' was expected to be an integer, but value was: '{attribute.Value}'. {attribute.Parent}",
-					nameof(attribute));
+				throw new ArgumentException($@"Attribute '{attribute.Name}' was expected to be an integer, but value was: '{attribute.Value}'. {attribute.Parent}", nameof(attribute));
 
 			return value;
 		}
@@ -27,9 +25,7 @@ namespace Vertica.Integration.Perfion.Infrastructure
 
 			DateTime value;
 			if (!DateTime.TryParse(attribute.Value, English, DateTimeStyles.None, out value))
-				throw new ArgumentException(
-					$"Attribute '{attribute.Name}' was expected to be a DateTime, but value was: '{attribute.Value}'. {attribute.Parent}",
-					nameof(attribute));
+				throw new ArgumentException($@"Attribute '{attribute.Name}' was expected to be a DateTime, but value was: '{attribute.Value}'. {attribute.Parent}", nameof(attribute));
 
 			return value;
 		}
@@ -40,9 +36,7 @@ namespace Vertica.Integration.Perfion.Infrastructure
 
 			Guid value;
 			if (!Guid.TryParse(element.Value, out value))
-				throw new ArgumentException(
-					$"Value '{element.Value}' was expected to be a Guid. Element: {element}",
-					nameof(element));
+				throw new ArgumentException($@"Value '{element.Value}' was expected to be a Guid. Element: {element}", nameof(element));
 
 			return value;
 		}

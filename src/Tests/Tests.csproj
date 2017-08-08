@@ -136,7 +136,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Examples.resx</DependentUpon>
     </Compile>
-    <Compile Include="Perfion\PerfionServiceTester.cs" />
+    <Compile Include="Perfion\PerfionClientImplTester.cs" />
     <Compile Include="Perfion\PerfionXmlTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rebus\RebusTester.cs" />

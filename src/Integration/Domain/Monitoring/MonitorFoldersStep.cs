@@ -10,7 +10,7 @@ namespace Vertica.Integration.Domain.Monitoring
 {
     public class MonitorFoldersStep : Step<MonitorWorkItem>
     {
-        public override Execution ContinueWith(MonitorWorkItem workItem)
+        public override Execution ContinueWith(MonitorWorkItem workItem, ITaskExecutionContext context)
         {
             if (workItem.Configuration.MonitorFolders.GetEnabledFolders().Length == 0)
                 return Execution.StepOver;

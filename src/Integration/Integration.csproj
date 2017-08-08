@@ -140,6 +140,7 @@
     <Compile Include="Infrastructure\Extensions\QueueExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\RepeatExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\StringExtensions.cs" />
+    <Compile Include="Infrastructure\Extensions\WebClientExtensions.cs" />
     <Compile Include="Infrastructure\IO\ConsoleWriter.cs" />
     <Compile Include="Infrastructure\IO\IConsoleWriter.cs" />
     <Compile Include="Infrastructure\IShutdown.cs" />

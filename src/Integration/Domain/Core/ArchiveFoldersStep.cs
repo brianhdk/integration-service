@@ -14,7 +14,7 @@ namespace Vertica.Integration.Domain.Core
             _archiver = archiver;
         }
 
-        public override Execution ContinueWith(MaintenanceWorkItem workItem)
+        public override Execution ContinueWith(MaintenanceWorkItem workItem, ITaskExecutionContext context)
         {
             if (workItem.Configuration.ArchiveFolders.GetEnabledFolders().Length == 0)
                 return Execution.StepOver;

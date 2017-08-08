@@ -5,21 +5,26 @@ using System.Net;
 using System.Xml.Linq;
 using Castle.MicroKernel;
 using Vertica.Integration.Infrastructure.Archiving;
+using Vertica.Integration.Perfion.Infrastructure.Client;
 using Vertica.Integration.Perfion.PerfionAPIService;
 
 namespace Vertica.Integration.Perfion
 {
-	public class PerfionService : IPerfionService
+	internal class PerfionClientImpl : IPerfionClient
 	{
-		private readonly IPerfionConfiguration _configuration;
-		private readonly IArchiveService _archive;
-		private readonly IKernel _kernel;
+	    private readonly Connection _connection;
+	    private readonly IPerfionClientConfiguration _configuration;
+	    private readonly IKernel _kernel;
 
-		public PerfionService(IArchiveService archive, IKernel kernel)
+		public PerfionClientImpl(Connection connection, IPerfionClientConfiguration configuration, IKernel kernel)
 		{
-			_configuration = kernel.Resolve<IPerfionConfiguration>();
-			_archive = archive;
-			_kernel = kernel;
+		    if (connection == null) throw new ArgumentNullException(nameof(connection));
+		    if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+		    if (kernel == null) throw new ArgumentNullException(nameof(kernel));
+
+		    _connection = connection;
+		    _configuration = configuration;
+		    _kernel = kernel;
 		}
 
 		public PerfionXml Query(string query, Action<QueryArchiveOptions> archive = null)
@@ -40,7 +45,7 @@ namespace Vertica.Integration.Perfion
 
 				if (finalArchiveOptions != null)
 				{
-					archiveCreated = _archive.Archive(finalArchiveOptions.Name, newArchive =>
+					archiveCreated = _kernel.Resolve<IArchiveService>().Archive(finalArchiveOptions.Name, newArchive =>
 					{
 						newArchive.Options.GroupedBy(finalArchiveOptions.GroupName);
 
@@ -110,12 +115,9 @@ namespace Vertica.Integration.Perfion
 
 		private byte[] Download(string path, object id, NameValueCollection options = null)
 		{
-			using (var webClient = new WebClient())
+			using (WebClient webClient = _connection.CreateWebClient(_kernel))
 			{
-				string url =
-					$"{ParseBaseUri()}{path}?id={id}{(options != null ? string.Join(string.Empty, options.AllKeys.Select(x => $"&{x}={options[x]}")) : string.Empty)}";
-
-				_configuration.WebClientConfiguration.Configuration?.Invoke(_kernel, webClient);
+				string url = $"{path}?id={id}{(options != null ? string.Join(string.Empty, options.AllKeys.Select(x => $"&{x}={options[x]}")) : string.Empty)}";
 
 				try
 				{
@@ -128,27 +130,11 @@ namespace Vertica.Integration.Perfion
 			}
 		}
 
-		private Uri ParseBaseUri()
-		{
-			string webServiceUri = _configuration.ConnectionString;
-
-			Uri uri;
-			if (!Uri.TryCreate(webServiceUri, UriKind.Absolute, out uri))
-				throw new ArgumentException($"'{webServiceUri}' is not a valid absolute uri.");
-
-			var builder = new UriBuilder(uri)
-			{
-				Path = string.Join(string.Empty, uri.Segments.Take(uri.Segments.Length - 1))
-			};
-
-			return builder.Uri;
-		}
-
 		private T Client<T>(Func<GetDataSoap, T> client)
 		{
 			if (client == null) throw new ArgumentNullException(nameof(client));
 
-		    return _configuration.WithProxy(_kernel, client);
+		    return _connection.WithProxy(_kernel, client);
 		}
 	}
 }

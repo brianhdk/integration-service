@@ -28,8 +28,8 @@ namespace Vertica.Integration.Tests.Model
             var workItem = new SomeWorkItem();
 		    var task = new TaskRunnerTesterTask<SomeWorkItem>(new[] {step1, step2}, workItem);
 
-			step1.ContinueWith(workItem).Returns(Execution.Execute);
-			step2.ContinueWith(workItem).Returns(Execution.Execute);
+			step1.ContinueWith(workItem, Arg.Any<ITaskExecutionContext>()).Returns(Execution.Execute);
+			step2.ContinueWith(workItem, Arg.Any<ITaskExecutionContext>()).Returns(Execution.Execute);
 
 			var subject = new TaskRunner(logger, concurrentExecution, shutdown, console);
 
@@ -60,7 +60,7 @@ namespace Vertica.Integration.Tests.Model
 
 			var throwingException = new DivideByZeroException("error");
             
-			step1.ContinueWith(workItem).Returns(Execution.Execute);
+			step1.ContinueWith(workItem, Arg.Any<ITaskExecutionContext>()).Returns(Execution.Execute);
 
 			step1
                 .When(x => x.Execute(workItem, Arg.Any<ITaskExecutionContext>()))
@@ -98,8 +98,8 @@ namespace Vertica.Integration.Tests.Model
 			var task = new TaskRunnerTesterTask<DisposableWorkItem>(new[] { step1, step2 }, workItem)
 				.OnStart(ctx => { throw exception; });
 
-			step1.ContinueWith(workItem).Returns(Execution.Execute);
-			step2.ContinueWith(workItem).Returns(Execution.Execute);
+			step1.ContinueWith(workItem, Arg.Any<ITaskExecutionContext>()).Returns(Execution.Execute);
+			step2.ContinueWith(workItem, Arg.Any<ITaskExecutionContext>()).Returns(Execution.Execute);
 
             var subject = new TaskRunner(logger, concurrentExecution, shutdown, console);
 
@@ -129,8 +129,8 @@ namespace Vertica.Integration.Tests.Model
 			var task = new TaskRunnerTesterTask<DisposableWorkItem>(new[] { step1, step2 }, workItem)
 				.OnEnd((wi, ctx) => { throw exception; });
 
-			step1.ContinueWith(workItem).Returns(Execution.Execute);
-			step2.ContinueWith(workItem).Returns(Execution.Execute);
+			step1.ContinueWith(workItem, Arg.Any<ITaskExecutionContext>()).Returns(Execution.Execute);
+			step2.ContinueWith(workItem, Arg.Any<ITaskExecutionContext>()).Returns(Execution.Execute);
 
             var subject = new TaskRunner(logger, concurrentExecution, shutdown, console);
 
@@ -160,8 +160,8 @@ namespace Vertica.Integration.Tests.Model
 			var exception = new InvalidOperationException();
 			var task = new TaskRunnerTesterTask<DisposableWorkItem>(new[] { step1, step2 }, workItem);
 
-			step1.ContinueWith(workItem).Returns(Execution.Execute);
-			step2.ContinueWith(workItem).Returns(Execution.Execute);
+			step1.ContinueWith(workItem, Arg.Any<ITaskExecutionContext>()).Returns(Execution.Execute);
+			step2.ContinueWith(workItem, Arg.Any<ITaskExecutionContext>()).Returns(Execution.Execute);
 
 			step2
 				.When(x => x.Execute(workItem, Arg.Any<ITaskExecutionContext>()))

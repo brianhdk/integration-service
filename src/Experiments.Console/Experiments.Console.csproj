@@ -67,21 +67,27 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="Vertica.Utilities, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Vertica.Utilities.5.0.0\lib\net45\Vertica.Utilities.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FileWatcher\FileWatcherDemo.cs" />
+    <Compile Include="FileWatcher\Demo.cs" />
     <Compile Include="FileWatcher\WatchFiles.cs" />
     <Compile Include="FileWatcher\HandleFileTask.cs" />
+    <Compile Include="Perfion\Demo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rebus\ReceiveMessageHandler.cs" />
-    <Compile Include="Rebus\RebusDemo.cs" />
+    <Compile Include="Rebus\Demo.cs" />
     <Compile Include="Rebus\RebusLoggerFactory.cs" />
     <Compile Include="Rebus\SendMessageWorker.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Integration.Elasticsearch\Integration.Elasticsearch.csproj">
@@ -91,6 +97,10 @@
     <ProjectReference Include="..\Integration.MongoDB\Integration.MongoDB.csproj">
       <Project>{3BCCDB4F-104A-418A-8DEE-15A655960AEA}</Project>
       <Name>Integration.MongoDB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration.Perfion\Integration.Perfion.csproj">
+      <Project>{218A773A-C382-42F7-9882-CB6D51B2EDF0}</Project>
+      <Name>Integration.Perfion</Name>
     </ProjectReference>
     <ProjectReference Include="..\Integration.Rebus\Integration.Rebus.csproj">
       <Project>{9078656D-7C5E-469C-BFC6-1B9AB2CE9AE1}</Project>

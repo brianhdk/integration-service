@@ -4,7 +4,7 @@ using Vertica.Integration.Domain.LiteServer;
 
 namespace Experiments.Console.FileWatcher
 {
-    public static class FileWatcherDemo
+    public static class Demo
     {
         public static void Run()
         {

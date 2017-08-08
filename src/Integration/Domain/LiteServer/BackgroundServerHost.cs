@@ -54,7 +54,7 @@ namespace Vertica.Integration.Domain.LiteServer
 
             if (_current.Status == TaskStatus.Running)
             {
-                statusText = $"Running for {_uptime.GetUptimeText(_startedAt)} (Failed: {_context.FailedCount} time(s))";
+                statusText = $"Running for {_uptime.GetUptimeText(_startedAt)}{(_context.FailedCount > 0 ? $" (Failed: {_context.FailedCount} time(s))" : string.Empty)}";
                 return true;
             }
 
@@ -98,7 +98,7 @@ namespace Vertica.Integration.Domain.LiteServer
             {
                 _current.Dispose();
 
-                statusText = $"Stopped. Uptime: {_uptime.GetUptimeText(_startedAt)} (Failed: {_context.FailedCount} time(s))";
+                statusText = $"Stopped. Uptime: {_uptime.GetUptimeText(_startedAt)}{(_context.FailedCount > 0 ? $" (Failed: {_context.FailedCount} time(s))" : string.Empty)}";
                 return false;
             }
 

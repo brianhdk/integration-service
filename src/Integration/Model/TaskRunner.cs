@@ -77,7 +77,7 @@ namespace Vertica.Integration.Model
                 {
                     foreach (IStep<TWorkItem> step in task.Steps)
                     {
-                        Execution continueWith = step.ContinueWith(workItem);
+                        Execution continueWith = step.ContinueWith(workItem, context);
 
                         if (continueWith == Execution.StepOut)
                             break;

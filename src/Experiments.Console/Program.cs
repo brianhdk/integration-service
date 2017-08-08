@@ -1,14 +1,14 @@
-﻿using Experiments.Console.Rebus;
-
-namespace Experiments.Console
+﻿namespace Experiments.Console
 {
     class Program
     {
         static void Main()
         {
-            //FileWatcherDemo.Run();
+            //FileWatcher.Demo.Run();
 
-            RebusDemo.Run();
+            //Rebus.Demo.Run();
+
+            Perfion.Demo.Run();
         }
     }
 }

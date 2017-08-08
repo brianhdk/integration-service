@@ -18,7 +18,7 @@ namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db
             _configuration = confiugration;
         }
 
-        public override Execution ContinueWith(MaintenanceWorkItem workItem)
+        public override Execution ContinueWith(MaintenanceWorkItem workItem, ITaskExecutionContext context)
         {
             if (_configuration.Disabled)
                 return Execution.StepOver;

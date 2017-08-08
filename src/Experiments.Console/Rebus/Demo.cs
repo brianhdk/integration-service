@@ -7,7 +7,7 @@ using Vertica.Integration.Rebus;
 
 namespace Experiments.Console.Rebus
 {
-    public static class RebusDemo
+    public static class Demo
     {
         public static void Run()
         {

@@ -35,7 +35,7 @@ namespace Vertica.Integration.Domain.LiteServer
 
         /// <summary>
         /// Overrides the number of iterations HouseKeeping should do before outputting the current status of background servers and workers.
-        /// Default is on every 10th iteration.
+        /// Default is on every 12th iteration (= every minute, if interval is 5 seconds).
         /// </summary>
         public HouseKeepingConfiguration OutputStatusOnNumberOfIterations(uint iteration)
         {

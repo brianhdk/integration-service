@@ -22,7 +22,7 @@ namespace Vertica.Integration.Domain.Monitoring
             _httpClientFactory = httpClientFactory;
         }
 
-        public override Execution ContinueWith(MonitorWorkItem workItem)
+        public override Execution ContinueWith(MonitorWorkItem workItem, ITaskExecutionContext context)
         {
             if (!workItem.Configuration.PingUrls.ShouldExecute)
                 return Execution.StepOver;

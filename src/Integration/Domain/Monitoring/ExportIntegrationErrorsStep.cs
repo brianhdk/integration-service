@@ -26,7 +26,7 @@ namespace Vertica.Integration.Domain.Monitoring
             _taskFactory = taskFactory;
         }
 
-        public override Execution ContinueWith(MonitorWorkItem workItem)
+        public override Execution ContinueWith(MonitorWorkItem workItem, ITaskExecutionContext context)
         {
             if (_configuration.Disabled)
                 return Execution.StepOver;

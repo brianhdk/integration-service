@@ -24,7 +24,7 @@ namespace Vertica.Integration.Domain.Core
 		    _archiver = archiver;
 		}
 
-        public override Execution ContinueWith(MaintenanceWorkItem workItem)
+        public override Execution ContinueWith(MaintenanceWorkItem workItem, ITaskExecutionContext context)
         {
             if (_dbConfiguration.Disabled)
                 return Execution.StepOver;

@@ -50,8 +50,9 @@ namespace Vertica.Integration.Tests.Perfion
 
 		private static PerfionXml Parse(string xml)
 		{
-			var service = Substitute.For<IPerfionService>();
-			return new PerfionXml(service, XDocument.Parse(xml));
+			var client = Substitute.For<IPerfionClient>();
+
+			return new PerfionXml(client, XDocument.Parse(xml));
 		}
 	}
 }

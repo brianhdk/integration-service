@@ -1949,115 +1949,162 @@ To setup a Perfion integration, start by adding the following package:
 The example below illustrates some of the features you can use when working with this Perfion integration, including how to download files/images.
 
 ```c#
-using System;
 using System.Collections.Specialized;
 using System.IO;
+using System.Linq;
+using System.Net;
+using System.ServiceModel;
+using System.ServiceModel.Description;
 using System.Text;
+using Castle.MicroKernel;
+using Vertica.Integration;
 using Vertica.Integration.Infrastructure;
-using Vertica.Integration.Model;
+using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Perfion;
+using Vertica.Integration.Perfion.Infrastructure;
+using Vertica.Integration.Perfion.Infrastructure.Client;
 using Vertica.Utilities.Collections;
 using Vertica.Utilities.Extensions.EnumerableExt;
 
-namespace ConsoleApplication16
+namespace Experiments.Console.Perfion
 {
-    class Program
+    public static class Demo
     {
-        static void Main(string[] args)
+        public static void Run()
         {
-			IntegrationStartup.Run(args, application => application
-				.Tasks(tasks => tasks.Task<PerfionTask>())
-				.UsePerfion(perfion => perfion
-					// Hard-coded connection string (NOT RECOMMENDED)
-					.ConnectionString(ConnectionString.FromText("http://perfion-api.local/Perfion/GetData.asmx"))
+            using (IApplicationContext context = ApplicationContext.Create(application => application
+                .Database(database => database
+                    .IntegrationDb(integrationDb => integrationDb
+                        .Disable()))
+                .UsePerfion(perfion => perfion
+                    // Setup the default connection based on a ConnectionString-element in app.config: <add name="Perfion" connectionString="http://perfion-01/Perfion/GetData.asmx" />
+                    .DefaultConnection(ConnectionString.FromName("Perfion.APIService.Url"), perfionClient => perfionClient
+                        // Setup global archiving - all queries will be archived.
+                        .EnableArchiving())
+                    // Setup the default connection allowing further customization of this default connection, see class "OverrideDefaultConnection" for more details
+                    .DefaultConnection(new OverrideDefaultConnection(ConnectionString.FromText("http://perfion-01/Perfion/GetData.asmx")))
+                    // Adds an additional connection to any Perfion API service
+                    .AddConnection(new AnotherPerfionConnection(ConnectionString.FromText("http://perfion-02/Perfion/GetData.asmx")), perfionClient => perfionClient
+                        // Setup global archiving - specifying that archives should expire after 10 days.
+                        .EnableArchiving(options => options.ExpiresAfterDays(10))))))
+            {
+                // Connect to default Perfion Service
+                IPerfionClient defaultPerfionClient = context.Resolve<IPerfionClient>();
 
-					//// Based on element in app.config: <add name="Perfion" connectionString="http://perfion-api.local/Perfion/GetData.asmx" />
-					//.ConnectionString(ConnectionString.FromName("Perfion"))
+                // Queries data from Perfion - override the default archiving option, in this case archiving is disabled.
+                PerfionXml categoriesXml = defaultPerfionClient.Query(@"
+<Query>
+    <Select languages='en'>
+        <Feature id='**' />
+    </Select>
+    <From id='Category'/>
+</Query>", archive => archive.Disable());
 
-					// ... or just simply add a connection-string element in app.config, name it "Perfion.APIService.Url" and we'll auto-wire it up.
+                Tree<PerfionXml.Component, string, int> categories = categoriesXml.Components("Category")
+                    .ToTree(x => x.Id, (x, p) => x.ParentId.HasValue ? p.Value(x.ParentId.Value) : p.None, x => x.Name());
 
-					// Enable archiving lets us create an entry in the archive with the data retrieved from Perfion
-                    //  - you can also specify archiving options individually on each query
-					.EnableArchiving()
+                var treeVisualization = new StringBuilder();
 
-					// Allows you to modify the behaviour of the WCF service - e.g. setting credentials, timeouts and more
-					.ServiceClient(client => 
-					{
-						client.Binding((kernel, binding) => 
-						{
-						});
-					})
+                foreach (var level1Category in categories)
+                {
+                    treeVisualization.AppendLine(level1Category.Model);
 
-					// Allows you to modify the behaviour of the WebClient used to download files, images and reports
-					.WebClient(client => client
-						.Configure((kernel, webClient) => client.SetBasicAuthentication(webClient, "username", "password")))
-				));
+                    foreach (var level2Category in level1Category)
+                    {
+                        treeVisualization.AppendLine($"-- {level2Category.Model}");
+                    }
+                }
+
+                string s = treeVisualization.ToString();
+
+                /*
+Motor Vechicles
+-- Cars
+-- Busses
+Clothes
+-- Pants
+                */
+
+                // Connects to the other Perfion Service
+                IPerfionClient anotherPerfionClient = context.Resolve<IPerfionClientFactory<AnotherPerfionConnection>>().Client;
+
+                PerfionXml productsXml = anotherPerfionClient.Query(@"
+<Query>
+    <Select languages='dan' maxCount='2'>
+        <Feature id='**' />
+    </Select>
+    <From id='Product' />
+    <Where>
+		<Clause id='MyFeature' operator='=' value='MyValue' />
+    </Where>
+</Query>");
+
+                foreach (PerfionXml.Component product in productsXml.Components("Product"))
+                {
+                    PerfionXml.Component parentCategory = product.FindRelation("Category");
+
+                    PerfionXml.Image image = product.GetImages("MainImage").FirstOrDefault();
+
+                    if (image != null)
+                    {
+                        // download RAW
+                        byte[] raw = image.Download();
+                        File.WriteAllBytes(Path.Combine(@"C:\tmp\perfion\", image.Name), raw);
+
+                        // download thumb (100x100)
+                        byte[] thumbnail = image.Download(new NameValueCollection {{"size", "100x100"}});
+                        File.WriteAllBytes(Path.Combine(@"c:\tmp\perfion\thumbs\", image.Name), thumbnail);
+                    }
+
+                    PerfionXml.File[] drawings = product.GetFiles("SketchDrawing");
+
+                    foreach (var drawing in drawings)
+                    {
+                        string fileName = drawing.Element.AttributeOrEmpty("string").Value;
+                        File.WriteAllBytes($@"c:\tmp\perfion\{fileName}", drawing.Download());
+                    }
+
+                    byte[] report = product.DownloadPdfReport("Datasheet", "dan");
+                    File.WriteAllBytes($@"c:\tmp\perfion\{product.Name()}.pdf", report);
+                }
+            }
         }
     }
 
-	public class PerfionTask : Task
-	{
-		private readonly IPerfionService _perfion;
+    public class OverrideDefaultConnection : Connection
+    {
+        public OverrideDefaultConnection(ConnectionString connectionString)
+            : base(connectionString)
+        {
+        }
 
-		public PerfionTask(IPerfionService perfion)
-		{
-			_perfion = perfion;
-		}
+        protected override void ConfigureBinding(BasicHttpBinding binding, IKernel kernel)
+        {
+            base.ConfigureBinding(binding, kernel);
+        }
 
-		public override void StartTask(ITaskExecutionContext context)
-		{
-            // See overload on this method, to be able to enable/disable archiving for this particular query
-			PerfionXml xml = _perfion.Query(@"
-<Query>
-	<Select languages='EN'>
-		<Feature id='**' />
-	</Select>
-	<From id='Product,Category'/>
-</Query>");
+        protected override void ConfigureClientCredentials(ClientCredentials clientCredentials, IKernel kernel)
+        {
+            base.ConfigureClientCredentials(clientCredentials, kernel);
+        }
+    }
 
-			Tree<PerfionXml.Component, string, int> categories = xml.Components("Category")
-				.ToTree(x => x.Id, (x, p) => x.ParentId.HasValue ? p.Value(x.ParentId.Value) : p.None, x => x.Name());
+    public class AnotherPerfionConnection : Connection
+    {
+        public AnotherPerfionConnection(ConnectionString connectionString)
+            : base(connectionString)
+        {
+        }
 
-			var treeVisualization = new StringBuilder();
+        protected override WebClient CreateWebClient(IKernel kernel)
+        {
+            WebClient client = base.CreateWebClient(kernel);
 
-			foreach (var level1Category in categories)
-			{
-				treeVisualization.AppendLine(level1Category.Model);
+            client.SetBasicAuthentication("username", "password");
 
-				foreach (var level2Category in level1Category)
-				{
-					treeVisualization.AppendLine(String.Format("-- {0}", level2Category.Model));
-				}
-			}
-
-			context.Log.Message(treeVisualization.ToString());
-
-			foreach (PerfionXml.Component product in xml.Components("Product"))
-			{
-				PerfionXml.Component parentCategory = product.FindRelation("Category");
-
-				context.Log.Message("Product {0} in Category {1}", product.Name(), parentCategory.Name());
-
-				PerfionXml.Image image = product.GetImage("Image");
-
-				if (image != null)
-				{
-					// download RAW
-					File.WriteAllBytes(Path.Combine(@"C:\tmp\perfion\", image.Name), 
-						image.Download());
-
-					// download thumb (100x100)
-					File.WriteAllBytes(Path.Combine(@"c:\tmp\perfion\thumbs\", image.Name), 
-						image.Download(new NameValueCollection { { "size", "100x100" }}));
-				}
-			}
-		}
-
-		public override string Description
-		{
-			get { return "TBD"; }
-		}
-	}
+            return client;
+        }
+    }
 }
 ```
 
