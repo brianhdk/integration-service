@@ -8,7 +8,9 @@
 
             //Rebus.Demo.Run();
 
-            Perfion.Demo.Run();
+            //Perfion.Demo.Run();
+
+            //Tasks.ConcurrentExecution.Demo.Run();
         }
     }
 }

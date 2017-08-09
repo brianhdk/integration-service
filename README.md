@@ -2788,10 +2788,10 @@ Another example could be if you're using Hangfire it's definitely also possible 
 
 Depending on your Task, it might not be optimal to have multiple instances running at the same time.
 
-See example below on two tasks - one is decorated with the "AllowConcurrentExecution"-attribute the other with "PreventConcurrentExecution"-attribute.
+See example below on two tasks - one is decorated with the "AllowConcurrentTaskExecution"-attribute the other with "PreventConcurrentTaskExecution"-attribute.
 
 ```c#
-[AllowConcurrentExecution]
+[AllowConcurrentTaskExecution]
 public class ConcurrentExecutableTask : Task
 {
     public override void StartTask(ITaskExecutionContext context)
@@ -2801,7 +2801,7 @@ public class ConcurrentExecutableTask : Task
     public override string Description => "This task can be executed in parallel.";
 }
 
-[PreventConcurrentExecution]
+[PreventConcurrentTaskExecution]
 public class SynchronousOnlyTask : Task
 {
     public override void StartTask(ITaskExecutionContext context)
@@ -2813,7 +2813,7 @@ public class SynchronousOnlyTask : Task
 ```
 
 In app.config, you can turn on the "Prevent Concurrent Execution"-behaviour on all tasks, by setting the value of "ConcurrentTaskExecution.PreventConcurrentTaskExecutionOnAllTasks" to "true".
-Only tasks that have been explicity marked as "AllowConcurrentExecution" will then support running in parallel.
+Only tasks that have been explicity marked as "AllowConcurrentTaskExecution" will then support running in parallel.
 
 
 ```xml
@@ -2843,7 +2843,7 @@ public class MyCustomEvaluator : IPreventConcurrentTaskExecutionRuntimeEvaluator
     {
         return
             _inner.Disabled(currentTask, arguments) ||
-            arguments.Contains("AllowConcurrentExecution");
+            arguments.Contains("AllowConcurrentTaskExecution");
     }
 }
 ```
@@ -2867,6 +2867,7 @@ The example above will register all public classes, in the same assembly as Prog
  - DisabledIfIntegrationDbIsDisabled
 
 TODO: Document the IPreventConcurrentTaskExecutionCustomLockName feature.
+TODO: Document the IPreventConcurrentTaskExecutionCustomLockDescription feature.
 
 [Back to Table of Contents](#table-of-contents)
 

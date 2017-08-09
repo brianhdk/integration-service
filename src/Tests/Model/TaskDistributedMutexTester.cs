@@ -69,7 +69,7 @@ namespace Vertica.Integration.Tests.Model
         }
 
         [Test]
-        public void Task_With_PreventConcurrentExecutionAttribute_Verify_InteractsWithDistributedMutex()
+        public void Task_With_PreventConcurrentTaskExecutionAttribute_Verify_InteractsWithDistributedMutex()
         {
             var distributedMutex = Substitute.For<IDistributedMutex>();
 
@@ -95,7 +95,7 @@ namespace Vertica.Integration.Tests.Model
         }
 
         [Test]
-        public void Task_With_PreventConcurrentExecutionAttribute_RuntimeEvaluator_Verify_DoesNotInteractWithDistributedMutex()
+        public void Task_With_PreventConcurrentTaskExecutionAttribute_RuntimeEvaluator_Verify_DoesNotInteractWithDistributedMutex()
         {
             var distributedMutex = Substitute.For<IDistributedMutex>();
 
@@ -123,7 +123,7 @@ namespace Vertica.Integration.Tests.Model
         }
 
         [Test]
-        public void Task_With_PreventConcurrentExecutionAttribute_CustomLockName_Verify_InteractsWithDistributedMutex()
+        public void Task_With_PreventConcurrentTaskExecutionAttribute_CustomLockName_Verify_InteractsWithDistributedMutex()
         {
             var distributedMutex = Substitute.For<IDistributedMutex>();
 
@@ -135,20 +135,25 @@ namespace Vertica.Integration.Tests.Model
                             .Set("ConcurrentTaskExecution.PreventConcurrentTaskExecutionOnAllTasks", "false"))
                         .Register(kernel => distributedMutex)))
                 .Tasks(tasks => tasks
-                    .Task<SyncOnlyWithAttributeAndCustomLockNameTask>()
+                    .Task<SyncOnlyWithAttributeAndCustomLockNameAndDescriptionTask>()
                     .ConcurrentTaskExecution(concurrentTaskExecution => concurrentTaskExecution
-                        .AddCustomLockName<CustomLockName>()))))
+                        .AddCustomLockName<CustomLockName>()
+                        .AddCustomLockDescription<CustomLockDescription>()))))
             {
                 var runner = context.Resolve<ITaskRunner>();
                 var factory = context.Resolve<ITaskFactory>();
 
                 runner.Execute(
-                    factory.Get<SyncOnlyWithAttributeAndCustomLockNameTask>(), 
-                    new Arguments(new KeyValuePair<string, string>("LockName", "MyLockName")));
+                    factory.Get<SyncOnlyWithAttributeAndCustomLockNameAndDescriptionTask>(), 
+                    new Arguments(
+                        new KeyValuePair<string, string>("LockName", "MyLockName"),
+                        new KeyValuePair<string, string>("LockDescription", "MyLockDescription")));
                 
                 distributedMutex
                     .Received(1)
-                    .Enter(Arg.Is<DistributedMutexContext>(x => x.Name == "MyLockName"));
+                    .Enter(Arg.Is<DistributedMutexContext>(x => 
+                        x.Name == "MyLockName" &&
+                        x.Description == "MyLockDescription"));
             }
         }
 
@@ -236,6 +241,14 @@ namespace Vertica.Integration.Tests.Model
             }
         }
 
+        public class CustomLockDescription : IPreventConcurrentTaskExecutionCustomLockDescription
+        {
+            public string GetLockDescription(ITask currentTask, Arguments arguments, string currentDescription)
+            {
+                return arguments["LockDescription"];
+            }
+        }
+
         [PreventConcurrentTaskExecution(RuntimeEvaluator = typeof(CustomRuntimeEvaluator))]
         public class SyncOnlyWithAttributeAndRuntimeEvaluatorTask : Task
         {
@@ -246,8 +259,8 @@ namespace Vertica.Integration.Tests.Model
             public override string Description => "TBD";
         }
 
-        [PreventConcurrentTaskExecution(CustomLockName = typeof(CustomLockName))]
-        public class SyncOnlyWithAttributeAndCustomLockNameTask : Task
+        [PreventConcurrentTaskExecution(CustomLockName = typeof(CustomLockName), CustomLockDescription = typeof(CustomLockDescription))]
+        public class SyncOnlyWithAttributeAndCustomLockNameAndDescriptionTask : Task
         {
             public override void StartTask(ITaskExecutionContext context)
             {

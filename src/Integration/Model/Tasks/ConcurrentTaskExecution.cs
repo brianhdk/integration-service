@@ -81,7 +81,7 @@ using (IApplicationContext context = ApplicationContext.Create(application => ap
                     lockName,
                     preventConcurrent?.Configuration ?? _defaultConfiguration,
                     log.LogMessage,
-                    $"Acquired by '{task.Name()}'. TaskLogId: {log.Id ?? "<n/a>"}.");
+                    GetLockDescription(task, log, arguments, preventConcurrent));
 
                 return _distributedMutex.Enter(context);
             }
@@ -116,7 +116,7 @@ using (IApplicationContext context = ApplicationContext.Create(application => ap
     .Tasks(tasks => tasks
         .ConcurrentTaskExecution(concurrentTaskExecution => concurrentTaskExecution
             .AddFromAssemblyOfThis<Program>()
-            .AddCustomLockName<MyCustomEvaluator>()))");
+            .AddCustomLockName<MyCustomLockName>()))");
 
                 string lockName = customLockName.GetLockName(task, arguments);
 
@@ -125,6 +125,38 @@ using (IApplicationContext context = ApplicationContext.Create(application => ap
             }
 
             return task.Name();
+        }
+
+        private string GetLockDescription(ITask task, TaskLog log, Arguments arguments, PreventConcurrentTaskExecutionAttribute preventConcurrent)
+        {
+            string description = $"Acquired by '{task.Name()}'. TaskLogId: {log.Id ?? "<n/a>"}.";
+
+            Type customLockDescriptionType = preventConcurrent?.CustomLockDescription;
+
+            if (customLockDescriptionType != null)
+            {
+                var customLockDescription =
+                    _kernel.Resolve(customLockDescriptionType) as IPreventConcurrentTaskExecutionCustomLockDescription;
+
+                if (customLockDescription == null)
+                    throw new InvalidOperationException(
+                        $@"Unable to resolve custom lock description type '{customLockDescriptionType.FullName}'. 
+
+
+Either the type does not implement '{nameof(IPreventConcurrentTaskExecutionCustomLockDescription)}'-interface or you forgot to register the type as a custom lock description. 
+
+You can register custom evaluators when setting up Integration Service in the ApplicationContext.Create(...)-method:
+
+using (IApplicationContext context = ApplicationContext.Create(application => application
+    .Tasks(tasks => tasks
+        .ConcurrentTaskExecution(concurrentTaskExecution => concurrentTaskExecution
+            .AddFromAssemblyOfThis<Program>()
+            .AddCustomLockDescription<MyCustomLockDescription>()))");
+
+                description = customLockDescription.GetLockDescription(task, arguments, description);
+            }
+
+            return description;
         }
 
         private static DistributedMutexConfiguration DefaultConfiguration(IRuntimeSettings settings, out bool preventConcurrentTaskExecutionOnAllTasks)

@@ -1,62 +1,79 @@
+using System;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Security.AccessControl;
+using System.Security.Principal;
+using System.Threading;
+using Vertica.Utilities;
+
 namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex
 {
-    /*
     /// <summary>
     /// http://stackoverflow.com/questions/229565/what-is-a-good-pattern-for-using-a-global-mutex-in-c
     /// </summary>
-    public class MachineWideMutex : IDistributedMutex
+    /*public class MachineWideMutex : IDistributedMutex
     {
-        public IDisposable Enter()
+        private readonly IShutdown _shutdown;
+        private readonly string _mutexId;
+        private readonly MutexSecurity _securitySettings;
+
+        public MachineWideMutex(IShutdown shutdown)
         {
-            throw new NotImplementedException();
+            _shutdown = shutdown;
 
             // get application GUID as defined in AssemblyInfo.cs
-            string appGuid = ((GuidAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(GuidAttribute), false).GetValue(0)).Value.ToString();
+            var appGuid = ((GuidAttribute) Assembly
+                .GetEntryAssembly()
+                .GetCustomAttributes(typeof(GuidAttribute), false).GetValue(0))
+                .Value;
 
             // unique id for global mutex - Global prefix means it is global to the machine
-            string mutexId = string.Format("Global\\{{{0}}}", appGuid);
+            _mutexId = $"Global\\{{{appGuid}}}";
 
-            // Need a place to store a return value in Mutex() constructor call
-            bool createdNew;
+            var identifier = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
 
-            // edited by Jeremy Wiebe to add example of setting up security for multi-user usage
-            // edited by 'Marc' to work also on localized systems (don't use just "Everyone") 
-            var allowEveryoneRule = new MutexAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), MutexRights.FullControl, AccessControlType.Allow);
-            var securitySettings = new MutexSecurity();
-            securitySettings.AddAccessRule(allowEveryoneRule);
+            var allowEveryoneRule = new MutexAccessRule(identifier, MutexRights.FullControl, AccessControlType.Allow);
+            _securitySettings = new MutexSecurity();
+            _securitySettings.AddAccessRule(allowEveryoneRule);
+        }
 
-            // edited by MasonGZhwiti to prevent race condition on security settings via VanNguyen
-            using (var mutex = new Mutex(false, mutexId, out createdNew, securitySettings))
+        public IDisposable Enter(DistributedMutexContext context)
+        {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
+            return new EnterLock(context, _mutexId, _securitySettings, _shutdown.Token);
+        }
+
+        private class EnterLock : IDisposable
+        {
+            private readonly Mutex _mutex;
+            private readonly bool _hasHandle;
+
+            public EnterLock(DistributedMutexContext context, string id, MutexSecurity security, CancellationToken cancellationToken)
             {
-                // edited by acidzombie24
-                var hasHandle = false;
+                bool createdNew;
+                _mutex = new Mutex(false, id, out createdNew, security);
+
                 try
                 {
-                    try
-                    {
-                        // note, you may want to time out here instead of waiting forever
-                        // edited by acidzombie24
-                        // mutex.WaitOne(Timeout.Infinite, false);
-                        hasHandle = mutex.WaitOne(5000, false);
-                        if (hasHandle == false)
-                            throw new TimeoutException("Timeout waiting for exclusive access");
-                    }
-                    catch (AbandonedMutexException)
-                    {
-                        // Log the fact that the mutex was abandoned in another process, it will still get acquired
-                        hasHandle = true;
-                    }
+                    _hasHandle = _mutex.WaitOne(context.WaitTime, false);
 
-                    // Perform your work here.
+                    if (!_hasHandle)
+                        throw new DistributedMutexTimeoutException($"Unable to acquire lock '{context.Name}' within wait time ({context.WaitTime}).");
                 }
-                finally
+                catch (AbandonedMutexException)
                 {
-                    // edited by acidzombie24, added if statement
-                    if (hasHandle)
-                        mutex.ReleaseMutex();
+                    _hasHandle = true;
                 }
             }
+
+            public void Dispose()
+            {
+                if (_hasHandle)
+                    _mutex.ReleaseMutex();
+
+                _mutex.Dispose();
+            }
         }
-    }
-    */
+    }*/
 }

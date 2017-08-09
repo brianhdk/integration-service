@@ -241,6 +241,7 @@
     <Compile Include="Infrastructure\Threading\DistributedMutex\Db\CleanUpDbDistributedMutexStep.cs" />
     <Compile Include="Infrastructure\Threading\DistributedMutex\Db\DbDistributedMutex.cs" />
     <Compile Include="Infrastructure\Threading\DistributedMutex\Db\DbDistributedMutexLock.cs" />
+    <Compile Include="Infrastructure\Threading\DistributedMutex\Db\IDeleteDbDistributedMutexLocksCommand.cs" />
     <Compile Include="Infrastructure\Threading\DistributedMutex\DistributedMutexConfiguration.cs" />
     <Compile Include="Infrastructure\Threading\DistributedMutex\DistributedMutexContext.cs" />
     <Compile Include="Infrastructure\Threading\DistributedMutex\IDistributedMutex.cs" />
@@ -330,6 +331,7 @@
     <Compile Include="Model\Tasks\Evaluators\DisabledIfEnvironmentIsDevelopment.cs" />
     <Compile Include="Model\Tasks\Evaluators\DisabledIfIntegrationDbIsDisabled.cs" />
     <Compile Include="Model\Tasks\IConcurrentTaskExecution.cs" />
+    <Compile Include="Model\Tasks\IPreventConcurrentTaskExecutionCustomLockDescription.cs" />
     <Compile Include="Model\Tasks\IPreventConcurrentTaskExecutionCustomLockName.cs" />
     <Compile Include="Model\Tasks\IPreventConcurrentTaskExecutionRuntimeEvaluator.cs" />
     <Compile Include="Model\Tasks\PreventConcurrentTaskExecutionAttribute.cs" />

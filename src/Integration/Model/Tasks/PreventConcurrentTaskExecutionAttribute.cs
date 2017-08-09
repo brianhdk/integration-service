@@ -37,5 +37,10 @@ namespace Vertica.Integration.Model.Tasks
         /// Specifies a type that implements <see cref="IPreventConcurrentTaskExecutionCustomLockName"/> to be able to specify a custom lock name at runtime.
         /// </summary>
         public Type CustomLockName { get; set; }
+
+        /// <summary>
+        /// Specifies a type that implements <see cref="IPreventConcurrentTaskExecutionCustomLockDescription"/> to be able to specify a custom lock description at runtime.
+        /// </summary>
+        public Type CustomLockDescription { get; set; }
     }
 }

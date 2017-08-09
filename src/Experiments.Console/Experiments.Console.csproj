@@ -82,6 +82,10 @@
     <Compile Include="Rebus\Demo.cs" />
     <Compile Include="Rebus\RebusLoggerFactory.cs" />
     <Compile Include="Rebus\SendMessageWorker.cs" />
+    <Compile Include="Tasks\ConcurrentExecution\CanRunInParallelTask.cs" />
+    <Compile Include="Tasks\ConcurrentExecution\Demo.cs" />
+    <Compile Include="Tasks\ConcurrentExecution\MustRunAloneTask.cs" />
+    <Compile Include="Tasks\ConcurrentExecution\MyCustomLockDescription.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

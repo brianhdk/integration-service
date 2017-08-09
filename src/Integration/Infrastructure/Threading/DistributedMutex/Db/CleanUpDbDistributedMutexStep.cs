@@ -1,5 +1,4 @@
 using System;
-using System.Data;
 using Vertica.Integration.Domain.Core;
 using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Model;
@@ -9,13 +8,13 @@ namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db
 {
     public class CleanUpDbDistributedMutexStep : Step<MaintenanceWorkItem>
     {
-        private readonly Lazy<IDbFactory> _db;
+        private readonly Lazy<IDeleteDbDistributedMutexLocksCommand> _deleteCommand;
         private readonly IIntegrationDatabaseConfiguration _configuration;
 
-        public CleanUpDbDistributedMutexStep(Lazy<IDbFactory> db, IIntegrationDatabaseConfiguration confiugration)
+        public CleanUpDbDistributedMutexStep(Lazy<IDeleteDbDistributedMutexLocksCommand> deleteCommand, IIntegrationDatabaseConfiguration configuration)
         {
-            _db = db;
-            _configuration = confiugration;
+            _deleteCommand = deleteCommand;
+            _configuration = configuration;
         }
 
         public override Execution ContinueWith(MaintenanceWorkItem workItem, ITaskExecutionContext context)
@@ -28,19 +27,13 @@ namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db
 
         public override void Execute(MaintenanceWorkItem workItem, ITaskExecutionContext context)
         {
-            using (IDbSession session = _db.Value.OpenSession())
-            using (IDbTransaction transaction = session.BeginTransaction())
-            {
-                DateTimeOffset deleteBefore = Time.UtcNow.AddHours(-24);
+            DateTimeOffset olderThanOneDay = Time.UtcNow.AddHours(-24);
 
-                var deletions = session.Execute($@"
-DELETE FROM [{_configuration.TableName(IntegrationDbTable.DistributedMutex)}] WHERE (CreatedAt <= @deleteBefore)", new { deleteBefore });
+            int deletions = _deleteCommand.Value.Execute(olderThanOneDay);
 
-                if (deletions > 0)
-                    context.Log.Message("Deleted {0} records locked before {1}", deletions, deleteBefore);
+            if (deletions > 0)
+                context.Log.Message("Deleted {0} records locked before {1}", deletions, olderThanOneDay);
 
-                transaction.Commit();
-            }
         }
 
         public override string Description => "Deletes lock records older than 24 hours.";
