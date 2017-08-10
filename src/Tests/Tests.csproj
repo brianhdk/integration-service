@@ -103,6 +103,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\Exceptions\ExceptionExtensionsTester.cs" />
     <Compile Include="Infrastructure\Testing\ConsoleWriterQueue.cs" />
     <Compile Include="ConsoleHost\WindowsServiceInterceptorTester.cs" />
     <Compile Include="Domain\LiteServer\LiteServerTester.cs" />

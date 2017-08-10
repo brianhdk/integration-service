@@ -30,7 +30,7 @@ namespace Vertica.Integration.Infrastructure.Logging
         {
             if (exception == null) throw new ArgumentNullException(nameof(exception));
 
-            Message = exception.Message.MaxLength(4000);
+            Message = exception.DestructMessage().MaxLength(4000);
             FormattedMessage = exception.GetFullStacktrace();
         }
 

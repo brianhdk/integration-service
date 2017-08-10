@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using NSubstitute;
 using NUnit.Framework;
 using Vertica.Integration.Infrastructure;
@@ -15,7 +16,12 @@ namespace Vertica.Integration.Tests.Model
 	[TestFixture]
 	public class TaskRunnerTester
 	{
-		[Test]
+	    private ILogger _logger;
+	    private IConcurrentTaskExecution _concurrentExecution;
+	    private IShutdown _shutdown;
+	    private IConsoleWriter _console;
+
+	    [Test]
 		public void Execute_TaskWithSteps_VerifyLogging()
 		{
             var logger = Substitute.For<ILogger>();
@@ -45,7 +51,36 @@ namespace Vertica.Integration.Tests.Model
 		    Assert.That(task.EndCalled, Is.True);
 		}
 
-		[Test]
+	    [Test]
+	    public void Execute_TaskThrowsAggregateException_VerifyLogging()
+	    {
+	        TaskRunner subject = InitializeSubject();
+
+	        var task = new ThrowingAggregateExceptionTask();
+
+	        var thrownException = Assert.Throws<TaskExecutionFailedException>(() => subject.Execute(task));
+	        var aggregateException = thrownException.InnerException as AggregateException;
+
+	        Assert.IsNotNull(aggregateException);
+	        CollectionAssert.Contains(aggregateException.InnerExceptions.Select(x => x.GetType()), typeof(InvalidOperationException));
+	        CollectionAssert.Contains(aggregateException.InnerExceptions.Select(x => x.GetType()), typeof(DivideByZeroException));
+
+	        _logger.Received().LogError(Arg.Is(aggregateException));
+	    }
+
+        private TaskRunner InitializeSubject()
+	    {
+	        _logger = Substitute.For<ILogger>();
+	        _concurrentExecution = Substitute.For<IConcurrentTaskExecution>();
+	        _shutdown = Substitute.For<IShutdown>();
+	        _console = Substitute.For<IConsoleWriter>();
+
+	        var subject = new TaskRunner(_logger, _concurrentExecution, _shutdown, _console);
+
+	        return subject;
+	    }
+
+	    [Test]
 		public void Execute_FailsAtStep_VerifyLogging()
 		{
             var logger = Substitute.For<ILogger>();
@@ -64,7 +99,7 @@ namespace Vertica.Integration.Tests.Model
 
 			step1
                 .When(x => x.Execute(workItem, Arg.Any<ITaskExecutionContext>()))
-				.Do(x => { throw throwingException; });
+				.Do(x => throw throwingException);
 
             var subject = new TaskRunner(logger, concurrentExecution, shutdown, console);
 
@@ -96,7 +131,7 @@ namespace Vertica.Integration.Tests.Model
 			var workItem = new DisposableWorkItem(() => disposedCount++);
 			var exception = new InvalidOperationException();
 			var task = new TaskRunnerTesterTask<DisposableWorkItem>(new[] { step1, step2 }, workItem)
-				.OnStart(ctx => { throw exception; });
+				.OnStart(ctx => throw exception);
 
 			step1.ContinueWith(workItem, Arg.Any<ITaskExecutionContext>()).Returns(Execution.Execute);
 			step2.ContinueWith(workItem, Arg.Any<ITaskExecutionContext>()).Returns(Execution.Execute);
@@ -127,7 +162,7 @@ namespace Vertica.Integration.Tests.Model
 			var workItem = new DisposableWorkItem(() => disposedCount++);
 			var exception = new InvalidOperationException();
 			var task = new TaskRunnerTesterTask<DisposableWorkItem>(new[] { step1, step2 }, workItem)
-				.OnEnd((wi, ctx) => { throw exception; });
+				.OnEnd((wi, ctx) => throw exception);
 
 			step1.ContinueWith(workItem, Arg.Any<ITaskExecutionContext>()).Returns(Execution.Execute);
 			step2.ContinueWith(workItem, Arg.Any<ITaskExecutionContext>()).Returns(Execution.Execute);
@@ -165,7 +200,7 @@ namespace Vertica.Integration.Tests.Model
 
 			step2
 				.When(x => x.Execute(workItem, Arg.Any<ITaskExecutionContext>()))
-				.Do(x => { throw exception; });
+				.Do(x => throw exception);
 
             var subject = new TaskRunner(logger, concurrentExecution, shutdown, console);
 
@@ -178,6 +213,19 @@ namespace Vertica.Integration.Tests.Model
 			Assert.That(disposedCount, Is.EqualTo(1));
 			Assert.That(thrownException.InnerException, Is.SameAs(exception));
 		}
+
+	    public class ThrowingAggregateExceptionTask : Task
+	    {
+	        public override void StartTask(ITaskExecutionContext context)
+	        {
+	            var failingTaskA = System.Threading.Tasks.Task.Factory.StartNew(() => throw new InvalidOperationException());
+	            var failingTaskB = System.Threading.Tasks.Task.Factory.StartNew(() => throw new DivideByZeroException());
+
+	            System.Threading.Tasks.Task.WaitAll(failingTaskA, failingTaskB);
+	        }
+
+	        public override string Description => nameof(ThrowingAggregateExceptionTask);
+	    }
 
 		public class TaskRunnerTesterTask<TWorkItem> : Task<TWorkItem>
 	    {

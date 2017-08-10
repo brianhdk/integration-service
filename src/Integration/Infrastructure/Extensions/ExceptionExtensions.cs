@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
@@ -7,6 +8,24 @@ namespace Vertica.Integration.Infrastructure.Extensions
 {
     public static class ExceptionExtensions
     {
+        internal static string DestructMessage(this Exception exception)
+        {
+            if (exception == null) throw new ArgumentNullException(nameof(exception));
+
+            var aggregateException = exception as AggregateException;
+            ReadOnlyCollection<Exception> innerExceptions = aggregateException?.InnerExceptions;
+
+            if (innerExceptions?.Count > 0)
+            {
+                return string.Concat(
+                    $"{aggregateException.Message}:", 
+                    Environment.NewLine,
+                    string.Join(Environment.NewLine, aggregateException.InnerExceptions.Select(x => $" - {x.Message}")));
+            }
+
+            return exception.Message;
+        }
+
         public static string GetFullStacktrace(this Exception exception)
         {
             if (exception == null) throw new ArgumentNullException(nameof(exception));
