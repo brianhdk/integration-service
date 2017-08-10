@@ -99,7 +99,7 @@ namespace Vertica.Integration.Tests.Model
 
 			step1
                 .When(x => x.Execute(workItem, Arg.Any<ITaskExecutionContext>()))
-				.Do(x => throw throwingException);
+				.Do(x => { throw throwingException; });
 
             var subject = new TaskRunner(logger, concurrentExecution, shutdown, console);
 
@@ -131,7 +131,7 @@ namespace Vertica.Integration.Tests.Model
 			var workItem = new DisposableWorkItem(() => disposedCount++);
 			var exception = new InvalidOperationException();
 			var task = new TaskRunnerTesterTask<DisposableWorkItem>(new[] { step1, step2 }, workItem)
-				.OnStart(ctx => throw exception);
+				.OnStart(ctx => { throw exception; });
 
 			step1.ContinueWith(workItem, Arg.Any<ITaskExecutionContext>()).Returns(Execution.Execute);
 			step2.ContinueWith(workItem, Arg.Any<ITaskExecutionContext>()).Returns(Execution.Execute);
@@ -162,7 +162,7 @@ namespace Vertica.Integration.Tests.Model
 			var workItem = new DisposableWorkItem(() => disposedCount++);
 			var exception = new InvalidOperationException();
 			var task = new TaskRunnerTesterTask<DisposableWorkItem>(new[] { step1, step2 }, workItem)
-				.OnEnd((wi, ctx) => throw exception);
+				.OnEnd((wi, ctx) => { throw exception; });
 
 			step1.ContinueWith(workItem, Arg.Any<ITaskExecutionContext>()).Returns(Execution.Execute);
 			step2.ContinueWith(workItem, Arg.Any<ITaskExecutionContext>()).Returns(Execution.Execute);
@@ -178,8 +178,7 @@ namespace Vertica.Integration.Tests.Model
 			Assert.That(disposedCount, Is.EqualTo(1));
 			Assert.That(thrownException.InnerException, Is.SameAs(exception));
 		}
-
-
+        
 		[Test]
 		public void Execute_IDisposableWorkItem_Step2Fails()
 		{
@@ -200,7 +199,7 @@ namespace Vertica.Integration.Tests.Model
 
 			step2
 				.When(x => x.Execute(workItem, Arg.Any<ITaskExecutionContext>()))
-				.Do(x => throw exception);
+				.Do(x => { throw exception; });
 
             var subject = new TaskRunner(logger, concurrentExecution, shutdown, console);
 
@@ -218,8 +217,8 @@ namespace Vertica.Integration.Tests.Model
 	    {
 	        public override void StartTask(ITaskExecutionContext context)
 	        {
-	            var failingTaskA = System.Threading.Tasks.Task.Factory.StartNew(() => throw new InvalidOperationException());
-	            var failingTaskB = System.Threading.Tasks.Task.Factory.StartNew(() => throw new DivideByZeroException());
+	            var failingTaskA = System.Threading.Tasks.Task.Factory.StartNew(() => { throw new InvalidOperationException(); });
+	            var failingTaskB = System.Threading.Tasks.Task.Factory.StartNew(() => { throw new DivideByZeroException(); });
 
 	            System.Threading.Tasks.Task.WaitAll(failingTaskA, failingTaskB);
 	        }
