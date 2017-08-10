@@ -1,5 +1,4 @@
-﻿using System;
-using Vertica.Integration;
+﻿using Vertica.Integration;
 using Vertica.Integration.Domain.LiteServer;
 using Vertica.Integration.Portal;
 using Vertica.Integration.WebApi;

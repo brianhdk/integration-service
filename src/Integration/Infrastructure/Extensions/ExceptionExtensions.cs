@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace Vertica.Integration.Infrastructure.Extensions
@@ -20,8 +21,16 @@ namespace Vertica.Integration.Infrastructure.Extensions
                 return string.Concat(
                     $"{aggregateException.Message}:", 
                     Environment.NewLine,
-                    string.Join(Environment.NewLine, aggregateException.InnerExceptions.Select(x => $" - {x.Message}")));
+                    Environment.NewLine,
+                    string.Join(
+                        string.Concat(Environment.NewLine, Environment.NewLine), 
+                        aggregateException.InnerExceptions.Select(x => x.AggregateMessages())));
             }
+
+            var targetInvocationException = exception as TargetInvocationException;
+
+            if (targetInvocationException?.InnerException != null)
+                return targetInvocationException.InnerException.DestructMessage();
 
             return exception.Message;
         }

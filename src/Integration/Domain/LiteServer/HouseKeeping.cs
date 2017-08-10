@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Castle.MicroKernel;
 using Vertica.Integration.Infrastructure;
+using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Utilities;
 using Vertica.Utilities.Extensions.StringExt;
@@ -145,7 +146,7 @@ namespace Vertica.Integration.Domain.LiteServer
         {
             ErrorLog errorLog = _logger.LogError(exception);
 
-            _output($"[{sender}]: [ERROR (ID: {errorLog?.Id.NullIfEmpty() ?? "<n/a>"})]: {exception.Message}");
+            _output($"[{sender}]: [ERROR (ID: {errorLog?.Id.NullIfEmpty() ?? "<n/a>"})]: {exception.DestructMessage()}");
         }
 
         public void Dispose()

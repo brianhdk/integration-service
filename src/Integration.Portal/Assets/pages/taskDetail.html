@@ -11,15 +11,15 @@
 			<div class="form-group">
 				<label class="col-sm-2 control-label">Description</label>
 				<div class="col-sm-10">
-					<p class="form-control-static">{{ taskDetail.Description }}</p>
+					<p class="form-control-static" style="white-space: pre;">{{ taskDetail.Description }}</p>
 				</div>
 			</div>
-			<div class="row">
+			<div class="row" ng-if="taskDetail.Steps.length">
 				<label class="col-sm-2 control-label">Steps</label>
 				<div class="col-sm-10">
 					<p class="form-control-static" ng-repeat="step in taskDetail.Steps">
 					    <strong>{{step.Name}}</strong><br/>
-                        {{ step.Description }}
+                        <span style="white-space: pre;">{{ step.Description }}</span>
 					</p>
 				</div>
 			</div>

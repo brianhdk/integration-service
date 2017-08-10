@@ -70,7 +70,7 @@ namespace Vertica.Integration.Model
                     ErrorLog errorLog = _logger.LogError(ex);
                     taskLog.ErrorLog = errorLog;
 
-                    throw new TaskExecutionFailedException($"Starting Task '{taskLog.Name}' failed with message: '{ex.Message}'. ErrorID: {errorLog?.Id ?? "<null>"}.", ex);
+                    throw new TaskExecutionFailedException($"Starting Task '{taskLog.Name}' failed with message: '{ex.DestructMessage()}'. ErrorID: {errorLog?.Id ?? "<null>"}.", ex);
                 }
 
                 try

@@ -25,6 +25,10 @@ namespace Experiments.Console.Hangfire
             context.Log.Message("...");
         }
 
-        public override string Description => nameof(MyTask);
+        public override string Description => $@"{nameof(MyTask)}
+
+New line
+
+New line again";
     }
 }

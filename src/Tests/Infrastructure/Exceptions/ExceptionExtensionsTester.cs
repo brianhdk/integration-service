@@ -45,7 +45,8 @@ namespace Vertica.Integration.Tests.Infrastructure.Exceptions
         public void DestructMessage_AggregateExceptionWithTwoInnerExceptions_ContainsMessages()
         {
             var divideByZeroException = new DivideByZeroException("DivideByZero");
-            var invalidOperationException = new InvalidOperationException("InvalidOperation");
+            var arithmeticException = new ArithmeticException("Arithmetic");
+            var invalidOperationException = new InvalidOperationException("InvalidOperation", arithmeticException);
 
             var aggregateException = new AggregateException(
                 divideByZeroException,
@@ -56,6 +57,9 @@ namespace Vertica.Integration.Tests.Infrastructure.Exceptions
             StringAssert.Contains(aggregateException.Message, actual);
             StringAssert.Contains(divideByZeroException.Message, actual);
             StringAssert.Contains(invalidOperationException.Message, actual);
+            StringAssert.Contains(arithmeticException.Message, actual);
+
+            Console.WriteLine(actual);
         }
     }
 }

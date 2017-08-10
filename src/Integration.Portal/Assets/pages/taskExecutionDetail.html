@@ -12,7 +12,7 @@
                     </a>
                 </td>
                 <td data-title="'Step Name'" sortable="'StepName'" filter="{ 'StepName': 'text' }">{{task.StepName}}</td>
-                <td data-title="'Message'" sortable="'Message'" filter="{ 'Message': 'text' }">{{task.Message | limitTo: 60 }}{{task.Message.length > 60 ? '...' : ''}}</td>
+                <td data-title="'Message'" sortable="'Message'" filter="{ 'Message': 'text' }" style="white-space: pre;">{{task.Message | limitTo: 60 }}{{task.Message.length > 60 ? '...' : ''}}</td>
                 <td data-title="'Execution Time Seconds'" sortable="'ExecutionTimeSeconds'" filter="{ 'ExecutionTimeSeconds': 'text' }">{{task.ExecutionTimeSeconds }}</td>
             </tr>
         </tbody>
