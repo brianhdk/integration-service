@@ -11,6 +11,10 @@
             //Perfion.Demo.Run();
 
             //Tasks.ConcurrentExecution.Demo.Run();
+
+            //WebApi.Portal.Demo.Run();
+
+            Hangfire.Demo.Run();
         }
     }
 }

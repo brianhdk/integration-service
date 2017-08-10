@@ -39,11 +39,41 @@
     <Reference Include="Castle.Windsor, Version=3.4.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Castle.Windsor.3.4.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
+    <Reference Include="FluentMigrator, Version=1.6.2.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FluentMigrator.1.6.2\lib\40\FluentMigrator.dll</HintPath>
+    </Reference>
+    <Reference Include="Hangfire.Console, Version=1.3.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Hangfire.Console.1.3.3\lib\net45\Hangfire.Console.dll</HintPath>
+    </Reference>
+    <Reference Include="Hangfire.Core, Version=1.6.15.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Hangfire.Core.1.6.15\lib\net45\Hangfire.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Hangfire.MemoryStorage, Version=1.5.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Hangfire.MemoryStorage.1.5.1\lib\net40\Hangfire.MemoryStorage.dll</HintPath>
+    </Reference>
+    <Reference Include="Hangfire.SqlServer, Version=1.6.15.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Hangfire.SqlServer.1.6.15\lib\net45\Hangfire.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Owin.3.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.HttpListener, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Owin.Host.HttpListener.3.1.0\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Owin.Host.SystemWeb.3.1.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.ServiceBus, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\WindowsAzure.ServiceBus.4.1.3\lib\net45\Microsoft.ServiceBus.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.WindowsAzure.ConfigurationManager.3.2.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="Rebus, Version=3.1.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Rebus.3.1.5\lib\NET45\Rebus.dll</HintPath>
@@ -75,6 +105,12 @@
     <Compile Include="FileWatcher\Demo.cs" />
     <Compile Include="FileWatcher\WatchFiles.cs" />
     <Compile Include="FileWatcher\HandleFileTask.cs" />
+    <Compile Include="Hangfire\AllowAllAuthorizationFilter.cs" />
+    <Compile Include="Hangfire\Demo.cs" />
+    <Compile Include="Hangfire\IHangfireJob.cs" />
+    <Compile Include="Hangfire\Migrations\M1_SetupRecurringJobs.cs" />
+    <Compile Include="Hangfire\MyTask.cs" />
+    <Compile Include="Hangfire\MyTaskWithProgressBar.cs" />
     <Compile Include="Perfion\Demo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -86,6 +122,7 @@
     <Compile Include="Tasks\ConcurrentExecution\Demo.cs" />
     <Compile Include="Tasks\ConcurrentExecution\MustRunAloneTask.cs" />
     <Compile Include="Tasks\ConcurrentExecution\MyCustomLockDescription.cs" />
+    <Compile Include="WebApi\Portal\Demo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -98,6 +135,10 @@
       <Project>{D755AB1A-90E7-4E81-9F86-C574E1695A71}</Project>
       <Name>Integration.Elasticsearch</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Integration.Hangfire\Integration.Hangfire.csproj">
+      <Project>{7158B2C5-5725-4B55-B9ED-C58169712051}</Project>
+      <Name>Integration.Hangfire</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Integration.MongoDB\Integration.MongoDB.csproj">
       <Project>{3BCCDB4F-104A-418A-8DEE-15A655960AEA}</Project>
       <Name>Integration.MongoDB</Name>
@@ -106,6 +147,10 @@
       <Project>{218A773A-C382-42F7-9882-CB6D51B2EDF0}</Project>
       <Name>Integration.Perfion</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Integration.Portal\Integration.Portal.csproj">
+      <Project>{BE14DA0E-31C6-4417-8EC6-ED1658B51FA9}</Project>
+      <Name>Integration.Portal</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Integration.Rebus\Integration.Rebus.csproj">
       <Project>{9078656D-7C5E-469C-BFC6-1B9AB2CE9AE1}</Project>
       <Name>Integration.Rebus</Name>
@@ -113,6 +158,10 @@
     <ProjectReference Include="..\Integration.Redis\Integration.Redis.csproj">
       <Project>{D59B4610-F4EB-495A-9012-C4767BBA9B38}</Project>
       <Name>Integration.Redis</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration.WebApi\Integration.WebApi.csproj">
+      <Project>{A6CB3949-9637-4952-AB0F-0DE199E29B36}</Project>
+      <Name>Integration.WebApi</Name>
     </ProjectReference>
     <ProjectReference Include="..\Integration\Integration.csproj">
       <Project>{460F774F-2C89-47F4-84BD-B97653060E68}</Project>

@@ -17,7 +17,7 @@
     <tags>Vertica Integration Service IntegrationService Portal</tags>
     <dependencies>
       <dependency id="Vertica.Integration" version="[1.12,2.0)" />
-      <dependency id="Vertica.Integration.WebApi" version="[1.12,2.0)" />
+      <dependency id="Vertica.Integration.WebApi" version="[1.15,2.0)" />
     </dependencies>
   </metadata>
   <files>
