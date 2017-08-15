@@ -21,6 +21,8 @@ namespace Experiments.Console.Tasks.ConcurrentExecution
                         .Connection(ConnectionString.FromText(@"Integrated Security=SSPI;Data Source=.\SQLExpress;Database=IntegrationService_Tasks"))))
                 .Services(services => services
                     .Advanced(advanced => advanced
+                        // We'll override where to read RuntimeSettings from - just for demo purposes
+                        // It's recommended to configure these in the app.config instead - which is the default behaviour
                         .Register<IRuntimeSettings>(kernel => new InMemoryRuntimeSettings()
                             // We'll wait for a maximum of 4 seconds to acquire a lock before timing out.
                             .Set("ConcurrentTaskExecution.DefaultWaitTime", "00:00:04")

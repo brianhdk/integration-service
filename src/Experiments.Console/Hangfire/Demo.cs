@@ -42,6 +42,8 @@ namespace Experiments.Console.Hangfire
                 .Services(services => services
                     .Advanced(advanced => advanced
                         .Register<IHangfireJob, HangfireJob>()
+                        // We'll override where to read RuntimeSettings from - just for demo purposes
+                        // It's recommended to configure these in the app.config instead - which is the default behaviour
                         .Register<IRuntimeSettings>(kernel => new InMemoryRuntimeSettings()
                             // Specify which URL WebAPI should listen on.
                             .Set("WebApi.Url", "http://localhost:8154"))))
