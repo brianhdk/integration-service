@@ -135,7 +135,7 @@
     <Compile Include="IInitializable.cs" />
     <Compile Include="Infrastructure\Database\IntegrationDatabaseConfiguration.cs" />
     <Compile Include="Infrastructure\Database\IntegrationDbTable.cs" />
-    <Compile Include="Infrastructure\Database\Migrations\M7_DbDistributedMutex - Copy.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\M8_DbDistributedMutexAddDescription.cs" />
     <Compile Include="Infrastructure\Extensions\IOExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\QueueExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\RepeatExtensions.cs" />

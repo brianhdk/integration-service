@@ -23,8 +23,8 @@ namespace Vertica.Integration.Infrastructure.Extensions
                     Environment.NewLine,
                     Environment.NewLine,
                     string.Join(
-                        string.Concat(Environment.NewLine, Environment.NewLine), 
-                        aggregateException.InnerExceptions.Select(x => x.AggregateMessages())));
+                        string.Concat(Environment.NewLine, Environment.NewLine),
+                        innerExceptions.Select(x => x.AggregateMessages())));
             }
 
             var targetInvocationException = exception as TargetInvocationException;
