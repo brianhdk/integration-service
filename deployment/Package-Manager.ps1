@@ -99,7 +99,7 @@ Get-ChildItem $script_directory | Where-Object { $_.Extension -eq ".nupkg" } | F
 
             $message = $_.Exception.Message
             
-            If ($message.Contains("The server is configured to not allow overwriting packages that already exist.")) {
+            If ($message.Contains("already exist")) {
 
                 Write-Host "WARNING: $message" -ForegroundColor Yellow
             }
@@ -108,7 +108,7 @@ Get-ChildItem $script_directory | Where-Object { $_.Extension -eq ".nupkg" } | F
                 Throw $_.Exception
             }
         }
-	} 
+	}
     Else {
 
 		Move-Item -Path $_.FullName -Destination "C:\Users\bhk\Dropbox\Development\NuGet.Packages" -Force
