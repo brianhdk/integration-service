@@ -7,7 +7,7 @@
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
-    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <licenseUrl>https://github.com/vertica-as/integration-service/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/vertica-as/integration-service</projectUrl>
     <iconUrl>http://icons.iconarchive.com/icons/icons8/ios7/32/Data-Workflow-icon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -18,6 +18,8 @@
     <dependencies>
       <dependency id="Vertica.Integration" version="[1.12,2.0)" />
       <dependency id="Vertica.Utilities" version="[5,6.0)" />
+      <dependency id="WindowsAzure.ServiceBus" version="[4.1,5.0)" />
+      <dependency id="WindowsAzure.Storage" version="[8.3,9.0)" />
     </dependencies>    
   </metadata>
   <files>

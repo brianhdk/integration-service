@@ -19,7 +19,7 @@ $settings = @{
         "integration_portal" = Resolve-Path $script_directory\..\src\Integration.Portal
 		"integration_logging_elmah" = Resolve-Path $script_directory\..\src\Integration.Logging.Elmah
 		"integration_azure" = Resolve-Path $script_directory\..\src\Integration.Azure
-		"integration_paymentservice" = Resolve-Path $script_directory\..\src\Integration.PaymentService
+		#"integration_paymentservice" = Resolve-Path $script_directory\..\src\Integration.PaymentService
 		"integration_ravendb" = Resolve-Path $script_directory\..\src\Integration.RavenDB
 		"integration_mongodb" = Resolve-Path $script_directory\..\src\Integration.MongoDB
 		"integration_rebus" = Resolve-Path $script_directory\..\src\Integration.Rebus
@@ -90,7 +90,10 @@ Get-ChildItem $script_directory | Where-Object { $_.Extension -eq ".nupkg" } | F
 
         Try {
 
-		    &$settings.tools.nuget push $_.FullName 66666666-6666-6666-6666-666666666666 -Source http://nuget.vertica.dk/api/v2/package
+			$apiKey = "66666666-6666-6666-6666-666666666666"
+			$source = "http://nuget.vertica.dk/api/v2/package"
+
+		    &$settings.tools.nuget push $_.FullName $apiKey -Source $source
         }
         Catch {
 

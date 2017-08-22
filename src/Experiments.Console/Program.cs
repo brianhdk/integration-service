@@ -16,7 +16,7 @@
 
             //Hangfire.Demo.Run();
 
-            Logging.TextFile.Demo.Run();
+            //Logging.TextFile.Demo.Run();
         }
     }
 }

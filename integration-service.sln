@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.14
+VisualStudioVersion = 15.0.26730.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration", "src\Integration\Integration.csproj", "{460F774F-2C89-47F4-84BD-B97653060E68}"
 EndProject
@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".git", ".git", "{E76306EF-7
 	ProjectSection(SolutionItems) = preProject
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
+		LICENSE = LICENSE
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Portal", "src\Integration.Portal\Integration.Portal.csproj", "{BE14DA0E-31C6-4417-8EC6-ED1658B51FA9}"
@@ -196,5 +197,8 @@ Global
 		{6BB8C3AE-1E2E-40BD-9B84-542BD2644590} = {A61651C1-77DA-46E1-8706-ECF75F822B64}
 		{E7DE3E0A-BCEC-419C-BBE7-6F9645CAEB87} = {960ECE29-BE4A-4CB8-A7FA-91F696811BA5}
 		{44A7587A-702A-4C3B-8E03-F43913C78632} = {960ECE29-BE4A-4CB8-A7FA-91F696811BA5}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F9CDA001-05F2-476D-830A-B5AA3B62A3B2}
 	EndGlobalSection
 EndGlobal

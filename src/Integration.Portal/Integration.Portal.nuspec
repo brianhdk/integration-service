@@ -7,7 +7,7 @@
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
-    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <licenseUrl>https://github.com/vertica-as/integration-service/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/vertica-as/integration-service</projectUrl>
     <iconUrl>http://icons.iconarchive.com/icons/icons8/ios7/32/Data-Workflow-icon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
