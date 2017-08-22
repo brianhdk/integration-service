@@ -37,7 +37,7 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 
         void IWindsorInstaller.Install(IWindsorContainer container, IConfigurationStore store)
         {
-            Func<Type, Type, Assembly, bool> isConvention = (@class, @interface, assembly) =>
+            Func<Type, Type, bool> isConvention = (@class, @interface) =>
                 @interface.Assembly.Equals(@class.Assembly) &&
                 (@interface.Namespace ?? string.Empty).Equals(@class.Namespace) &&
                 @interface.Name.Equals($"I{@class.Name}");
@@ -48,9 +48,9 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
                     Classes.FromAssembly(assembly)
                         .Pick()
                         .If(@class =>
-                            @class.GetInterfaces().Any(@interface => isConvention(@class, @interface, assembly)) &&
+                            @class.GetInterfaces().Any(@interface => isConvention(@class, @interface)) &&
                             !_ignoreTypes.Any(ignoreType => @class == ignoreType || ignoreType.IsAssignableFrom(@class)))
-                        .WithService.Select((@class, baseTypes) => new[] { @class.GetInterfaces().First(@interface => isConvention(@class, @interface, assembly)) })
+                        .WithService.Select((@class, baseTypes) => new[] { @class.GetInterfaces().First(@interface => isConvention(@class, @interface)) })
                         .Configure(_registration));
             }
         }
