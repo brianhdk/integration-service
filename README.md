@@ -1227,7 +1227,7 @@ namespace ConsoleApplication16
 				var request = new Request();
 
 				HttpResponseMessage httpResponse = 
-					httpClient.PutAsJsonAsync("http://localhost:8123/Service", request)
+					httpClient.PutAsJsonAsync("http://localhost:8900/Service", request)
 						.Result;
 
 				httpResponse.EnsureSuccessStatusCode();
@@ -1404,11 +1404,12 @@ namespace ConsoleApplication16
 3. To open up the Portal, run the Integration Service with the following arguments:
 
   ```
-  .exe WebApiTask -url http://localhost:8123
+  .exe WebApiTask -url http://localhost:8900
   ```
 
-  ... you can of course choose any Host Name and any Port Number other than localhost:8123 as mentioned above.
-4. Open your browser and navigate to http://localhost:8123
+  ... you can of course choose any Host Name and any Port Number other than localhost:8900 as mentioned above.
+  
+4. Open your browser and navigate to http://localhost:8900
   
 [Back to Table of Contents](#table-of-contents)
 
