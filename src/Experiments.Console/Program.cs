@@ -1,4 +1,6 @@
-﻿namespace Experiments.Console
+﻿using Experiments.Console.WebApi.NSwag;
+
+namespace Experiments.Console
 {
     class Program
     {
@@ -13,6 +15,8 @@
             //Tasks.ConcurrentExecution.Demo.Run();
 
             //WebApi.Portal.Demo.Run();
+
+            Demo.Run();
 
             //Hangfire.Demo.Run();
 

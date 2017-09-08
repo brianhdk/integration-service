@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+<package>
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://github.com/vertica-as/integration-service/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/vertica-as/integration-service</projectUrl>
+    <iconUrl>http://icons.iconarchive.com/icons/icons8/ios7/32/Data-Workflow-icon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>Vertica Integration Service WebApi Owin Swagger NSwag</tags>
+    <dependencies>
+      <dependency id="Vertica.Integration" version="[1.21,2.0)" />
+      <dependency id="Vertica.Integration.WebApi" version="[1.15,2.0)" />
+    </dependencies>
+  </metadata>
+	<files>
+		<file src="App_Readme\Integration.WebApi.NSwag-readme.txt" target="readme.txt" />
+	</files>
+</package>

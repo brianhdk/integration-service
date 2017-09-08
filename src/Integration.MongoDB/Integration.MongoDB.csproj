@@ -60,8 +60,8 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Vertica.Utilities, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Vertica.Utilities.5.0.0\lib\net45\Vertica.Utilities.dll</HintPath>
+    <Reference Include="Vertica.Utilities, Version=5.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Vertica.Utilities.5.0.2\lib\net45\Vertica.Utilities.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
