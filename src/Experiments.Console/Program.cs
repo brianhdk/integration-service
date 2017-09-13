@@ -1,6 +1,4 @@
-﻿using Experiments.Console.WebApi.NSwag;
-
-namespace Experiments.Console
+﻿namespace Experiments.Console
 {
     class Program
     {
@@ -16,11 +14,13 @@ namespace Experiments.Console
 
             //WebApi.Portal.Demo.Run();
 
-            Demo.Run();
+            //WebApi.NSwag.Demo.Run();
 
             //Hangfire.Demo.Run();
 
             //Logging.TextFile.Demo.Run();
+
+            Elasticsearch.Demo.Run();
         }
     }
 }
