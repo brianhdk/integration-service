@@ -1385,7 +1385,7 @@ Setting up the Portal is easy.
   Install-Package Vertica.Integration.Portal
   ```
   
-2. Invoke the Extension Method *UsePortal()* that effectively initializes the Portal
+2. Invoke the Extension Method *WithPortal()* on *UseWebApi* which effectively initializes the Portal:
   ```c#
 using Vertica.Integration.Portal;
 
@@ -1396,7 +1396,8 @@ namespace ConsoleApplication16
 		static void Main(string[] args)
 		{
 			IntegrationStartup.Run(args, application => application
-				.UsePortal());
+				.UseWebApi(webApi => webApi
+					.WithPortal());
 		}
 	}
 }
@@ -1404,7 +1405,7 @@ namespace ConsoleApplication16
 3. To open up the Portal, run the Integration Service with the following arguments:
 
   ```
-  .exe WebApiTask -url http://localhost:8900
+  .exe WebApiHost -url http://localhost:8900
   ```
 
   ... you can of course choose any Host Name and any Port Number other than localhost:8900 as mentioned above.

@@ -136,6 +136,7 @@
     <Compile Include="Tasks\ConcurrentExecution\Demo.cs" />
     <Compile Include="Tasks\ConcurrentExecution\MustRunAloneTask.cs" />
     <Compile Include="Tasks\ConcurrentExecution\MyCustomLockDescription.cs" />
+    <Compile Include="WebApi\Controllers\Demo.cs" />
     <Compile Include="WebApi\NSwag\Demo.cs" />
     <Compile Include="WebApi\Portal\Demo.cs" />
   </ItemGroup>

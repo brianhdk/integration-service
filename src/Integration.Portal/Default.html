@@ -27,13 +27,6 @@
     <script src="assets/js/controller/archivesController.js"></script>
     <script src="assets/js/controller/configurationController.js"></script>
     <script src="assets/js/controller/configurationDetailController.js"></script>
-    <script src="assets/js/controller/graphController.js"></script>
-
-	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type="text/javascript">
-        google.load("visualization", "1", { packages: ["corechart"] });
-    </script>
-
     <script src="assets/js/ace/ace.js"></script>
     <script src="assets/js/ace/ui-ace.js"></script>
     <script src="assets/js/filesize.min.js"></script>
@@ -54,7 +47,6 @@
             <li ng-class="{'active' : isActive('/archives')}"><a href="#/archives">Archives</a></li>
 		    <li ng-class="{'active' : isActive('/configuration')}"><a href="#/configuration">Configuration</a></li>
             <li ng-class="{'active' : isActive('/errors')}"><a href="#/errors">Errors</a></li>
-            <li ng-class="{'active' : isActive('/graph')}"><a href="#/graph">Graph</a></li>
 		</ul>
 		<div class="row">
 			<div ng-view></div>

@@ -12,6 +12,8 @@
 
             //Tasks.ConcurrentExecution.Demo.Run();
 
+            WebApi.Controllers.Demo.Run();
+
             //WebApi.Portal.Demo.Run();
 
             //WebApi.NSwag.Demo.Run();
@@ -20,7 +22,7 @@
 
             //Logging.TextFile.Demo.Run();
 
-            Elasticsearch.Demo.Run();
+            //Elasticsearch.Demo.Run();
         }
     }
 }

@@ -57,11 +57,6 @@ integrationsApp.config(function ($routeProvider, $locationProvider) {
         	controller: 'configurationDetailController'
         })
 
-        .when('/graph', {
-            templateUrl: '/assets/pages/graph.html',
-            controller: 'graphController'
-        })
-
         .otherwise('/tasks')
     ;
 });

@@ -1,5 +1,4 @@
 ﻿using Vertica.Integration;
-using Vertica.Integration.Domain.LiteServer;
 using Vertica.Integration.Portal;
 using Vertica.Integration.WebApi;
 
@@ -13,18 +12,11 @@ namespace Experiments.Console.WebApi.Portal
                 .Database(database => database
                     .IntegrationDb(integrationDb => integrationDb
                         .Disable()))
-                .Services(services => services
-                    .Advanced(advanced => advanced
-                        .Register<IRuntimeSettings>(kernel => new InMemoryRuntimeSettings()
-                            // Specify which URL WebAPI should listen on.
-                            .Set("WebApi.Url", "http://localhost:8154"))))
-                .UseLiteServer(liteServer => liteServer
-                    .AddWebApi())
                 .UseWebApi(webApi => webApi
                     .WithPortal())))
             {
-                // Fires up the Portal on WebAPI
-                context.Execute(nameof(WebApiHost), "-noBrowser");
+                // Fires up the Portal on WebAPI on the specified URL
+                context.Execute(nameof(WebApiHost), "-url:http://localhost:8154");
             }
         }
     }
