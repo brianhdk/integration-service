@@ -42,6 +42,11 @@ namespace Experiments.Console.Rebus
                 _console.WriteLine(message, objs);
             }
 
+            public void Warn(Exception exception, string message, params object[] objs)
+            {
+                _console.WriteLine(message, objs);
+            }
+
             public void Error(Exception exception, string message, params object[] objs)
             {
                 _console.WriteLine(message, objs);
