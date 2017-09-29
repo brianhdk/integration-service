@@ -17,6 +17,7 @@ namespace Vertica.Integration.Tests.Rebus
     public class RebusTester
     {
         [Test]
+        [Ignore("Not supported until Rebus upgrades their Castle.Windsor dependency to 4.0")]
         public void SendMessageFromWorker_InMemory_GetsHandled()
         {
             using (var waitBlock = new WaitBlock())
