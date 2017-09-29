@@ -17,7 +17,6 @@ $script_directory = Split-Path -Parent $PSCommandPath
 $settings = @{
     "src" = @{
         "integration" = Resolve-Path $script_directory\..\src\Integration
-        "integration_host" = Resolve-Path $script_directory\..\src\Integration.Host
 		"integration_consolehost" = Resolve-Path $script_directory\..\src\Integration.ConsoleHost
         "integration_webhost" = Resolve-Path $script_directory\..\src\Integration.WebHost
 		"integration_webapi" = Resolve-Path $script_directory\..\src\Integration.WebApi
