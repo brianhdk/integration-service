@@ -78,7 +78,7 @@ foreach ($project in $settings.src.Keys) {
     }
 
 	# https://docs.nuget.org/consume/command-line-reference
-    &$settings.tools.nuget pack $csproj -Verbosity "quiet" -Build -Properties Configuration=Release -IncludeReferencedProjects -Exclude "Assets/**/*.*" -Exclude "Default.html" -MSBuildVersion 14
+    &$settings.tools.nuget pack $csproj -Verbosity "quiet" -Build -Properties Configuration=Release -IncludeReferencedProjects -Exclude "Assets/**/*.*" -Exclude "Default.html"
 	
 	if (Test-Path (Join-Path $projectDirectory "NuGet-After-Pack.ps1")) {
 		
