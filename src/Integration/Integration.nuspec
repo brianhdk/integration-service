@@ -15,9 +15,6 @@
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>Vertica Integration Service IntegrationService</tags>
-		<frameworkAssemblies>
-			<frameworkAssembly assemblyName="System.Net.Http" />
-		</frameworkAssemblies>
     <dependencies>
       <dependency id="Vertica.Utilities" version="[5,6.0)" />
     </dependencies>
