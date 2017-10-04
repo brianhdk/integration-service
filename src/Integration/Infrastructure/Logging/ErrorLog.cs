@@ -14,7 +14,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 
             MachineName = Environment.MachineName;
             IdentityName = WindowsUtils.GetIdentityName();
-            CommandLine = Environment.CommandLine.MaxLength(4000);
+            CommandLine = Environment.CommandLine;
             TimeStamp = Time.UtcNow;
         }
 
