@@ -12,7 +12,7 @@
 
             //Tasks.ConcurrentExecution.Demo.Run();
 
-            WebApi.Controllers.Demo.Run();
+            //WebApi.Controllers.Demo.Run();
 
             //WebApi.Portal.Demo.Run();
 
@@ -23,6 +23,8 @@
             //Logging.TextFile.Demo.Run();
 
             //Elasticsearch.Demo.Run();
+
+            Logging.SqlServer.Demo.Run();
         }
     }
 }

@@ -124,6 +124,7 @@
     <Compile Include="Hangfire\Migrations\M1_SetupRecurringJobs.cs" />
     <Compile Include="Hangfire\MyTask.cs" />
     <Compile Include="Hangfire\MyTaskWithProgressBar.cs" />
+    <Compile Include="Logging\SqlServer\Demo.cs" />
     <Compile Include="Logging\TextFile\Demo.cs" />
     <Compile Include="Perfion\Demo.cs" />
     <Compile Include="Program.cs" />

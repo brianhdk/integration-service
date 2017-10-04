@@ -1,5 +1,4 @@
 ﻿using System;
-using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Infrastructure.Logging
@@ -12,7 +11,7 @@ namespace Vertica.Integration.Infrastructure.Logging
 	        if (taskLog == null) throw new ArgumentNullException(nameof(taskLog));
 
 	        TaskLog = taskLog;
-            Message = message.MaxLength(4000);
+            Message = message;
 	    }
 
 	    internal MessageLog(TaskLog taskLog, string message, Output output)
