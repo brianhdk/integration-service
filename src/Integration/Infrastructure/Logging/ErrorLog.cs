@@ -21,7 +21,7 @@ namespace Vertica.Integration.Infrastructure.Logging
         public ErrorLog(Severity severity, string message, ITarget target)
             : this(severity, target)
         {
-            Message = message.MaxLength(4000);
+            Message = message;
             FormattedMessage = message;
         }
 
@@ -30,7 +30,7 @@ namespace Vertica.Integration.Infrastructure.Logging
         {
             if (exception == null) throw new ArgumentNullException(nameof(exception));
 
-            Message = exception.DestructMessage().MaxLength(4000);
+            Message = exception.DestructMessage();
             FormattedMessage = exception.GetFullStacktrace();
         }
 
