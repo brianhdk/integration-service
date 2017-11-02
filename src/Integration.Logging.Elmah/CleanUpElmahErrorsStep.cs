@@ -17,7 +17,7 @@ namespace Vertica.Integration.Logging.Elmah
             _configuration = configuration;
         }
 
-        public override Execution ContinueWith(MaintenanceWorkItem workItem, ITaskExecutionContext context)
+        public override Execution ContinueWith(ITaskExecutionContext<MaintenanceWorkItem> context)
         {
             ElmahConfiguration configuration = _configuration.GetElmahConfiguration();
 
@@ -27,14 +27,14 @@ namespace Vertica.Integration.Logging.Elmah
             if (configuration.Disabled)
                 return Execution.StepOver;
 
-            workItem.Context(ConfigurationName, configuration);
+            context.TypedBag(ConfigurationName, configuration);
 
             return Execution.Execute;
         }
 
-        public override void Execute(MaintenanceWorkItem workItem, ITaskExecutionContext context)
+        public override void Execute(ITaskExecutionContext<MaintenanceWorkItem> context)
         {
-            ElmahConfiguration configuration = workItem.Context<ElmahConfiguration>(ConfigurationName);
+            ElmahConfiguration configuration = context.TypedBag<ElmahConfiguration>(ConfigurationName);
 
             DateTime lowerBound = DateTime.UtcNow.Date.Subtract(configuration.CleanUpEntriesOlderThan);
             int batchSize = configuration.BatchSize;

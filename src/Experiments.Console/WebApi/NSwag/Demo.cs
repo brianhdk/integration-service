@@ -18,6 +18,7 @@ namespace Experiments.Console.WebApi.NSwag
                     .Advanced(advanced => advanced
                         .Register<IRuntimeSettings>(kernel => new InMemoryRuntimeSettings()
                             .Set("Environment", ApplicationEnvironment.Stage)
+                            .Set("WebApi.NSwag.Disabled", bool.TrueString)
                             // Specify which URL WebAPI should listen on.
                             .Set("WebApi.Url", "http://localhost:8154"))))
                 .UseLiteServer(liteServer => liteServer
@@ -27,11 +28,15 @@ namespace Experiments.Console.WebApi.NSwag
                     .WithNSwag(nswag => nswag
                         .Title("Demo")
                         .Description("Show casing NSwag")
-                        .DisableIf(condition => condition.IsProduction())
+                        .DisableIf(condition => 
+                            condition.IsProduction() || 
+                            condition.IsDisabledByRuntimeSettings())
                         .AddFromAssemblyOfThis<DemoApiController>()))))
             {
                 // Fires up the Portal on WebAPI
                 context.Execute(nameof(WebApiHost), "-noBrowser");
+
+                // http://localhost:8154/swagger/index.html
             }
         }
     }

@@ -1,9 +1,8 @@
 ﻿using System;
-using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Domain.Core
 {
-    public class MaintenanceWorkItem : ContextWorkItem
+    public class MaintenanceWorkItem
 	{
 	    public MaintenanceWorkItem(MaintenanceConfiguration configuration)
 	    {

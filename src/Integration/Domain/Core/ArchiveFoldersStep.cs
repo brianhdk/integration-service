@@ -14,18 +14,18 @@ namespace Vertica.Integration.Domain.Core
             _archiver = archiver;
         }
 
-        public override Execution ContinueWith(MaintenanceWorkItem workItem, ITaskExecutionContext context)
+        public override Execution ContinueWith(ITaskExecutionContext<MaintenanceWorkItem> context)
         {
-            if (workItem.Configuration.ArchiveFolders.GetEnabledFolders().Length == 0)
+            if (context.WorkItem.Configuration.ArchiveFolders.GetEnabledFolders().Length == 0)
                 return Execution.StepOver;
 
             return Execution.Execute;
         }
 
-        public override void Execute(MaintenanceWorkItem workItem, ITaskExecutionContext context)
+        public override void Execute(ITaskExecutionContext<MaintenanceWorkItem> context)
         {
             MaintenanceConfiguration.ArchiveFoldersConfiguration.Folder[] folders =
-                workItem.Configuration.ArchiveFolders.GetEnabledFolders();
+                context.WorkItem.Configuration.ArchiveFolders.GetEnabledFolders();
 
             foreach (MaintenanceConfiguration.ArchiveFoldersConfiguration.Folder folder in folders)
             {

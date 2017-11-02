@@ -18,7 +18,7 @@ namespace Vertica.Integration.Redis.Monitor
             _clientFactory = clientFactory;
         }
 
-        public override void Execute(MonitorWorkItem workItem, ITaskExecutionContext context)
+        public override void Execute(ITaskExecutionContext<MonitorWorkItem> context)
         {
             try
             {
@@ -29,19 +29,19 @@ namespace Vertica.Integration.Redis.Monitor
 
                 string status = connection.GetStatus();
 
-                AddToWorkItem(workItem, context, status);
+                AddToWorkItem(context, status);
             }
             catch (Exception ex)
             {
-                AddToWorkItem(workItem, context, ex.AggregateMessages());
+                AddToWorkItem(context, ex.AggregateMessages());
             }
         }
 
-        private static void AddToWorkItem(MonitorWorkItem workItem, ITaskExecutionContext context, string message)
+        private static void AddToWorkItem(ITaskExecutionContext<MonitorWorkItem> context, string message)
         {
             context.Log.Message(message);
 
-            workItem.Add(Time.UtcNow, "Redis", message);
+            context.WorkItem.Add(Time.UtcNow, "Redis", message);
         }
 
         public override string Description => $"Performs a Ping request to the Redis cluster for {_clientFactory}.";

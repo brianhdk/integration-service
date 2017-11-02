@@ -14,11 +14,24 @@ namespace Vertica.Integration.WebApi.NSwag
 
         public IKernel Kernel { get; }
 
+        public IRuntimeSettings RuntimeSettings => Kernel.Resolve<IRuntimeSettings>();
+
         public bool IsProduction()
         {
-            ApplicationEnvironment environment = Kernel.Resolve<IRuntimeSettings>().Environment;
+            ApplicationEnvironment environment = RuntimeSettings.Environment;
 
             return environment.Equals(ApplicationEnvironment.Production);
+        }
+
+        /// <summary>
+        /// Disable NSwag by specifying a value of 'True' for setting 'WebApi.NSwag.Disabled'.
+        /// </summary>
+        public bool IsDisabledByRuntimeSettings()
+        {
+            return string.Equals(
+                RuntimeSettings["WebApi.NSwag.Disabled"], 
+                bool.TrueString, 
+                StringComparison.OrdinalIgnoreCase);
         }
     }
 }

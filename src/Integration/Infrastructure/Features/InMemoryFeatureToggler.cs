@@ -3,11 +3,11 @@ using System.Collections.Concurrent;
 
 namespace Vertica.Integration.Infrastructure.Features
 {
-    public class FeatureToggler : IFeatureToggler
+    internal class InMemoryFeatureToggler : IFeatureToggler
     {
         private readonly ConcurrentDictionary<Type, bool> _disabled;
 
-        public FeatureToggler()
+        public InMemoryFeatureToggler()
         {
             _disabled = new ConcurrentDictionary<Type, bool>();
         }

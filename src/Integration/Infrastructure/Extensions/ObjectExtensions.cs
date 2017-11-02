@@ -7,6 +7,7 @@ namespace Vertica.Integration.Infrastructure.Extensions
 		public static void DisposeIfDisposable(this object instance)
 		{
 			var disposable = instance as IDisposable;
+
 			disposable?.Dispose();
 		}
 	}

@@ -10,18 +10,18 @@ namespace Vertica.Integration.Domain.Monitoring
 {
     public class MonitorFoldersStep : Step<MonitorWorkItem>
     {
-        public override Execution ContinueWith(MonitorWorkItem workItem, ITaskExecutionContext context)
+        public override Execution ContinueWith(ITaskExecutionContext<MonitorWorkItem> context)
         {
-            if (workItem.Configuration.MonitorFolders.GetEnabledFolders().Length == 0)
+            if (context.WorkItem.Configuration.MonitorFolders.GetEnabledFolders().Length == 0)
                 return Execution.StepOver;
 
             return Execution.Execute;
         }
 
-        public override void Execute(MonitorWorkItem workItem, ITaskExecutionContext context)
+        public override void Execute(ITaskExecutionContext<MonitorWorkItem> context)
         {
             MonitorConfiguration.MonitorFoldersConfiguration.Folder[] folders =
-                workItem.Configuration.MonitorFolders.GetEnabledFolders();
+                context.WorkItem.Configuration.MonitorFolders.GetEnabledFolders();
 
             context.Log.Message(@"Folder(s) monitored:
 {0}",
@@ -52,7 +52,7 @@ namespace Vertica.Integration.Domain.Monitoring
                     if (files.Length > limit)
                         message.AppendLine("...");
 
-                    workItem.Add(Time.UtcNow, this.Name(), message.ToString(), folder.Target);
+                    context.WorkItem.Add(Time.UtcNow, this.Name(), message.ToString(), folder.Target);
                 }
             }
         }

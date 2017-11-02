@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using NJsonSchema;
 using NSwag.AspNet.Owin;
+using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.WebApi.Infrastructure;
 
 namespace Vertica.Integration.WebApi.NSwag
@@ -106,7 +107,12 @@ namespace Vertica.Integration.WebApi.NSwag
 	            return;
 
 	        if (_disableIf != null && _disableIf(new DisableIfCondition(owin.Kernel)))
+	        {
+	            var console = owin.Kernel.Resolve<IConsoleWriter>();
+	            console.WriteLine("[WebApi]: [NSwag]: Disabled");
+
 	            return;
+	        }
 
 	        owin.App.UseSwagger(_assemblies.Distinct(), _settings);
 

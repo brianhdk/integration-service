@@ -54,16 +54,14 @@ namespace Vertica.Integration.Model
                 Action<string>[] logMessage = { x => { } };
 
                 var log = new Log(message => logMessage[0]?.Invoke(message), _logger);
-                var context = new TaskExecutionContext(log, arguments, _shutdown.Token);
-
-                TWorkItem workItem;
+                var context = new TaskExecutionContext<TWorkItem>(log, arguments, _shutdown.Token);
 
                 try
                 {
                     logMessage[0] = taskLog.LogMessage;
                     context.ThrowIfCancelled();
 
-                    workItem = task.Start(context);
+                    context.WorkItem = task.Start(context);
                 }
                 catch (Exception ex)
                 {
@@ -77,14 +75,6 @@ namespace Vertica.Integration.Model
                 {
                     foreach (IStep<TWorkItem> step in task.Steps)
                     {
-                        Execution continueWith = step.ContinueWith(workItem, context);
-
-                        if (continueWith == Execution.StepOut)
-                            break;
-
-                        if (continueWith == Execution.StepOver)
-                            continue;
-
                         using (StepLog stepLog = taskLog.LogStep(step))
                         {
                             try
@@ -92,7 +82,17 @@ namespace Vertica.Integration.Model
                                 logMessage[0] = stepLog.LogMessage;
                                 context.ThrowIfCancelled();
 
-                                step.Execute(workItem, context);
+                                Execution continueWith = step.ContinueWith(context);
+
+                                if (continueWith == Execution.StepOut)
+                                    break;
+
+                                if (continueWith == Execution.StepOver)
+                                    continue;
+
+                                context.ThrowIfCancelled();
+
+                                step.Execute(context);
                             }
                             catch (Exception ex)
                             {
@@ -111,7 +111,7 @@ namespace Vertica.Integration.Model
                         logMessage[0] = taskLog.LogMessage;
                         context.ThrowIfCancelled();
 
-                        task.End(workItem, context);
+                        task.End(context);
                     }
                     catch (Exception ex)
                     {
@@ -123,7 +123,7 @@ namespace Vertica.Integration.Model
                 }
                 finally
                 {
-                    workItem.DisposeIfDisposable();
+                    context.WorkItem.DisposeIfDisposable();
                 }
             }
 

@@ -5,13 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Vertica.Integration.Infrastructure.Logging;
-using Vertica.Integration.Model;
 using Vertica.Utilities;
 using Vertica.Utilities.Patterns;
 
 namespace Vertica.Integration.Domain.Monitoring
 {
-    public class MonitorWorkItem : ContextWorkItem
+    public class MonitorWorkItem
     {
         private static readonly CultureInfo English = CultureInfo.GetCultureInfo("en-US");
 
@@ -154,6 +153,9 @@ namespace Vertica.Integration.Domain.Monitoring
 
             public bool Equals(MonitorEntry x, MonitorEntry y)
             {
+                if (x == null || y == null)
+                    return false;
+
                 if (!string.Equals(x.Source, y.Source))
                     return false;
 

@@ -22,19 +22,15 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
     public class MigrateTask : Task
     {
         private readonly IKernel _kernel;
-	    private readonly ITaskFactory _taskFactory;
-	    private readonly ITaskRunner _taskRunner;
         private readonly IFeatureToggler _featureToggler;
 
         private readonly MigrationDb[] _dbs;
         private readonly bool _databaseCreated;
         private readonly FeatureAttribute[] _disabledFeatures;
 
-        public MigrateTask(Lazy<IDbFactory> db, IIntegrationDatabaseConfiguration configuration, IKernel kernel, IMigrationDbs dbs, ITaskFactory taskFactory, ITaskRunner taskRunner, IFeatureToggler featureToggler)
+        public MigrateTask(Lazy<IDbFactory> db, IIntegrationDatabaseConfiguration configuration, IKernel kernel, IMigrationDbs dbs, IFeatureToggler featureToggler)
         {
             _kernel = kernel;
-	        _taskFactory = taskFactory;
-	        _taskRunner = taskRunner;
             _featureToggler = featureToggler;
 
 	        if (!configuration.Disabled)
@@ -137,35 +133,13 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
                         feature.Enable(_featureToggler);
                 }
             }
-        }
 
-        public override void End(EmptyWorkItem workItem, ITaskExecutionContext context)
-        {
             if (_databaseCreated)
             {
                 context.Log.Warning(
                     Target.Service,
                     "Created new database (using Simple Recovery) and applied migrations to this. Make sure to configure this new database (auto growth, backup etc).");
             }
-
-	        string[] taskNames = (context.Arguments["Tasks"] ?? string.Empty)
-				.Split(new[] {",", ";"}, StringSplitOptions.RemoveEmptyEntries);
-
-	        foreach (string taskName in taskNames)
-	        {
-		        ITask task;
-		        if (_taskFactory.TryGet(taskName, out task))
-		        {
-			        if (task is MigrateTask)
-				        continue;
-
-			        _taskRunner.Execute(task);
-		        }
-				else
-		        {
-			        context.Log.Warning(Target.Service, "Task with name '{0}' not found.", taskName);
-		        }
-	        }
         }
 
         private static string EnsureIntegrationDb(IDbFactory db, bool checkExistsAndCreateIntegrationDbIfNotFound, out bool databaseCreated)

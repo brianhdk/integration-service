@@ -24,7 +24,7 @@ namespace Vertica.Integration.Domain.Core
 		    _archiver = archiver;
 		}
 
-        public override Execution ContinueWith(MaintenanceWorkItem workItem, ITaskExecutionContext context)
+        public override Execution ContinueWith(ITaskExecutionContext<MaintenanceWorkItem> context)
         {
             if (_dbConfiguration.Disabled)
                 return Execution.StepOver;
@@ -32,10 +32,10 @@ namespace Vertica.Integration.Domain.Core
             return Execution.Execute;
         }
 
-        public override void Execute(MaintenanceWorkItem workItem, ITaskExecutionContext context)
+        public override void Execute(ITaskExecutionContext<MaintenanceWorkItem> context)
         {
-			DateTimeOffset tasksLowerBound = Time.UtcNow.Subtract(workItem.Configuration.CleanUpTaskLogEntriesOlderThan),
-				errorsLowerBound = Time.UtcNow.Subtract(workItem.Configuration.CleanUpErrorLogEntriesOlderThan);
+			DateTimeOffset tasksLowerBound = Time.UtcNow.Subtract(context.WorkItem.Configuration.CleanUpTaskLogEntriesOlderThan),
+				errorsLowerBound = Time.UtcNow.Subtract(context.WorkItem.Configuration.CleanUpErrorLogEntriesOlderThan);
 
 			using (IDbSession session = _db.Value.OpenSession())
 			using (IDbTransaction transaction = session.BeginTransaction())

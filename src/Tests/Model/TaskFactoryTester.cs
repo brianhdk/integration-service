@@ -5,7 +5,6 @@ using NUnit.Framework;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Model;
 using Vertica.Integration.Model.Exceptions;
-using Vertica.Integration.Tests.Infrastructure;
 using Vertica.Integration.Tests.Infrastructure.Testing;
 using Vertica.Integration.Tests.SQLite;
 
@@ -210,7 +209,7 @@ namespace Vertica.Integration.Tests.Model
         {
             public override string Description => string.Empty;
 
-	        public override void Execute(TaskWithStepsWorkItem workItem, ITaskExecutionContext context)
+	        public override void Execute(ITaskExecutionContext<TaskWithStepsWorkItem> context)
             {
             }
         }
@@ -219,7 +218,7 @@ namespace Vertica.Integration.Tests.Model
         {
             public override string Description => string.Empty;
 
-	        public override void Execute(TaskWithStepsWorkItem workItem, ITaskExecutionContext context)
+	        public override void Execute(ITaskExecutionContext<TaskWithStepsWorkItem> context)
             {
             }
         }

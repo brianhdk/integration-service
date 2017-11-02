@@ -32,11 +32,9 @@ namespace Vertica.Integration.Model
 
 	public abstract class Task<TWorkItem> : ITask<TWorkItem>
 	{
-		private readonly IEnumerable<IStep<TWorkItem>> _steps;
-
-		protected Task(IEnumerable<IStep<TWorkItem>> steps)
+	    protected Task(IEnumerable<IStep<TWorkItem>> steps)
 		{
-			_steps = steps ?? Enumerable.Empty<IStep<TWorkItem>>();
+			Steps = steps ?? Enumerable.Empty<IStep<TWorkItem>>();
 		}
 
 		[JsonProperty(Order = 1)]
@@ -46,14 +44,19 @@ namespace Vertica.Integration.Model
 		public abstract string Description { get; }
 
 		[JsonProperty(Order = 3)]
-		public IEnumerable<IStep<TWorkItem>> Steps => _steps;
+		public IEnumerable<IStep<TWorkItem>> Steps { get; }
 
-		IEnumerable<IStep> ITask.Steps => Steps;
+	    IEnumerable<IStep> ITask.Steps => Steps;
 
 		public abstract TWorkItem Start(ITaskExecutionContext context);
 
-        public virtual void End(TWorkItem workItem, ITaskExecutionContext context)
-		{
-		}
+        [Obsolete("Override End(ITaskExecution<TWorkItem> instead.")]
+	    public virtual void End(TWorkItem workItem, ITaskExecutionContext context)
+	    {
+	    }
+
+	    public virtual void End(ITaskExecutionContext<TWorkItem> context)
+	    {
+	    }
 	}
 }

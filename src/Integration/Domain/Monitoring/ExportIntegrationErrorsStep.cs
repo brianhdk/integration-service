@@ -26,7 +26,7 @@ namespace Vertica.Integration.Domain.Monitoring
             _taskFactory = taskFactory;
         }
 
-        public override Execution ContinueWith(MonitorWorkItem workItem, ITaskExecutionContext context)
+        public override Execution ContinueWith(ITaskExecutionContext<MonitorWorkItem> context)
         {
             if (_configuration.Disabled)
                 return Execution.StepOver;
@@ -34,9 +34,9 @@ namespace Vertica.Integration.Domain.Monitoring
             return Execution.Execute;
         }
 
-        public override void Execute(MonitorWorkItem workItem, ITaskExecutionContext context)
+        public override void Execute(ITaskExecutionContext<MonitorWorkItem> context)
         {
-            workItem.AddMessageGroupingPatterns(MessageGroupingPattern);
+            context.WorkItem.AddMessageGroupingPatterns(MessageGroupingPattern);
 
             using (IDbSession session = _db.Value.OpenSession())
             {
@@ -63,13 +63,13 @@ WHERE (
 ORDER BY ErrorLog.Id DESC",
                     new
                     {
-                        workItem.CheckRange.LowerBound,
-                        workItem.CheckRange.UpperBound
+                        context.WorkItem.CheckRange.LowerBound,
+                        context.WorkItem.CheckRange.UpperBound
                     }).ToArray();
 
                 if (errors.Length > 0)
                 {
-                    context.Log.Message("{0} entries within time-period {1}.", errors.Length, workItem.CheckRange);
+                    context.Log.Message("{0} entries within time-period {1}.", errors.Length, context.WorkItem.CheckRange);
 
                     var tasksByName = new Dictionary<string, ITask>(StringComparer.OrdinalIgnoreCase);
 
@@ -105,7 +105,7 @@ ORDER BY ErrorLog.Id DESC",
                                 error.StepDescription = step.Description;
                         }
 
-                        workItem.Add(error.DateTime, "Integration Service", error.CombineMessage(), error.Target);
+                        context.WorkItem.Add(error.DateTime, "Integration Service", error.CombineMessage(), error.Target);
                     }
                 }
             }

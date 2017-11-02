@@ -1,6 +1,7 @@
 using System;
 using Vertica.Integration.Domain.Core;
 using Vertica.Integration.Infrastructure.Configuration;
+using Vertica.Integration.Model;
 
 namespace Vertica.Integration.UCommerce.Maintenance
 {
@@ -8,21 +9,17 @@ namespace Vertica.Integration.UCommerce.Maintenance
     {
         private const string Name = "UCommerceMaintenanceConfiguration_4B3457979EDD4DE5BEB3087A29DB0A58";
 
-        public static UCommerceMaintenanceConfiguration EnsureConfiguration(this MaintenanceWorkItem workItem, IConfigurationService configurationService)
+        public static UCommerceMaintenanceConfiguration EnsureConfiguration(this ITaskExecutionContext<MaintenanceWorkItem> context, IConfigurationService configurationService)
         {
-            if (workItem == null) throw new ArgumentNullException(nameof(workItem));
+            if (context == null) throw new ArgumentNullException(nameof(context));
             if (configurationService == null) throw new ArgumentNullException(nameof(configurationService));
 
-            var configuration = workItem[Name] as UCommerceMaintenanceConfiguration;
+            var configuration = context.TypedBag<UCommerceMaintenanceConfiguration>(Name);
 
-            if (configuration == null)
-            {
-                workItem[Name] = 
-                    configuration = 
-                        configurationService.Get<UCommerceMaintenanceConfiguration>();
-            }
+            if (configuration != null)
+                return configuration;
 
-            return configuration;
+            return context.TypedBag(Name, configurationService.Get<UCommerceMaintenanceConfiguration>());
         }
     }
 }

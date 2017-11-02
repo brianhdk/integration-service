@@ -35,32 +35,32 @@ namespace Vertica.Integration.Domain.Monitoring
                 .AddMessageGroupingPatterns(configuration.MessageGroupingPatterns);
 		}
 
-        public override void End(MonitorWorkItem workItem, ITaskExecutionContext context)
+        public override void End(ITaskExecutionContext<MonitorWorkItem> context)
 		{
             Target[] unconfiguredTargets;
-            if (workItem.HasEntriesForUnconfiguredTargets(out unconfiguredTargets))
+            if (context.WorkItem.HasEntriesForUnconfiguredTargets(out unconfiguredTargets))
                 context.Log.Error(Target.Service, "Create missing configuration for the following targets: [{0}].", string.Join(", ", unconfiguredTargets.Select(x => x.Name)));
 
-		    foreach (MonitorTarget target in workItem.Configuration.Targets ?? new MonitorTarget[0])
-		        SendTo(target, workItem, context.Log, workItem.Configuration.SubjectPrefix);
+		    foreach (MonitorTarget target in context.WorkItem.Configuration.Targets ?? new MonitorTarget[0])
+		        SendTo(target, context);
 
-            workItem.Configuration.LastRun = workItem.CheckRange.UpperBound;
-		    _configuration.Save(workItem.Configuration, Name);
+            context.WorkItem.Configuration.LastRun = context.WorkItem.CheckRange.UpperBound;
+		    _configuration.Save(context.WorkItem.Configuration, Name);
 		}
 
-        private void SendTo(MonitorTarget target, MonitorWorkItem workItem, ILog log, string subjectPrefix)
+        private void SendTo(MonitorTarget target, ITaskExecutionContext<MonitorWorkItem> context)
 	    {
-            MonitorEntry[] entries = workItem.GetEntries(target);
+            MonitorEntry[] entries = context.WorkItem.GetEntries(target);
 
 	        if (entries.Length > 0)
 	        {
                 if (target.Recipients == null || target.Recipients.Length == 0)
                 {
-                    log.Warning(Target.Service, "No recipients found for target '{0}'.", target);
+                    context.Log.Warning(Target.Service, "No recipients found for target '{0}'.", target);
                     return;
                 }
 
-                log.Message("Sending {0} entries to {1}.", entries.Length, target);
+	            context.Log.Message("Sending {0} entries to {1}.", entries.Length, target);
 
 	            var subject = new StringBuilder();
 
@@ -69,10 +69,10 @@ namespace Vertica.Integration.Domain.Monitoring
 		        if (environment != null)
 			        subject.AppendFormat("[{0}] ", environment);
 
-	            if (!string.IsNullOrWhiteSpace(subjectPrefix))
-	                subject.AppendFormat("{0}: ", subjectPrefix);
+	            if (!string.IsNullOrWhiteSpace(context.WorkItem.Configuration.SubjectPrefix))
+	                subject.AppendFormat("{0}: ", context.WorkItem.Configuration.SubjectPrefix);
 
-	            subject.AppendFormat("Monitoring ({0})", workItem.CheckRange);
+	            subject.AppendFormat("Monitoring ({0})", context.WorkItem.CheckRange);
 
                 _emailService.Send(new MonitorEmailTemplate(subject.ToString(), entries, target), target.Recipients);
 	        }

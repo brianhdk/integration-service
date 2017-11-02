@@ -20,7 +20,7 @@ namespace Vertica.Integration.Logging.Elmah
             _configuration = configuration;
         }
 
-        public override Execution ContinueWith(MonitorWorkItem workItem, ITaskExecutionContext context)
+        public override Execution ContinueWith(ITaskExecutionContext<MonitorWorkItem> context)
         {
             ElmahConfiguration configuration = _configuration.GetElmahConfiguration();
 
@@ -30,16 +30,16 @@ namespace Vertica.Integration.Logging.Elmah
             if (configuration.Disabled)
                 return Execution.StepOver;
 
-            workItem.Context(ConfigurationName, configuration);
+            context.TypedBag(ConfigurationName, configuration);
 
             return Execution.Execute;
         }
 
-        public override void Execute(MonitorWorkItem workItem, ITaskExecutionContext context)
+        public override void Execute(ITaskExecutionContext<MonitorWorkItem> context)
         {
-            ElmahConfiguration configuration = workItem.Context<ElmahConfiguration>(ConfigurationName);
+            ElmahConfiguration configuration = context.TypedBag<ElmahConfiguration>(ConfigurationName);
 
-            workItem.AddMessageGroupingPatterns(MessageGroupingPattern);
+            context.WorkItem.AddMessageGroupingPatterns(MessageGroupingPattern);
 
             using (var connection = new SqlConnection(configuration.GetConnectionString()))
             using (SqlCommand command = connection.CreateCommand())
@@ -71,8 +71,8 @@ WHERE [TimeUtc] BETWEEN @l AND @u
 ORDER BY [TimeUtc] DESC, [Sequence] DESC
 FOR XML AUTO";
 
-                command.Parameters.AddWithValue("l", workItem.CheckRange.LowerBound);
-                command.Parameters.AddWithValue("u", workItem.CheckRange.UpperBound);
+                command.Parameters.AddWithValue("l", context.WorkItem.CheckRange.LowerBound);
+                command.Parameters.AddWithValue("u", context.WorkItem.CheckRange.UpperBound);
 
                 using (XmlReader reader = command.ExecuteXmlReader())
                 {
@@ -85,7 +85,7 @@ FOR XML AUTO";
                             count++;
                             var error = new ElmahError(reader);
 
-                            workItem.Add(
+                            context.WorkItem.Add(
                                 error.Created,
 								string.Join(", ", new[] {configuration.LogName, error.Source}
                                     .Where(x => !string.IsNullOrWhiteSpace(x))),
@@ -94,7 +94,7 @@ FOR XML AUTO";
 
                         if (count > 0)
                         {
-                            context.Log.Message("{0} entries within time-period {1}.", count, workItem.CheckRange);
+                            context.Log.Message("{0} entries within time-period {1}.", count, context.WorkItem.CheckRange);
                         }
                     }
                     catch (SqlException ex)

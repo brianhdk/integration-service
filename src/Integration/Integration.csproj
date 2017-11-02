@@ -205,7 +205,7 @@
     <Compile Include="Infrastructure\Email\IEmailService.cs" />
     <Compile Include="Infrastructure\Email\TextBasedEmailTemplate.cs" />
     <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ScanAddRemoveInstaller.cs" />
-    <Compile Include="Infrastructure\Features\FeatureToggler.cs" />
+    <Compile Include="Infrastructure\Features\InMemoryFeatureToggler.cs" />
     <Compile Include="Infrastructure\Features\IFeatureToggler.cs" />
     <Compile Include="Infrastructure\KernelActions.cs" />
     <Compile Include="Infrastructure\Extensions\ActionRepeaterExtensions.cs" />
@@ -278,7 +278,6 @@
     <Compile Include="InMemoryRuntimeSettings.cs" />
     <Compile Include="IRuntimeSettings.cs" />
     <Compile Include="Model\Arguments.cs" />
-    <Compile Include="Model\ContextWorkItem.cs" />
     <Compile Include="Model\Tasks\ConcurrentTaskExecutionConfiguration.cs" />
     <Compile Include="Model\Exceptions\IIgnoreLogging.cs" />
     <Compile Include="Model\Exceptions\MultipleHostsFoundException.cs" />

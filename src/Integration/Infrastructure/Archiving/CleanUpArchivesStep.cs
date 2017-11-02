@@ -12,7 +12,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
             _archive = archive;
         }
 
-        public override void Execute(MaintenanceWorkItem workItem, ITaskExecutionContext context)
+        public override void Execute(ITaskExecutionContext<MaintenanceWorkItem> context)
         {
             int count = _archive.DeleteExpired();
 

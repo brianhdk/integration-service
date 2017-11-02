@@ -20,19 +20,19 @@ namespace Vertica.Integration.UCommerce.Maintenance
             _configuration = configuration;
         }
 
-        public override Execution ContinueWith(MaintenanceWorkItem workItem, ITaskExecutionContext context)
+        public override Execution ContinueWith(ITaskExecutionContext<MaintenanceWorkItem> context)
         {
-            UCommerceMaintenanceConfiguration configuration = workItem.EnsureConfiguration(_configuration);
+            UCommerceMaintenanceConfiguration configuration = context.EnsureConfiguration(_configuration);
 
             if (!configuration.IndexMaintenance.Enabled)
                 return Execution.StepOver;
 
-            return base.ContinueWith(workItem, context);
+            return base.ContinueWith(context);
         }
 
-        public override void Execute(MaintenanceWorkItem workItem, ITaskExecutionContext context)
+        public override void Execute(ITaskExecutionContext<MaintenanceWorkItem> context)
         {
-            UCommerceMaintenanceConfiguration configuration = workItem.EnsureConfiguration(_configuration);
+            UCommerceMaintenanceConfiguration configuration = context.EnsureConfiguration(_configuration);
 
             string script = BuildScript(configuration);
 

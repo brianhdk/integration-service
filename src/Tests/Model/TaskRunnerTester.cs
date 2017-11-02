@@ -34,8 +34,11 @@ namespace Vertica.Integration.Tests.Model
             var workItem = new SomeWorkItem();
 		    var task = new TaskRunnerTesterTask<SomeWorkItem>(new[] {step1, step2}, workItem);
 
-			step1.ContinueWith(workItem, Arg.Any<ITaskExecutionContext>()).Returns(Execution.Execute);
-			step2.ContinueWith(workItem, Arg.Any<ITaskExecutionContext>()).Returns(Execution.Execute);
+		    Func<ITaskExecutionContext<SomeWorkItem>> contextArg =
+		        () => Arg.Is<ITaskExecutionContext<SomeWorkItem>>(context => context.WorkItem == workItem);
+
+            step1.ContinueWith(contextArg()).Returns(Execution.Execute);
+			step2.ContinueWith(contextArg()).Returns(Execution.Execute);
 
 			var subject = new TaskRunner(logger, concurrentExecution, shutdown, console);
 
@@ -45,8 +48,8 @@ namespace Vertica.Integration.Tests.Model
 			logger.Received().LogEntry(Arg.Is<StepLog>(x => x.Name == step1.Name()));
 			logger.Received().LogEntry(Arg.Is<StepLog>(x => x.Name == step2.Name()));
 
-            step1.Received().Execute(workItem, Arg.Any<ITaskExecutionContext>());
-            step2.Received().Execute(workItem, Arg.Any<ITaskExecutionContext>());
+            step1.Received().Execute(contextArg());
+            step2.Received().Execute(contextArg());
 
 		    Assert.That(task.EndCalled, Is.True);
 		}
@@ -94,11 +97,14 @@ namespace Vertica.Integration.Tests.Model
 		    var task = new TaskRunnerTesterTask<SomeWorkItem>(new[] { step1, step2 }, workItem);
 
 			var throwingException = new DivideByZeroException("error");
-            
-			step1.ContinueWith(workItem, Arg.Any<ITaskExecutionContext>()).Returns(Execution.Execute);
+
+		    Func<ITaskExecutionContext<SomeWorkItem>> contextArg = 
+                () => Arg.Is<ITaskExecutionContext<SomeWorkItem>>(context => context.WorkItem == workItem);
+
+		    step1.ContinueWith(contextArg()).Returns(Execution.Execute);
 
 			step1
-                .When(x => x.Execute(workItem, Arg.Any<ITaskExecutionContext>()))
+                .When(x => x.Execute(contextArg()))
 				.Do(x => { throw throwingException; });
 
             var subject = new TaskRunner(logger, concurrentExecution, shutdown, console);
@@ -109,8 +115,8 @@ namespace Vertica.Integration.Tests.Model
 			logger.Received().LogEntry(Arg.Any<TaskLog>());
 			logger.Received().LogEntry(Arg.Is<StepLog>(x => x.Name == step1.Name()));
 
-            step1.Received().Execute(workItem, Arg.Any<ITaskExecutionContext>());
-            step2.DidNotReceive().Execute(workItem, Arg.Any<ITaskExecutionContext>());
+            step1.Received().Execute(contextArg());
+            step2.DidNotReceive().Execute(contextArg());
 
 			logger.Received().LogError(Arg.Is(throwingException));
 
@@ -133,15 +139,18 @@ namespace Vertica.Integration.Tests.Model
 			var task = new TaskRunnerTesterTask<DisposableWorkItem>(new[] { step1, step2 }, workItem)
 				.OnStart(ctx => { throw exception; });
 
-			step1.ContinueWith(workItem, Arg.Any<ITaskExecutionContext>()).Returns(Execution.Execute);
-			step2.ContinueWith(workItem, Arg.Any<ITaskExecutionContext>()).Returns(Execution.Execute);
+		    Func<ITaskExecutionContext<DisposableWorkItem>> contextArg = 
+                () => Arg.Is<ITaskExecutionContext<DisposableWorkItem>>(context => context.WorkItem == workItem);
+
+		    step1.ContinueWith(contextArg()).Returns(Execution.Execute);
+			step2.ContinueWith(contextArg()).Returns(Execution.Execute);
 
             var subject = new TaskRunner(logger, concurrentExecution, shutdown, console);
 
             var thrownException = Assert.Throws<TaskExecutionFailedException>(() => subject.Execute(task));
 
-			step1.DidNotReceive().Execute(workItem, Arg.Any<ITaskExecutionContext>());
-			step1.DidNotReceive().Execute(workItem, Arg.Any<ITaskExecutionContext>());
+			step1.DidNotReceive().Execute(contextArg());
+			step1.DidNotReceive().Execute(contextArg());
 
 			Assert.That(task.EndCalled, Is.False);
 			Assert.That(disposedCount, Is.EqualTo(0));
@@ -161,18 +170,22 @@ namespace Vertica.Integration.Tests.Model
 			var step2 = Substitute.For<IStep<DisposableWorkItem>>();
 			var workItem = new DisposableWorkItem(() => disposedCount++);
 			var exception = new InvalidOperationException();
-			var task = new TaskRunnerTesterTask<DisposableWorkItem>(new[] { step1, step2 }, workItem)
-				.OnEnd((wi, ctx) => { throw exception; });
 
-			step1.ContinueWith(workItem, Arg.Any<ITaskExecutionContext>()).Returns(Execution.Execute);
-			step2.ContinueWith(workItem, Arg.Any<ITaskExecutionContext>()).Returns(Execution.Execute);
+			var task = new TaskRunnerTesterTask<DisposableWorkItem>(new[] { step1, step2 }, workItem)
+                .OnEnd(ctx => { throw exception; });
+
+		    Func<ITaskExecutionContext<DisposableWorkItem>> contextArg = 
+                () => Arg.Is<ITaskExecutionContext<DisposableWorkItem>>(context => context.WorkItem == workItem);
+
+            step1.ContinueWith(contextArg()).Returns(Execution.Execute);
+			step2.ContinueWith(contextArg()).Returns(Execution.Execute);
 
             var subject = new TaskRunner(logger, concurrentExecution, shutdown, console);
 
             var thrownException = Assert.Throws<TaskExecutionFailedException>(() => subject.Execute(task));
 
-			step1.Received().Execute(workItem, Arg.Any<ITaskExecutionContext>());
-			step2.Received().Execute(workItem, Arg.Any<ITaskExecutionContext>());
+			step1.Received().Execute(contextArg());
+			step2.Received().Execute(contextArg());
 
 			Assert.That(task.EndCalled, Is.True);
 			Assert.That(disposedCount, Is.EqualTo(1));
@@ -194,21 +207,24 @@ namespace Vertica.Integration.Tests.Model
 			var exception = new InvalidOperationException();
 			var task = new TaskRunnerTesterTask<DisposableWorkItem>(new[] { step1, step2 }, workItem);
 
-			step1.ContinueWith(workItem, Arg.Any<ITaskExecutionContext>()).Returns(Execution.Execute);
-			step2.ContinueWith(workItem, Arg.Any<ITaskExecutionContext>()).Returns(Execution.Execute);
+		    Func<ITaskExecutionContext<DisposableWorkItem>> contextArg =
+		        () => Arg.Is<ITaskExecutionContext<DisposableWorkItem>>(context => context.WorkItem == workItem);
 
-			step2
-				.When(x => x.Execute(workItem, Arg.Any<ITaskExecutionContext>()))
+            step1.ContinueWith(contextArg()).Returns(Execution.Execute);
+			step2.ContinueWith(contextArg()).Returns(Execution.Execute);
+
+		    step2
+				.When(x => x.Execute(contextArg()))
 				.Do(x => { throw exception; });
 
             var subject = new TaskRunner(logger, concurrentExecution, shutdown, console);
 
             var thrownException = Assert.Throws<TaskExecutionFailedException>(() => subject.Execute(task));
 
-			step1.Received().Execute(workItem, Arg.Any<ITaskExecutionContext>());
-			step2.Received().Execute(workItem, Arg.Any<ITaskExecutionContext>());
+			step1.Received().Execute(contextArg());
+			step2.Received().Execute(contextArg());
 
-			Assert.That(task.EndCalled, Is.False);
+            Assert.That(task.EndCalled, Is.False);
 			Assert.That(disposedCount, Is.EqualTo(1));
 			Assert.That(thrownException.InnerException, Is.SameAs(exception));
 		}
@@ -230,7 +246,7 @@ namespace Vertica.Integration.Tests.Model
 	    {
 	        private readonly TWorkItem _workItem;
 			private Action<ITaskExecutionContext> _onStart;
-			private Action<TWorkItem, ITaskExecutionContext> _onEnd;
+			private Action<ITaskExecutionContext<TWorkItem>> _onEnd;
 
 			public TaskRunnerTesterTask(IEnumerable<IStep<TWorkItem>> steps, TWorkItem workItem)
                 : base(steps)
@@ -251,19 +267,19 @@ namespace Vertica.Integration.Tests.Model
                 return _workItem;
 	        }
 
-			public TaskRunnerTesterTask<TWorkItem> OnEnd(Action<TWorkItem, ITaskExecutionContext> onEnd)
+			public TaskRunnerTesterTask<TWorkItem> OnEnd(Action<ITaskExecutionContext<TWorkItem>> onEnd)
 			{
 				_onEnd = onEnd;
 
 				return this;
 			}
 
-			public override void End(TWorkItem workItem, ITaskExecutionContext context)
-			{
+	        public override void End(ITaskExecutionContext<TWorkItem> context)
+	        {
 	            EndCalled = true;
 
-			    _onEnd?.Invoke(workItem, context);
-			}
+	            _onEnd?.Invoke(context);
+            }
 
 			public bool EndCalled { get; set; }
 

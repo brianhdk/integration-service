@@ -7,6 +7,7 @@ using Castle.Windsor;
 using Vertica.Integration.Infrastructure.Archiving;
 using Vertica.Integration.Infrastructure.Configuration;
 using Vertica.Integration.Infrastructure.Database;
+using Vertica.Integration.Infrastructure.Features;
 using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Infrastructure.Logging.Loggers;
@@ -34,6 +35,7 @@ namespace Vertica.Integration.Infrastructure
 		    Register<IArchiveService, DbArchiveService, FileBasedArchiveService>();
 	        Register<IDistributedMutex, DbDistributedMutex, ThrowingDistributedMutex>();
 		    Register<IRuntimeSettings, AppConfigRuntimeSettings>();
+            Register<IFeatureToggler, InMemoryFeatureToggler>();
 
 		    Register(kernel => Environment.UserInteractive ? Console.Out : TextWriter.Null);
 

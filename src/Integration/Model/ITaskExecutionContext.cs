@@ -3,6 +3,11 @@ using System.Threading;
 
 namespace Vertica.Integration.Model
 {
+    public interface ITaskExecutionContext<out TWorkItem> : ITaskExecutionContext
+    {
+        TWorkItem WorkItem { get; }
+    }
+
     public interface ITaskExecutionContext
     {
         /// <summary>
@@ -22,5 +27,10 @@ namespace Vertica.Integration.Model
         /// This is an add-on to the existing workitem infrastructure.
         /// </summary>
         object this[string name] { get; set; }
+
+        /// <summary>
+        /// Typed Property bag - internally uses the weakly typed property bag.
+        /// </summary>
+        T TypedBag<T>(string name, T value = null) where T : class;
     }
 }

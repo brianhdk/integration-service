@@ -17,7 +17,7 @@ namespace Vertica.Integration.MongoDB.Maintenance
             _logRotator = logRotator;
         }
 
-        public override void Execute(MaintenanceWorkItem workItem, ITaskExecutionContext context)
+        public override void Execute(ITaskExecutionContext<MaintenanceWorkItem> context)
         {
             _logRotator.Execute(_db.Client, context.CancellationToken);
         }

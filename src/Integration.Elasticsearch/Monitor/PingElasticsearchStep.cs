@@ -18,7 +18,7 @@ namespace Vertica.Integration.Elasticsearch.Monitor
             _clientFactory = connection;
         }
 
-        public override void Execute(MonitorWorkItem workItem, ITaskExecutionContext context)
+        public override void Execute(ITaskExecutionContext<MonitorWorkItem> context)
         {
             try
             {
@@ -34,19 +34,19 @@ namespace Vertica.Integration.Elasticsearch.Monitor
                 if (response.IsValid)
                     return;
 
-                AddToWorkItem(workItem, context, response.DebugInformation);
+                AddToWorkItem(context, response.DebugInformation);
             }
             catch (Exception ex)
             {
-                AddToWorkItem(workItem, context, ex.AggregateMessages());
+                AddToWorkItem(context, ex.AggregateMessages());
             }
         }
 
-        private static void AddToWorkItem(MonitorWorkItem workItem, ITaskExecutionContext context, string message)
+        private static void AddToWorkItem(ITaskExecutionContext<MonitorWorkItem> context, string message)
         {
             context.Log.Message(message);
 
-            workItem.Add(Time.UtcNow, "Elasticsearch", message);
+            context.WorkItem.Add(Time.UtcNow, "Elasticsearch", message);
         }
 
         public override string Description => $"Performs a Ping request to the Elasticsearch cluster for {_clientFactory}.";

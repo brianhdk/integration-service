@@ -22,17 +22,17 @@ namespace Vertica.Integration.Domain.Monitoring
             _httpClientFactory = httpClientFactory;
         }
 
-        public override Execution ContinueWith(MonitorWorkItem workItem, ITaskExecutionContext context)
+        public override Execution ContinueWith(ITaskExecutionContext<MonitorWorkItem> context)
         {
-            if (!workItem.Configuration.PingUrls.ShouldExecute)
+            if (!context.WorkItem.Configuration.PingUrls.ShouldExecute)
                 return Execution.StepOver;
 
             return Execution.Execute;
         }
 
-        public override void Execute(MonitorWorkItem workItem, ITaskExecutionContext context)
+        public override void Execute(ITaskExecutionContext<MonitorWorkItem> context)
         {
-            Uri[] urls = ParseUrls(workItem.Configuration.PingUrls.Urls, context.Log);
+            Uri[] urls = ParseUrls(context.WorkItem.Configuration.PingUrls.Urls, context.Log);
 
             if (urls.Length == 0)
                 return;
@@ -45,7 +45,7 @@ namespace Vertica.Integration.Domain.Monitoring
 
                     try
                     {
-                        Response response = HttpGet(url, workItem.Configuration.PingUrls.MaximumWaitTimeSeconds);
+                        Response response = HttpGet(url, context.WorkItem.Configuration.PingUrls.MaximumWaitTimeSeconds);
                         response.Wait();
 
                         response.Result.EnsureSuccessStatusCode();
@@ -61,7 +61,7 @@ namespace Vertica.Integration.Domain.Monitoring
                 PingException[] exceptions = AssertExceptions(ex);
 
                 foreach (PingException pingException in exceptions)
-                    AddException(pingException, workItem);
+                    AddException(pingException, context.WorkItem);
             }
         }
 

@@ -17,7 +17,7 @@ namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db
             _configuration = configuration;
         }
 
-        public override Execution ContinueWith(MaintenanceWorkItem workItem, ITaskExecutionContext context)
+        public override Execution ContinueWith(ITaskExecutionContext<MaintenanceWorkItem> context)
         {
             if (_configuration.Disabled)
                 return Execution.StepOver;
@@ -25,7 +25,7 @@ namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db
             return Execution.Execute;
         }
 
-        public override void Execute(MaintenanceWorkItem workItem, ITaskExecutionContext context)
+        public override void Execute(ITaskExecutionContext<MaintenanceWorkItem> context)
         {
             DateTimeOffset olderThanOneDay = Time.UtcNow.AddHours(-24);
 

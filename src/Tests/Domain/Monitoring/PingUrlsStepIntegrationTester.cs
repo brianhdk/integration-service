@@ -34,7 +34,10 @@ namespace Vertica.Integration.Tests.Domain.Monitoring
 
             var workItem = new MonitorWorkItem(configuration);
 
-            subject.Execute(workItem, Substitute.For<ITaskExecutionContext>());
+            var context = Substitute.For<ITaskExecutionContext<MonitorWorkItem>>();
+            context.WorkItem.Returns(workItem);
+
+            subject.Execute(context);
 
             string messages = string.Join(Environment.NewLine,
                 workItem.GetEntries(Target.Service).Select(x => x.Message));

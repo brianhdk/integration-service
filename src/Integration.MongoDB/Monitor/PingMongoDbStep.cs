@@ -20,7 +20,7 @@ namespace Vertica.Integration.MongoDB.Monitor
             _clientFactory = clientFactory;
         }
 
-        public override void Execute(MonitorWorkItem workItem, ITaskExecutionContext context)
+        public override void Execute(ITaskExecutionContext<MonitorWorkItem> context)
         {
             try
             {
@@ -28,19 +28,19 @@ namespace Vertica.Integration.MongoDB.Monitor
             }
             catch (AggregateException ex)
             {
-                AddToWorkItem(workItem, context, ex.AggregateMessages());
+                AddToWorkItem(context, ex.AggregateMessages());
             }
             catch (Exception ex)
             {
-                AddToWorkItem(workItem, context, ex.AggregateMessages());
+                AddToWorkItem(context, ex.AggregateMessages());
             }
         }
 
-        private static void AddToWorkItem(MonitorWorkItem workItem, ITaskExecutionContext context, string message)
+        private static void AddToWorkItem(ITaskExecutionContext<MonitorWorkItem> context, string message)
         {
             context.Log.Message(message);
 
-            workItem.Add(Time.UtcNow, "MongoDb", message);
+            context.WorkItem.Add(Time.UtcNow, "MongoDb", message);
         }
 
         public override string Description => $"Performs a Ping request to the MongoDb cluster for {_clientFactory}.";

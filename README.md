@@ -2701,7 +2701,7 @@ namespace ConsoleApplication16
 
     public class MonitorLowDiskSpaceStep : Step<MonitorWorkItem>
     {
-        public override void Execute(MonitorWorkItem workItem, ITaskExecutionContext context)
+        public override void Execute(ITaskExecutionContext<MonitorWorkItem> context)
         {
             foreach (DriveInfo drive in DriveInfo.GetDrives().Where(x => x.DriveType == DriveType.Fixed))
             {
@@ -2791,7 +2791,7 @@ namespace ConsoleApplication16
             _uCommerceDb = uCommerceDb;
         }
 
-        public override void Execute(MaintenanceWorkItem workItem, ITaskExecutionContext context)
+        public override void Execute(ITaskExecutionContext<MaintenanceWorkItem> context)
         {
             using (IDbSession session = _uCommerceDb.OpenSession())
             {

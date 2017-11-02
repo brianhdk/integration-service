@@ -6,11 +6,15 @@
         {
             //FileWatcher.Demo.Run();
 
+            //LiteServer.Demo.Run();
+
             //Rebus.Demo.Run();
 
             //Perfion.Demo.Run();
 
             //Tasks.ConcurrentExecution.Demo.Run();
+
+            Tasks.WithSteps.Demo.Run();
 
             //WebApi.Controllers.Demo.Run();
 
@@ -24,7 +28,9 @@
 
             //Elasticsearch.Demo.Run();
 
-            Logging.SqlServer.Demo.Run();
+            //Logging.SqlServer.Demo.Run();
+
+            //FeatureToggler.Demo.Run();
         }
     }
 }
