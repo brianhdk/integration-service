@@ -278,6 +278,7 @@
     <Compile Include="InMemoryRuntimeSettings.cs" />
     <Compile Include="IRuntimeSettings.cs" />
     <Compile Include="Model\Arguments.cs" />
+    <Compile Include="Model\ContextWorkItem.cs" />
     <Compile Include="Model\Tasks\ConcurrentTaskExecutionConfiguration.cs" />
     <Compile Include="Model\Exceptions\IIgnoreLogging.cs" />
     <Compile Include="Model\Exceptions\MultipleHostsFoundException.cs" />
