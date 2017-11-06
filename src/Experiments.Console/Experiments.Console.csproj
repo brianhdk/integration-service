@@ -114,6 +114,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Castle.Windsor\CustomInstaller\Demo.cs" />
     <Compile Include="FeatureToggler\Demo.cs" />
     <Compile Include="FileWatcher\Demo.cs" />
     <Compile Include="FileWatcher\WatchFiles.cs" />

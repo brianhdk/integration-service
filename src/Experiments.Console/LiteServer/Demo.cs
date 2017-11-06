@@ -2,8 +2,6 @@
 using System.Threading.Tasks;
 using Vertica.Integration;
 using Vertica.Integration.Domain.LiteServer;
-using Vertica.Integration.Infrastructure.Features;
-using Vertica.Integration.Infrastructure.IO;
 
 namespace Experiments.Console.LiteServer
 {

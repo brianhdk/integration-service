@@ -14,7 +14,7 @@
 
             //Tasks.ConcurrentExecution.Demo.Run();
 
-            Tasks.WithSteps.Demo.Run();
+            //Tasks.WithSteps.Demo.Run();
 
             //WebApi.Controllers.Demo.Run();
 
@@ -31,6 +31,8 @@
             //Logging.SqlServer.Demo.Run();
 
             //FeatureToggler.Demo.Run();
+
+            Castle.Windsor.CustomInstaller.Demo.Run();
         }
     }
 }
