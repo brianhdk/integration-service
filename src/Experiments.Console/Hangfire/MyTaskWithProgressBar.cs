@@ -4,9 +4,11 @@ using Hangfire.Console;
 using Hangfire.Console.Progress;
 using Vertica.Integration.Hangfire.Console;
 using Vertica.Integration.Model;
+using Vertica.Integration.Model.Tasks;
 
 namespace Experiments.Console.Hangfire
 {
+    [PreventConcurrentTaskExecution]
     public class MyTaskWithProgressBar : Task
     {
         private readonly IHangfirePerformContextProvider _hangfireContextProvider;

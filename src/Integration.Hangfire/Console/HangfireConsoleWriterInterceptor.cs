@@ -28,7 +28,7 @@ namespace Vertica.Integration.Hangfire.Console
                 {
                     var args = (object[])invocation.Arguments.ElementAtOrDefault(1);
 
-                    if (args != null)
+                    if (args != null && args.Length > 0)
                         message = string.Format(message, args);
 
                     if (message.Contains("[WARNING]"))

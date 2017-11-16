@@ -22,7 +22,7 @@
 
             //WebApi.NSwag.Demo.Run();
 
-            //Hangfire.Demo.Run();
+            Hangfire.Demo.Run();
 
             //Logging.TextFile.Demo.Run();
 
@@ -32,7 +32,7 @@
 
             //FeatureToggler.Demo.Run();
 
-            Castle.Windsor.CustomInstaller.Demo.Run();
+            //Castle.Windsor.CustomInstaller.Demo.Run();
         }
     }
 }

@@ -11,6 +11,7 @@ using Vertica.Integration.Domain.LiteServer;
 using Vertica.Integration.Hangfire;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Database.Migrations;
+using Vertica.Integration.Infrastructure.Features;
 using Vertica.Integration.Model;
 using Vertica.Integration.Portal;
 using Vertica.Integration.WebApi;
@@ -26,6 +27,7 @@ namespace Experiments.Console.Hangfire
             using (var context = ApplicationContext.Create(application => application
                 .Database(database => database
                     .IntegrationDb(integrationDb => integrationDb
+                        //.Disable()
                         .PrefixTables("IntegrationDb_")
                         .Connection(db)))
                 .Migration(migration => migration
@@ -77,6 +79,7 @@ namespace Experiments.Console.Hangfire
                     .AddHangfire()
                     // We'll add something that runs in the background by LiteServer, that adds fire-and-forget jobs to Hangfire
                     .AddWorker<CreateFireAndForgetJobsWorker>()
+                    .AddWorker<ForceExceptionWorker>()
                     .OnStartup(startup => startup
                         // The startup-method below is a hack due to the InMemory storage provider of Hangfire
                         .Add(ClearExistingMigrationsHack)
@@ -97,6 +100,9 @@ namespace Experiments.Console.Hangfire
 
             var taskRunner = kernel.Resolve<ITaskRunner>();
             var taskFactory = kernel.Resolve<ITaskFactory>();
+            var featureToggler = kernel.Resolve<IFeatureToggler>();
+
+            //if (featureToggler.IsDisabled<DbLogger>())
 
             taskRunner.Execute(taskFactory.Get<MigrateTask>(), new Vertica.Integration.Model.Arguments(
                 new KeyValuePair<string, string>("names", "CustomMigrations"),
@@ -108,11 +114,30 @@ namespace Experiments.Console.Hangfire
     {
         public BackgroundWorkerContinuation Work(BackgroundWorkerContext context, CancellationToken token)
         {
-            var message = $"A message from the \"Fire and forget\"-worker (#{context.InvocationCount})";
+            var message = $"A message from the \"Fire and forget\"-worker (#{context.InvocationCount}) - containing {{json}}";
 
             BackgroundJob.Enqueue<IHangfireJob>(x => x.WriteMessageToTheConsoleWriter(message));
 
+            const string anotherMessage = "A different message from the \"Fire and forget\"-worker (#{0}) - containing string format";
+
+            BackgroundJob.Enqueue<IHangfireJob>(x => x.WriteMessageToTheConsoleWriter(anotherMessage, context.InvocationCount));
+
             return context.Wait(TimeSpan.FromSeconds(10));
         }
+    }
+
+    public class ForceExceptionWorker : IBackgroundWorker
+    {
+        public BackgroundWorkerContinuation Work(BackgroundWorkerContext context, CancellationToken token)
+        {
+            BackgroundJob.Enqueue<ISomeInterfaceMissingImplementation>(x => x.CallMeAndHangfireWillThrowException());
+
+            return context.Wait(TimeSpan.FromSeconds(7));
+        }
+    }
+
+    public interface ISomeInterfaceMissingImplementation
+    {
+        void CallMeAndHangfireWillThrowException();
     }
 }

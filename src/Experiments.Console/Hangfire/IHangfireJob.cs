@@ -18,7 +18,7 @@ namespace Experiments.Console.Hangfire
         [AutomaticRetry(Attempts = 0, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
         void RunMyTask();
 
-        void WriteMessageToTheConsoleWriter(string message);
+        void WriteMessageToTheConsoleWriter(string format, params object[] args);
     }
 
     /// <summary>
@@ -50,11 +50,11 @@ namespace Experiments.Console.Hangfire
             RunTask(nameof(MyTask));
         }
 
-        public void WriteMessageToTheConsoleWriter(string message)
+        public void WriteMessageToTheConsoleWriter(string format, params object[] args)
         {
-            if (string.IsNullOrWhiteSpace(message)) throw new ArgumentException(@"Value cannot be null or empty", nameof(message));
-            
-            _consoleWriter.WriteLine(message);
+            if (string.IsNullOrWhiteSpace(format)) throw new ArgumentException(@"Value cannot be null or empty", nameof(format));
+
+            _consoleWriter.WriteLine(format, args);
         }
     }
 }

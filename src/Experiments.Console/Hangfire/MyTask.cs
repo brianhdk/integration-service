@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Threading;
 using Vertica.Integration.Model;
+using Vertica.Integration.Model.Tasks;
 
 namespace Experiments.Console.Hangfire
 {
+    [PreventConcurrentTaskExecution]
     public class MyTask : Task
     {
+        private int _iterations;
+
         public override void StartTask(ITaskExecutionContext context)
         {
             int iterations = 10;
@@ -21,7 +26,10 @@ namespace Experiments.Console.Hangfire
                     context.CancellationToken.WaitHandle.WaitOne(TimeSpan.FromMilliseconds(500));
             }
 
-            context.Log.Message("Done");
+            if (Interlocked.Increment(ref _iterations) % 4 == 0)
+                throw new InvalidOperationException("Simulating that the task is throwing an exception. {json}");
+
+            context.Log.Message("Done - including some {json}");
             context.Log.Message("...");
         }
 

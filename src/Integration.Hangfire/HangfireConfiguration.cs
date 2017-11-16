@@ -8,6 +8,7 @@ using Hangfire.Server;
 using Vertica.Integration.Domain.LiteServer;
 using Vertica.Integration.Hangfire.Console;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
+using Vertica.Integration.Infrastructure.Logging;
 
 namespace Vertica.Integration.Hangfire
 {
@@ -187,7 +188,16 @@ namespace Vertica.Integration.Hangfire
 
 			public override object ActivateJob(Type jobType)
 			{
-				return _kernel.Resolve(jobType);
+			    try
+			    {
+			        return _kernel.Resolve(jobType);
+                }
+			    catch (Exception ex)
+			    {
+			        _kernel.Resolve<ILogger>().LogError(ex);
+
+			        throw;
+			    }
 			}
 		}
 	}
