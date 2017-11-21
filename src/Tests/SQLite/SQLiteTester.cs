@@ -6,7 +6,6 @@ using Vertica.Integration.Infrastructure.Database;
 using Vertica.Integration.Infrastructure.Database.Migrations;
 using Vertica.Integration.Model;
 using Vertica.Integration.SQLite;
-using Vertica.Integration.Tests.Infrastructure;
 using Vertica.Integration.Tests.Infrastructure.Testing;
 
 namespace Vertica.Integration.Tests.SQLite

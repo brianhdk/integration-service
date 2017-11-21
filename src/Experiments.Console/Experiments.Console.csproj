@@ -115,6 +115,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Castle.Windsor\CustomInstaller\Demo.cs" />
+    <Compile Include="Configuration\Demo.cs" />
     <Compile Include="FeatureToggler\Demo.cs" />
     <Compile Include="FileWatcher\Demo.cs" />
     <Compile Include="FileWatcher\WatchFiles.cs" />
@@ -140,6 +141,7 @@
     <Compile Include="Tasks\ConcurrentExecution\Demo.cs" />
     <Compile Include="Tasks\ConcurrentExecution\MustRunAloneTask.cs" />
     <Compile Include="Tasks\ConcurrentExecution\MyCustomLockDescription.cs" />
+    <Compile Include="Tasks\Exceptions\Demo.cs" />
     <Compile Include="Tasks\WithSteps\Demo.cs" />
     <Compile Include="WebApi\Controllers\Demo.cs" />
     <Compile Include="WebApi\NSwag\Demo.cs" />

@@ -12,7 +12,7 @@ namespace Experiments.Console.Logging.SqlServer
             using (var context = ApplicationContext.Create(application => application
                 .Database(database => database
                     .IntegrationDb(integrationDb => integrationDb
-                        .Connection(ConnectionString.FromText(@"Integrated Security=SSPI;Data Source=.\SQLExpress;Database=IS_Logging"))))))
+                        .Connection(ConnectionString.FromText(@"Integrated Security=SSPI;Data Source=.\SQLExpress;Database=IntegrationServiceDemo_Logging"))))))
             {
                 context.Execute("MigrateTask");
 

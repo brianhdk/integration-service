@@ -16,13 +16,15 @@
 
             //Tasks.WithSteps.Demo.Run();
 
+            //Tasks.Exceptions.Demo.Run();
+
             //WebApi.Controllers.Demo.Run();
 
             //WebApi.Portal.Demo.Run();
 
             //WebApi.NSwag.Demo.Run();
 
-            Hangfire.Demo.Run();
+            //Hangfire.Demo.Run();
 
             //Logging.TextFile.Demo.Run();
 
@@ -33,6 +35,8 @@
             //FeatureToggler.Demo.Run();
 
             //Castle.Windsor.CustomInstaller.Demo.Run();
+
+            Configuration.Demo.Run();
         }
     }
 }
