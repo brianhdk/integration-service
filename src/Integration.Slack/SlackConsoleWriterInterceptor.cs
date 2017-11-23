@@ -28,7 +28,7 @@ namespace Vertica.Integration.Slack
                 {
                     var args = (object[])invocation.Arguments.ElementAtOrDefault(1);
 
-                    if (args != null)
+                    if (args != null && args.Length > 0)
                         message = string.Format(message, args);
 
                     _queue.Add(new SlackPostMessageInChannel(message));

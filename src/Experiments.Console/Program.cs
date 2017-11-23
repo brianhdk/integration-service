@@ -36,7 +36,9 @@
 
             //Castle.Windsor.CustomInstaller.Demo.Run();
 
-            Configuration.Demo.Run();
+            Castle.Windsor.Interceptors.Demo.Run();
+
+            //Configuration.Demo.Run();
         }
     }
 }
