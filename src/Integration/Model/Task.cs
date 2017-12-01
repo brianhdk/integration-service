@@ -57,6 +57,9 @@ namespace Vertica.Integration.Model
 
 	    public virtual void End(ITaskExecutionContext<TWorkItem> context)
 	    {
+#pragma warning disable 618
+	        End(context.WorkItem, context);
+#pragma warning restore 618
 	    }
 	}
 }
