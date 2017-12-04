@@ -57,7 +57,7 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
 	**NOTE:** Make sure that you have a NuGet Package Source configured for URL: http://nuget.vertica.dk/nuget
 	
   ```
-  Install-Package Vertica.Integration.Host
+  Install-Package Vertica.Integration.ConsoleHost
   ```
   The package above will add all necessary files to get you up and running soon.
 3. Modify "Program.cs" as mentioned in the "Readme.txt"

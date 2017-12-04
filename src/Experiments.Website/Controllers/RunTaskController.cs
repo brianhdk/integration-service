@@ -22,6 +22,6 @@ namespace Experiments.Website.Controllers
             return Ok(result);
         }
 
-        private IOwinContext OwinContext => HttpContext.Current.GetOwinContext();
+        private static IOwinContext OwinContext => HttpContext.Current.GetOwinContext();
     }
 }
