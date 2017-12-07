@@ -27,6 +27,30 @@ namespace Vertica.Integration.Emails.Mandrill.Infrastructure
             _httpClient.BaseAddress = _settings.BaseUrl;
         }
 
+        public async Task RequestAsync<TRequest>(string relativeUrl, TRequest request) where TRequest : MandrillApiRequest
+        {
+            if (string.IsNullOrWhiteSpace(relativeUrl)) throw new ArgumentException(@"Value cannot be null or empty", nameof(relativeUrl));
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
+            request.Key = _settings.ApiKey;
+
+            try
+            {
+                using (HttpResponseMessage response = await _httpClient.PostAsJsonAsync(relativeUrl, request, _shutdown.Token))
+                {
+                    await AssertResponse(response);
+                }
+            }
+            catch (WebException ex)
+            {
+                throw new InvalidOperationException($"Unable to request Mandrill '{relativeUrl}'. Response: {await GetResponseBody(ex)}", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Unable to request Mandrill '{relativeUrl}'. Message: {ex.Message}", ex);
+            }
+        }
+
         public async Task<TResponse> RequestAsync<TRequest, TResponse>(string relativeUrl, TRequest request)
             where TRequest : MandrillApiRequest
         {
@@ -37,11 +61,39 @@ namespace Vertica.Integration.Emails.Mandrill.Infrastructure
 
             try
             {
-                HttpResponseMessage response = await _httpClient.PostAsJsonAsync(relativeUrl, request, _shutdown.Token);
+                using (HttpResponseMessage response = await _httpClient.PostAsJsonAsync(relativeUrl, request, _shutdown.Token))
+                {
+                    await AssertResponse(response);
 
-                await AssertResponse(response);
+                    return await response.Content.ReadAsAsync<TResponse>(_shutdown.Token);
+                }
+            }
+            catch (WebException ex)
+            {
+                throw new InvalidOperationException($"Unable to request Mandrill '{relativeUrl}'. Response: {await GetResponseBody(ex)}", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Unable to request Mandrill '{relativeUrl}'. Message: {ex.Message}", ex);
+            }
+        }
 
-                return await response.Content.ReadAsAsync<TResponse>(_shutdown.Token);
+        public async Task RequestAsync<TRequest>(string relativeUrl, TRequest request, Action<HttpResponseMessage> withResponse)
+            where TRequest : MandrillApiRequest
+        {
+            if (string.IsNullOrWhiteSpace(relativeUrl)) throw new ArgumentException(@"Value cannot be null or empty", nameof(relativeUrl));
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
+            request.Key = _settings.ApiKey;
+
+            try
+            {
+                using (HttpResponseMessage response = await _httpClient.PostAsJsonAsync(relativeUrl, request, _shutdown.Token))
+                {
+                    await AssertResponse(response);
+
+                    withResponse(response);
+                }
             }
             catch (WebException ex)
             {
@@ -80,7 +132,6 @@ namespace Vertica.Integration.Emails.Mandrill.Infrastructure
 
         public void Dispose()
         {
-            Console.WriteLine("Disposing!");
             _httpClient.Dispose();
         }
     }

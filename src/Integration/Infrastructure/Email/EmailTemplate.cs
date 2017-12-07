@@ -5,13 +5,13 @@ namespace Vertica.Integration.Infrastructure.Email
 {
 	public abstract class EmailTemplate
 	{
-		protected internal abstract string Subject { get; }
-		protected internal abstract bool IsHtml { get; }
-	    protected internal abstract string GetBody();
+	    public abstract string Subject { get; }
+	    public abstract bool IsHtml { get; }
+	    public abstract string GetBody();
 
-		protected internal virtual MailPriority? MailPriority => null;
+	    public virtual MailPriority? MailPriority => null;
 
-		protected internal virtual IEnumerable<Attachment> Attachments
+	    public virtual IEnumerable<Attachment> Attachments
 	    {
 	        get { yield break; }
 	    }

@@ -22,11 +22,11 @@ namespace Vertica.Integration.Domain.Monitoring
             _target = target;
 		}
 
-	    protected internal override string Subject { get; }
+	    public override string Subject { get; }
 
-	    protected internal override bool IsHtml => true;
+	    public override bool IsHtml => true;
 
-	    protected internal override string GetBody()
+	    public override string GetBody()
 	    {
             using (var stream = new MemoryStream(Resources.EmailTemplate))
             using (var reader = new StreamReader(stream))
@@ -40,6 +40,6 @@ namespace Vertica.Integration.Domain.Monitoring
             }
 	    }
 
-		protected internal override MailPriority? MailPriority => _target.MailPriority;
+	    public override MailPriority? MailPriority => _target.MailPriority;
 	}
 }

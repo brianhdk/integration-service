@@ -3,6 +3,7 @@ using System.Net.Http;
 using Castle.MicroKernel;
 using Vertica.Integration.Emails.Mandrill.Infrastructure;
 using Vertica.Integration.Emails.Mandrill.Infrastructure.Providers;
+using Vertica.Integration.Infrastructure.Email;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 
 namespace Vertica.Integration.Emails.Mandrill
@@ -11,6 +12,7 @@ namespace Vertica.Integration.Emails.Mandrill
 	{
 	    private Type _configurationProvider;
 	    private readonly State _state;
+	    private bool _replaceEmailService;
 
 	    internal MandrillConfiguration(ApplicationConfiguration application)
 		{
@@ -62,6 +64,13 @@ namespace Vertica.Integration.Emails.Mandrill
 	        return this;
 	    }
 
+	    public MandrillConfiguration ReplaceEmailService()
+	    {
+	        _replaceEmailService = true;
+
+	        return this;
+	    }
+
         void IInitializable<ApplicationConfiguration>.Initialized(ApplicationConfiguration application)
         {
             application.Services(services => services
@@ -81,6 +90,9 @@ namespace Vertica.Integration.Emails.Mandrill
                     advanced.Install(Install.Instance(_state));
 
                     advanced.Register<IMandrillApiService, MandrillApiService>();
+
+                    if (_replaceEmailService)
+                        advanced.Register<IEmailService, MandrillEmailService>();
                 })
             );
         }

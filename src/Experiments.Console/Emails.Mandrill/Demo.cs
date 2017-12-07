@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,6 +6,7 @@ using Castle.MicroKernel;
 using Vertica.Integration;
 using Vertica.Integration.Emails.Mandrill;
 using Vertica.Integration.Emails.Mandrill.Infrastructure;
+using Vertica.Integration.Infrastructure.Email;
 using Vertica.Integration.Infrastructure.IO;
 
 namespace Experiments.Console.Emails.Mandrill
@@ -29,26 +29,32 @@ namespace Experiments.Console.Emails.Mandrill
                 .UseMandrill(mandrill => mandrill
                     .WithHttpMessageHandler(kernel => new LoggingHandler(kernel, new HttpClientHandler()))
                     .ConfiguredBy(by => by.RuntimeSettings())
+                    .ReplaceEmailService()
                 )
             ))
             {
-                var apiService = context.Resolve<IMandrillApiService>();
+                var email = new TextBasedEmailTemplate("Subject")
+                    .WriteLine("Test");
 
-                Reject[] rejects = apiService
-                    .RequestAsync<GetRejects, Reject[]>("rejects/list", new GetRejects())
-                    .Result;
+                context.Resolve<IEmailService>().Send(email, "bhk@vertica.dk");
 
-                context.Resolve<IConsoleWriter>().WriteLine(
-                    string.Join(Environment.NewLine, rejects
-                        .Select(x => $"{x.Email} - {x.reason} - {x.last_event_at}")));
+                //var apiService = context.Resolve<IMandrillApiService>();
 
-                Sender[] senders = apiService
-                    .RequestAsync<GetSendersList, Sender[]>("senders/list", new GetSendersList())
-                    .Result;
+                //Reject[] rejects = apiService
+                //    .RequestAsync<GetRejects, Reject[]>("rejects/list", new GetRejects())
+                //    .Result;
 
-                context.Resolve<IConsoleWriter>().WriteLine(
-                    string.Join(Environment.NewLine, senders
-                        .Select(x => $"{x.Address}")));
+                //context.Resolve<IConsoleWriter>().WriteLine(
+                //    string.Join(Environment.NewLine, rejects
+                //        .Select(x => $"{x.Email} - {x.reason} - {x.last_event_at}")));
+
+                //Sender[] senders = apiService
+                //    .RequestAsync<GetSendersList, Sender[]>("senders/list", new GetSendersList())
+                //    .Result;
+
+                //context.Resolve<IConsoleWriter>().WriteLine(
+                //    string.Join(Environment.NewLine, senders
+                //        .Select(x => $"{x.Address}")));
             }
         }
 

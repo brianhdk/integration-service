@@ -7,14 +7,13 @@ namespace Vertica.Integration.Infrastructure.Email
 {
     public class TextBasedEmailTemplate : EmailTemplate
     {
-        private readonly string _subject;
         private readonly StringBuilder _text;
         private readonly List<Attachment> _attachments;
 		private MailPriority? _priority;
 
         public TextBasedEmailTemplate(string subject, params object[] args)
         {
-            _subject = string.Format(subject, args);
+            Subject = string.Format(subject, args);
             _text = new StringBuilder();
             _attachments = new List<Attachment>();
         }
@@ -49,17 +48,17 @@ namespace Vertica.Integration.Infrastructure.Email
             return this;
         }
 
-		protected internal override string Subject => _subject;
+        public override string Subject { get; }
 
-	    protected internal override bool IsHtml => false;
+        public override bool IsHtml => false;
 
-	    protected internal override string GetBody()
+        public override string GetBody()
         {
             return _text.ToString();
         }
 
-		protected internal override MailPriority? MailPriority => _priority;
+        public override MailPriority? MailPriority => _priority;
 
-	    protected internal override IEnumerable<Attachment> Attachments => _attachments;
+        public override IEnumerable<Attachment> Attachments => _attachments;
     }
 }
