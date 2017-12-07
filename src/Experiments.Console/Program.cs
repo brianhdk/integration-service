@@ -40,7 +40,9 @@
 
             //Configuration.Demo.Run();
 
-            Emails.Mandrill.Demo.Run();
+            //Emails.Mandrill.Demo.Run();
+
+            //Emails.SendGrid.Demo.Run();
         }
     }
 }

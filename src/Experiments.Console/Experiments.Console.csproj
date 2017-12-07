@@ -116,6 +116,7 @@
   <ItemGroup>
     <Compile Include="Castle.Windsor\CustomInstaller\Demo.cs" />
     <Compile Include="Configuration\Demo.cs" />
+    <Compile Include="Emails.SendGrid\Demo.cs" />
     <Compile Include="Emails.Mandrill\Demo.cs" />
     <Compile Include="FeatureToggler\Demo.cs" />
     <Compile Include="FileWatcher\Demo.cs" />
@@ -165,6 +166,10 @@
     <ProjectReference Include="..\Integration.Emails.Mandrill\Integration.Emails.Mandrill.csproj">
       <Project>{99AC12A8-C792-4DEF-BFC8-065BDCF84CD1}</Project>
       <Name>Integration.Emails.Mandrill</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration.Emails.SendGrid\Integration.Emails.SendGrid.csproj">
+      <Project>{58C087A6-1000-40ED-9B21-3C3AD44A0762}</Project>
+      <Name>Integration.Emails.SendGrid</Name>
     </ProjectReference>
     <ProjectReference Include="..\Integration.Hangfire\Integration.Hangfire.csproj">
       <Project>{7158B2C5-5725-4B55-B9ED-C58169712051}</Project>

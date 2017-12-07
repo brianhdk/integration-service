@@ -10,6 +10,7 @@ namespace Experiments.Console.Castle.Windsor.CustomInstaller
     {
         public static void Run()
         {
+            
             using (var context = ApplicationContext.Create(application => application
                 .Database(database => database
                     .IntegrationDb(integrationDb => integrationDb

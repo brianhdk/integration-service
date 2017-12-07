@@ -33,6 +33,8 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
  - [Integrating Rebus](#integrating-rebus)  
  - [Integrating Redis](#integrating-redis)  
  - [Integrating Elasticsearch](#integrating-elasticsearch)  
+ - [Integrating Mandrill](#integrating-mandrill)  
+ - [Integrating SendGrid](#integrating-sendgrid)  
  - [How to Disable IntegrationDb](#how-to-disable-integrationdb)
  - [How to Change Logger](#how-to-change-logger) 
  - [How to Register Custom dependencies/services](#how-to-register-custom-dependenciesservices)
@@ -2232,6 +2234,17 @@ namespace ConsoleApplication16
 
 Read more about Elasticsearch and NEST here: https://github.com/elastic/elasticsearch-net
 
+[Back to Table of Contents](#table-of-contents)
+
+## Integrating Mandrill
+
+TBD - See Experiments.Console for demos.
+
+[Back to Table of Contents](#table-of-contents)
+
+## Integrating SendGrid
+
+TBD - See Experiments.Console for demos.
 
 [Back to Table of Contents](#table-of-contents)
 
