@@ -14,7 +14,7 @@
 
             //Tasks.ConcurrentExecution.Demo.Run();
 
-            Tasks.WithSteps.Demo.Run();
+            //Tasks.WithSteps.Demo.Run();
 
             //Tasks.Exceptions.Demo.Run();
 
@@ -39,6 +39,8 @@
             //Castle.Windsor.Interceptors.Demo.Run();
 
             //Configuration.Demo.Run();
+
+            Emails.Mandrill.Demo.Run();
         }
     }
 }

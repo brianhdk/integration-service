@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2006
+VisualStudioVersion = 15.0.27004.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration", "src\Integration\Integration.csproj", "{460F774F-2C89-47F4-84BD-B97653060E68}"
 EndProject
@@ -84,6 +84,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Experiments.Console", "src\Experiments.Console\Experiments.Console.csproj", "{44A7587A-702A-4C3B-8E03-F43913C78632}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.WebApi.NSwag", "src\Integration.WebApi.NSwag\Integration.WebApi.NSwag.csproj", "{7FF8496F-0BE0-402B-B9BF-3FC8E83E6F0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Emails.Mandrill", "src\Integration.Emails.Mandrill\Integration.Emails.Mandrill.csproj", "{99AC12A8-C792-4DEF-BFC8-065BDCF84CD1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -195,6 +197,10 @@ Global
 		{7FF8496F-0BE0-402B-B9BF-3FC8E83E6F0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FF8496F-0BE0-402B-B9BF-3FC8E83E6F0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FF8496F-0BE0-402B-B9BF-3FC8E83E6F0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99AC12A8-C792-4DEF-BFC8-065BDCF84CD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99AC12A8-C792-4DEF-BFC8-065BDCF84CD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99AC12A8-C792-4DEF-BFC8-065BDCF84CD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99AC12A8-C792-4DEF-BFC8-065BDCF84CD1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -39,6 +39,7 @@ $settings = @{
         "integration_elasticsearch" = Resolve-Path $script_directory\..\src\Integration.Elasticsearch
 		"integration_redis" = Resolve-Path $script_directory\..\src\Integration.Redis
 		"integration_iis" = Resolve-Path $script_directory\..\src\Integration.IIS
+		"integration_emails_mandrill" = Resolve-Path $script_directory\..\src\Integration.Emails.Mandrill
     }
     "tools" = @{
         "nuget" = Resolve-Path $script_directory\..\.nuget\NuGet.exe
