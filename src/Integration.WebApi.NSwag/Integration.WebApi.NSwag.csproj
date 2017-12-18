@@ -61,20 +61,20 @@
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NJsonSchema, Version=9.10.10.0, Culture=neutral, PublicKeyToken=c2f9c3bdfae56102, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NJsonSchema.9.10.10\lib\net45\NJsonSchema.dll</HintPath>
+    <Reference Include="NJsonSchema, Version=9.10.15.0, Culture=neutral, PublicKeyToken=c2f9c3bdfae56102, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NJsonSchema.9.10.15\lib\net45\NJsonSchema.dll</HintPath>
     </Reference>
-    <Reference Include="NSwag.AspNet.Owin, Version=11.12.10.0, Culture=neutral, PublicKeyToken=c2d88086e098d109, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NSwag.AspNet.Owin.11.12.10\lib\net45\NSwag.AspNet.Owin.dll</HintPath>
+    <Reference Include="NSwag.AspNet.Owin, Version=11.12.13.0, Culture=neutral, PublicKeyToken=c2d88086e098d109, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NSwag.AspNet.Owin.11.12.13\lib\net45\NSwag.AspNet.Owin.dll</HintPath>
     </Reference>
-    <Reference Include="NSwag.Core, Version=11.12.10.0, Culture=neutral, PublicKeyToken=c2d88086e098d109, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NSwag.Core.11.12.10\lib\net45\NSwag.Core.dll</HintPath>
+    <Reference Include="NSwag.Core, Version=11.12.13.0, Culture=neutral, PublicKeyToken=c2d88086e098d109, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NSwag.Core.11.12.13\lib\net45\NSwag.Core.dll</HintPath>
     </Reference>
-    <Reference Include="NSwag.SwaggerGeneration, Version=11.12.10.0, Culture=neutral, PublicKeyToken=c2d88086e098d109, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NSwag.SwaggerGeneration.11.12.10\lib\net45\NSwag.SwaggerGeneration.dll</HintPath>
+    <Reference Include="NSwag.SwaggerGeneration, Version=11.12.13.0, Culture=neutral, PublicKeyToken=c2d88086e098d109, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NSwag.SwaggerGeneration.11.12.13\lib\net45\NSwag.SwaggerGeneration.dll</HintPath>
     </Reference>
-    <Reference Include="NSwag.SwaggerGeneration.WebApi, Version=11.12.10.0, Culture=neutral, PublicKeyToken=c2d88086e098d109, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NSwag.SwaggerGeneration.WebApi.11.12.10\lib\net45\NSwag.SwaggerGeneration.WebApi.dll</HintPath>
+    <Reference Include="NSwag.SwaggerGeneration.WebApi, Version=11.12.13.0, Culture=neutral, PublicKeyToken=c2d88086e098d109, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NSwag.SwaggerGeneration.WebApi.11.12.13\lib\net45\NSwag.SwaggerGeneration.WebApi.dll</HintPath>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
@@ -82,7 +82,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
