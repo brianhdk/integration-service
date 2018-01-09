@@ -14,12 +14,12 @@
     <description>$description$</description>
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2018</copyright>
-    <tags>Vertica Integration Service IntegrationService SQLite</tags>
+    <tags>Vertica Integration Service IntegrationService Serilog logging</tags>
     <dependencies>
-      <dependency id="Vertica.Integration" version="[1.12,2.0)" />
+      <dependency id="Vertica.Integration" version="[1.24,2.0)" />
     </dependencies>
   </metadata>
   <files>
-    <file src="App_Readme\Integration.SQLite-readme.txt" target="readme.txt" />
+    <file src="App_Readme\Integration.Serilog-readme.txt" target="readme.txt" />
   </files>
 </package>
