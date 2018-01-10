@@ -38,7 +38,7 @@ namespace Experiments.Console.Configuration
             }
         }
 
-        public class TaskWithConfiguration : Task
+        public class TaskWithConfiguration : IntegrationTask
         {
             private readonly IConfigurationService _configuration;
 

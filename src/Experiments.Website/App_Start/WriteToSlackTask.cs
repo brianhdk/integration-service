@@ -5,7 +5,7 @@ using Vertica.Integration.Slack.Messaging.Messages;
 
 namespace Experiments.Website
 {
-    public class WriteToSlackTask : Task
+    public class WriteToSlackTask : IntegrationTask
     {
         private readonly ISlackMessageQueue _slackMessageQueue;
 

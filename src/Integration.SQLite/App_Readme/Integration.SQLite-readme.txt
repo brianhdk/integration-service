@@ -22,7 +22,7 @@ public class MyConnection : SQLiteConnection
 	}
 }
 
-public class MyTask : Task
+public class MyTask : IntegrationTask
 {
 	private readonly IDbFactory<MyConnection> _myConnection;
 

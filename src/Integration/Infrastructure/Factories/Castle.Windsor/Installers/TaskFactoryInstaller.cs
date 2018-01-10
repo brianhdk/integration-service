@@ -43,7 +43,7 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 
             public ITask Get<TTask>() where TTask : class, ITask
             {
-                return Get(Task.NameOf<TTask>());
+                return Get(IntegrationTask.NameOf<TTask>());
             }
 
             public ITask Get(string name)

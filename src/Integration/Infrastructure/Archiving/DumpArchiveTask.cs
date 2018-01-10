@@ -5,7 +5,7 @@ using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Infrastructure.Archiving
 {
-    public class DumpArchiveTask : Task
+    public class DumpArchiveTask : IntegrationTask
     {
         private readonly IArchiveService _archive;
 

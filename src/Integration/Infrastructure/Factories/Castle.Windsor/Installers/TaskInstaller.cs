@@ -33,7 +33,7 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
             {
                 container.Register(
                     Classes.FromAssembly(assembly)
-                        .BasedOn<Task>()
+                        .BasedOn<IntegrationTask>()
 						.Unless(x =>
 						{
 							if (_ignore.Contains(x) || _add.Contains(x))

@@ -3,7 +3,7 @@ using Vertica.Integration.Model;
 
 namespace Experiments.Console.Tasks.ConcurrentExecution
 {
-    public class CanRunInParallelTask : Task
+    public class CanRunInParallelTask : IntegrationTask
     {
         public override void StartTask(ITaskExecutionContext context)
         {

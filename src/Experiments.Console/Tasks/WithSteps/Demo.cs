@@ -42,7 +42,7 @@ namespace Experiments.Console.Tasks.WithSteps
         }
     }
 
-    public class TaskThatHasSteps : Task<TaskThatHasStepsWorkItem>
+    public class TaskThatHasSteps : IntegrationTask<TaskThatHasStepsWorkItem>
     {
         private readonly IRuntimeSettings _settings;
 

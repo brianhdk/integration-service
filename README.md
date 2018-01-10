@@ -134,7 +134,7 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
 
 ## Basics of Tasks
 
-A Task is, in it's simplest form, a .NET class that inherits from **Vertica.Integration.Model.Task**. 
+A Task is, in it's simplest form, a .NET class that inherits from **Vertica.Integration.Model.IntegrationTask**. 
 A Task must implement two members:
 
 1. **Description** (Property)
@@ -149,7 +149,7 @@ using Vertica.Integration.Model;
 
 namespace ClassLibrary2
 {
-    public class MyFirstTask : Task
+    public class MyFirstTask : IntegrationTask
     {
         public override string Description
         {
@@ -197,7 +197,7 @@ using Vertica.Integration.Model;
 
 namespace ClassLibrary2
 {
-    public class MakeDeploymentTask : Task<MakeDeploymentWorkItem>
+    public class MakeDeploymentTask : IntegrationTask<MakeDeploymentWorkItem>
     {
         public MakeDeploymentTask(IEnumerable<IStep<MakeDeploymentWorkItem>> steps)
             : base(steps)
@@ -212,7 +212,7 @@ namespace ClassLibrary2
             return workItem;
         }
 
-        public override void End(MakeDeploymentWorkItem workItem, ITaskExecutionContext context)
+        public override void End(ITaskExecutionContext<MakeDeploymentWorkItem> context)
         {
             // ... Zip folders and files in WorkItem.
         }
@@ -238,9 +238,9 @@ namespace ClassLibrary2
 
     public class CopyWebsiteArtifacts : Step<MakeDeploymentWorkItem>
     {
-        public override void Execute(MakeDeploymentWorkItem workItem, ITaskExecutionContext context)
+        public override void Execute(ITaskExecutionContext<MakeDeploymentWorkItem> context)
         {
-            workItem.AddFolder("../src/Portal.Website");
+            context.WorkItem.AddFolder("../src/Portal.Website");
         }
 
         public override string Description
@@ -251,9 +251,9 @@ namespace ClassLibrary2
 
     public class CopySitecoreBaseline : Step<MakeDeploymentWorkItem>
     {
-        public override void Execute(MakeDeploymentWorkItem workItem, ITaskExecutionContext context)
+        public override void Execute(ITaskExecutionContext<MakeDeploymentWorkItem> context)
         {
-            workItem.AddFile("../installs/Sitecore 8.0 rev. 141212.zip");
+            context.WorkItem.AddFile("../installs/Sitecore 8.0 rev. 141212.zip");
         }
 
         public override string Description
@@ -264,9 +264,9 @@ namespace ClassLibrary2
 
     public class CopyUCommerceBaseline : Step<MakeDeploymentWorkItem>
     {
-        public override void Execute(MakeDeploymentWorkItem workItem, ITaskExecutionContext context)
+        public override void Execute(ITaskExecutionContext<MakeDeploymentWorkItem> context)
         {
-            workItem.AddFile("../installs/uCommerce-for-Sitecore-6.6.6.15140.zip");
+            context.WorkItem.AddFile("../installs/uCommerce-for-Sitecore-6.6.6.15140.zip");
         }
 
         public override string Description
@@ -631,7 +631,7 @@ using Vertica.Integration.Model;
 
 namespace ConsoleApplication16
 {
-    public class UseCustomTableTask : Task
+    public class UseCustomTableTask : IntegrationTask
     {
         private readonly IDbFactory _integrationDb;
 
@@ -743,7 +743,7 @@ using Vertica.Integration.Model;
 
 namespace ConsoleApplication16
 {
-    public class UseCustomTableTask : Task
+    public class UseCustomTableTask : IntegrationTask
     {
         private readonly IDbFactory<CustomDb> _customDb;
 
@@ -834,7 +834,7 @@ using Vertica.Integration.Model;
 
 namespace ConsoleApplication16
 {
-    public class IndexCatalogTask : Task
+    public class IndexCatalogTask : IntegrationTask
     {
         public override void StartTask(ITaskExecutionContext context)
         {
@@ -847,7 +847,7 @@ namespace ConsoleApplication16
         }
     }
 
-    public class ImportCatalogTask : Task
+    public class ImportCatalogTask : IntegrationTask
     {
         private readonly ITaskFactory _factory;
         private readonly ITaskRunner _runner;
@@ -965,7 +965,7 @@ using Vertica.Integration.Model;
 
 namespace ClassLibrary2
 {
-    public class LogToBusinessExampleTask : Task
+    public class LogToBusinessExampleTask : IntegrationTask
     {
         public override string Description
         {
@@ -1026,7 +1026,7 @@ using Vertica.Integration.Model;
 
 namespace ConsoleApplication16
 {
-	public class ReadCsvFileDemoTask : Task
+	public class ReadCsvFileDemoTask : IntegrationTask
 	{
 		private readonly ICsvParser _csvParser;
 
@@ -1081,7 +1081,7 @@ using Vertica.Integration.Model;
 
 namespace ConsoleApplication16
 {
-	public class WriteCsvDemoTask : Task
+	public class WriteCsvDemoTask : IntegrationTask
 	{
 		public override void StartTask(ITaskExecutionContext context)
 		{
@@ -1155,7 +1155,7 @@ using Vertica.Integration.Model;
 
 namespace ConsoleApplication16
 {
-	public class FtpClientDemoTask : Task
+	public class FtpClientDemoTask : IntegrationTask
 	{
 		private readonly IFtpClientFactory _ftpClientFactory;
 
@@ -1213,7 +1213,7 @@ using Vertica.Integration.Model;
 
 namespace ConsoleApplication16
 {
-	public class HttpClientDemoTask : Task
+	public class HttpClientDemoTask : IntegrationTask
 	{
 		private readonly IHttpClientFactory _httpClientFactory;
 
@@ -1278,7 +1278,7 @@ using Vertica.Integration.Model;
 
 namespace ConsoleApplication16
 {
-	public class EmailDemoTask : Task
+	public class EmailDemoTask : IntegrationTask
 	{
 		private readonly IEmailService _emailService;
 
@@ -1317,7 +1317,7 @@ using Vertica.Integration.Model;
 
 namespace ConsoleApplication16
 {
-	public class EmailWithAttachmentDemoTask : Task
+	public class EmailWithAttachmentDemoTask : IntegrationTask
 	{
 		private readonly IHttpClientFactory _httpClientFactory;
 		private readonly IEmailService _emailService;
@@ -1509,7 +1509,7 @@ namespace ConsoleApplication16
 		}
 	}
 
-	public class BlobStorageDemoTask : Task
+	public class BlobStorageDemoTask : IntegrationTask
 	{
 		private readonly IAzureBlobStorageClientFactory _defaultClientFactory;
 		private readonly IAzureBlobStorageClientFactory<SecondaryAccount> _secondaryClientFactory;
@@ -1582,7 +1582,7 @@ namespace ConsoleApplication16
 		}
 	}
 
-	public class BlobStorageDemoTask : Task
+	public class BlobStorageDemoTask : IntegrationTask
 	{
 		private readonly IAzureServiceBusClientFactory _defaultClientFactory;
 		private readonly IAzureServiceBusClientFactory<SecondaryAccount> _secondaryClientFactory;
@@ -1680,7 +1680,7 @@ namespace ConsoleApplication16
 		}
 	}
 
-	public class RavenDbDemoTask : Task
+	public class RavenDbDemoTask : IntegrationTask
 	{
 		private readonly IRavenDbFactory _ravenDb;
 		private readonly IRavenDbFactory<SecondRavenDb> _secondRavenDb;
@@ -1753,7 +1753,7 @@ namespace ConsoleApplication16
 		}
 	}
 
-	public class MongoDbDemoTask : Task
+	public class MongoDbDemoTask : IntegrationTask
 	{
 		private readonly IMongoDbClientFactory _mongoDb;
 		private readonly IMongoDbClientFactory<SecondMongoDb> _secondMongoDb;
@@ -1877,7 +1877,7 @@ namespace ConsoleApplication16
 		}
 	}
 
-	public class MyTask : Task
+	public class MyTask : IntegrationTask
 	{
 		private readonly ITaskFactory _taskFactory;
 		private readonly ITaskRunner _taskRunner;
@@ -2462,7 +2462,7 @@ namespace ConsoleApplication16
         }
     }
 
-    public class UseSomeServiceTask : Task
+    public class UseSomeServiceTask : IntegrationTask
     {
         private readonly ISomeService _service;
 
@@ -2533,7 +2533,7 @@ namespace ConsoleApplication16
     {
     }
 
-    public class UseComplexFactoryTask : Task
+    public class UseComplexFactoryTask : IntegrationTask
     {
         private readonly IComplexFactory _factory;
 
@@ -2623,7 +2623,7 @@ using Vertica.Integration.Model;
 
 namespace ClassLibrary2
 {
-    public class UsingCustomDbExampleTask : Task
+    public class UsingCustomDbExampleTask : IntegrationTask
     {
         private readonly IDbFactory<CustomDb> _customDb;
 
@@ -2722,7 +2722,7 @@ namespace ConsoleApplication16
 
                 if (availablePercentage <= 15d)
                 {
-                    workItem.Add(
+                    context.WorkItem.Add(
                         Time.Now,
                         Environment.MachineName,
                         String.Format("[WARNING] Disk {0} ({1}) is running low ({2:0.00} % free space available).",
@@ -2847,7 +2847,7 @@ See example below on two tasks - one is decorated with the "AllowConcurrentTaskE
 
 ```c#
 [AllowConcurrentTaskExecution]
-public class ConcurrentExecutableTask : Task
+public class ConcurrentExecutableTask : IntegrationTask
 {
     public override void StartTask(ITaskExecutionContext context)
     {
@@ -2857,7 +2857,7 @@ public class ConcurrentExecutableTask : Task
 }
 
 [PreventConcurrentTaskExecution]
-public class SynchronousOnlyTask : Task
+public class SynchronousOnlyTask : IntegrationTask
 {
     public override void StartTask(ITaskExecutionContext context)
     {

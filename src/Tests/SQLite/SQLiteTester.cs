@@ -45,7 +45,7 @@ namespace Vertica.Integration.Tests.SQLite
 			_context.Execute(taskName);
 		}
 
-		public class TestMigrationsTask : Task
+		public class TestMigrationsTask : IntegrationTask
 		{
 			private readonly ITaskFactory _taskFactory;
 			private readonly ITaskRunner _taskRunner;

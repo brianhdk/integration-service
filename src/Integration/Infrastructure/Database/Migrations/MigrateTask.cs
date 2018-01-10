@@ -19,7 +19,7 @@ using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
-    public class MigrateTask : Task
+    public class MigrateTask : IntegrationTask
     {
         private readonly IKernel _kernel;
         private readonly IFeatureToggler _featureToggler;

@@ -45,9 +45,9 @@ namespace Vertica.Integration.Model
         }
 
         /// <summary>
-        /// Scans the assembly of the defined <typeparamref name="T"></typeparamref> for public classes inheriting <see cref="Task"/>.
+        /// Scans the assembly of the defined <typeparamref name="T"></typeparamref> for public classes inheriting <see cref="IntegrationTask"/>.
         /// <para />
-        /// Note: This will <u>not</u> register classes that make use of WorkItem and Steps (<see cref="Model.Task{TWorkItem}"/>).
+        /// Note: This will <u>not</u> register classes that make use of WorkItem and Steps (<see cref="IntegrationTask{TWorkItem}"/>).
         /// For that you have to use the <see cref="Task{TTask,TWorkItem}"/> method to explicitly define the Task and its ordered Steps.
         /// </summary>
         /// <typeparam name="T">The type in which its assembly will be scanned.</typeparam>
@@ -61,11 +61,11 @@ namespace Vertica.Integration.Model
         /// <summary>
         /// Adds the specified <typeparamref name="TTask"/>.
         /// </summary>
-        /// <typeparam name="TTask">Specifies the <see cref="Model.Task{TWorkItem}"/> to be added.</typeparam>
+        /// <typeparam name="TTask">Specifies the <see cref="IntegrationTask{TWorkItem}"/> to be added.</typeparam>
         /// <typeparam name="TWorkItem">Specifies the WorkItem that is used by this Task.</typeparam>
         /// <param name="task">Required in order to register one or more <see cref="Step{TWorkItem}"/></param> sequentially executed by this Task.
         public TasksConfiguration Task<TTask, TWorkItem>(Action<TaskConfiguration<TWorkItem>> task = null)
-            where TTask : Task<TWorkItem>
+            where TTask : IntegrationTask<TWorkItem>
         {
             var configuration = new TaskConfiguration<TWorkItem>(Application, typeof (TTask));
 
@@ -83,9 +83,9 @@ namespace Vertica.Integration.Model
         /// <summary>
         /// Adds the specified <typeparamref name="TTask" />.
         /// </summary>
-        /// <typeparam name="TTask">Specifies the <see cref="Task"/> to be added.</typeparam>
+        /// <typeparam name="TTask">Specifies the <see cref="IntegrationTask"/> to be added.</typeparam>
         public TasksConfiguration Task<TTask>()
-            where TTask : Task
+            where TTask : IntegrationTask
         {
             _simpleTasks.Add(typeof(TTask));
 
@@ -95,9 +95,9 @@ namespace Vertica.Integration.Model
         /// <summary>
         /// Skips the specified <typeparamref name="TTask" />.
         /// </summary>
-        /// <typeparam name="TTask">Specifies the <see cref="Task"/> that will be skipped.</typeparam>
+        /// <typeparam name="TTask">Specifies the <see cref="IntegrationTask"/> that will be skipped.</typeparam>
         public TasksConfiguration Remove<TTask>()
-            where TTask : Task
+            where TTask : IntegrationTask
         {
             _removeTasks.Add(typeof(TTask));
 

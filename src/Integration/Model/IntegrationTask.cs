@@ -6,9 +6,9 @@ using Vertica.Integration.Infrastructure.Extensions;
 
 namespace Vertica.Integration.Model
 {
-	public abstract class Task : Task<EmptyWorkItem>
+    public abstract class IntegrationTask : IntegrationTask<EmptyWorkItem>
 	{
-		protected Task()
+		protected IntegrationTask()
 			: base(Enumerable.Empty<IStep<EmptyWorkItem>>())
 		{
 		}
@@ -30,9 +30,9 @@ namespace Vertica.Integration.Model
 	    }
 	}
 
-	public abstract class Task<TWorkItem> : ITask<TWorkItem>
+	public abstract class IntegrationTask<TWorkItem> : ITask<TWorkItem>
 	{
-	    protected Task(IEnumerable<IStep<TWorkItem>> steps)
+	    protected IntegrationTask(IEnumerable<IStep<TWorkItem>> steps)
 		{
 			Steps = steps ?? Enumerable.Empty<IStep<TWorkItem>>();
 		}
@@ -62,4 +62,17 @@ namespace Vertica.Integration.Model
 #pragma warning restore 618
 	    }
 	}
+
+    [Obsolete("Use IntegrationTask as base class.")]
+    public abstract class Task : IntegrationTask
+    {
+    }
+
+    [Obsolete("Use IntegrationTask<TWorkItem> as base class.")]
+    public abstract class Task<TWorkItem> : IntegrationTask<TWorkItem>
+    {
+        protected Task(IEnumerable<IStep<TWorkItem>> steps) : base(steps)
+        {
+        }
+    }
 }

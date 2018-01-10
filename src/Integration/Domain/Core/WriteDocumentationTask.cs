@@ -7,7 +7,7 @@ using Vertica.Integration.Model.Hosting;
 
 namespace Vertica.Integration.Domain.Core
 {
-    public class WriteDocumentationTask : Task
+    public class WriteDocumentationTask : IntegrationTask
     {
         private readonly ITaskFactory _taskFactory;
         private readonly IHostFactory _hostFactory;

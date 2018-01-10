@@ -8,7 +8,7 @@ using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Domain.Monitoring
 {
-    public class MonitorTask : Task<MonitorWorkItem>
+    public class MonitorTask : IntegrationTask<MonitorWorkItem>
     {
 	    private readonly IConfigurationService _configuration;
 	    private readonly IEmailService _emailService;

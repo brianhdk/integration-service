@@ -6,7 +6,7 @@ using Vertica.Integration.Model.Tasks;
 namespace Experiments.Console.Hangfire
 {
     [PreventConcurrentTaskExecution]
-    public class MyTask : Task
+    internal class MyTask : IntegrationTask
     {
         private int _iterations;
 

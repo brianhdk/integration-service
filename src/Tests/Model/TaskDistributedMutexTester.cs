@@ -12,7 +12,6 @@ using Vertica.Integration.Model;
 using Vertica.Integration.Model.Tasks;
 using Vertica.Utilities;
 using Vertica.Integration.Tests.Infrastructure.Testing;
-using Task = Vertica.Integration.Model.Task;
 
 namespace Vertica.Integration.Tests.Model
 {
@@ -198,7 +197,7 @@ namespace Vertica.Integration.Tests.Model
             public CancellationToken Token => _source.Token;
         }
 
-        public class SomeTask : Task
+        public class SomeTask : IntegrationTask
         {
             private readonly SynchronizationContext _context;
 
@@ -216,7 +215,7 @@ namespace Vertica.Integration.Tests.Model
         }
 
         [PreventConcurrentTaskExecution]
-        public class SyncOnlyWithAttributeTask : Task
+        public class SyncOnlyWithAttributeTask : IntegrationTask
         {
             public override void StartTask(ITaskExecutionContext context)
             {
@@ -250,7 +249,7 @@ namespace Vertica.Integration.Tests.Model
         }
 
         [PreventConcurrentTaskExecution(RuntimeEvaluator = typeof(CustomRuntimeEvaluator))]
-        public class SyncOnlyWithAttributeAndRuntimeEvaluatorTask : Task
+        public class SyncOnlyWithAttributeAndRuntimeEvaluatorTask : IntegrationTask
         {
             public override void StartTask(ITaskExecutionContext context)
             {
@@ -260,7 +259,7 @@ namespace Vertica.Integration.Tests.Model
         }
 
         [PreventConcurrentTaskExecution(CustomLockName = typeof(CustomLockName), CustomLockDescription = typeof(CustomLockDescription))]
-        public class SyncOnlyWithAttributeAndCustomLockNameAndDescriptionTask : Task
+        public class SyncOnlyWithAttributeAndCustomLockNameAndDescriptionTask : IntegrationTask
         {
             public override void StartTask(ITaskExecutionContext context)
             {

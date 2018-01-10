@@ -18,6 +18,8 @@
 
             //Tasks.Exceptions.Demo.Run();
 
+            //Tasks.Obsolete.Demo.Run();
+
             //WebApi.Controllers.Demo.Run();
 
             //WebApi.Portal.Demo.Run();

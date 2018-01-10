@@ -56,7 +56,7 @@ namespace Experiments.Console.Castle.Windsor.Interceptors
         }
     }
 
-    public class MyTask : Task
+    internal class MyTask : IntegrationTask
     {
         public override void StartTask(ITaskExecutionContext context)
         {

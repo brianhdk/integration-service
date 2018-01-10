@@ -342,7 +342,7 @@
     <Compile Include="Model\Log.cs" />
     <Compile Include="Model\Output.cs" />
     <Compile Include="Model\Step.cs" />
-    <Compile Include="Model\Task.cs" />
+    <Compile Include="Model\IntegrationTask.cs" />
     <Compile Include="Model\TaskExecutionResult.cs" />
     <Compile Include="Model\TaskRunner.cs" />
     <Compile Include="Model\Tasks\AllowConcurrentTaskExecutionAttribute.cs" />

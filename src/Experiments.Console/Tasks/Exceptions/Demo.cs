@@ -41,7 +41,7 @@ StackTrace: {ex.GetFullStacktrace()}
         }
     }
 
-    public class TaskThatThrows : Task
+    public class TaskThatThrows : IntegrationTask
     {
         public override void StartTask(ITaskExecutionContext context)
         {

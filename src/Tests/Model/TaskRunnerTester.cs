@@ -229,7 +229,7 @@ namespace Vertica.Integration.Tests.Model
 			Assert.That(thrownException.InnerException, Is.SameAs(exception));
 		}
 
-	    public class ThrowingAggregateExceptionTask : Task
+	    public class ThrowingAggregateExceptionTask : IntegrationTask
 	    {
 	        public override void StartTask(ITaskExecutionContext context)
 	        {
@@ -242,7 +242,7 @@ namespace Vertica.Integration.Tests.Model
 	        public override string Description => nameof(ThrowingAggregateExceptionTask);
 	    }
 
-		public class TaskRunnerTesterTask<TWorkItem> : Task<TWorkItem>
+		public class TaskRunnerTesterTask<TWorkItem> : IntegrationTask<TWorkItem>
 	    {
 	        private readonly TWorkItem _workItem;
 			private Action<ITaskExecutionContext> _onStart;

@@ -4,7 +4,7 @@ using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Domain.Core
 {
-	public class MaintenanceTask : Task<MaintenanceWorkItem>
+	public class MaintenanceTask : IntegrationTask<MaintenanceWorkItem>
 	{
 	    private readonly IConfigurationService _service;
 

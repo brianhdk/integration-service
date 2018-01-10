@@ -5,7 +5,7 @@ using Vertica.Integration.Model;
 
 namespace Experiments.Console.FileWatcher
 {
-    internal class HandleFileTask : Task
+    internal class HandleFileTask : IntegrationTask
     {
         private readonly IArchiveService _archiveService;
 

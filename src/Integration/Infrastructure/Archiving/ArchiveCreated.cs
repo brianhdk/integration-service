@@ -22,7 +22,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
         public override string ToString()
         {
             return
-	            $"ArchiveID: {Id}\r\nOptions to download archive:\r\n{string.Join(Environment.NewLine, new[] {"From the web-based interface (Portal)", $"Run the following command: {Task.NameOf<DumpArchiveTask>()} {Id}"}.Concat(_additionalDownloadOptions).Select(x => $" - {x}"))}";
+	            $"ArchiveID: {Id}\r\nOptions to download archive:\r\n{string.Join(Environment.NewLine, new[] {"From the web-based interface (Portal)", $"Run the following command: {IntegrationTask.NameOf<DumpArchiveTask>()} {Id}"}.Concat(_additionalDownloadOptions).Select(x => $" - {x}"))}";
         }
 
         public static implicit operator string(ArchiveCreated archive)

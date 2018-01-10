@@ -140,7 +140,7 @@ namespace Vertica.Integration.Tests.Model
             return context;
         }
 
-        public class TestTask : Task, IEquatable<TestTask>
+        public class TestTask : IntegrationTask, IEquatable<TestTask>
         {
             private readonly Guid _id;
 
@@ -182,7 +182,7 @@ namespace Vertica.Integration.Tests.Model
             }
         }
 
-        public class AnotherTask : Task
+        public class AnotherTask : IntegrationTask
         {
             public override void StartTask(ITaskExecutionContext context)
             {
@@ -191,7 +191,7 @@ namespace Vertica.Integration.Tests.Model
             public override string Description => string.Empty;
         }
 
-        public class TaskWithStepsTask : Task<TaskWithStepsWorkItem>
+        public class TaskWithStepsTask : IntegrationTask<TaskWithStepsWorkItem>
         {
             public TaskWithStepsTask(IEnumerable<IStep<TaskWithStepsWorkItem>> steps) : base(steps)
             {

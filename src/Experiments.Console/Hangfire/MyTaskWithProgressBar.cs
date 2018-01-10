@@ -9,7 +9,7 @@ using Vertica.Integration.Model.Tasks;
 namespace Experiments.Console.Hangfire
 {
     [PreventConcurrentTaskExecution]
-    public class MyTaskWithProgressBar : Task
+    public class MyTaskWithProgressBar : IntegrationTask
     {
         private readonly IHangfirePerformContextProvider _hangfireContextProvider;
 

@@ -5,7 +5,7 @@ using Vertica.Integration.Model.Tasks;
 namespace Experiments.Console.Tasks.ConcurrentExecution
 {
     [PreventConcurrentTaskExecution(CustomLockDescription = typeof(MyCustomLockDescription))]
-    public class MustRunAloneTask : Task
+    public class MustRunAloneTask : IntegrationTask
     {
         public override void StartTask(ITaskExecutionContext context)
         {
