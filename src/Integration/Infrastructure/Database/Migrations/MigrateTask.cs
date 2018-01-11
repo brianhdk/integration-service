@@ -19,7 +19,9 @@ using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Infrastructure.Database.Migrations
 {
-    public class MigrateTask : IntegrationTask
+#pragma warning disable 618
+    public class MigrateTask : Task
+#pragma warning restore 618
     {
         private readonly IKernel _kernel;
         private readonly IFeatureToggler _featureToggler;

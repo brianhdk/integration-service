@@ -5,7 +5,9 @@ using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Infrastructure.Archiving
 {
-    public class DumpArchiveTask : IntegrationTask
+#pragma warning disable 618
+    public class DumpArchiveTask : Task
+#pragma warning restore 618
     {
         private readonly IArchiveService _archive;
 

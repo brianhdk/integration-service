@@ -7,7 +7,9 @@ using Vertica.Integration.Model.Hosting;
 
 namespace Vertica.Integration.Domain.Core
 {
-    public class WriteDocumentationTask : IntegrationTask
+#pragma warning disable 618
+    public class WriteDocumentationTask : Task
+#pragma warning restore 618
     {
         private readonly ITaskFactory _taskFactory;
         private readonly IHostFactory _hostFactory;

@@ -41,7 +41,7 @@ $settings = @{
 		"integration_iis" = Resolve-Path $script_directory\..\src\Integration.IIS
 		"integration_emails_mandrill" = Resolve-Path $script_directory\..\src\Integration.Emails.Mandrill
 		"integration_emails_sendgrid" = Resolve-Path $script_directory\..\src\Integration.Emails.SendGrid
-		"integration_serilog" = Resolve-Path $script_directory\..\src\Integration.Emails.Serilog
+		"integration_serilog" = Resolve-Path $script_directory\..\src\Integration.Serilog
     }
     "tools" = @{
         "nuget" = Resolve-Path $script_directory\..\.nuget\NuGet.exe

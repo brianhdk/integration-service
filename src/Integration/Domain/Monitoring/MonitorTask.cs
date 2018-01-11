@@ -8,7 +8,9 @@ using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Domain.Monitoring
 {
-    public class MonitorTask : IntegrationTask<MonitorWorkItem>
+#pragma warning disable 618
+    public class MonitorTask : Task<MonitorWorkItem>
+#pragma warning restore 618
     {
 	    private readonly IConfigurationService _configuration;
 	    private readonly IEmailService _emailService;

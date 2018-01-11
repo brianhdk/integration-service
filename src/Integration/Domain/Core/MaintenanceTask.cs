@@ -4,7 +4,9 @@ using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Domain.Core
 {
-	public class MaintenanceTask : IntegrationTask<MaintenanceWorkItem>
+#pragma warning disable 618
+	public class MaintenanceTask : Task<MaintenanceWorkItem>
+#pragma warning restore 618
 	{
 	    private readonly IConfigurationService _service;
 
