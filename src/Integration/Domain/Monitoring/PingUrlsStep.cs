@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Logging;
-using Vertica.Integration.Infrastructure.Remote;
 using Vertica.Integration.Model;
 using Vertica.Utilities;
 using Response = System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage>;
@@ -15,13 +14,6 @@ namespace Vertica.Integration.Domain.Monitoring
 {
     public class PingUrlsStep : Step<MonitorWorkItem>
     {
-        private readonly IHttpClientFactory _httpClientFactory;
-
-        public PingUrlsStep(IHttpClientFactory httpClientFactory)
-        {
-            _httpClientFactory = httpClientFactory;
-        }
-
         public override Execution ContinueWith(ITaskExecutionContext<MonitorWorkItem> context)
         {
             if (!context.WorkItem.Configuration.PingUrls.ShouldExecute)
@@ -45,7 +37,7 @@ namespace Vertica.Integration.Domain.Monitoring
 
                     try
                     {
-                        Response response = HttpGet(url, context.WorkItem.Configuration.PingUrls.MaximumWaitTimeSeconds);
+                        Response response = HttpGet(url, context.WorkItem.Configuration.PingUrls);
                         response.Wait();
 
                         response.Result.EnsureSuccessStatusCode();
@@ -100,7 +92,7 @@ namespace Vertica.Integration.Domain.Monitoring
             return pingExceptions;
         }
 
-        private void AddException(PingException exception, MonitorWorkItem workItem)
+        private static void AddException(PingException exception, MonitorWorkItem workItem)
         {
             string message = $@"{exception.Message}
 
@@ -109,13 +101,19 @@ namespace Vertica.Integration.Domain.Monitoring
             workItem.Add(Time.UtcNow, "Ping Urls", message);
         }
 
-        private async Response HttpGet(Uri absoluteUri, uint maximumWaitTimeSeconds)
+        private static async Response HttpGet(Uri absoluteUri, MonitorConfiguration.PingUrlsConfiguration configuration)
         {
-            using (HttpClient client = _httpClientFactory.Create())
+            using (var handler = new HttpClientHandler())
             {
-                client.Timeout = TimeSpan.FromSeconds(maximumWaitTimeSeconds);
+                if (configuration.UseProxy.HasValue)
+                    handler.UseProxy = configuration.UseProxy.Value;
 
-                return await client.GetAsync(absoluteUri, HttpCompletionOption.ResponseHeadersRead);
+                using (var client = new HttpClient(handler))
+                {
+                    client.Timeout = TimeSpan.FromSeconds(configuration.MaximumWaitTimeSeconds);
+
+                    return await client.GetAsync(absoluteUri, HttpCompletionOption.ResponseHeadersRead);
+                }
             }
         }
 

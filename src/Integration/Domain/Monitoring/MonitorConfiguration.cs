@@ -210,6 +210,7 @@ namespace Vertica.Integration.Domain.Monitoring
             public bool Enabled { get; set; }
             public uint MaximumWaitTimeSeconds { get; set; }
             public string[] Urls { get; set; }
+            public bool? UseProxy { get; set; }
 
             internal bool ShouldExecute => Enabled && Urls != null && Urls.Length > 0;
         }

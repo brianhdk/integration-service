@@ -5,7 +5,6 @@ using NSubstitute;
 using NUnit.Framework;
 using Vertica.Integration.Domain.Monitoring;
 using Vertica.Integration.Infrastructure.Logging;
-using Vertica.Integration.Infrastructure.Remote;
 using Vertica.Integration.Model;
 
 namespace Vertica.Integration.Tests.Domain.Monitoring
@@ -30,7 +29,7 @@ namespace Vertica.Integration.Tests.Domain.Monitoring
                 }
             };
 
-            var subject = new PingUrlsStep(new HttpClientFactory());
+            var subject = new PingUrlsStep();
 
             var workItem = new MonitorWorkItem(configuration);
 
