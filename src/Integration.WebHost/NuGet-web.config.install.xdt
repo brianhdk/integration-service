@@ -10,7 +10,9 @@
     <add key="ConcurrentTaskExecution.DefaultWaitTime" value="00:01:00" xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" />
     <add key="DbDistributedMutex.QueryLockInterval" value="00:00:10" xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" />
   </appSettings>
-
+  <system.webServer xdt:Transform="InsertIfMissing">
+    <modules runAllManagedModulesForAllRequests="true" xdt:Transform="SetAttributes" />
+  </system.webServer>
   <system.net xdt:Transform="InsertIfMissing">
     <mailSettings xdt:Transform="InsertIfMissing">
       <smtp from="[EMAIL-ADDRESS]" xdt:Transform="InsertIfMissing">

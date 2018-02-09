@@ -22,7 +22,7 @@
 
             //WebApi.Controllers.Demo.Run();
 
-            //WebApi.Portal.Demo.Run();
+            WebApi.Portal.Demo.Run();
 
             //WebApi.NSwag.Demo.Run();
 

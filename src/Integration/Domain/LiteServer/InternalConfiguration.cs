@@ -21,7 +21,7 @@ namespace Vertica.Integration.Domain.LiteServer
 
         public TimeSpan ShutdownTimeout
         {
-            get { return _shutdownTimeout; }
+            get => _shutdownTimeout;
             set
             {
                 if (value < TimeSpan.Zero) throw new ArgumentOutOfRangeException(nameof(value), @"Value cannot be negative.");
@@ -32,7 +32,7 @@ namespace Vertica.Integration.Domain.LiteServer
 
         public TimeSpan HouseKeepingInterval
         {
-            get { return _houseKeepingInterval; }
+            get => _houseKeepingInterval;
             set
             {
                 if (value <= TimeSpan.Zero) throw new ArgumentOutOfRangeException(nameof(value), value, @"Value cannot be zero or negative.");

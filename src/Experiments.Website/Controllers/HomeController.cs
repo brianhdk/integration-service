@@ -1,5 +1,4 @@
-﻿using System;
-using System.Web;
+﻿using System.Web;
 using System.Web.Mvc;
 using Microsoft.Owin;
 using Vertica.Integration;
@@ -13,8 +12,6 @@ namespace Experiments.Website.Controllers
     {
         public ViewResult Index()
         {
-            //return View(new TaskExecutionResult(new[] {"A"}));
-
             try
             {
                 IApplicationContext integrationService = OwinContext.GetIntegrationService();
