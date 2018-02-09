@@ -1,8 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
+using Microsoft.Owin;
+using Microsoft.Owin.Extensions;
+using Microsoft.Owin.FileSystems;
+using Microsoft.Owin.StaticFiles;
+using Owin;
 using Vertica.Integration.WebApi;
-using Vertica.Integration.WebApi.Controllers;
 
 namespace Vertica.Integration.Portal
 {
@@ -32,9 +36,19 @@ Try re-installing the package and/or make sure that the zip-file is included par
 						ZipFile.ExtractToDirectory(zipFile.FullName, PortalConfiguration.Folder);
 					}
 
-					webApi
-						.Remove<HomeController>()
-						.AddFromAssemblyOfThis<PortalConfiguration>();
+	                webApi
+	                    .AddFromAssemblyOfThis<PortalConfiguration>()
+	                    .HttpServer(httpServer => httpServer.Configure(owin =>
+	                    {
+	                        owin.App.UseFileServer(new FileServerOptions
+	                        {
+	                            RequestPath = new PathString(""),
+	                            FileSystem = new PhysicalFileSystem(PortalConfiguration.Folder)
+	                        });
+
+                            // https://github.com/aspnet/AspNetKatana/wiki/Static-Files-on-IIS
+                            owin.App.UseStageMarker(PipelineStage.MapHandler);
+	                    }));
 
 		            return new PortalConfiguration();
 	            });

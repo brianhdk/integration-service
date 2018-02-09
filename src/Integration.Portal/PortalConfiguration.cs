@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
+using System.Web;
 
 namespace Vertica.Integration.Portal
 {
@@ -15,7 +16,15 @@ namespace Vertica.Integration.Portal
 
         private static string GetBinFolder()
         {
+            if (IsWebApp())
+                return HttpRuntime.AppDomainAppPath;
+
             return new FileInfo(typeof(PortalConfiguration).Assembly.Location).DirectoryName ?? string.Empty;
+        }
+
+        private static bool IsWebApp()
+        {
+            return !string.IsNullOrWhiteSpace(HttpRuntime.AppDomainAppId);
         }
 
         private static string GetVersion()
@@ -30,7 +39,12 @@ namespace Vertica.Integration.Portal
             string folder = Path.Combine(BinFolder, $"{Name}-{Version}");
 
 #if DEBUG
-            string developmentFolder = Path.Combine(folder, @"..\..\..\..\Integration.Portal");
+            string developmentFolder = @"..\..\Integration.Portal";
+
+            if (!IsWebApp())
+                developmentFolder = $@"..\..\{developmentFolder}";
+
+            developmentFolder = Path.Combine(folder, developmentFolder);
 
             if (Directory.Exists(developmentFolder))
                 folder = developmentFolder;

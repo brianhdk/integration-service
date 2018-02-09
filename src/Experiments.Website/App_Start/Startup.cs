@@ -1,4 +1,7 @@
 ﻿using Microsoft.Owin;
+using Microsoft.Owin.Extensions;
+using Microsoft.Owin.FileSystems;
+using Microsoft.Owin.StaticFiles;
 using Owin;
 using Vertica.Integration.Domain.Core;
 using Vertica.Integration.Portal;
@@ -13,6 +16,8 @@ namespace Experiments.Website
     {
         public void Configuration(IAppBuilder app)
         {
+            // Configure WebAPI base path + route ...
+
             app.UseIntegrationService(application => application
                 .Database(database => database
                     .IntegrationDb(integrationDb => integrationDb
