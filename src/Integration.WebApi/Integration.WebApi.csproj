@@ -99,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Infrastructure\ExceptionLogger.cs" />
+    <Compile Include="Infrastructure\WebApiConfigurator.cs" />
     <Compile Include="Infrastructure\HttpServerConfiguration.cs" />
     <Compile Include="Infrastructure\Castle.Windsor\WebApiInstaller.cs" />
     <Compile Include="Infrastructure\IOwinConfiguration.cs" />

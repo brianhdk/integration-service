@@ -2,18 +2,26 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Web.Http;
+using Castle.Windsor;
+using Owin;
 using Vertica.Integration.Domain.LiteServer;
 using Vertica.Integration.WebApi.Infrastructure;
 using Vertica.Integration.WebApi.Infrastructure.Castle.Windsor;
 
 namespace Vertica.Integration.WebApi
 {
-    public class WebApiConfiguration : IInitializable<ApplicationConfiguration>
+    public class WebApiConfiguration : 
+        IInitializable<IWindsorContainer>,
+        IInitializable<ApplicationConfiguration>, 
+        IInitializable<IApplicationContext>
     {
         private readonly List<Assembly> _scan;
         private readonly List<Type> _add;
         private readonly List<Type> _remove;
 	    private readonly HttpServerConfiguration _httpServerConfiguration;
+
+        private IAppBuilder _currentApp;
+        private IWindsorContainer _container;
 
         internal WebApiConfiguration(ApplicationConfiguration application)
         {
@@ -24,6 +32,7 @@ namespace Vertica.Integration.WebApi
             _scan = new List<Assembly>();
             _add = new List<Type>();
             _remove = new List<Type>();
+
 	        _httpServerConfiguration = new HttpServerConfiguration();
 
             // scan own assembly
@@ -98,8 +107,25 @@ namespace Vertica.Integration.WebApi
 
 		    return this;
 	    }
+        
+        /// <summary>
+        /// Pass an existing <see cref="IAppBuilder"/> instance to have WebApi configured on that.
+        /// </summary>
+        public WebApiConfiguration FromCurrentApp(IAppBuilder currentApp)
+        {
+            if (currentApp == null) throw new ArgumentNullException(nameof(currentApp));
 
-	    void IInitializable<ApplicationConfiguration>.Initialized(ApplicationConfiguration application)
+            _currentApp = currentApp;
+
+            return this;
+        }
+
+        void IInitializable<IWindsorContainer>.Initialized(IWindsorContainer container)
+        {
+            _container = container;
+        }
+
+        void IInitializable<ApplicationConfiguration>.Initialized(ApplicationConfiguration application)
 	    {
 	        var installer = new WebApiInstaller(
 	            _scan.ToArray(),
@@ -112,5 +138,11 @@ namespace Vertica.Integration.WebApi
 	                .Advanced(advanced => advanced
 	                    .Install(installer)));
 	    }
+
+        void IInitializable<IApplicationContext>.Initialized(IApplicationContext context)
+        {
+            if (_currentApp != null)
+                _httpServerConfiguration.Configure(_container.Kernel, _currentApp);
+        }
     }
 }

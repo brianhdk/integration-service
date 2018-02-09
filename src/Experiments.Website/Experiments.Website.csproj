@@ -107,6 +107,9 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Http.Owin, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Owin.5.2.3\lib\net45\System.Web.Http.Owin.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
@@ -153,7 +156,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\EnqueueMessageBotCommand.cs" />
@@ -163,7 +168,6 @@
     <Compile Include="App_Start\MachineNameBotCommand.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\StaticLogger.cs" />
-    <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="App_Start\WriteToSlackTask.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RunTaskController.cs" />
@@ -197,9 +201,17 @@
       <Project>{7158B2C5-5725-4B55-B9ED-C58169712051}</Project>
       <Name>Integration.Hangfire</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Integration.Portal\Integration.Portal.csproj">
+      <Project>{be14da0e-31c6-4417-8ec6-ed1658b51fa9}</Project>
+      <Name>Integration.Portal</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Integration.Slack\Integration.Slack.csproj">
       <Project>{2E86F586-A386-4E65-8241-BA6E0C24F4B6}</Project>
       <Name>Integration.Slack</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration.WebApi\Integration.WebApi.csproj">
+      <Project>{a6cb3949-9637-4952-ab0f-0de199e29b36}</Project>
+      <Name>Integration.WebApi</Name>
     </ProjectReference>
     <ProjectReference Include="..\Integration.WebHost\Integration.WebHost.csproj">
       <Project>{317D57D1-6A15-4D13-A789-1381817A7E6F}</Project>

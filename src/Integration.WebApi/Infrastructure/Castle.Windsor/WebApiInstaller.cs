@@ -16,10 +16,11 @@ namespace Vertica.Integration.WebApi.Infrastructure.Castle.Windsor
 {
 	internal class WebApiInstaller : IWindsorInstaller
 	{
-		private readonly HttpServerConfiguration _httpServerConfiguration;
-		private readonly Assembly[] _scanAssemblies;
-        private readonly Type[] _addControllers;
-        private readonly Type[] _removeControllers;
+	    private readonly Assembly[] _scanAssemblies;
+	    private readonly Type[] _addControllers;
+	    private readonly Type[] _removeControllers;
+
+	    private readonly HttpServerConfiguration _httpServerConfiguration;
 
 	    public WebApiInstaller(Assembly[] scanAssemblies, Type[] addControllers, Type[] removeControllers, HttpServerConfiguration httpServerConfiguration)
         {
@@ -31,14 +32,15 @@ namespace Vertica.Integration.WebApi.Infrastructure.Castle.Windsor
 		    _scanAssemblies = scanAssemblies;
 		    _addControllers = addControllers;
 		    _removeControllers = removeControllers;
+
 		    _httpServerConfiguration = httpServerConfiguration;
         }
 
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-			container.Register(
-				Component.For<IHttpServerFactory>()
-					.UsingFactoryMethod(kernel => new HttpServerFactory(kernel, _httpServerConfiguration))
+            container.Register(
+                Component.For<IHttpServerFactory>()
+                    .UsingFactoryMethod(kernel => new HttpServerFactory(kernel, _httpServerConfiguration))
                     .LifestyleSingleton());
 
             var types = new List<Type>();
@@ -73,7 +75,7 @@ namespace Vertica.Integration.WebApi.Infrastructure.Castle.Windsor
             container.Install(installer);
         }
 
-	    private class HttpServerFactory : IHttpServerFactory
+        private class HttpServerFactory : IHttpServerFactory
 	    {
 		    private readonly IKernel _kernel;
 		    private readonly HttpServerConfiguration _configuration;

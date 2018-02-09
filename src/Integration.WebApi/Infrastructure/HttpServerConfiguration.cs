@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Web.Http;
 using Castle.MicroKernel;
+using Owin;
 
 namespace Vertica.Integration.WebApi.Infrastructure
 {
@@ -63,6 +64,14 @@ namespace Vertica.Integration.WebApi.Infrastructure
 
 			return new HttpServer(kernel, Apply, url);
 		}
+
+	    internal void Configure(IKernel kernel, IAppBuilder app)
+	    {
+	        if (kernel == null) throw new ArgumentNullException(nameof(kernel));
+	        if (app == null) throw new ArgumentNullException(nameof(app));
+
+	        app.Configure(kernel, Apply);
+	    }
 
 		private void Apply(IOwinConfiguration configuration)
 		{

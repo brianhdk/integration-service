@@ -23,8 +23,6 @@ namespace Vertica.Integration
         private readonly CancellationTokenSource _cancellation;
 	    private readonly ApplicationConfiguration _configuration;
 
-	    private readonly IWindsorContainer _container;
-
 		private bool _isDisposed;
 
 		internal ApplicationContext(Action<ApplicationConfiguration> application)
@@ -45,20 +43,27 @@ namespace Vertica.Integration
             });
 
             // Creates the DI container
-            _container = new WindsorContainer();
-            _container.Kernel.AddFacility<TypedFactoryFacility>();
-            _container.Register(Component.For<ILazyComponentLoader>().ImplementedBy<LazyOfTComponentLoader>());
+            Container = new WindsorContainer();
+            Container.Kernel.AddFacility<TypedFactoryFacility>();
+            Container.Register(Component.For<ILazyComponentLoader>().ImplementedBy<LazyOfTComponentLoader>());
             
             // Allows all extension-points to initialize the DI container.
             _configuration.Extensibility(extensibility =>
             {
                 foreach (var subject in extensibility.OfType<IInitializable<IWindsorContainer>>())
-                    subject.Initialized(_container);
+                    subject.Initialized(Container);
             });
 
             // Ensures that we "own" these specific service interfaces - which cannot be intercepted
-            _container.Install(Install.Instance<IShutdown>(this, registration => registration.NamedAutomatically("Shutdown_23a911175572418588e212253a2dcf98")));
-		    _container.Install(Install.Instance<IUptime>(this, registration => registration.NamedAutomatically("Uptime_d097752484954f1cb727633cdefc87a4")));
+            Container.Install(Install.Instance<IShutdown>(this, registration => registration.NamedAutomatically("Shutdown_23a911175572418588e212253a2dcf98")));
+		    Container.Install(Install.Instance<IUptime>(this, registration => registration.NamedAutomatically("Uptime_d097752484954f1cb727633cdefc87a4")));
+
+            // Allows all extensions-points to run code after the Integration Service is fully configured.
+		    _configuration.Extensibility(extensibility =>
+		    {
+		        foreach (var subject in extensibility.OfType<IInitializable<IApplicationContext>>())
+		            subject.Initialized(this);
+		    });
 
             // Report that we're live and kicking
             WriteLine("[Integration Service]: Started at {0} (UTC).", _startedAt);
@@ -74,7 +79,7 @@ namespace Vertica.Integration
 			if (service == null) throw new ArgumentNullException(nameof(service));
 
             EnsureNotDisposed();
-            return _container.Resolve(service);
+            return Container.Resolve(service);
 		}
 
 		public Array ResolveAll(Type service)
@@ -82,19 +87,19 @@ namespace Vertica.Integration
 			if (service == null) throw new ArgumentNullException(nameof(service));
 
             EnsureNotDisposed();
-            return _container.ResolveAll(service);
+            return Container.ResolveAll(service);
 		}
 
 		public T Resolve<T>()
 	    {
             EnsureNotDisposed();
-            return _container.Resolve<T>();
+            return Container.Resolve<T>();
 	    }
 
 	    public T[] ResolveAll<T>()
 	    {
             EnsureNotDisposed();
-            return _container.ResolveAll<T>();
+            return Container.ResolveAll<T>();
 	    }
 
 	    public void Execute(params string[] args)
@@ -177,11 +182,13 @@ namespace Vertica.Integration
                 WriteLine("[Integration Service]: Shut down. Uptime: {0}", UptimeText);
 
                 _cancellation.Dispose();
-                _container.Dispose();
+                Container.Dispose();
 
                 _isDisposed = true;
             }
         }
+
+        private IWindsorContainer Container { get; }
 
         private void EnsureNotDisposed()
         {
