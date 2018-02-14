@@ -11,6 +11,7 @@
     <add key="DbDistributedMutex.QueryLockInterval" value="00:00:10" xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" />
   </appSettings>
   <system.webServer xdt:Transform="InsertIfMissing">
+    <modules xdt:Transform="InsertIfMissing" />
     <modules runAllManagedModulesForAllRequests="true" xdt:Transform="SetAttributes" />
   </system.webServer>
   <system.net xdt:Transform="InsertIfMissing">

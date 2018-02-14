@@ -16,12 +16,14 @@
     <copyright>Copyright 2018</copyright>
     <tags>Vertica Integration Service IntegrationService WebHost</tags>
     <dependencies>
-      <dependency id="Vertica.Integration" version="[1.12,2.0)" />
+      <dependency id="Vertica.Integration.WebApi" version="[1.18,2.0)" />
+      <dependency id="Microsoft.Owin.Host.SystemWeb" version="3.1.0" />
     </dependencies>
   </metadata>
   <files>
     <file src="App_Readme\Integration.WebHost-readme.txt" target="readme.txt" />
     <file src="NuGet-web.config.install.xdt" target="content\Web.config.install.xdt" />
     <file src="NuGet-web.config.uninstall.xdt" target="content\Web.config.uninstall.xdt" />
+    <file src="NuGet-Startup.cs.pp" target="content\App_Start\Startup.cs.pp" />
   </files>
 </package>

@@ -16,8 +16,9 @@
     <copyright>Copyright 2018</copyright>
     <tags>Vertica Integration Service IntegrationService Portal</tags>
     <dependencies>
-      <dependency id="Vertica.Integration" version="[1.12,2.0)" />
-      <dependency id="Vertica.Integration.WebApi" version="[1.15,2.0)" />
+      <dependency id="Vertica.Integration.WebApi" version="[1.17,2.0)" />
+      <dependency id="Microsoft.Owin.FileSystems" version="3.1.0" />
+      <dependency id="Microsoft.Owin.StaticFiles" version="3.1.0" />
     </dependencies>
   </metadata>
   <files>

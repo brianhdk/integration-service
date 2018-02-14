@@ -17,6 +17,7 @@
     <tags>Vertica Integration Service IntegrationService SQLite</tags>
     <dependencies>
       <dependency id="Vertica.Integration" version="[1.12,2.0)" />
+      <dependency id="System.Data.SQLite.Core" version="[1,2.0)" />
     </dependencies>
   </metadata>
   <files>

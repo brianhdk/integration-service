@@ -59,6 +59,10 @@
     <Compile Include="WebHostShutdownRequest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Integration.WebApi\Integration.WebApi.csproj">
+      <Project>{a6cb3949-9637-4952-ab0f-0de199e29b36}</Project>
+      <Name>Integration.WebApi</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Integration\Integration.csproj">
       <Project>{460F774F-2C89-47F4-84BD-B97653060E68}</Project>
       <Name>Integration</Name>
@@ -67,6 +71,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Integration.WebHost.nuspec" />
+    <None Include="NuGet-Startup.cs.pp" />
     <None Include="NuGet-web.config.install.xdt" />
     <None Include="NuGet-web.config.uninstall.xdt" />
     <None Include="packages.config" />
