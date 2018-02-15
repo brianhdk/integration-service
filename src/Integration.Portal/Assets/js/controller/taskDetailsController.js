@@ -1,4 +1,4 @@
-﻿integrationsApp.controller('taskDetailsController', function ($scope, $http, $routeParams, $filter, ngTableParams) {
+﻿integrationsApp.controller("taskDetailsController", function ($scope, $http, $routeParams, $filter, ngTableParams) {
 
 	$scope.init = function() {
 		$http.get("/taskDetails").success(function(xhr) {
@@ -8,17 +8,17 @@
 				page: 1,
 				count: 100,
 				sorting: {
-					Name: 'asc' // initial sorting
+					Name: "asc" // initial sorting
 				},
 				filter: {}
 			}, {
 				getData: function($defer, params) {
 					var filteredData = params.filter() ?
-						$filter('filter')(data, params.filter()) :
+						$filter("filter")(data, params.filter()) :
 						data;
 
 					var orderedData = params.sorting() ?
-						$filter('orderBy')(filteredData, params.orderBy()) :
+						$filter("orderBy")(filteredData, params.orderBy()) :
 						filteredData;
 
 					params.total(orderedData.length);

@@ -1,5 +1,3 @@
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using Vertica.Integration.Infrastructure;
 
@@ -14,9 +12,9 @@ namespace Vertica.Integration.WebApi.Controllers
             _uptime = uptime;
         }
 
-        public virtual HttpResponseMessage Get()
+        public virtual IHttpActionResult Get()
         {
-            return Request.CreateResponse(HttpStatusCode.OK, $"Running. {_uptime.UptimeText}");
+            return Ok($"Running. {_uptime.UptimeText}");
         }
     }
 }

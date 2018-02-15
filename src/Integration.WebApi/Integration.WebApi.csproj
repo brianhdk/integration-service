@@ -109,7 +109,6 @@
     <Compile Include="Infrastructure\HttpServer.cs" />
     <Compile Include="Infrastructure\IHttpServerFactory.cs" />
     <Compile Include="Infrastructure\Castle.Windsor\IWebApiControllers.cs" />
-    <Compile Include="Controllers\TasksController.cs" />
     <Compile Include="WebApiConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>

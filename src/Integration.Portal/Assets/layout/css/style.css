@@ -2,3 +2,8 @@
 	height: 200px;
     margin-bottom: 6px;
 }
+
+.uptime-text {
+    color: #cccccc;
+    text-align: right;
+}

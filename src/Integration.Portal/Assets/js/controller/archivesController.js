@@ -1,4 +1,4 @@
-﻿integrationsApp.controller('archivesController', function ($scope, $http, $filter, ngTableParams) {
+﻿integrationsApp.controller("archivesController", function ($scope, $http, $filter, ngTableParams) {
 
     $http.get("/archives").success(function (xhr) {
         var data = xhr;
@@ -7,17 +7,17 @@
             page: 1,
             count: 10,
             sorting: {
-                Created: 'desc'     // initial sorting
+                Created: "desc"     // initial sorting
             },
             filter: {}
         }, {
             getData: function ($defer, params) {
                 var filteredData = params.filter() ?
-                                   $filter('filter')(data, params.filter()) :
+                                   $filter("filter")(data, params.filter()) :
                                    data;
 
                 var orderedData = params.sorting() ?
-                                    $filter('orderBy')(filteredData, params.orderBy()) :
+                                    $filter("orderBy")(filteredData, params.orderBy()) :
                                     filteredData;
 
                 params.total(orderedData.length);

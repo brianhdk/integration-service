@@ -1,8 +1,8 @@
 using System;
-using System.Collections.Concurrent;
 using System.IO;
 using System.Text.RegularExpressions;
 using Castle.MicroKernel;
+using Microsoft.Owin.BuilderProperties;
 using Microsoft.Owin.Hosting;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.IO;
@@ -26,17 +26,14 @@ namespace Vertica.Integration.WebApi.Infrastructure
 
 			// TODO: Make it possible to add multiple URL's to listen on
 	        _httpServer = WebApp.Start(new StartOptions(url), builder =>
-            {
-                // TODO: Look into what this does exactly
-				builder.Properties["host.TraceOutput"] = kernel.Resolve<TextWriter>();
+	        {
+	            var properties = new AppProperties(builder.Properties)
+	            {
+	                TraceOutput = kernel.Resolve<TextWriter>(),
+	                OnAppDisposing = kernel.Resolve<IShutdown>().Token
+	            };
 
-                builder.Configure(kernel, cfg =>
-                {
-                    ConcurrentDictionary<object, object> properties = cfg.Http.Properties;
-                    properties["host.OnAppDisposing"] = kernel.Resolve<IShutdown>().Token;
-
-                    configuration(cfg);
-                });
+	            builder.Configure(properties, kernel, configuration);
             });
         }
 

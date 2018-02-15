@@ -88,6 +88,7 @@
     <Compile Include="Controllers\ArchivesController.cs" />
     <Compile Include="Controllers\ErrorsController.cs" />
     <Compile Include="Controllers\LatestTasksController.cs" />
+    <Compile Include="Controllers\UptimeController.cs" />
     <Compile Include="Controllers\RunningTasksController.cs" />
     <Compile Include="Controllers\TaskDetailsController.cs" />
     <Compile Include="Controllers\TaskExecutionDetailsController.cs" />

@@ -8,6 +8,7 @@ using System.Web.Http.Dispatcher;
 using System.Web.Http.ExceptionHandling;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Lifestyle;
+using Microsoft.Owin.BuilderProperties;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Owin;
@@ -19,21 +20,21 @@ namespace Vertica.Integration.WebApi.Infrastructure
 {
     internal static class WebApiConfigurator
     {
-        public static void Configure(this IAppBuilder builder, IKernel kernel, Action<IOwinConfiguration> configuration)
+        public static void Configure(this IAppBuilder app, AppProperties properties, IKernel kernel, Action<IOwinConfiguration> configuration)
         {
-            if (builder == null) throw new ArgumentNullException(nameof(builder));
+            if (app == null) throw new ArgumentNullException(nameof(app));
             if (kernel == null) throw new ArgumentNullException(nameof(kernel));
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
             HttpConfiguration httpConfiguration = new HttpConfiguration();
-            configuration(new OwinConfiguration(builder, httpConfiguration, kernel));
+            configuration(new OwinConfiguration(app, properties, httpConfiguration, kernel));
 
             ConfigureJson(httpConfiguration);
             ConfigureServices(kernel, httpConfiguration);
 
             MapRoutes(httpConfiguration);
 
-            builder.UseWebApi(httpConfiguration);
+            app.UseWebApi(httpConfiguration);
         }
 
         private static void ConfigureServices(IKernel kernel, HttpConfiguration configuration)
@@ -79,18 +80,20 @@ namespace Vertica.Integration.WebApi.Infrastructure
 
         private class OwinConfiguration : IOwinConfiguration
         {
-            internal OwinConfiguration(IAppBuilder app, HttpConfiguration httpConfiguration, IKernel kernel)
+            internal OwinConfiguration(IAppBuilder app, AppProperties properties, HttpConfiguration http, IKernel kernel)
             {
                 if (app == null) throw new ArgumentNullException(nameof(app));
-                if (httpConfiguration == null) throw new ArgumentNullException(nameof(httpConfiguration));
+                if (http == null) throw new ArgumentNullException(nameof(http));
                 if (kernel == null) throw new ArgumentNullException(nameof(kernel));
 
                 App = app;
-                Http = httpConfiguration;
+                Properties = properties;
+                Http = http;
                 Kernel = kernel;
             }
 
             public IAppBuilder App { get; }
+            public AppProperties Properties { get; }
             public HttpConfiguration Http { get; }
             public IKernel Kernel { get; }
         }

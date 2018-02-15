@@ -33,11 +33,15 @@
 </head>
 <body ng-controller="mainController">
 	<div class="masthead palette-the-black-flag">
-		<div class="container">
-			<div class="masthead-title">
-				Integration Portal
-			</div>
-		</div>
+	    <div class="container">
+            <div class="navbar-right uptime-text hidden-sm">
+                Started: <span ng-bind="uptime.StartedAt"></span><br />
+                Uptime: <span ng-bind="uptime.Text"></span>
+            </div>
+	        <div class="masthead-title">
+	            Integration Portal
+	        </div>
+	    </div>
 	</div>
 	<div class="container">
 		<ul class="row nav nav-pills demo-componant-title">

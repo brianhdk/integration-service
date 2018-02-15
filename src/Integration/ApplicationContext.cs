@@ -18,8 +18,6 @@ namespace Vertica.Integration
 {
 	public sealed class ApplicationContext : IApplicationContext, IShutdown, IUptime
     {
-        private readonly DateTimeOffset _startedAt;
-
         private readonly CancellationTokenSource _cancellation;
 	    private readonly ApplicationConfiguration _configuration;
 
@@ -27,7 +25,7 @@ namespace Vertica.Integration
 
 		internal ApplicationContext(Action<ApplicationConfiguration> application)
 		{
-            _startedAt = Time.UtcNow;
+            StartedAt = Time.UtcNow;
 
             _cancellation = new CancellationTokenSource();
             _configuration = new ApplicationConfiguration();
@@ -66,7 +64,7 @@ namespace Vertica.Integration
 		    });
 
             // Report that we're live and kicking
-            WriteLine("[Integration Service]: Started at {0} (UTC).", _startedAt);
+            WriteLine("[Integration Service]: Started at {0} (UTC).", StartedAt);
         }
 
         public static IApplicationContext Create(Action<ApplicationConfiguration> application = null)
@@ -74,7 +72,9 @@ namespace Vertica.Integration
 			return new ApplicationContext(application);
 	    }
 
-		public object Resolve(Type service)
+        public DateTimeOffset StartedAt { get; }
+
+        public object Resolve(Type service)
 		{
 			if (service == null) throw new ArgumentNullException(nameof(service));
 
@@ -196,7 +196,7 @@ namespace Vertica.Integration
                 throw new ObjectDisposedException(GetType().Name, "ApplicationContext has already been disposed.");
         }
 
-        public string UptimeText => Resolve<IUptimeTextGenerator>().GetUptimeText(_startedAt);
+        public string UptimeText => Resolve<IUptimeTextGenerator>().GetUptimeText(StartedAt);
 
         private void WriteLine(string format, params object[] args)
         {

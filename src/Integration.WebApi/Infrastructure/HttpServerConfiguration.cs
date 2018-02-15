@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Web.Http;
 using Castle.MicroKernel;
+using Microsoft.Owin.BuilderProperties;
 using Owin;
 
 namespace Vertica.Integration.WebApi.Infrastructure
@@ -70,7 +71,7 @@ namespace Vertica.Integration.WebApi.Infrastructure
 	        if (kernel == null) throw new ArgumentNullException(nameof(kernel));
 	        if (app == null) throw new ArgumentNullException(nameof(app));
 
-	        app.Configure(kernel, Apply);
+	        app.Configure(new AppProperties(app.Properties), kernel, Apply);
 	    }
 
 		private void Apply(IOwinConfiguration configuration)
