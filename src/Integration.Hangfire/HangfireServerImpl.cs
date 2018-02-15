@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Castle.MicroKernel;
 using Hangfire;
 using Hangfire.Server;
+using Vertica.Integration.Infrastructure.Logging;
 
 namespace Vertica.Integration.Hangfire
 {
@@ -23,7 +24,9 @@ namespace Vertica.Integration.Hangfire
 
 			Execute(_configuration.OnStartup);
 
-			IBackgroundProcess[] backgroundProcesses = kernel.ResolveAll<IBackgroundProcess>();
+		    JobActivator.Current = _configuration.ServerOptions.Activator = new WindsorJobActivator(kernel);
+
+            IBackgroundProcess[] backgroundProcesses = kernel.ResolveAll<IBackgroundProcess>();
 
             _server = new BackgroundJobServer(configuration.ServerOptions, JobStorage.Current, backgroundProcesses);
 		}
@@ -40,5 +43,29 @@ namespace Vertica.Integration.Hangfire
 			foreach (Action<IKernel> action in actions)
 				action(_kernel);
 		}
-	}
+
+	    private class WindsorJobActivator : JobActivator
+	    {
+	        private readonly IKernel _kernel;
+
+	        public WindsorJobActivator(IKernel kernel)
+	        {
+	            _kernel = kernel;
+	        }
+
+	        public override object ActivateJob(Type jobType)
+	        {
+	            try
+	            {
+	                return _kernel.Resolve(jobType);
+	            }
+	            catch (Exception ex)
+	            {
+	                _kernel.Resolve<ILogger>().LogError(ex);
+
+	                throw;
+	            }
+	        }
+	    }
+    }
 }

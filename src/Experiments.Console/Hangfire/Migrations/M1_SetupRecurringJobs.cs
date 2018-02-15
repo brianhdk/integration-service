@@ -12,6 +12,8 @@ namespace Experiments.Console.Hangfire.Migrations
     {
         public override void Up()
         {
+            //EnsureHangfire();
+
             AddRecurringJob(nameof(MyTask), x => x.RunMyTask(), Cron.Minutely());
 
             // This calls the "RunTask()"-method on the IHangfireJob-interface

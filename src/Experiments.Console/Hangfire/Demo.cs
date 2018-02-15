@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
-using Castle.MicroKernel;
 using Experiments.Console.Hangfire.Migrations;
 using Hangfire;
-using Hangfire.MemoryStorage;
 using Hangfire.SqlServer;
 using Vertica.Integration;
 using Vertica.Integration.Domain.LiteServer;
 using Vertica.Integration.Hangfire;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Database.Migrations;
-using Vertica.Integration.Infrastructure.Features;
-using Vertica.Integration.Model;
 using Vertica.Integration.Portal;
 using Vertica.Integration.WebApi;
 
@@ -22,17 +17,16 @@ namespace Experiments.Console.Hangfire
     {
         public static void Run()
         {
-            var db = ConnectionString.FromText(@"Integrated Security=SSPI;Data Source=.\SQLExpress;Database=IntegrationService_Hangfire");
+            var db = ConnectionString.FromText(@"Integrated Security=SSPI;Data Source=.\SQLExpress;Database=IntegrationServiceDemo_Hangfire");
 
             using (var context = ApplicationContext.Create(application => application
                 .Database(database => database
                     .IntegrationDb(integrationDb => integrationDb
-                        //.Disable()
-                        .PrefixTables("IntegrationDb_")
+                        .PrefixTables("IntegrationService.")
                         .Connection(db)))
                 .Migration(migration => migration
                     // These migrations will be stored in IntegrationDb
-                    .AddFromNamespaceOfThis<M1_SetupRecurringJobs>("CustomMigrations"))
+                    .AddFromNamespaceOfThis<M1_SetupRecurringJobs>())
                 .Tasks(tasks => tasks
                     // clear all detault tasks ...
                     .Clear()
@@ -55,14 +49,12 @@ namespace Experiments.Console.Hangfire
                         .WithOptions(options => options
                             .ExpireIn = TimeSpan.FromDays(1)))
                     .Configuration(configuration => configuration
-                        // Use InMemory storage - see Migration hack further below
-                        .UseMemoryStorage(new MemoryStorageOptions())
-                        // Your can also use SqlServerStorage - make sure that the database is created before running the code
-                        //.UseSqlServerStorage(db, new SqlServerStorageOptions
-                        //{
-                        //    QueuePollInterval = TimeSpan.FromSeconds(5)
-                        //})
-                    ))
+                        .UseSqlServerStorage(db, new SqlServerStorageOptions
+                        {
+                            QueuePollInterval = TimeSpan.FromSeconds(5)
+                        })
+                    )
+                )
                 // We'll also setup WebAPI so we can host the Hangfire Dashboard
                 .UseWebApi(webApi => webApi
                     .WithPortal()
@@ -81,8 +73,6 @@ namespace Experiments.Console.Hangfire
                     .AddWorker<CreateFireAndForgetJobsWorker>()
                     .AddWorker<ForceExceptionWorker>()
                     .OnStartup(startup => startup
-                        // The startup-method below is a hack due to the InMemory storage provider of Hangfire
-                        .Add(ClearExistingMigrationsHack)
                         // Running MigrateTask ensures DB schema is up to date.
                         .RunMigrateTask()))))
             {
@@ -91,22 +81,6 @@ namespace Experiments.Console.Hangfire
 
                 // You can now browse to http://localhost:8154/hangfire to see the Hangfire dashboard
             }
-        }
-
-        private static void ClearExistingMigrationsHack(IKernel kernel)
-        {
-            // Since we're running an InMemory storage, we need to rollback our custom migration (M1_SetupRecurringJobs)
-            //  - On any "real" project you'll be using a persistent storage provider, e.g. SQL - so this hack will not be necessary.
-
-            var taskRunner = kernel.Resolve<ITaskRunner>();
-            var taskFactory = kernel.Resolve<ITaskFactory>();
-            var featureToggler = kernel.Resolve<IFeatureToggler>();
-
-            //if (featureToggler.IsDisabled<DbLogger>())
-
-            taskRunner.Execute(taskFactory.Get<MigrateTask>(), new Vertica.Integration.Model.Arguments(
-                new KeyValuePair<string, string>("names", "CustomMigrations"),
-                new KeyValuePair<string, string>("action", "rollback")));
         }
     }
 
@@ -130,7 +104,7 @@ namespace Experiments.Console.Hangfire
     {
         public BackgroundWorkerContinuation Work(BackgroundWorkerContext context, CancellationToken token)
         {
-            BackgroundJob.Enqueue<ISomeInterfaceMissingImplementation>(x => x.CallMeAndHangfireWillThrowException());
+            //BackgroundJob.Enqueue<ISomeInterfaceMissingImplementation>(x => x.CallMeAndHangfireWillThrowException());
 
             return context.Wait(TimeSpan.FromSeconds(7));
         }

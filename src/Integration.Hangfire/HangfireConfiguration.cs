@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
 using Castle.MicroKernel;
-using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Hangfire;
+using Hangfire.Logging;
 using Hangfire.Server;
+using Hangfire.States;
+using Hangfire.Storage;
 using Vertica.Integration.Domain.LiteServer;
 using Vertica.Integration.Hangfire.Console;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
-using Vertica.Integration.Infrastructure.Logging;
 
 namespace Vertica.Integration.Hangfire
 {
@@ -16,7 +17,6 @@ namespace Vertica.Integration.Hangfire
 	{
 		private readonly InternalConfiguration _configuration;
 		private readonly ScanAddRemoveInstaller<IBackgroundProcess> _backgroundProcesses;
-        private readonly List<Action<IGlobalConfiguration, IKernel>> _globalConfigurations;
 		
 		internal HangfireConfiguration(ApplicationConfiguration application)
 		{
@@ -27,7 +27,6 @@ namespace Vertica.Integration.Hangfire
 
 			_configuration = new InternalConfiguration();
 			_backgroundProcesses = new ScanAddRemoveInstaller<IBackgroundProcess>();
-            _globalConfigurations = new List<Action<IGlobalConfiguration, IKernel>>();
 		}
 
 		public ApplicationConfiguration Application { get; }
@@ -44,9 +43,7 @@ namespace Vertica.Integration.Hangfire
 
 	    public HangfireConfiguration Configuration(Action<IGlobalConfiguration, IKernel> configuration)
 	    {
-	        if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-
-	        _globalConfigurations.Add(configuration);
+	        _configuration.Add(configuration);
 
 	        return this;
 	    }
@@ -148,57 +145,92 @@ namespace Vertica.Integration.Hangfire
 
 		void IInitializable<IWindsorContainer>.Initialized(IWindsorContainer container)
 		{
-            foreach (Action<IGlobalConfiguration, IKernel> globalConfiguration in _globalConfigurations)
-                globalConfiguration(GlobalConfiguration.Configuration, container.Kernel);
-
-            JobActivator.Current = _configuration.ServerOptions.Activator = new WindsorJobActivator(container.Kernel);
-
             container.Install(_backgroundProcesses);
+		    container.Install(Install.Instance<IInternalConfiguration>(_configuration));
+		    container.Install(Install.Service<IHangfireServerFactory, HangfireServerFactory>());
 
-			container.Register(
-				Component.For<IHangfireServerFactory>()
-					.UsingFactoryMethod(kernel => new HangfireServerFactory(kernel, _configuration)));
+            // Assign a Storage as early as this, to support creating a brand-new Hangfire database part of the initial migration of Integration Service.
+		    GlobalConfiguration.Configuration.UseStorage(new DelegatingJobStorage(container, _configuration));
 		}
 
-		private class HangfireServerFactory : IHangfireServerFactory
-		{
-			private readonly IKernel _kernel;
-			private readonly IInternalConfiguration _configuration;
+	    private class DelegatingJobStorage : JobStorage
+	    {
+	        private readonly IWindsorContainer _container;
+	        private readonly InternalConfiguration _configuration;
+	        private bool _initialized;
 
-			public HangfireServerFactory(IKernel kernel, IInternalConfiguration configuration)
-			{
-				_kernel = kernel;
-				_configuration = configuration;
-			}
+	        public DelegatingJobStorage(IWindsorContainer container, InternalConfiguration configuration)
+	        {
+	            _container = container;
+	            _configuration = configuration;
+	        }
 
-			public IDisposable Create()
-			{
-				return new HangfireServerImpl(_kernel, _configuration);
-			}
-		}
+	        public override IMonitoringApi GetMonitoringApi()
+	        {
+	            return Ensure(current => current.GetMonitoringApi());
+	        }
 
-		private class WindsorJobActivator : JobActivator
-		{
-			private readonly IKernel _kernel;
+	        public override IStorageConnection GetConnection()
+	        {
+	            return Ensure(current => current.GetConnection());
+	        }
 
-			public WindsorJobActivator(IKernel kernel)
-			{
-				_kernel = kernel;
-			}
+#pragma warning disable 618
+	        public override IEnumerable<IServerComponent> GetComponents()
+#pragma warning restore 618
+	        {
+	            return Ensure(current => current.GetComponents());
+	        }
 
-			public override object ActivateJob(Type jobType)
-			{
-			    try
-			    {
-			        return _kernel.Resolve(jobType);
-                }
-			    catch (Exception ex)
-			    {
-			        _kernel.Resolve<ILogger>().LogError(ex);
+	        public override IEnumerable<IStateHandler> GetStateHandlers()
+	        {
+	            return Ensure(c => c.GetStateHandlers());
+	        }
 
-			        throw;
-			    }
-			}
-		}
+	        public override void WriteOptionsToLog(ILog logger)
+	        {
+	            Ensure(current =>
+	            {
+	                current.WriteOptionsToLog(logger);
+
+                    // dummy value
+	                return true;
+	            });
+	        }
+
+	        private T Ensure<T>(Func<JobStorage, T> withJobStorage)
+	        {
+	            if (!_initialized)
+	            {
+	                lock (this)
+	                {
+	                    if (!_initialized)
+	                    {
+	                        foreach (Action<IGlobalConfiguration, IKernel> configurer in _configuration)
+	                            configurer(GlobalConfiguration.Configuration, _container.Kernel);
+
+	                        _initialized = true;
+	                    }
+	                }
+	            }
+
+	            JobStorage current = Current;
+
+	            if (current is DelegatingJobStorage)
+	                throw new InvalidOperationException(@"You must apply a JobStorage part of bootstrapping Hangfire, see the following example which uses the SqlServerStorage (available from the ""Hangfire.SqlServer"" NuGet package):
+
+.UseHangfire(hangfire => hangfire
+    .Configuration(configuration => configuration
+        .UseSqlServerStorage(""Integrated Security=SSPI;Data Source=.\\SQLExpress;Database=IntegrationService_Hangfire"", new SqlServerStorageOptions
+        {
+            // Defines how often to query the Hangfire database
+            QueuePollInterval = TimeSpan.FromSeconds(5)
+        })
+    )
+)");
+
+	            return withJobStorage(Current);
+	        }
+        }
 	}
 }

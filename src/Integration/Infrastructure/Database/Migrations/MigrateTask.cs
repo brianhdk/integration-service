@@ -160,13 +160,13 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 
                     var builder = new SqlConnectionStringBuilder(connection.ConnectionString);
 
-                    Func<string, string> changeDatabase = dbName =>
+                    string ChangeDatabase(string dbName)
                     {
                         builder["Initial Catalog"] = dbName;
                         return builder.ConnectionString;
-                    };
+                    }
 
-                    connection.ConnectionString = changeDatabase("master");
+                    connection.ConnectionString = ChangeDatabase("master");
                     connection.Open();
 
                     command.CommandText = @"
@@ -192,7 +192,7 @@ ELSE
 
                     databaseCreated = (string)command.ExecuteScalar() == "CREATED";
 
-                    return changeDatabase(databaseName);
+                    return ChangeDatabase(databaseName);
                 }                
             }
         }
