@@ -144,7 +144,6 @@
     <Compile Include="FileWatcher\HandleFileTask.cs" />
     <Compile Include="Elasticsearch\Demo.cs" />
     <Compile Include="Hangfire\AllowAllAuthorizationFilter.cs" />
-    <Compile Include="Hangfire\CreateDatabaseDemo.cs" />
     <Compile Include="Hangfire\Demo.cs" />
     <Compile Include="Hangfire\IHangfireJob.cs" />
     <Compile Include="Hangfire\Migrations\M1_SetupRecurringJobs.cs" />

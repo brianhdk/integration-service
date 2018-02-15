@@ -198,6 +198,11 @@ namespace Vertica.Integration.Hangfire
 	            });
 	        }
 
+	        public override string ToString()
+	        {
+	            return Ensure(current => current.ToString());
+	        }
+
 	        private T Ensure<T>(Func<JobStorage, T> withJobStorage)
 	        {
 	            if (!_initialized)
