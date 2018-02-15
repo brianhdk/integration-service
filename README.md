@@ -50,14 +50,12 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
 
 1. Choosing a Host for Integration Service.
 
-	Typically Integration Service is hosted through a simple .NET Console Application (.exe). Add a new "Console Application" project to your existing (or new solution). 
+	Typically Integration Service is hosted through a simple .NET Console Application (.exe). Add a new "Console Application" project to your existing (or new solution). It is also supported to host Integration Service from a Web Application project - simply create a new "ASP.NET Web Application (.NET Framework)" and choose the "Empty"-template.
 
   **NOTE:** Later you'll add a Class Library project where all your actual implementation code will be placed.
 
 2. Install Integration Service via NuGet
 
-	**NOTE:** Make sure that you have a NuGet Package Source configured for URL: http://nuget.vertica.dk/nuget
-	
   ```
   Install-Package Vertica.Integration.ConsoleHost
   ```
@@ -79,10 +77,8 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
 4. Open file app.config, and fill-out the [Placeholder]'s with actual values:
  
   ### Database configuration
-  *By default Integration Service requires a database - but this can be disabled. See section [How to Disable IntegrationDb](#how-to-disable-integrationdb) to read more about the option of running Integration Service without a database.*
+  *By default Integration Service requires a database - but this can easily be disabled. See section [How to Disable IntegrationDb](#how-to-disable-integrationdb) to read more about the option of running Integration Service without a database.*
 
-  TODO: Document how to setup a table-prefix.
-  
   ```xml
   <connectionStrings>
       <add name="IntegrationDb" connectionString="Integrated Security=SSPI;Data Source=[NAME-OF-SQL-SERVER];Database=[NAME-OF-INTEGRATION-DATABASE]" />
@@ -94,6 +90,13 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
   <add name="IntegrationDb" connectionString="Server=tcp:xxxx.database.windows.net,1433;Database=IntegrationDb;User ID=xxxx@xxxx;Password=xxxx;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" />
   ```  
 
+  You can choose to setup all Integration Service tables with a prefix (recommended) - this can be done using the following snippet:
+  
+  ```c#
+  .Database(database => database
+    .IntegrationDb(integrationDb => integrationDb
+        .PrefixTables("IntegrationService.")))
+  ```
   ### SMTP
   ```xml
   <mailSettings>
@@ -116,6 +119,8 @@ General purpose platform for running Tasks and Migrations expose (internally) HT
         <network defaultCredentials="false" enableSsl="true" host="smtp.office365.com" port="587" password="askForPassword" userName="no-reply@vertica.dk" />
   </smtp>
   ```    
+  
+  You can also choose to add either **Vertica.Integration.Mandrill** or **Vertica.Integration.SendGrid** to support sending e-mails without using the SMTP-protocol. 
   
 4. Run **MigrateTask** to ensure an up-to-date-schema
  - From Visual Studio, open Project Properties of your Console Application project, navigate to the "Debug"-tab, and write "MigrateTask" (without quotes) in the multi-line textbox "Command line arguments".
