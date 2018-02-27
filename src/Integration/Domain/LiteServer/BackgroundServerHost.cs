@@ -19,7 +19,7 @@ namespace Vertica.Integration.Domain.LiteServer
         private Task _current;
         private DateTimeOffset _startedAt;
 
-        public BackgroundServerHost(IBackgroundServer server, TaskScheduler scheduler, IKernel kernel, Action<string> output)
+        public BackgroundServerHost(IBackgroundServer server, TaskScheduler scheduler, IKernel kernel, Action<string> output, CancellationToken? token = null)
         {
             if (server == null) throw new ArgumentNullException(nameof(server));
             if (scheduler == null) throw new ArgumentNullException(nameof(scheduler));
@@ -28,8 +28,8 @@ namespace Vertica.Integration.Domain.LiteServer
 
             _server = server;
             _scheduler = scheduler;
+            _token = token.GetValueOrDefault(kernel.Resolve<IShutdown>().Token);
             _output = message => output($"[{this}]: {message}");
-            _token = kernel.Resolve<IShutdown>().Token;
             _context = new RestartableContext(kernel);
             _uptime = kernel.Resolve<IUptimeTextGenerator>();
         }

@@ -188,7 +188,7 @@ namespace Vertica.Integration
             }
         }
 
-        private IWindsorContainer Container { get; }
+        internal IWindsorContainer Container { get; }
 
         private void EnsureNotDisposed()
         {

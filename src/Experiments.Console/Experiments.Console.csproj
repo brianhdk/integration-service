@@ -151,6 +151,7 @@
     <Compile Include="Hangfire\MyTaskWithProgressBar.cs" />
     <Compile Include="Castle.Windsor\Interceptors\Demo.cs" />
     <Compile Include="LiteServer\Demo.cs" />
+    <Compile Include="LiteServer\Heartbeat\Demo.cs" />
     <Compile Include="Logging\SqlServer\Demo.cs" />
     <Compile Include="Logging\TextFile\Demo.cs" />
     <Compile Include="Perfion\Demo.cs" />

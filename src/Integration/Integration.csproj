@@ -115,9 +115,13 @@
     <Compile Include="Domain\LiteServer\BackgroundWorkerContext.cs" />
     <Compile Include="Domain\LiteServer\BackgroundWorkerContinuation.cs" />
     <Compile Include="Domain\LiteServer\BackgroundWorkerServer.cs" />
+    <Compile Include="Domain\LiteServer\HeartbeatLoggingConfiguration.cs" />
+    <Compile Include="Domain\LiteServer\HeartbeatLoggingWorker.cs" />
     <Compile Include="Domain\LiteServer\HouseKeeping.cs" />
+    <Compile Include="Domain\LiteServer\HouseKeepingConfiguration.cs" />
     <Compile Include="Domain\LiteServer\IBackgroundServer.cs" />
     <Compile Include="Domain\LiteServer\IBackgroundWorker.cs" />
+    <Compile Include="Domain\LiteServer\IHeartbeatProvider.cs" />
     <Compile Include="Domain\LiteServer\ILiteServerFactory.cs" />
     <Compile Include="Domain\LiteServer\InternalConfiguration.cs" />
     <Compile Include="Domain\LiteServer\IRestartable.cs" />

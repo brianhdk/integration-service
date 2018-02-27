@@ -42,5 +42,11 @@ namespace Vertica.Integration.Domain.LiteServer
         }
 
         public uint HouseKeepingOutputStatusOnNumberOfIterations { get; set; }
+        public TimeSpan? HeartbeatLoggingInterval { get; set; }
+
+        public bool OutputStatusText(uint invocationCount)
+        {
+            return (invocationCount - 1) % HouseKeepingOutputStatusOnNumberOfIterations == 0;
+        }
     }
 }

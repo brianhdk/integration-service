@@ -8,6 +8,7 @@ using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Utilities;
+using Vertica.Utilities.Extensions.EnumerableExt;
 using Vertica.Utilities.Extensions.StringExt;
 
 namespace Vertica.Integration.Domain.LiteServer
@@ -18,10 +19,14 @@ namespace Vertica.Integration.Domain.LiteServer
         private readonly IUptimeTextGenerator _uptime;
         private readonly InternalConfiguration _configuration;
         private readonly Action<string> _output;
+        private readonly CancellationTokenSource _cancellation;
+        private readonly BackgroundServerHost _heartbeatLogging;
         private readonly BackgroundServerHost[] _servers;
         private readonly HashSet<BackgroundServerHost> _isRunning;
         private readonly Task _task;
         private readonly DateTimeOffset _startedAt;
+
+        private bool _isDisposed;
 
         public HouseKeeping(IKernel kernel, InternalConfiguration configuration, Action<string> output)
         {
@@ -33,6 +38,7 @@ namespace Vertica.Integration.Domain.LiteServer
             _uptime = kernel.Resolve<IUptimeTextGenerator>();
             _configuration = configuration;
             _output = message => output($"[{this}]: {message}");
+            _cancellation = new CancellationTokenSource();
 
             TaskScheduler scheduler = TaskScheduler.Current;
 
@@ -44,8 +50,12 @@ namespace Vertica.Integration.Domain.LiteServer
 
             CancellationToken token = kernel.Resolve<IShutdown>().Token;
 
+            _heartbeatLogging = CreateHeartbeatLoggingServerHost(_configuration, scheduler, kernel);
+
             _servers = servers
                 .Select(server => new BackgroundServerHost(server, scheduler, kernel, output))
+                .Concat(new[] { _heartbeatLogging })
+                .SkipNulls()
                 .ToArray();
 
             // To keep track of which servers are actually running.
@@ -56,6 +66,28 @@ namespace Vertica.Integration.Domain.LiteServer
 
             // Keep track of when Housekeeping was started.
             _startedAt = Time.UtcNow;
+        }
+
+        private BackgroundServerHost CreateHeartbeatLoggingServerHost(InternalConfiguration configuration, TaskScheduler scheduler, IKernel kernel)
+        {
+            TimeSpan? interval = configuration.HeartbeatLoggingInterval;
+
+            if (interval.HasValue)
+            {
+                IHeartbeatProvider[] providers = kernel.ResolveAll<IHeartbeatProvider>();
+
+                if (providers.Length > 0)
+                {
+                    var worker = new HeartbeatLoggingWorker(providers, interval.Value);
+                    var server = new BackgroundWorkerServer(worker, scheduler);
+
+                    var host = new BackgroundServerHost(server, scheduler, kernel, _output, _cancellation.Token);
+
+                    return host;
+                }
+            }
+
+            return null;
         }
 
         private Task Start(IKernel kernel, TaskScheduler scheduler, CancellationToken token)
@@ -82,6 +114,7 @@ namespace Vertica.Integration.Domain.LiteServer
                     try
                     {
                         host.Start();
+
                         _isRunning.Add(host);
                     }
                     catch (Exception ex)
@@ -96,13 +129,15 @@ namespace Vertica.Integration.Domain.LiteServer
             }
 
             // Calculates whether to output status text or not, depending on number of iterations.
-            bool outputStatus = (context.InvocationCount - 1) % _configuration.HouseKeepingOutputStatusOnNumberOfIterations == 0;
+            bool outputStatus = _configuration.OutputStatusText(context.InvocationCount);
 
             CheckIsRunning(outputStatus);
 
-            if (_isRunning.Count == 0)
+            if (ExitHouseKeeping())
             {
                 _output("Exiting (no more servers left to monitor)");
+
+                Dispose();
                 return context.Exit();
             }
 
@@ -110,6 +145,19 @@ namespace Vertica.Integration.Domain.LiteServer
                 _output($"{_isRunning.Count} server(s) running. Uptime: {_uptime.GetUptimeText(_startedAt)}");
 
             return context.Wait(_configuration.HouseKeepingInterval);
+        }
+
+        private bool ExitHouseKeeping()
+        {
+            // No more servers are running
+            if (_isRunning.Count == 0)
+                return true;
+
+            // Check to see if the HeartbeatLogging is the only server left running
+            if (_heartbeatLogging != null && _isRunning.Count == 1 && _isRunning.Contains(_heartbeatLogging))
+                return true;
+
+            return false;
         }
 
         private void CheckIsRunning(bool outputStatus = true)
@@ -122,6 +170,7 @@ namespace Vertica.Integration.Domain.LiteServer
                     if (!host.IsRunning(ex => LogError(host, ex), out statusText))
                     {
                         _isRunning.Remove(host);
+
                         outputStatus = true;
                     }
 
@@ -131,6 +180,7 @@ namespace Vertica.Integration.Domain.LiteServer
                 catch (Exception ex)
                 {
                     LogError(host, ex);
+
                     _isRunning.Remove(host);
                 }
             }
@@ -151,44 +201,71 @@ namespace Vertica.Integration.Domain.LiteServer
 
         public void Dispose()
         {
-            _output("Stopping");
+            if (!_isDisposed)
+            {
+                lock (this)
+                {
+                    if (!_isDisposed)
+                    {
+                        _output("Stopping");
 
+                        try
+                        {
+                            _cancellation.Cancel();
+                        }
+                        catch (Exception ex)
+                        {
+                            LogError(this, ex);
+                        }
+
+                        try
+                        {
+                            if (_task.Exception != null)
+                                throw _task.Exception;
+
+                            if (_task.Status == TaskStatus.Running)
+                                _task.Wait(_configuration.ShutdownTimeout);
+                        }
+                        catch (AggregateException ex)
+                        {
+                            LogError(this, ex);
+                        }
+
+                        if (_task.Status != TaskStatus.Running)
+                            _task.Dispose();
+                        
+                        CheckIsRunning();
+
+                        // Allow for servers to finish within a specified timeout.
+                        foreach (BackgroundServerHost host in _servers.Where(_isRunning.Contains).AsParallel())
+                            WaitForExit(host);
+
+                        // Dispose all hosts in parallel
+                        foreach (BackgroundServerHost host in _servers.AsParallel())
+                            host.Dispose();
+
+                        _cancellation.Dispose();
+
+                        _output("Stopped");
+
+                        _isDisposed = true;
+                    }
+                }
+            }
+        }
+
+        private void WaitForExit(BackgroundServerHost host)
+        {
             try
             {
-                if (_task.Exception != null)
-                    throw _task.Exception;
+                host.WaitForExit(_configuration.ShutdownTimeout);
 
-                if (_task.Status == TaskStatus.Running)
-                    _task.Wait(_configuration.ShutdownTimeout);
+                _isRunning.Remove(host);
             }
             catch (AggregateException ex)
             {
-                LogError(this, ex);
+                LogError(host, ex);
             }
-
-            if (_task.Status != TaskStatus.Running)
-                _task.Dispose();
-
-            CheckIsRunning();
-
-            // Allow for servers to finish within a specified timeout.
-            foreach (BackgroundServerHost host in _servers.Where(_isRunning.Contains).AsParallel())
-            {
-                try
-                {
-                    host.WaitForExit(_configuration.ShutdownTimeout);
-                }
-                catch (AggregateException ex)
-                {
-                    LogError(host, ex);
-                }
-            }
-
-            // Dispose all hosts in parallel
-            foreach (BackgroundServerHost host in _servers.AsParallel())
-                host.Dispose();
-
-            _output("Stopped");
         }
 
         public override string ToString()

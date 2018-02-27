@@ -2554,7 +2554,7 @@ a.thumbnail[class*="fa-"]:hover:before {
 .switch .switch-handle-on.switch-danger,
 .switch .switch-handle-off.switch-danger {
   color: #fff;
-  background: redg;
+  background: red;
 }
 .switch .switch-handle-on.switch-default,
 .switch .switch-handle-off.switch-default {

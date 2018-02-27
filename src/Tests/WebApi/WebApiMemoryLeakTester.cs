@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Castle.Core;
 using Castle.MicroKernel.Facilities;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
@@ -26,6 +27,8 @@ namespace Vertica.Integration.Tests.WebApi
         [Test]
         public void Ensure_ControllerInstances_Gets_Disposed()
         {
+            const int iterations = 10;
+
             Task httpServer;
 
             var referenceCounter = new ReferenceCounter();
@@ -36,11 +39,16 @@ namespace Vertica.Integration.Tests.WebApi
                 .Services(services => services
                     .Advanced(advanced => advanced
                         .Install(referenceCounter)
-                        .Install(Install.Service<ITransientThing, TransientThing>(x => x.LifestyleTransient()))
                         .Install(Install.Service<ISingletonThing, SingletonThing>(x => x.LifestyleSingleton()))
+                        .Install(Install.Service<IScopedThing, ScopedThing>(x => x.LifestyleScoped()))
                         .Register<IRuntimeSettings>(kernel => new InMemoryRuntimeSettings())))
                 .UseWebApi(webApi => webApi.Add<MyTestController>())))
             {
+                IWindsorContainer container = (context as ApplicationContext)?.Container;
+
+                if (container == null)
+                    throw new InvalidOperationException();
+
                 var shutdown = context.Resolve<IShutdown>();
 
                 var httpServerFactory = context.Resolve<IHttpServerFactory>();
@@ -60,7 +68,7 @@ namespace Vertica.Integration.Tests.WebApi
                 {
                     httpClient.BaseAddress = new Uri(url);
 
-                    for (int i = 0; i < 1000; i++)
+                    for (int i = 0; i < iterations; i++)
                     {
                         int result = httpClient
                             .GetAsync($"mytest?id={i}").Result
@@ -70,82 +78,80 @@ namespace Vertica.Integration.Tests.WebApi
                     }
                 }
 
-                int references = referenceCounter.Value;
-                Assert.That(references, Is.EqualTo(0));
+                // Ensure controllers gets disposed
+                int controllerInstances = referenceCounter.Facility.ControllerInstances;
+                Assert.That(controllerInstances, Is.EqualTo(0));
+
+                // Ensure scoped instances gets disposed
+                int scopedInstances = referenceCounter.Facility.ScopedInstances;
+                Assert.That(scopedInstances, Is.EqualTo(0));
             }
 
-            httpServer.Wait(2000);
+            httpServer.Wait(TimeSpan.FromSeconds(2));
         }
 
         private class ReferenceCounter : IWindsorInstaller
         {
-            private readonly ReferenceCounterFacility _facility;
-
             public ReferenceCounter()
             {
-                _facility = new ReferenceCounterFacility();
+                Facility = new ReferenceCounterFacility();
             }
 
             public void Install(IWindsorContainer container, IConfigurationStore store)
             {
-                container.AddFacility(_facility);
+                container.AddFacility(Facility);
             }
 
-            public int Value => _facility.Value;
+            public ReferenceCounterFacility Facility { get; }
 
-            class ReferenceCounterFacility : AbstractFacility
+            public class ReferenceCounterFacility : AbstractFacility
             {
-                public int Value;
-
+                public int ControllerInstances;
+                public int ScopedInstances;
+                
                 protected override void Init()
                 {
                     Kernel.ComponentCreated += ComponentCreated;
                     Kernel.ComponentDestroyed += ComponentDestroyed;
                 }
 
-                void ComponentCreated(Castle.Core.ComponentModel model, object instance)
+                private void ComponentCreated(ComponentModel model, object instance)
                 {
                     if (instance is MyTestController)
-                        Interlocked.Increment(ref Value);
+                        Interlocked.Increment(ref ControllerInstances);
+
+                    if (instance is IScopedThing)
+                        Interlocked.Increment(ref ScopedInstances);
                 }
 
-                void ComponentDestroyed(Castle.Core.ComponentModel model, object instance)
+                private void ComponentDestroyed(ComponentModel model, object instance)
                 {
                     if (instance is MyTestController)
-                        Interlocked.Decrement(ref Value);
+                        Interlocked.Decrement(ref ControllerInstances);
+
+                    if (instance is IScopedThing)
+                        Interlocked.Decrement(ref ScopedInstances);
                 }
             }
         }
 
         private class MyTestController : ApiController
         {
-            private readonly ITransientThing _transientThing;
             private readonly ISingletonThing _singletonThing;
+            private readonly IScopedThing _scopedThing;
 
-            public MyTestController(ITransientThing transientThing, ISingletonThing singletonThing)
+            public MyTestController(ISingletonThing singletonThing, IScopedThing scopedThing)
             {
-                _transientThing = transientThing;
                 _singletonThing = singletonThing;
+                _scopedThing = scopedThing;
             }
 
             public IHttpActionResult Get(int id)
             {
-                _transientThing.Execute();
                 _singletonThing.Execute();
+                _scopedThing.Execute();
 
                 return Ok(id);
-            }
-        }
-
-        private interface ITransientThing
-        {
-            void Execute();
-        }
-
-        private class TransientThing : ITransientThing
-        {
-            public void Execute()
-            {
             }
         }
 
@@ -155,6 +161,18 @@ namespace Vertica.Integration.Tests.WebApi
         }
 
         private class SingletonThing : ISingletonThing
+        {
+            public void Execute()
+            {
+            }
+        }
+
+        private interface IScopedThing
+        {
+            void Execute();
+        }
+
+        private class ScopedThing : IScopedThing
         {
             public void Execute()
             {

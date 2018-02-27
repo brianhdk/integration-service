@@ -8,6 +8,8 @@
 
             //LiteServer.Demo.Run();
 
+            LiteServer.Heartbeat.Demo.Run();
+
             //Rebus.Demo.Run();
 
             //Perfion.Demo.Run();
