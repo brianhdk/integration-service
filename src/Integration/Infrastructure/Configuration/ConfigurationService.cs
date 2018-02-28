@@ -96,7 +96,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
 			});
 		}
 
-		private string GetDescription(Type configurationType)
+		private static string GetDescription(Type configurationType)
         {
             if (configurationType == null)
                 return null;

@@ -1,41 +1,50 @@
 using System;
+using Vertica.Integration.Domain.LiteServer.Heartbeat.Logging;
+using Vertica.Integration.Domain.LiteServer.Heartbeat.Providers;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 
-namespace Vertica.Integration.Domain.LiteServer
+namespace Vertica.Integration.Domain.LiteServer.Heartbeat
 {
-    internal class HeartbeatLoggingConfiguration
+    public class HeartbeatConfiguration
     {
         private readonly InternalConfiguration _configuration;
         private readonly ScanAddRemoveInstaller<IHeartbeatProvider> _providers;
 
-        internal HeartbeatLoggingConfiguration(HouseKeepingConfiguration houseKeeping, InternalConfiguration configuration)
+        internal HeartbeatConfiguration(LiteServerConfiguration liteServer, InternalConfiguration configuration)
         {
-            if (houseKeeping == null) throw new ArgumentNullException(nameof(houseKeeping));
+            if (liteServer == null) throw new ArgumentNullException(nameof(liteServer));
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
             _providers = new ScanAddRemoveInstaller<IHeartbeatProvider>();
             _configuration = configuration;
 
-            HouseKeeping = houseKeeping;
+            LiteServer = liteServer;
 
-            HouseKeeping.LiteServer.Application 
+            LiteServer.Application 
                 .Services(services => services
                     .Advanced(advanced => advanced
                         .Install(_providers)));
-
-            AddFromAssemblyOfThis<HeartbeatLoggingConfiguration>();
-
-            // Default heartbeat interval
-            Interval(TimeSpan.FromMinutes(15));
+            
+            // Add default providers
+            AddProvider<CurrentProcessHeartbeatProvider>();
+            AddProvider<GarbageCollectorHeartbeatProvider>();
         }
 
-        public HouseKeepingConfiguration HouseKeeping { get; }
+        public LiteServerConfiguration LiteServer { get; }
 
-        public HeartbeatLoggingConfiguration Interval(TimeSpan interval)
+        /// <summary>
+        /// Enables logging of Heartbeats, default interval is every 15th minutes
+        /// </summary>
+        public HeartbeatConfiguration EnableLogging(Action<HeartbeatLoggingConfiguration> heartbeatLogging = null)
         {
-            if (interval <= TimeSpan.Zero) throw new ArgumentOutOfRangeException(nameof(interval), interval, @"Value cannot be zero or negative.");
+            HeartbeatLoggingConfiguration instance = null;
 
-            _configuration.HeartbeatLoggingInterval = interval;
+            LiteServer.Application.Extensibility(extensibility =>
+            {
+                instance = extensibility.Register(() => new HeartbeatLoggingConfiguration(this, _configuration));
+            });
+
+            heartbeatLogging?.Invoke(instance);
 
             return this;
         }
@@ -45,7 +54,7 @@ namespace Vertica.Integration.Domain.LiteServer
         /// <para />
         /// </summary>
         /// <typeparam name="T">The type in which its assembly will be scanned.</typeparam>
-        public HeartbeatLoggingConfiguration AddFromAssemblyOfThis<T>()
+        public HeartbeatConfiguration AddFromAssemblyOfThis<T>()
         {
             _providers.AddFromAssemblyOfThis<T>();
 
@@ -56,7 +65,7 @@ namespace Vertica.Integration.Domain.LiteServer
         /// Adds the specified <typeparamref name="TProvider"/>.
         /// </summary>
         /// <typeparam name="TProvider">Specifies the <see cref="IHeartbeatProvider"/> to be added.</typeparam>
-        public HeartbeatLoggingConfiguration AddProvider<TProvider>()
+        public HeartbeatConfiguration AddProvider<TProvider>()
             where TProvider : IHeartbeatProvider
         {
             _providers.Add<TProvider>();
@@ -68,7 +77,7 @@ namespace Vertica.Integration.Domain.LiteServer
         /// Skips the specified <typeparamref name="TProvider" />.
         /// </summary>
         /// <typeparam name="TProvider">Specifies the <see cref="IHeartbeatProvider"/> that will be skipped.</typeparam>
-        public HeartbeatLoggingConfiguration RemoveProvider<TProvider>()
+        public HeartbeatConfiguration RemoveProvider<TProvider>()
             where TProvider : IHeartbeatProvider
         {
             _providers.Remove<TProvider>();
@@ -77,9 +86,9 @@ namespace Vertica.Integration.Domain.LiteServer
         }
 
         /// <summary>
-        /// Clears all providers.
+        /// Clears all Providers.
         /// </summary>
-        public HeartbeatLoggingConfiguration ClearProviders()
+        public HeartbeatConfiguration ClearProviders()
         {
             _providers.Clear();
 

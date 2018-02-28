@@ -38,23 +38,5 @@ namespace Vertica.Integration.Domain.LiteServer
 
             return this;
         }
-
-        /// <summary>
-        /// Enables the HouseKeeping to log heartbeat information.
-        /// Defaults to every 15th minute.
-        /// </summary>
-        internal HouseKeepingConfiguration EnableHeartbeatLogging(Action<HeartbeatLoggingConfiguration> heartbeat = null)
-        {
-            HeartbeatLoggingConfiguration instance = null;
-
-            LiteServer.Application.Extensibility(extensibility =>
-            {
-                instance = extensibility.Register(() => new HeartbeatLoggingConfiguration(this, _configuration));
-            });
-
-            heartbeat?.Invoke(instance);
-
-            return this;
-        }
     }
 }

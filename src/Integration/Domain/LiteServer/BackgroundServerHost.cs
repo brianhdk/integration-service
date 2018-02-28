@@ -54,7 +54,7 @@ namespace Vertica.Integration.Domain.LiteServer
 
             if (_current.Status == TaskStatus.Running)
             {
-                statusText = $"Running for {_uptime.GetUptimeText(_startedAt)}{(_context.FailedCount > 0 ? $" (Failed: {_context.FailedCount} time(s))" : string.Empty)}";
+                statusText = GetRunningStatusText();
                 return true;
             }
 
@@ -103,6 +103,14 @@ namespace Vertica.Integration.Domain.LiteServer
             }
 
             throw new InvalidOperationException($"{this} has Task with status '{_current.Status}' which was not expected.");
+        }
+
+        public string GetRunningStatusText()
+        {
+            if (_current.Status == TaskStatus.Running)
+                return $"Running for {_uptime.GetUptimeText(_startedAt)}{(_context.FailedCount > 0 ? $" (Failed: {_context.FailedCount} time(s))" : string.Empty)}";
+
+            return "<not running>";
         }
 
         public void WaitForExit(TimeSpan timeout)

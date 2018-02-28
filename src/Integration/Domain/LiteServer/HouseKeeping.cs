@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Castle.MicroKernel;
+using Vertica.Integration.Domain.LiteServer.Heartbeat;
+using Vertica.Integration.Domain.LiteServer.Heartbeat.Logging;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Logging;
@@ -13,7 +15,7 @@ using Vertica.Utilities.Extensions.StringExt;
 
 namespace Vertica.Integration.Domain.LiteServer
 {
-    internal class HouseKeeping : IBackgroundWorker, IDisposable
+    internal class HouseKeeping : IBackgroundWorker, IHeartbeatProvider, IDisposable
     {
         private readonly ILogger _logger;
         private readonly IUptimeTextGenerator _uptime;
@@ -74,22 +76,24 @@ namespace Vertica.Integration.Domain.LiteServer
 
             if (interval.HasValue)
             {
-                IHeartbeatProvider[] providers = kernel.ResolveAll<IHeartbeatProvider>();
+                IHeartbeatProvider[] providers = kernel
+                    .ResolveAll<IHeartbeatProvider>()
+                    .Prepend(this)
+                    .ToArray();
 
-                if (providers.Length > 0)
-                {
-                    var worker = new HeartbeatLoggingWorker(providers, interval.Value);
-                    var server = new BackgroundWorkerServer(worker, scheduler);
+                var repository = kernel.Resolve<IHeartbeatLoggingRepository>();
 
-                    var host = new BackgroundServerHost(server, scheduler, kernel, _output, _cancellation.Token);
+                var worker = new HeartbeatLoggingWorker(providers, interval.Value, repository);
+                var server = new BackgroundWorkerServer(worker, scheduler);
 
-                    return host;
-                }
+                var host = new BackgroundServerHost(server, scheduler, kernel, _output, _cancellation.Token);
+
+                return host;
             }
 
             return null;
         }
-
+        
         private Task Start(IKernel kernel, TaskScheduler scheduler, CancellationToken token)
         {
             if (_servers.Length == 0)
@@ -266,6 +270,19 @@ namespace Vertica.Integration.Domain.LiteServer
             {
                 LogError(host, ex);
             }
+        }
+
+        public IEnumerable<string> CollectHeartbeatMessages(CancellationToken token)
+        {
+            return _servers
+                .Where(server => server != _heartbeatLogging)
+                .Select(server =>
+                {
+                    if (_isRunning.Contains(server))
+                        return $"{server}: {server.GetRunningStatusText()}";
+
+                    return $"{server}: <not running>";
+                });
         }
 
         public override string ToString()

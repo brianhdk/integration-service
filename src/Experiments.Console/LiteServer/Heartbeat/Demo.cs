@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using Vertica.Integration;
 using Vertica.Integration.Domain.LiteServer;
+using Vertica.Integration.Domain.LiteServer.Heartbeat;
+using Vertica.Integration.Portal;
+using Vertica.Integration.WebApi;
 
 namespace Experiments.Console.LiteServer.Heartbeat
 {
@@ -13,37 +18,59 @@ namespace Experiments.Console.LiteServer.Heartbeat
                 .Database(database => database
                     .IntegrationDb(integrationDb => integrationDb
                         .Disable()))
+                .Services(services => services
+                    .Advanced(advanced => advanced
+                        .Register<IRuntimeSettings>(kernel => new InMemoryRuntimeSettings()
+                            // Specify which URL WebAPI should listen on.
+                            .Set("WebApi.Url", "http://localhost:8154")
+                            .Set("ConfigurationServiceBasedHeartbeatLoggingRepository.MaximumNumberOfEntries", "10"))))
                 .UseLiteServer(liteServer => liteServer
-                    .ShutdownTimeout(TimeSpan.FromSeconds(5))
                     .AddWorker<MyWorker>()
+                    .Heartbeat(heartbeat => heartbeat
+                        .EnableLogging(logging => logging
+                            .Interval(TimeSpan.FromSeconds(5)))
+                        .AddProvider<MySystemUptimeHeartbeatProvider>())
                     .HouseKeeping(houseKeeping => houseKeeping
                         .Interval(TimeSpan.FromSeconds(1))
-                        .OutputStatusOnNumberOfIterations(10)
-                        //.EnableHeartbeatLogging(heartbeatLogging => heartbeatLogging
-                        //    .AddProvider<MyHeartbeatProvider>()
-                        //    .Interval(TimeSpan.FromSeconds(5)))
-                    )
-                )))
+                        .OutputStatusOnNumberOfIterations(10)))
+                .UseWebApi(webApi => webApi
+                    .AddToLiteServer()
+                    .WithPortal())))
             {
                 context.Execute(nameof(LiteServerHost));
             }
         }
     }
 
-    //public class MyHeartbeatProvider : IHeartbeatProvider
-    //{
-    //}
+    public class MySystemUptimeHeartbeatProvider : IHeartbeatProvider, IDisposable
+    {
+        private readonly PerformanceCounter _uptime;
+
+        public MySystemUptimeHeartbeatProvider()
+        {
+            _uptime = new PerformanceCounter("System", "System Up Time");
+            _uptime.NextValue();
+        }
+
+        public IEnumerable<string> CollectHeartbeatMessages(CancellationToken token)
+        {
+            yield return $"System Uptime: {TimeSpan.FromSeconds(_uptime.NextValue())}";
+        }
+
+        public void Dispose()
+        {
+            _uptime.Dispose();
+        }
+    }
 
     public class MyWorker : IBackgroundWorker
     {
         public BackgroundWorkerContinuation Work(BackgroundWorkerContext context, CancellationToken token)
         {
-            if (context.InvocationCount == 4)
+            if (context.InvocationCount == 10)
                 return context.Exit();
 
-            context.Console.WriteLine("Doing work...");
-
-            return context.Wait(TimeSpan.FromSeconds(3));
+            return context.Wait(TimeSpan.FromSeconds(1));
         }
     }
 }

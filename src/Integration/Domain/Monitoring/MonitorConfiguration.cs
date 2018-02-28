@@ -34,6 +34,9 @@ namespace Vertica.Integration.Domain.Monitoring
         public MonitorTarget[] Targets { get; set; }
         public string SubjectPrefix { get; set; }
 
+        // TODO: Tilføj mulighed for at hvis samme fejl (inkl. group-patterns) sker < threshold, så ignoreres den
+        //  - en udvidelse af IgnoreErrorsWithMessagesContaining => IgnoreErrorsWithMessagesContainingWithThreshold
+
         public MonitorFoldersConfiguration MonitorFolders { get; }
         public PingUrlsConfiguration PingUrls { get; }
 

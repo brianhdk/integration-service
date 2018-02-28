@@ -3,6 +3,7 @@ using Castle.Core;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
+using Vertica.Integration.Domain.LiteServer.Heartbeat;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 
 namespace Vertica.Integration.Domain.LiteServer
@@ -19,9 +20,6 @@ namespace Vertica.Integration.Domain.LiteServer
 		{
 			if (application == null) throw new ArgumentNullException(nameof(application));
 
-		    _configuration = new InternalConfiguration();
-		    _houseKeeping = new HouseKeepingConfiguration(this, _configuration);
-
 		    _servers = new ScanAddRemoveInstaller<IBackgroundServer>(configure: x => x.LifeStyle.Is(LifestyleType.Transient));
 		    _workers = new ScanAddRemoveInstaller<IBackgroundWorker>(configure: x => x.LifeStyle.Is(LifestyleType.Transient));
 
@@ -31,9 +29,12 @@ namespace Vertica.Integration.Domain.LiteServer
                     .Advanced(advanced => advanced
                         .Install(_servers)
                         .Install(_workers)));
+
+		    _configuration = new InternalConfiguration();
+		    _houseKeeping = new HouseKeepingConfiguration(this, _configuration);
 		}
 
-		public ApplicationConfiguration Application { get; }
+        public ApplicationConfiguration Application { get; }
 
 		public LiteServerConfiguration OnStartup(Action<StartupActions> startup)
 		{
@@ -71,6 +72,25 @@ namespace Vertica.Integration.Domain.LiteServer
 	        if (houseKeeping == null) throw new ArgumentNullException(nameof(houseKeeping));
 
 	        houseKeeping(_houseKeeping);
+
+	        return this;
+	    }
+
+        /// <summary>
+	    /// Configuration of the Heartbeat functionality
+	    /// </summary>
+        public LiteServerConfiguration Heartbeat(Action<HeartbeatConfiguration> heartbeat)
+	    {
+	        if (heartbeat == null) throw new ArgumentNullException(nameof(heartbeat));
+
+	        HeartbeatConfiguration instance = null;
+
+	        Application.Extensibility(extensibility =>
+	        {
+	            instance = extensibility.Register(() => new HeartbeatConfiguration(this, _configuration));
+	        });
+
+	        heartbeat.Invoke(instance);
 
 	        return this;
 	    }
