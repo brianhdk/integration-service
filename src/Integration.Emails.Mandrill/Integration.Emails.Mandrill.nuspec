@@ -16,7 +16,7 @@
     <copyright>Copyright 2018</copyright>
     <tags>Vertica Integration Service IntegrationService Mandrill Mailchimp Transactional Email</tags>
     <dependencies>
-      <dependency id="Vertica.Integration" version="[1.23.1,2.0)" />
+      <dependency id="Vertica.Integration" version="[1.29.1,2.0)" />
       <dependency id="Vertica.Utilities" version="[5,6.0)" />
     </dependencies>
   </metadata>

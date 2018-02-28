@@ -16,7 +16,7 @@
     <copyright>Copyright 2018</copyright>
     <tags>Vertica Integration Service IntegrationService Serilog logging</tags>
     <dependencies>
-      <dependency id="Vertica.Integration" version="[1.24,2.0)" />
+      <dependency id="Vertica.Integration" version="[1.29,2.0)" />
     </dependencies>
   </metadata>
   <files>

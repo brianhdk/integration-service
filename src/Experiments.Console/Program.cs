@@ -8,7 +8,7 @@
 
             //LiteServer.Demo.Run();
 
-            LiteServer.Heartbeat.Demo.Run();
+            //LiteServer.Heartbeat.Demo.Run();
 
             //Rebus.Demo.Run();
 
@@ -30,7 +30,7 @@
 
             //Hangfire.Demo.Run();
 
-            //Hangfire.Demo.Run(); 
+            //Hangfire.Demo.Run();
 
             //Logging.TextFile.Demo.Run();
 
