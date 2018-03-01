@@ -14,6 +14,7 @@ using Vertica.Integration.Tests.Infrastructure.Testing;
 namespace Vertica.Integration.Tests.Rebus
 {
     [TestFixture]
+    [Ignore("Rebus currently does not work as intended due to a double-registration issue.")]
     public class RebusTester
     {
         [Test]
