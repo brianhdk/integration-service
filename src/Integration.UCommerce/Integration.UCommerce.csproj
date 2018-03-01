@@ -75,7 +75,9 @@
     <None Include="Integration.UCommerce.nuspec" />
     <None Include="NuGet-app.config.install.xdt" />
     <None Include="NuGet-app.config.uninstall.xdt" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Readme\Integration.UCommerce-readme.txt" />

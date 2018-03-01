@@ -18,6 +18,7 @@
     <dependencies>
       <dependency id="Vertica.Integration" version="[1.29,2.0)" />
       <dependency id="Vertica.Utilities" version="[5,6.0)" />
+      <dependency id="FluentMigrator" version="[1.6.2,2.0)" />
     </dependencies>
   </metadata>
   <files>

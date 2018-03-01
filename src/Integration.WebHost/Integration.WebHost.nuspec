@@ -17,7 +17,7 @@
     <tags>Vertica Integration Service IntegrationService WebHost</tags>
     <dependencies>
       <dependency id="Vertica.Integration.WebApi" version="[1.20,2.0)" />
-      <dependency id="Microsoft.Owin.Host.SystemWeb" version="3.1.0" />
+      <dependency id="Microsoft.Owin.Host.SystemWeb" version="[3.1.0,5.0)" />
     </dependencies>
   </metadata>
   <files>
