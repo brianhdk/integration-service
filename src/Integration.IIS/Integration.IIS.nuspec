@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-
+﻿<?xml version="1.0" encoding="utf-8"?>
 <package>
   <metadata>
     <id>$id$</id>
@@ -15,9 +14,18 @@
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2018</copyright>
     <tags>Vertica Integration Service IntegrationService IIS Internet Information Services</tags>
+    <!--<dependencies>
+  <dependency id="Vertica.Integration" version="[1.29.1,2.0)" />
+  <dependency id="Castle.Core" version="[3.3.3,5.0)" />
+  <dependency id="Castle.Windsor" version="[3.4,5.0)" />
+  <dependency id="IIS.Microsoft.Web.Administration" version="[8.5.9600.16384,9.0)" />
+</dependencies>-->
     <dependencies>
-      <dependency id="Vertica.Integration" version="[1.29,2.0)" />
-    </dependencies>    
+      <dependency id="Castle.Core" version="[3.3.3,5.0)" />
+      <dependency id="Castle.Windsor" version="[3.4.0,5.0)" />
+      <dependency id="IIS.Microsoft.Web.Adminstration" version="[8.5.9600.16384,9.0)" />
+      <dependency id="Vertica.Integration" version="[1.29.1,2.0)" />
+    </dependencies>
   </metadata>
   <files>
     <file src="App_Readme\Integration.IIS-readme.txt" target="readme.txt" />
