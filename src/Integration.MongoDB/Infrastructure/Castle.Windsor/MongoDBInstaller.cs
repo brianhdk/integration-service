@@ -21,7 +21,7 @@ namespace Vertica.Integration.MongoDB.Infrastructure.Castle.Windsor
 
             container.Register(
                 Component.For<IMongoDbClientFactory>()
-                    .UsingFactoryMethod(kernel => 
+                    .UsingFactoryMethod((kernel, model, context) => 
 						new MongoDbClientFactory(kernel.Resolve<IMongoDbClientFactory<DefaultConnection>>())));
         }
     }
@@ -42,7 +42,7 @@ namespace Vertica.Integration.MongoDB.Infrastructure.Castle.Windsor
         {
             container.Register(
                 Component.For<IMongoDbClientFactory<TConnection>>()
-                    .UsingFactoryMethod(kernel => new MongoDBClientFactory<TConnection>(_connection, kernel)));
+                    .UsingFactoryMethod((kernel, model, context) => new MongoDBClientFactory<TConnection>(_connection, kernel)));
         }
     }
 }

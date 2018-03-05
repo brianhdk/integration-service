@@ -21,7 +21,7 @@ namespace Vertica.Integration.RavenDB.Infrastructure.Castle.Windsor
 
 			container.Register(
 				Component.For<IRavenDbFactory>()
-					.UsingFactoryMethod(kernel => 
+					.UsingFactoryMethod((kernel, model, context) => 
 						new RavenDbFactory(kernel.Resolve<IRavenDbFactory<DefaultConnection>>())));
 		}
 	}
@@ -42,7 +42,7 @@ namespace Vertica.Integration.RavenDB.Infrastructure.Castle.Windsor
 		{
 			container.Register(
 				Component.For<IRavenDbFactory<TConnection>>()
-					.UsingFactoryMethod(kernel => new RavenDbFactory<TConnection>(_connection, kernel)));
+					.UsingFactoryMethod((kernel, model, context) => new RavenDbFactory<TConnection>(_connection, kernel)));
 		}
 	}
 }

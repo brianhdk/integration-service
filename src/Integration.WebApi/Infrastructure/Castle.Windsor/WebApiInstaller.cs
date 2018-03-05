@@ -40,7 +40,7 @@ namespace Vertica.Integration.WebApi.Infrastructure.Castle.Windsor
         {
             container.Register(
                 Component.For<IHttpServerFactory>()
-                    .UsingFactoryMethod(kernel => new HttpServerFactory(kernel, _httpServerConfiguration))
+                    .UsingFactoryMethod((kernel, model, context) => new HttpServerFactory(kernel, _httpServerConfiguration))
                     .LifestyleSingleton());
 
             var types = new List<Type>();

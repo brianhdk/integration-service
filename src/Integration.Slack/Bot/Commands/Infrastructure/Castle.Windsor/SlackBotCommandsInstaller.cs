@@ -21,7 +21,7 @@ namespace Vertica.Integration.Slack.Bot.Commands.Infrastructure.Castle.Windsor
             container.Register(
                 Component
                     .For<ISlackBotCommand[]>()
-                    .UsingFactoryMethod(kernel => kernel.ResolveAll<ISlackBotCommand>())
+                    .UsingFactoryMethod((kernel, model, context) => kernel.ResolveAll<ISlackBotCommand>())
                     .LifestyleSingleton());
         }
     }

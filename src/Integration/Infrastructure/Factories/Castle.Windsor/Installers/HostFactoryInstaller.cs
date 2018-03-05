@@ -12,7 +12,7 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
 		{
 		    container.Register(
 		        Component.For<IHostFactory>()
-		            .UsingFactoryMethod(kernel => new HostFactory(kernel))
+		            .UsingFactoryMethod((kernel, model, context) => new HostFactory(kernel))
                     .LifestyleSingleton());
 		}
 

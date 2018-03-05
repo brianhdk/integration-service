@@ -22,7 +22,7 @@ namespace Vertica.Integration.Azure.Infrastructure.Castle.Windsor
 
 			container.Register(
 				Component.For<IAzureBlobStorageClientFactory>()
-					.UsingFactoryMethod(kernel =>
+					.UsingFactoryMethod((kernel, model, context) =>
 						new AzureBlobStorageClientFactory(kernel.Resolve<IAzureBlobStorageClientFactory<DefaultConnection>>())));
 		}
 	}
@@ -43,7 +43,7 @@ namespace Vertica.Integration.Azure.Infrastructure.Castle.Windsor
         {
             container.Register(
                 Component.For<IAzureBlobStorageClientFactory<TConnection>>()
-                    .UsingFactoryMethod(kernel => new AzureBlobStorageClientFactory<TConnection>(_connection, kernel)));
+                    .UsingFactoryMethod((kernel, model, context) => new AzureBlobStorageClientFactory<TConnection>(_connection, kernel)));
         }
     }
 }

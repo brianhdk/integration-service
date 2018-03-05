@@ -171,7 +171,7 @@ namespace Vertica.Integration.Domain.LiteServer
 		{
 			container.Register(
 				Component.For<ILiteServerFactory>()
-					.UsingFactoryMethod(kernel => new LiteServerFactory(kernel, _configuration)));
+					.UsingFactoryMethod((kernel, model, context) => new LiteServerFactory(kernel, _configuration)));
 		}
 		
 		private class LiteServerFactory : ILiteServerFactory

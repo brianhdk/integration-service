@@ -24,7 +24,7 @@ namespace Vertica.Integration.Perfion.Infrastructure.Client.Castle.Windsor
         {
             container.Register(
                 Component.For<IPerfionClientFactory<TConnection>>()
-                    .UsingFactoryMethod(kernel => new PerfionClientFactory<TConnection>(_connection, _configuration, kernel)));
+                    .UsingFactoryMethod((kernel, model, context) => new PerfionClientFactory<TConnection>(_connection, _configuration, kernel)));
         }
     }
 
@@ -44,11 +44,11 @@ namespace Vertica.Integration.Perfion.Infrastructure.Client.Castle.Windsor
 
             container.Register(
                 Component.For<IPerfionClientFactory>()
-                    .UsingFactoryMethod(kernel => new PerfionClientFactory(kernel.Resolve<IPerfionClientFactory<DefaultConnection>>())));
+                    .UsingFactoryMethod((kernel, model, context) => new PerfionClientFactory(kernel.Resolve<IPerfionClientFactory<DefaultConnection>>())));
 
             container.Register(
                 Component.For<IPerfionClient>()
-                    .UsingFactoryMethod(kernel => kernel.Resolve<IPerfionClientFactory>().Client));
+                    .UsingFactoryMethod((kernel, model, context) => kernel.Resolve<IPerfionClientFactory>().Client));
         }
     }
 }

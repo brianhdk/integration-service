@@ -42,8 +42,8 @@ namespace Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers
                     .If(classType => !_ignoreTypes.Any(ignoreType => ignoreType.IsAssignableFrom(classType))));
             }
 
-            container.Register(Component.For<IEnumerable<TService>>().UsingFactoryMethod(kernel => kernel.ResolveAll<TService>()));
-            container.Register(Component.For<TService[]>().UsingFactoryMethod(kernel => kernel.ResolveAll<TService>()));
+            container.Register(Component.For<IEnumerable<TService>>().UsingFactoryMethod((kernel, model, context) => kernel.ResolveAll<TService>()));
+            container.Register(Component.For<TService[]>().UsingFactoryMethod((kernel, model, context) => kernel.ResolveAll<TService>()));
         }
     }
 }

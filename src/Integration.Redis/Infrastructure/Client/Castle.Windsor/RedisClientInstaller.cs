@@ -21,7 +21,7 @@ namespace Vertica.Integration.Redis.Infrastructure.Client.Castle.Windsor
         {
             container.Register(
                 Component.For<IRedisClientFactory<TConnection>>()
-                    .UsingFactoryMethod(kernel => new RedisClientFactory<TConnection>(_connection, kernel)));
+                    .UsingFactoryMethod((kernel, model, context) => new RedisClientFactory<TConnection>(_connection, kernel)));
         }
     }
 
@@ -41,7 +41,7 @@ namespace Vertica.Integration.Redis.Infrastructure.Client.Castle.Windsor
 
             container.Register(
                 Component.For<IRedisClientFactory>()
-                    .UsingFactoryMethod(kernel =>
+                    .UsingFactoryMethod((kernel, model, context) =>
                         new RedisClientFactory(kernel.Resolve<IRedisClientFactory<DefaultConnection>>())));
         }
     }

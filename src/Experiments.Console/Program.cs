@@ -4,7 +4,7 @@
     {
         static void Main()
         {
-            Azure.BlobStorage.Demo.Run();
+            //Azure.BlobStorage.Demo.Run();
 
             //FileWatcher.Demo.Run();
 
@@ -30,9 +30,7 @@
 
             //WebApi.NSwag.Demo.Run();
 
-            //Hangfire.Demo.Run();
-
-            //Hangfire.Demo.Run();
+            Hangfire.Demo.Run();
 
             //Logging.TextFile.Demo.Run();
 

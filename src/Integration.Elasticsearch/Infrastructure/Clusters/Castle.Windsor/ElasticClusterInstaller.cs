@@ -21,7 +21,7 @@ namespace Vertica.Integration.Elasticsearch.Infrastructure.Clusters.Castle.Winds
 
 			container.Register(
 				Component.For<IElasticClientFactory>()
-					.UsingFactoryMethod(kernel =>
+					.UsingFactoryMethod((kernel, model, context) =>
 						new ElasticClientFactory(kernel.Resolve<IElasticClientFactory<DefaultConnection>>())));
 		}
 	}
@@ -42,7 +42,7 @@ namespace Vertica.Integration.Elasticsearch.Infrastructure.Clusters.Castle.Winds
         {
             container.Register(
                 Component.For<IElasticClientFactory<TConnection>>()
-                    .UsingFactoryMethod(kernel => new ElasticClientFactory<TConnection>(_connection, kernel)));
+                    .UsingFactoryMethod((kernel, model, context) => new ElasticClientFactory<TConnection>(_connection, kernel)));
         }
     }
 }

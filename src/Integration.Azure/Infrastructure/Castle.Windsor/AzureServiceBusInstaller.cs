@@ -22,7 +22,7 @@ namespace Vertica.Integration.Azure.Infrastructure.Castle.Windsor
 
 			container.Register(
 				Component.For<IAzureServiceBusClientFactory>()
-					.UsingFactoryMethod(kernel =>
+					.UsingFactoryMethod((kernel, model, context) =>
 						new AzureServiceBusClientFactory(kernel.Resolve<IAzureServiceBusClientFactory<DefaultConnection>>())));
 		}
 	}
@@ -43,7 +43,7 @@ namespace Vertica.Integration.Azure.Infrastructure.Castle.Windsor
         {
             container.Register(
                 Component.For<IAzureServiceBusClientFactory<TConnection>>()
-                    .UsingFactoryMethod(kernel => new AzureServiceBusClientFactory<TConnection>(_connection, kernel)));
+                    .UsingFactoryMethod((kernel, model, context) => new AzureServiceBusClientFactory<TConnection>(_connection, kernel)));
         }
     }
 }
