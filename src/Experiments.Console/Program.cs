@@ -4,11 +4,13 @@
     {
         static void Main()
         {
+            Azure.BlobStorage.Demo.Run();
+
             //FileWatcher.Demo.Run();
 
             //LiteServer.Demo.Run();
 
-            LiteServer.Heartbeat.Demo.Run();
+            //LiteServer.Heartbeat.Demo.Run();
 
             //Rebus.Demo.Run();
 
