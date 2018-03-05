@@ -23,7 +23,8 @@ namespace Experiments.Console.LiteServer.Heartbeat
                         .Register<IRuntimeSettings>(kernel => new InMemoryRuntimeSettings()
                             // Specify which URL WebAPI should listen on.
                             .Set("WebApi.Url", "http://localhost:8154")
-                            .Set("ConfigurationServiceBasedHeartbeatLoggingRepository.MaximumNumberOfEntries", "10"))))
+                            .Set("ConfigurationServiceBasedHeartbeatLoggingRepository.MaximumNumberOfEntries", "3")
+                            .Set("ConfigurationServiceBasedHeartbeatLoggingRepository.MaximumAge", "00:00:15"))))
                 .UseLiteServer(liteServer => liteServer
                     .AddWorker<MyWorker>()
                     .Heartbeat(heartbeat => heartbeat

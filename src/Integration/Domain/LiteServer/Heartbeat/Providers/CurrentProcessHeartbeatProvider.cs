@@ -18,7 +18,6 @@ namespace Vertica.Integration.Domain.LiteServer.Heartbeat.Providers
 
         public IEnumerable<string> CollectHeartbeatMessages(CancellationToken token)
         {
-            yield return $"MachineName: {Environment.MachineName}";
             yield return $"CommandLine: {Environment.CommandLine}";
 
             yield return $"StartedAt: {_uptime.StartedAt}";
