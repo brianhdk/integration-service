@@ -60,7 +60,7 @@ FROM
 WHERE (
 	ErrorLog.[TimeStamp] BETWEEN @LowerBound AND @UpperBound
 )
-ORDER BY ErrorLog.Id DESC",
+ORDER BY ErrorLog.[TimeStamp] DESC",
                     new
                     {
                         context.WorkItem.CheckRange.LowerBound,

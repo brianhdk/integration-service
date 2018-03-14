@@ -22,6 +22,7 @@ namespace Vertica.Integration.Tests.WebApi
     [TestFixture(Category = "Integration,Slow")]
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Local")]
+    [Ignore("Issue with System.Net.Http")]
     public class WebApiMemoryLeakTester
     {
         [Test]

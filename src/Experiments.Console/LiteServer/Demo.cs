@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Vertica.Integration;
 using Vertica.Integration.Domain.LiteServer;
@@ -24,19 +25,30 @@ namespace Experiments.Console.LiteServer
         }
     }
 
-    public class MyOtherServer : IBackgroundServer
-    {
-        public Task Create(BackgroundServerContext context, CancellationToken token)
-        {
-            throw new System.NotImplementedException();
-        }
-    }
-
     public class MyServer : IBackgroundServer
     {
         public Task Create(BackgroundServerContext context, CancellationToken token)
         {
-            throw new System.NotImplementedException();
+            // Will fail from start - but the LiteServer will still run
+            throw new NotImplementedException();
+        }
+    }
+
+    public class MyOtherServer : IBackgroundServer
+    {
+        public Task Create(BackgroundServerContext context, CancellationToken token)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                int iterationCount = 0;
+
+                while (!token.IsCancellationRequested)
+                {
+                    context.Console.WriteLine($"{nameof(MyOtherServer)}: Iteration#: {++iterationCount}");
+
+                    token.WaitHandle.WaitOne(TimeSpan.FromSeconds(2));
+                }
+            }, token);
         }
     }
 
@@ -44,15 +56,27 @@ namespace Experiments.Console.LiteServer
     {
         public BackgroundWorkerContinuation Work(BackgroundWorkerContext context, CancellationToken token)
         {
-            throw new System.NotImplementedException();
+            context.Console.WriteLine($"{nameof(MyOtherWorker)}: Invocation#: {context.InvocationCount}");
+
+            return context.Wait(TimeSpan.FromSeconds(2));
         }
     }
 
-    public class MyWorker : IBackgroundWorker
+    public class MyWorker : IBackgroundWorker, IRestartable
     {
         public BackgroundWorkerContinuation Work(BackgroundWorkerContext context, CancellationToken token)
         {
-            throw new System.NotImplementedException();
+            if (context.InvocationCount < 5u)
+                throw new InvalidOperationException();
+
+            context.Console.WriteLine($"{nameof(MyOtherWorker)}: Invocation#: {context.InvocationCount}");
+            
+            return context.Wait(TimeSpan.FromSeconds(2));
+        }
+
+        public bool ShouldRestart(RestartableContext context)
+        {
+            return context.FailedCount < 5u;
         }
     }
 }

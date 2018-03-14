@@ -43,6 +43,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 			if (ReferenceEquals(null, obj)) return false;
 			if (ReferenceEquals(this, obj)) return true;
 			if (obj.GetType() != GetType()) return false;
+
 			return Equals((MigrationDb) obj);
 		}
 
@@ -53,6 +54,7 @@ namespace Vertica.Integration.Infrastructure.Database.Migrations
 				var hashCode = (Assembly != null ? Assembly.GetHashCode() : 0);
 				hashCode = (hashCode*397) ^ (NamespaceContainingMigrations != null ? NamespaceContainingMigrations.GetHashCode() : 0);
 				hashCode = (hashCode*397) ^ (ConnectionString != null ? ConnectionString.GetHashCode() : 0);
+
 				return hashCode;
 			}
 		}
