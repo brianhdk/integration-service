@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Vertica.Integration;
 using Vertica.Integration.Domain.LiteServer;
+using Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db;
+using Vertica.Utilities;
 
 namespace Experiments.Console.LiteServer
 {
@@ -15,6 +17,8 @@ namespace Experiments.Console.LiteServer
                     .IntegrationDb(integrationDb => integrationDb
                         .Disable()))
                 .UseLiteServer(liteServer => liteServer
+                    .OnStartup(startup => startup
+                        .Add(kernel => kernel.Resolve<IDeleteDbDistributedMutexLocksCommand>().Execute(Time.UtcNow)))
                     .AddWorker<MyWorker>()
                     .AddWorker<MyOtherWorker>()
                     .AddServer<MyServer>()

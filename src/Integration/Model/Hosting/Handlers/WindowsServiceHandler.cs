@@ -37,10 +37,10 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 			if (!args.CommandArgs.TryGetValue(Command, out action))
                 return false;
 
-	        Func<KeyValuePair<string, string>, bool> actionIs = command =>
-				string.Equals(command.Value, action, StringComparison.OrdinalIgnoreCase);
+            bool ActionIs(KeyValuePair<string, string> command) => 
+                string.Equals(command.Value, action, StringComparison.OrdinalIgnoreCase);
 
-			if (actionIs(InstallCommand))
+            if (ActionIs(InstallCommand))
 			{
 				var configuration = new WindowsServiceConfiguration(GetServiceName(service), ExePath, ExeArgs(args))
 					.DisplayName(Prefix(service.DisplayName))
@@ -74,7 +74,7 @@ namespace Vertica.Integration.Model.Hosting.Handlers
 
 				_windowsServices.Install(configuration);
 			}
-			else if (actionIs(UninstallCommand))
+			else if (ActionIs(UninstallCommand))
 			{
 				_windowsServices.Uninstall(GetServiceName(service));
 			}

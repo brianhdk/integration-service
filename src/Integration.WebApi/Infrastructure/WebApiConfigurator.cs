@@ -58,7 +58,8 @@ namespace Vertica.Integration.WebApi.Infrastructure
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
-            configuration.MapHttpAttributeRoutes();
+            if (!configuration.Routes.ContainsKey("MS_attributerouteWebApi"))
+                configuration.MapHttpAttributeRoutes();
 
             if (!configuration.Routes.ContainsKey("WebApi"))
             {

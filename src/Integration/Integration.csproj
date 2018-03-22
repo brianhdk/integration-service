@@ -266,6 +266,7 @@
     <Compile Include="Infrastructure\Threading\DistributedMutex\Db\CleanUpDbDistributedMutexStep.cs" />
     <Compile Include="Infrastructure\Threading\DistributedMutex\Db\DbDistributedMutex.cs" />
     <Compile Include="Infrastructure\Threading\DistributedMutex\Db\DbDistributedMutexLock.cs" />
+    <Compile Include="Infrastructure\Threading\DistributedMutex\Db\DeleteDbDistributedMutexLocksCommand.cs" />
     <Compile Include="Infrastructure\Threading\DistributedMutex\Db\IDeleteDbDistributedMutexLocksCommand.cs" />
     <Compile Include="Infrastructure\Threading\DistributedMutex\DistributedMutexConfiguration.cs" />
     <Compile Include="Infrastructure\Threading\DistributedMutex\DistributedMutexContext.cs" />
