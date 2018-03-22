@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Threading;
 using System.Web.Http;
 using Vertica.Integration;
 using Vertica.Integration.Domain.LiteServer;
+using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Remote;
 using Vertica.Integration.WebApi;
 
@@ -13,10 +15,18 @@ namespace Experiments.Console.WebApi.Controllers
     {
         public static void Run()
         {
+            var db = ConnectionString.FromText(@"Integrated Security=SSPI;Data Source=.\SQLExpress;Database=IntegrationServiceDemo_Hangfire");
+
             using (var context = ApplicationContext.Create(application => application
+                //.Database(database => database
+                //    .IntegrationDb(integrationDb => integrationDb
+                //        .Disable()))
+                //.Logging(logging => logging
+                //    .TextWriter(logger => logger.Detailed()))
                 .Database(database => database
                     .IntegrationDb(integrationDb => integrationDb
-                        .Disable()))
+                        .PrefixTables("IntegrationService.")
+                        .Connection(db)))
                 .Services(services => services
                     .Advanced(advanced => advanced
                         .Register<IRuntimeSettings>(kernel => new InMemoryRuntimeSettings()
@@ -47,8 +57,10 @@ namespace Experiments.Console.WebApi.Controllers
         {
             [HttpGet]
             [Route("route")]
+            [DebuggerStepThrough]
             public IHttpActionResult MyMethodOnACompletelyCustomRoute()
             {
+                throw new InvalidOperationException("something!");
                 return Ok("You found me");
             }
 

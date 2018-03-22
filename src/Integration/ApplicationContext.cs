@@ -5,6 +5,7 @@ using Castle.Facilities.TypedFactory;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.Resolvers;
 using Castle.Windsor;
+using Newtonsoft.Json;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Factories.Castle.Windsor.Installers;
 using Vertica.Integration.Infrastructure.IO;
@@ -147,6 +148,7 @@ namespace Vertica.Integration
             EnsureCancelled(TimeSpan.FromMilliseconds(500));
         }
 
+        [JsonIgnore]
         public CancellationToken Token
         {
             get
