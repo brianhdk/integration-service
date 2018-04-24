@@ -153,6 +153,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="EnvironmentConfiguration.cs" />
     <Compile Include="ExtensibilityConfiguration.cs" />
     <Compile Include="IApplicationContext.cs" />
     <Compile Include="IInitializable.cs" />

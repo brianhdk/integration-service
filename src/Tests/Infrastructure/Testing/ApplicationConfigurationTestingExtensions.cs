@@ -17,7 +17,8 @@ namespace Vertica.Integration.Tests.Infrastructure.Testing
                         .Interval(TimeSpan.FromMilliseconds(50))
                         .OutputStatusOnNumberOfIterations(1)))
                 .Database(database => database
-                    .IntegrationDb(integrationDb => integrationDb.Disable()))
+                    .IntegrationDb(integrationDb => integrationDb
+                        .Disable()))
                 .Logging(logging => logging
                     .TextWriter());
         }

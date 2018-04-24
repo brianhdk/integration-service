@@ -34,6 +34,9 @@ namespace Vertica.Integration
             // Executes all client-specific configuration
             application?.Invoke(_configuration);
 
+		    // Apply all environment-specific configuration
+		    _configuration.Environment(environment => environment.Apply());
+
             // Will instruct all extension-points that client-specific configurations have been completed.
             _configuration.Extensibility(extensibility =>
             {

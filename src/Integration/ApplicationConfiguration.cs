@@ -20,6 +20,7 @@ namespace Vertica.Integration
 	    private readonly TasksConfiguration _tasks;
 		private readonly LoggingConfiguration _logging;
 		private readonly MigrationConfiguration _migration;
+        private readonly EnvironmentConfiguration _environment;
 
 		internal ApplicationConfiguration()
         {
@@ -31,48 +32,61 @@ namespace Vertica.Integration
 		    _tasks = Register(() => new TasksConfiguration(this));
             _logging = Register(() => new LoggingConfiguration(this));
             _migration = Register(() => new MigrationConfiguration(this));
+            _environment = Register(() => new EnvironmentConfiguration(this));
 
 			Register(() => this);
         }
 
 	    public ApplicationConfiguration Services(Action<ServicesConfiguration> services)
 	    {
-            services?.Invoke(_services);
+	        if (services == null) throw new ArgumentNullException(nameof(services));
+
+	        services(_services);
 
             return this;
         }
 
 	    public ApplicationConfiguration Database(Action<DatabaseConfiguration> database)
 	    {
-	        database?.Invoke(_database);
+	        if (database == null) throw new ArgumentNullException(nameof(database));
+
+	        database(_database);
 
 	        return this;
 	    }
 
 	    public ApplicationConfiguration Hosts(Action<HostsConfiguration> hosts)
 		{
-			hosts?.Invoke(_hosts);
+		    if (hosts == null) throw new ArgumentNullException(nameof(hosts));
+
+		    hosts(_hosts);
 
 			return this;
 		}
 
 	    public ApplicationConfiguration Tasks(Action<TasksConfiguration> tasks)
         {
-			tasks?.Invoke(_tasks);
+            if (tasks == null) throw new ArgumentNullException(nameof(tasks));
+
+            tasks(_tasks);
 
 			return this;
         }
 
 	    public ApplicationConfiguration Logging(Action<LoggingConfiguration> logging)
         {
-			logging?.Invoke(_logging);
+            if (logging == null) throw new ArgumentNullException(nameof(logging));
+
+            logging(_logging);
 
 			return this;
         }
 
 	    public ApplicationConfiguration Migration(Action<MigrationConfiguration> migration)
         {
-			migration?.Invoke(_migration);
+            if (migration == null) throw new ArgumentNullException(nameof(migration));
+
+            migration(_migration);
 
 			return this;
         }
@@ -88,10 +102,21 @@ namespace Vertica.Integration
 
 		public ApplicationConfiguration Extensibility(Action<ExtensibilityConfiguration> extensibility)
 		{
-			extensibility?.Invoke(_extensibility);
+		    if (extensibility == null) throw new ArgumentNullException(nameof(extensibility));
+
+		    extensibility(_extensibility);
 
 			return this;
 		}
+
+        public ApplicationConfiguration Environment(Action<EnvironmentConfiguration> environment)
+        {
+            if (environment == null) throw new ArgumentNullException(nameof(environment));
+
+            environment(_environment);
+
+            return this;
+        }
 
         [Obsolete("Use .Services(services => services.Advanced(advanced => advanced.Install(installer))")]
         public ApplicationConfiguration AddCustomInstaller(IWindsorInstaller installer)

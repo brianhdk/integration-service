@@ -39,8 +39,7 @@ namespace Vertica.Integration.Domain.Monitoring
 
         public override void End(ITaskExecutionContext<MonitorWorkItem> context)
 		{
-            Target[] unconfiguredTargets;
-            if (context.WorkItem.HasEntriesForUnconfiguredTargets(out unconfiguredTargets))
+		    if (context.WorkItem.HasEntriesForUnconfiguredTargets(out Target[] unconfiguredTargets))
                 context.Log.Error(Target.Service, "Create missing configuration for the following targets: [{0}].", string.Join(", ", unconfiguredTargets.Select(x => x.Name)));
 
 		    foreach (MonitorTarget target in context.WorkItem.Configuration.Targets ?? new MonitorTarget[0])

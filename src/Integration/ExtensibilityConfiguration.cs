@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Vertica.Integration
 {
-	public class ExtensibilityConfiguration : IEnumerable<object>
+    public class ExtensibilityConfiguration : IEnumerable<object>
 	{
 		private readonly Dictionary<Type, object> _extensions;
 
@@ -18,8 +18,7 @@ namespace Vertica.Integration
 			if (factory == null) throw new ArgumentNullException(nameof(factory));
 
 			T value;
-			object cached;
-			if (_extensions.TryGetValue(typeof (T), out cached))
+		    if (_extensions.TryGetValue(typeof (T), out object cached))
 			{
 				value = (T) cached;
 			}

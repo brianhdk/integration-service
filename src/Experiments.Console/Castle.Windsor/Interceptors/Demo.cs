@@ -51,7 +51,7 @@ namespace Experiments.Console.Castle.Windsor.Interceptors
                 if (args != null && args.Length > 0)
                     message = string.Format(message, args);
 
-                File.AppendAllText(@"c:\tmp\integrationservice-interceptor-demo.txt", $@"{message}{Environment.NewLine}");
+                File.AppendAllText(@"c:\tmp\integrationservice-interceptor-demo.txt", $@"{message}{System.Environment.NewLine}");
             }
         }
     }

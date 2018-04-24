@@ -30,8 +30,7 @@ namespace Vertica.Integration.WebApi
         {
             if (args == null) throw new ArgumentNullException(nameof(args));
 
-	        bool basedOnSettings;
-	        string url = EnsureUrl(args, out basedOnSettings);
+            string url = EnsureUrl(args, out _);
 
 			using (_factory.Create(url))
 			{
@@ -48,8 +47,7 @@ namespace Vertica.Integration.WebApi
 		{
 			if (args == null) throw new ArgumentNullException(nameof(args));
 
-			string url;
-			args.Args.TryGetValue(Url, out url);
+		    args.Args.TryGetValue(Url, out string url);
 
 			if (string.IsNullOrWhiteSpace(url))
 				return _factory.GetOrGenerateUrl(out basedOnSettings);

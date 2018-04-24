@@ -75,11 +75,10 @@ namespace Vertica.Integration.Domain.Monitoring
             {
                 targets = targets ?? new Target[0];
 
-                Target[] redirects;
-                if (_redirects.TryHandle(entry, out redirects))
-                    targets = targets.Concat(redirects ?? new Target[0]).ToArray();
+                if (_redirects.TryHandle(entry, out Target[] redirects))
+                    targets = redirects;
 
-                if (targets.Length == 0)
+                if (targets == null || targets.Length == 0)
                     targets = new[] { Target.Service };
 
                 foreach (Target target in targets.Distinct())

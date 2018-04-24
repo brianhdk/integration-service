@@ -21,7 +21,6 @@ $settings = @{
         "integration_webhost" = Resolve-Path $script_directory\..\src\Integration.WebHost
 		"integration_webapi" = Resolve-Path $script_directory\..\src\Integration.WebApi
 		"integration_webapi_signalr" = Resolve-Path $script_directory\..\src\Integration.WebApi.SignalR
-		"integration_webapi_nswag" = Resolve-Path $script_directory\..\src\Integration.WebApi.NSwag
         "integration_portal" = Resolve-Path $script_directory\..\src\Integration.Portal
 		"integration_logging_elmah" = Resolve-Path $script_directory\..\src\Integration.Logging.Elmah
 		"integration_azure" = Resolve-Path $script_directory\..\src\Integration.Azure

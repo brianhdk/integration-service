@@ -2,7 +2,7 @@
 {
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             //Azure.BlobStorage.Demo.Run();
 
@@ -24,7 +24,7 @@
 
             //Tasks.Obsolete.Demo.Run();
 
-            WebApi.Controllers.Demo.Run();
+            //WebApi.Controllers.Demo.Run();
 
             //WebApi.Portal.Demo.Run();
 
@@ -49,6 +49,10 @@
             //Emails.Mandrill.Demo.Run();
 
             //Emails.SendGrid.Demo.Run();
+
+            //Environment.Demo.Run();
+
+            //Logging.Serilog.Demo.Run();
         }
     }
 }

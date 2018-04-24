@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Net.Http;
 using System.Threading;
 using System.Web.Http;
@@ -50,7 +49,6 @@ namespace Experiments.Console.WebApi.Controllers
         {
             [HttpGet]
             [Route("route")]
-            [DebuggerStepThrough]
             public IHttpActionResult MyMethodOnACompletelyCustomRoute()
             {
                 return Ok("You found me");
@@ -61,6 +59,13 @@ namespace Experiments.Console.WebApi.Controllers
             public IHttpActionResult OnADifferentRoute()
             {
                 return Ok("You found me too");
+            }
+
+            [HttpGet]
+            [Route("route/exception")]
+            public IHttpActionResult ThrowException()
+            {
+                throw new InvalidOperationException("Some exception");
             }
         }
 
