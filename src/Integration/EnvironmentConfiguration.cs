@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Vertica.Utilities.Extensions.EnumerableExt;
 using InvalidOperationException = System.InvalidOperationException;
 
 namespace Vertica.Integration
@@ -34,6 +35,16 @@ namespace Vertica.Integration
 
             customizations.Add(customization);
             
+            return this;
+        }
+
+        public EnvironmentConfiguration Customize(IEnumerable<ApplicationEnvironment> environments, Action<ApplicationConfiguration> customization)
+        {
+            if (environments == null) throw new ArgumentNullException(nameof(environments));
+            if (customization == null) throw new ArgumentNullException(nameof(customization));
+
+            environments.SkipNulls().ForEach(x => Customize(x, customization));
+
             return this;
         }
 

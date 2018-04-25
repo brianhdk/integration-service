@@ -12,6 +12,7 @@ namespace Experiments.Console.Environment
         public static void Run()
         {
             var db = ConnectionString.FromText(@"Integrated Security=SSPI;Data Source=.\SQLExpress;Database=IntegrationServiceDemo_Environment");
+            var stageAndProduction = new[] { ApplicationEnvironment.Production, ApplicationEnvironment.Stage };
 
             using (var context = ApplicationContext.Create(application => application
                 .Database(database => database
@@ -28,6 +29,9 @@ namespace Experiments.Console.Environment
                     // We'll add something that runs in the background by LiteServer, that adds fire-and-forget jobs to Hangfire
                     .AddWorker<SayHelloWorker>())
                 .Environment(environment => environment
+                    .Customize(stageAndProduction, customize => customize
+                        .Database(database => database
+                            .IntegrationDb(integrationDb => integrationDb.DisableCheckExistsAndCreateDatabaseIfNotFound())))
                     .Customize(ApplicationEnvironment.Production, production => production
                         .Database(database => database
                             .IntegrationDb(integrationDb => integrationDb
