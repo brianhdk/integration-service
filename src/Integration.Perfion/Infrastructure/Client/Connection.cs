@@ -49,8 +49,7 @@ namespace Vertica.Integration.Perfion.Infrastructure.Client
 
         protected internal virtual Uri GetWebServiceUri(IKernel kernel)
         {
-            Uri uri;
-            if (!Uri.TryCreate(ConnectionString, UriKind.Absolute, out uri))
+            if (!Uri.TryCreate(ConnectionString, UriKind.Absolute, out Uri uri))
                 throw new ArgumentException($"'{ConnectionString}' is not a valid absolute uri.");
 
             return uri;

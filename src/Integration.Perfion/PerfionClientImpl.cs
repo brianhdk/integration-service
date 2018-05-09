@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Xml.Linq;
 using Castle.MicroKernel;
+using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Archiving;
 using Vertica.Integration.Perfion.Infrastructure.Client;
 using Vertica.Integration.Perfion.PerfionAPIService;
@@ -113,7 +114,13 @@ namespace Vertica.Integration.Perfion
 			return Download($"../{reportName}.report", string.Join(",", ids.Distinct()), options);
 		}
 
-		private byte[] Download(string path, object id, NameValueCollection options = null)
+	    public ConnectionString ConnectionString => _connection.ConnectionString;
+
+	    public Uri BaseUri => _connection.GetBaseUri(_kernel);
+
+	    public Uri WebServiceUri => _connection.GetWebServiceUri(_kernel);
+
+	    private byte[] Download(string path, object id, NameValueCollection options = null)
 		{
 			using (WebClient webClient = _connection.CreateWebClient(_kernel))
 			{
