@@ -23,20 +23,13 @@ namespace Experiments.Console.FileWatcher
 
             context.Log.Message("Archive: {0}", _archiveService.ArchiveFile(file));
 
-            try
-            {
-                if (file.Name.IndexOf("fail", StringComparison.OrdinalIgnoreCase) >= 0)
-                    throw new InvalidOperationException($"failed {file.Name}");
+            if (file.Name.IndexOf("fail", StringComparison.OrdinalIgnoreCase) >= 0)
+                throw new InvalidOperationException($"failed {file.Name}");
 
-                context.Log.Message($"Name: {file.Name}, Size: {file.Length}");
+            context.Log.Message($"Name: {file.Name}, Size: {file.Length}");
 
-                // Simulate processing file takes time
-                context.CancellationToken.WaitHandle.WaitOne(300);
-            }
-            finally
-            {
-                file.Delete();
-            }
+            // Simulate processing file takes time
+            context.CancellationToken.WaitHandle.WaitOne(10);
         }
 
         public override string Description => nameof(HandleFileTask);

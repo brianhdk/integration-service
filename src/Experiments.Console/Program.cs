@@ -6,7 +6,7 @@
         {
             //Azure.BlobStorage.Demo.Run();
 
-            //FileWatcher.Demo.Run();
+            FileWatcher.Demo.Run();
 
             //LiteServer.Demo.Run();
 
