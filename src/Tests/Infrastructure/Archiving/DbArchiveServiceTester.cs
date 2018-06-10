@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using NSubstitute;
 using NUnit.Framework;
 using Vertica.Integration.Infrastructure.Archiving;
@@ -13,8 +12,7 @@ namespace Vertica.Integration.Tests.Infrastructure.Archiving
         [Test]
         public void ArchiveText_Verify_DbInteraction()
         {
-            IDbSession session;
-            DbArchiveService subject = Initialize(out session);
+            DbArchiveService subject = Initialize(out IDbSession session);
 
             const int expectedId = 1;
             session.ExecuteScalar<int>(null).ReturnsForAnyArgs(expectedId);
@@ -24,7 +22,7 @@ namespace Vertica.Integration.Tests.Infrastructure.Archiving
             Assert.That(archive.Id, Is.EqualTo(expectedId.ToString()));
         }
 
-        private DbArchiveService Initialize(out IDbSession session)
+        private static DbArchiveService Initialize(out IDbSession session)
         {
             var dbFactory = Substitute.For<IDbFactory>();
             session = Substitute.For<IDbSession>();

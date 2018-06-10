@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO.Compression;
 using Vertica.Integration.Infrastructure.Archiving;
 using Vertica.Integration.Perfion.Infrastructure.Client;
 
@@ -18,10 +19,11 @@ namespace Vertica.Integration.Perfion
 		/// </summary>
 		public PerfionClientConfiguration EnableArchiving(Action<ArchiveOptions> options = null)
 		{
-			_configuration.ArchiveOptions = 
-                new ArchiveOptions("Data")
-                    .GroupedBy("Perfion")
-                    .ExpiresAfterMonths(1);
+		    _configuration.ArchiveOptions =
+		        new ArchiveOptions("Data")
+		            .GroupedBy("Perfion")
+		            .ExpiresAfterMonths(1)
+		            .Compression(CompressionLevel.Optimal);
 
 			options?.Invoke(_configuration.ArchiveOptions);
 

@@ -14,8 +14,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
             using (BeginArchive archive = service.Create(file.Name, x => created = x))
             {
-                if (options != null)
-                    options(archive.Options);
+                options?.Invoke(archive.Options);
 
                 archive.IncludeFile(file);
             }
@@ -32,8 +31,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
             using (BeginArchive archive = service.Create(folder.Name, x => created = x))
             {
-                if (options != null)
-                    options(archive.Options);
+                options?.Invoke(archive.Options);
 
                 archive.IncludeFolder(folder);
             }
@@ -49,8 +47,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
             using (BeginArchive archive = service.Create(name, x => created = x))
             {
-                if (options != null)
-                    options(archive.Options);
+                options?.Invoke(archive.Options);
 
                 archive.IncludeContent(name, content);
             }
@@ -67,8 +64,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
             using (BeginArchive archive = service.Create(name, x => created = x))
             {
-                if (options != null)
-                    options(archive.Options);
+                options?.Invoke(archive.Options);
 
                 archive.IncludeObjectAsJson(obj, name);
             }

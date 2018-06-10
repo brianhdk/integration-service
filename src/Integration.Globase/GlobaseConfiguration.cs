@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO.Compression;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Archiving;
 
@@ -46,7 +47,8 @@ namespace Vertica.Integration.Globase
 			_configuration.ArchiveOptions = 
                 new ArchiveOptions("Globase")
                     .GroupedBy("Globase")
-                    .ExpiresAfterMonths(1);
+                    .ExpiresAfterMonths(1)
+		            .Compression(CompressionLevel.Optimal);
 
 			options?.Invoke(_configuration.ArchiveOptions);
 

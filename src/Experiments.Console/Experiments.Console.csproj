@@ -155,6 +155,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Archiving\Demo.cs" />
     <Compile Include="Azure\BlobStorage\Demo.cs" />
     <Compile Include="Castle.Windsor\CustomInstaller\Demo.cs" />
     <Compile Include="Configuration\Demo.cs" />

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.IO.Compression;
 using Vertica.Integration.Infrastructure.Archiving;
 using Vertica.Integration.Infrastructure.Configuration;
 using Vertica.Integration.Infrastructure.Database;
@@ -49,7 +50,10 @@ namespace Vertica.Integration.Domain.Core
 			    {
 			        ArchiveCreated archive = _archiver.Archive("IntegrationDb-Maintenance", a =>
 			        {
-			            a.Options.GroupedBy("Backup").ExpiresAfterMonths(12);
+			            a.Options
+			                .GroupedBy("Backup")
+			                .ExpiresAfterMonths(12)
+			                .Compression(CompressionLevel.Optimal);
 
 			            a.IncludeContent($"TaskLog_{tasksLowerBound:yyyyMMdd}.csv", taskLog.Item2);
 			            a.IncludeContent($"ErrorLog_{errorsLowerBound:yyyyMMdd}.csv", errorLog.Item2);

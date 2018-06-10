@@ -44,6 +44,9 @@ namespace Vertica.Integration.Domain.Core
                     if (localFolder.ArchiveOptions.Expires.HasValue)
                         a.Options.ExpiresOn(localFolder.ArchiveOptions.Expires.Value);
 
+                    if (localFolder.ArchiveOptions.CompressionLevel.HasValue)
+                        a.Options.Compression(localFolder.ArchiveOptions.CompressionLevel.Value);
+
                     a.Options.GroupedBy(localFolder.ArchiveOptions.GroupName);
 
                     foreach (FileInfo fileToArchive in filesToArchive)

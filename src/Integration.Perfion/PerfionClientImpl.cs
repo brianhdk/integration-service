@@ -53,6 +53,9 @@ namespace Vertica.Integration.Perfion
 						if (finalArchiveOptions.Expires.HasValue)
 							newArchive.Options.ExpiresOn(finalArchiveOptions.Expires.Value);
 
+					    if (finalArchiveOptions.CompressionLevel.HasValue)
+					        newArchive.Options.Compression(finalArchiveOptions.CompressionLevel.Value);
+
 						newArchive
 							.IncludeContent("Query.xml", query)
 							.IncludeContent("Data.xml", xml);

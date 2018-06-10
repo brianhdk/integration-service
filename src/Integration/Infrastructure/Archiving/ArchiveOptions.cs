@@ -1,4 +1,5 @@
 using System;
+using System.IO.Compression;
 using Newtonsoft.Json;
 using Vertica.Utilities;
 
@@ -19,6 +20,9 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
         [JsonProperty]
         public virtual DateTimeOffset? Expires { get; private set; }
+
+        [JsonProperty]
+        public CompressionLevel? CompressionLevel { get; private set; }
 
         public ArchiveOptions Named(string name)
         {
@@ -52,7 +56,13 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
         public virtual ArchiveOptions ExpiresAfterMonths(uint months)
         {
-            return ExpiresOn(Time.UtcNow.AddMonths((int)months));
+            return ExpiresOn(Time.UtcNow.AddMonths((int) months));
+        }
+
+        public ArchiveOptions Compression(CompressionLevel level)
+        {
+            CompressionLevel = level;
+            return this;
         }
     }
 }

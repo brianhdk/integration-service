@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.IO.Compression;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using Newtonsoft.Json;
@@ -82,9 +83,10 @@ namespace Vertica.Integration.Infrastructure.Configuration
 
 			return _archive.Archive(current.Name, archive =>
 			{
-				archive.Options
-					.GroupedBy("Backup")
-					.ExpiresAfterMonths(1);
+			    archive.Options
+			        .GroupedBy("Backup")
+			        .ExpiresAfterMonths(1)
+			        .Compression(CompressionLevel.Optimal);
 
 				archive.IncludeContent("data", current.JsonData, ".json");
 				archive.IncludeContent("meta", string.Join(Environment.NewLine,

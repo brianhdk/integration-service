@@ -6,7 +6,7 @@
         {
             //Azure.BlobStorage.Demo.Run();
 
-            FileWatcher.Demo.Run();
+            //FileWatcher.Demo.Run();
 
             //LiteServer.Demo.Run();
 
@@ -53,6 +53,8 @@
             //Environment.Demo.Run();
 
             //Logging.Serilog.Demo.Run();
+
+            Archiving.Demo.Run();
         }
     }
 }

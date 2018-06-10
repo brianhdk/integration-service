@@ -22,6 +22,7 @@ namespace Vertica.Integration.Infrastructure.Archiving
             _complete = complete;
 
             Options = new ArchiveOptions(name);
+
             _stream = new MemoryStream();
             _archive = new ZipArchive(_stream, ZipArchiveMode.Create, leaveOpen: true);
         }
@@ -64,7 +65,11 @@ namespace Vertica.Integration.Infrastructure.Archiving
 
         private BeginArchive CreateEntryFromFile(FileInfo file, string relativePath = null)
         {
-            _archive.CreateEntryFromFile(file.FullName, Path.Combine(relativePath ?? string.Empty, file.Name));
+            string entryName = Path.Combine(relativePath ?? string.Empty, file.Name);
+
+            ZipArchiveEntry _ = Options.CompressionLevel.HasValue
+                ? _archive.CreateEntryFromFile(file.FullName, entryName, Options.CompressionLevel.Value)
+                : _archive.CreateEntryFromFile(file.FullName, entryName);
 
 	        return this;
         }
@@ -77,10 +82,16 @@ namespace Vertica.Integration.Infrastructure.Archiving
             extension = extension.NullIfEmpty() ?? Path.GetExtension(name).NullIfEmpty() ?? ".txt";
             name = Path.GetFileNameWithoutExtension(name);
 
-            ZipArchiveEntry entry = _archive.CreateEntry($"{name}{extension}");
+            string entryName = $"{name}{extension}";
+
+            ZipArchiveEntry entry = Options.CompressionLevel.HasValue
+                ? _archive.CreateEntry(entryName, Options.CompressionLevel.Value)
+                : _archive.CreateEntry(entryName);
 
             using (var writer = new StreamWriter(entry.Open()))
+            {
                 writer.Write(content);
+            }
 
 	        return this;
         }
@@ -89,10 +100,14 @@ namespace Vertica.Integration.Infrastructure.Archiving
         {
             if (string.IsNullOrWhiteSpace(fileName)) throw new ArgumentException(@"Value cannot be null or empty.", nameof(fileName));
 
-            ZipArchiveEntry entry = _archive.CreateEntry(fileName);
+            ZipArchiveEntry entry = Options.CompressionLevel.HasValue
+                ? _archive.CreateEntry(fileName, Options.CompressionLevel.Value)
+                : _archive.CreateEntry(fileName);
 
             using (var writer = new BinaryWriter(entry.Open()))
+            {
                 writer.Write(content);
+            }
 
 	        return this;
         }

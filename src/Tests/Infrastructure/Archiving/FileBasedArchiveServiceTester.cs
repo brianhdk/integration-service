@@ -20,6 +20,7 @@ namespace Vertica.Integration.Tests.Infrastructure.Archiving
 			try
 			{
 				var logger = Substitute.For<ILogger>();
+
 				var subject = new FileBasedArchiveService(new InMemoryRuntimeSettings()
 					.Set(FileBasedArchiveService.BaseDirectoryKey, baseDirectory), logger);
 

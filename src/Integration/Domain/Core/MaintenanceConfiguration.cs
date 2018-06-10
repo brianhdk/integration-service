@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using Newtonsoft.Json;
 using Vertica.Integration.Infrastructure.Archiving;
-using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Utilities;
 using Vertica.Utilities.Extensions.EnumerableExt;
@@ -60,7 +60,10 @@ namespace Vertica.Integration.Domain.Core
             public Folder[] GetEnabledFolders()
             {
                 EnsureFolders();
-                return Folders.Where(x => Enabled && x.Enabled && !string.IsNullOrWhiteSpace(x.Path) && x.Handler != null).ToArray();
+
+                return Folders
+                    .Where(x => Enabled && x.Enabled && !string.IsNullOrWhiteSpace(x.Path) && x.Handler != null)
+                    .ToArray();
             }
 
             public class Folder
@@ -70,8 +73,10 @@ namespace Vertica.Integration.Domain.Core
                     Enabled = true;
                     Target = Target.Service;
 
-                    ArchiveOptions = new PersistedArchiveOptions(typeof (ArchiveFoldersStep).StepName());
-                    ArchiveOptions.GroupedBy("Backup");
+                    ArchiveOptions = new PersistedArchiveOptions(nameof(ArchiveFoldersStep));
+                    ArchiveOptions
+                        .GroupedBy("Backup")
+                        .Compression(CompressionLevel.Optimal);
                 }
 
                 public string Name { get; set; }
@@ -105,7 +110,8 @@ namespace Vertica.Integration.Domain.Core
 
                 public class PersistedArchiveOptions : ArchiveOptions
                 {
-                    public PersistedArchiveOptions(string name) : base(name)
+                    public PersistedArchiveOptions(string name)
+                        : base(name)
                     {
                     }
 
