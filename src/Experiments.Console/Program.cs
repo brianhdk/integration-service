@@ -54,7 +54,7 @@
 
             //Logging.Serilog.Demo.Run();
 
-            Archiving.Demo.Run();
+            //Archiving.Demo.Run();
         }
     }
 }

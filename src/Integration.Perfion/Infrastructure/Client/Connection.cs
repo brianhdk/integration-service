@@ -59,14 +59,13 @@ namespace Vertica.Integration.Perfion.Infrastructure.Client
         {
             if (kernel == null) throw new ArgumentNullException(nameof(kernel));
 
-            var binding = new BasicHttpBinding
-            {
-                Name = $"PerfionService.{GetType().Name}",
-            };
+            Uri uri = GetWebServiceUri(kernel);
+
+            HttpBindingBase binding = CreateBinding($"PerfionService.{GetType().Name}", uri, kernel);
 
             ConfigureBinding(binding, kernel);
             
-            GetDataSoapClient proxy = new GetDataSoapClient(binding, new EndpointAddress(GetWebServiceUri(kernel)));
+            GetDataSoapClient proxy = new GetDataSoapClient(binding, new EndpointAddress(uri));
 
             ConfigureClientCredentials(proxy.ClientCredentials, kernel);
 
@@ -88,19 +87,41 @@ namespace Vertica.Integration.Perfion.Infrastructure.Client
             }
         }
 
+        protected internal virtual HttpBindingBase CreateBinding(string name, Uri uri, IKernel kernel)
+        {
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(@"Value cannot be null or empty", nameof(name));
+            if (uri == null) throw new ArgumentNullException(nameof(uri));
+            if (!uri.IsAbsoluteUri) throw new ArgumentOutOfRangeException($"'{uri}' is not a valid absolute uri.");
+            if (kernel == null) throw new ArgumentNullException(nameof(kernel));
+
+            if (Uri.UriSchemeHttps.Equals(uri.Scheme, StringComparison.OrdinalIgnoreCase))
+                return new BasicHttpsBinding { Name = name };
+
+            return new BasicHttpBinding { Name = name };
+        }
+
         protected internal virtual void ConfigureClientCredentials(ClientCredentials clientCredentials, IKernel kernel)
         {
             if (clientCredentials == null) throw new ArgumentNullException(nameof(clientCredentials));
             if (kernel == null) throw new ArgumentNullException(nameof(kernel));
         }
 
-        protected internal virtual void ConfigureBinding(BasicHttpBinding binding, IKernel kernel)
+        protected internal virtual void ConfigureBinding(HttpBindingBase binding, IKernel kernel)
         {
             if (binding == null) throw new ArgumentNullException(nameof(binding));
             if (kernel == null) throw new ArgumentNullException(nameof(kernel));
 
             binding.MaxReceivedMessageSize = int.MaxValue;
             binding.ReceiveTimeout = binding.SendTimeout = TimeSpan.MaxValue;
+        }
+
+        [Obsolete("Use ConfigureBinding(HttpBindingBase binding, IKernel kernel) method instead.")]
+        protected internal virtual void ConfigureBinding(BasicHttpBinding binding, IKernel kernel)
+        {
+            if (binding == null) throw new ArgumentNullException(nameof(binding));
+            if (kernel == null) throw new ArgumentNullException(nameof(kernel));
+
+            ConfigureBinding((HttpBindingBase) binding, kernel);
         }
     }
 }

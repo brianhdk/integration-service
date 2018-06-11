@@ -4,6 +4,7 @@ using System.ServiceModel;
 using System.ServiceModel.Description;
 using Castle.MicroKernel;
 using Vertica.Integration.Infrastructure;
+using Vertica.Integration.Perfion.PerfionAPIService;
 
 namespace Vertica.Integration.Perfion.Infrastructure.Client
 {
@@ -59,6 +60,34 @@ namespace Vertica.Integration.Perfion.Infrastructure.Client
             base.ConfigureClientCredentials(clientCredentials, kernel);
         }
 
+        protected internal override HttpBindingBase CreateBinding(string name, Uri uri, IKernel kernel)
+        {
+            if (_connection != null)
+                return _connection.CreateBinding(name, uri, kernel);
+
+            return base.CreateBinding(name, uri, kernel);
+        }
+
+        protected internal override void ConfigureBinding(HttpBindingBase binding, IKernel kernel)
+        {
+            if (_connection != null)
+            {
+                _connection.ConfigureBinding(binding, kernel);
+                return;
+            }
+
+            base.ConfigureBinding(binding, kernel);
+        }
+
+        internal override T WithProxy<T>(IKernel kernel, Func<GetDataSoap, T> client)
+        {
+            if (_connection != null)
+                return _connection.WithProxy(kernel, client);
+
+            return base.WithProxy(kernel, client);
+        }
+
+        [Obsolete("Use ConfigureBinding(HttpBindingBase binding, IKernel kernel) method instead.")]
         protected internal override void ConfigureBinding(BasicHttpBinding binding, IKernel kernel)
         {
             if (_connection != null)

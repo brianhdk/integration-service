@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using System;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -27,9 +28,9 @@ namespace Experiments.Console.Perfion
                         .Disable()))
                 .UsePerfion(perfion => perfion
                     // Setup the default connection based on a ConnectionString-element in app.config: <add name="Perfion" connectionString="http://perfion-01/Perfion/GetData.asmx" />
-                    .DefaultConnection(ConnectionString.FromName("Perfion.APIService.Url"), perfionClient => perfionClient
-                        // Setup global archiving - all queries will be archived.
-                        .EnableArchiving())
+                    //.DefaultConnection(ConnectionString.FromName("Perfion.APIService.Url"), perfionClient => perfionClient
+                    //    // Setup global archiving - all queries will be archived.
+                    //    .EnableArchiving())
                     // Setup the default connection allowing further customization of this default connection, see class "OverrideDefaultConnection" for more details
                     .DefaultConnection(new OverrideDefaultConnection(ConnectionString.FromText("http://perfion-01/Perfion/GetData.asmx")))
                     // Adds an additional connection to any Perfion API service
@@ -127,7 +128,27 @@ Clothes
         {
         }
 
-        protected override void ConfigureBinding(BasicHttpBinding binding, IKernel kernel)
+        protected override WebClient CreateWebClient(IKernel kernel)
+        {
+            return base.CreateWebClient(kernel);
+        }
+
+        protected override Uri GetBaseUri(IKernel kernel)
+        {
+            return base.GetBaseUri(kernel);
+        }
+
+        protected override Uri GetWebServiceUri(IKernel kernel)
+        {
+            return base.GetWebServiceUri(kernel);
+        }
+
+        protected override HttpBindingBase CreateBinding(string name, Uri uri, IKernel kernel)
+        {
+            return base.CreateBinding(name, uri, kernel);
+        }
+
+        protected override void ConfigureBinding(HttpBindingBase binding, IKernel kernel)
         {
             base.ConfigureBinding(binding, kernel);
         }
