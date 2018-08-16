@@ -170,8 +170,7 @@ namespace Vertica.Integration.Domain.LiteServer
             {
                 try
                 {
-                    string statusText;
-                    if (!host.IsRunning(ex => LogError(host, ex), out statusText))
+                    if (!host.IsRunning(ex => LogError(host, ex), out string statusText))
                     {
                         _isRunning.Remove(host);
 

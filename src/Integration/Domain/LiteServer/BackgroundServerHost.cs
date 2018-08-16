@@ -52,7 +52,7 @@ namespace Vertica.Integration.Domain.LiteServer
 
             EnsureStarted();
 
-            if (_current.Status == TaskStatus.Running)
+            if (_current.Status == TaskStatus.Running || _current.Status == TaskStatus.WaitingToRun)
             {
                 statusText = GetRunningStatusText();
                 return true;
@@ -71,9 +71,7 @@ namespace Vertica.Integration.Domain.LiteServer
                     return false;
                 }
 
-                var restartable = _server as IRestartable;
-
-                if (restartable == null)
+                if (!(_server is IRestartable restartable))
                 {
                     statusText = "Failed";
                     return false;
@@ -110,7 +108,7 @@ namespace Vertica.Integration.Domain.LiteServer
             if (_current.Status == TaskStatus.Running)
                 return $"Running for {_uptime.GetUptimeText(_startedAt)}{(_context.FailedCount > 0 ? $" (Failed: {_context.FailedCount} time(s))" : string.Empty)}";
 
-            return "<not running>";
+            return $"<not running: {_current.Status}>";
         }
 
         public void WaitForExit(TimeSpan timeout)
