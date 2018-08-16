@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Castle.MicroKernel;
@@ -18,6 +19,13 @@ namespace Vertica.Integration.Domain.LiteServer
 
         private Task _current;
         private DateTimeOffset _startedAt;
+
+        private static readonly HashSet<TaskStatus> Running = new HashSet<TaskStatus>(new[]
+        {
+            TaskStatus.Running,
+            TaskStatus.WaitingToRun,
+            TaskStatus.WaitingForActivation
+        });
 
         public BackgroundServerHost(IBackgroundServer server, TaskScheduler scheduler, IKernel kernel, Action<string> output, CancellationToken? token = null)
         {
@@ -52,7 +60,7 @@ namespace Vertica.Integration.Domain.LiteServer
 
             EnsureStarted();
 
-            if (_current.Status == TaskStatus.Running || _current.Status == TaskStatus.WaitingToRun)
+            if (Running.Contains(_current.Status))
             {
                 statusText = GetRunningStatusText();
                 return true;
