@@ -1,12 +1,14 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Vertica.Integration;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Database.Migrations;
 using Vertica.Integration.Infrastructure.IO;
 using Vertica.Integration.Infrastructure.Threading;
 using Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db;
+using Vertica.Integration.Model;
 using Vertica.Integration.Model.Exceptions;
+using Vertica.Integration.Model.Tasks;
+using Task = System.Threading.Tasks.Task;
 
 namespace Experiments.Console.Tasks.ConcurrentExecution
 {
@@ -64,9 +66,7 @@ namespace Experiments.Console.Tasks.ConcurrentExecution
                         {
                             var taskExecutionFailed = taskException as TaskExecutionFailedException;
 
-                            var timeoutException = taskExecutionFailed?.InnerException as DistributedMutexTimeoutException;
-
-                            if (timeoutException != null)
+                            if (taskExecutionFailed?.InnerException is DistributedMutexTimeoutException timeoutException)
                             {
                                 safeContext[0].Resolve<IConsoleWriter>().WriteLine(timeoutException.Message);
                                 return true;
@@ -87,6 +87,39 @@ namespace Experiments.Console.Tasks.ConcurrentExecution
                     if (deletions > 0)
                         context.Resolve<IConsoleWriter>().WriteLine("Deleted {0} lock(s).", deletions);
                 }
+            }
+        }
+
+        public class CanRunInParallelTask : IntegrationTask
+        {
+            public override void StartTask(ITaskExecutionContext context)
+            {
+                context.Log.Message("Alias {0} will finish in 3 seconds...", context.Arguments["Alias"]);
+                context.CancellationToken.WaitHandle.WaitOne(TimeSpan.FromSeconds(3));
+                context.Log.Message("Alias {0} finished...", context.Arguments["Alias"]);
+            }
+
+            public override string Description => nameof(CanRunInParallelTask);
+        }
+
+        [PreventConcurrentTaskExecution(CustomLockDescription = typeof(MyCustomLockDescription))]
+        public class MustRunAloneTask : IntegrationTask
+        {
+            public override void StartTask(ITaskExecutionContext context)
+            {
+                context.Log.Message("Alias {0} will finish in 3 seconds...", context.Arguments["Alias"]);
+                context.CancellationToken.WaitHandle.WaitOne(TimeSpan.FromSeconds(3));
+                context.Log.Message("Alias {0} finished...", context.Arguments["Alias"]);
+            }
+
+            public override string Description => nameof(MustRunAloneTask);
+        }
+
+        public class MyCustomLockDescription : IPreventConcurrentTaskExecutionCustomLockDescription
+        {
+            public string GetLockDescription(ITask currentTask, Vertica.Integration.Model.Arguments arguments, string currentDescription)
+            {
+                return $"Alias = {arguments["Alias"]}";
             }
         }
     }

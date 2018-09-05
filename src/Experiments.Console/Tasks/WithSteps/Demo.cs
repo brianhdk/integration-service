@@ -37,7 +37,7 @@ namespace Experiments.Console.Tasks.WithSteps
                 var runner = context.Resolve<ITaskRunner>();
 
                 ITask task = factory.Get<TaskThatHasSteps>();
-                runner.Execute(task, new Arguments("Argument 1"));
+                runner.Execute(task, new Vertica.Integration.Model.Arguments("Argument 1"));
             }
         }
     }

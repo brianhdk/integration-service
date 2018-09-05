@@ -24,9 +24,7 @@ namespace Vertica.Integration.Hangfire.Console
             {
                 if (invocation.Method.ReturnType == typeof(ErrorLog))
                 {
-                    var errorLog = invocation.ReturnValue as ErrorLog;
-
-                    if (errorLog != null)
+                    if (invocation.ReturnValue is ErrorLog errorLog)
                     {
                         context.SetTextColor(errorLog.Severity == Severity.Error ? ConsoleTextColor.Red : ConsoleTextColor.Yellow);
                         context.WriteLine(" - ID: {0}", errorLog.Id);

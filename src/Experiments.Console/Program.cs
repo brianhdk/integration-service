@@ -24,6 +24,8 @@
 
             //Tasks.Obsolete.Demo.Run();
 
+            Tasks.Arguments.Demo.Run(args);
+
             //WebApi.Controllers.Demo.Run();
 
             //WebApi.Portal.Demo.Run();
