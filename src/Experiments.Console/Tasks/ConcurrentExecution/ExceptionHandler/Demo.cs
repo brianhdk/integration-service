@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using Vertica.Integration;
 using Vertica.Integration.Infrastructure;
 using Vertica.Integration.Infrastructure.Database.Migrations;
