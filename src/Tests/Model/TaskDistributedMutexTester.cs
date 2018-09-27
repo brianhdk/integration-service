@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 using NSubstitute;
 using NUnit.Framework;
 using Vertica.Integration.Infrastructure.Extensions;
+using Vertica.Integration.Infrastructure.Logging;
 using Vertica.Integration.Infrastructure.Threading.DistributedMutex;
 using Vertica.Integration.Model;
+using Vertica.Integration.Model.Exceptions;
 using Vertica.Integration.Model.Tasks;
 using Vertica.Utilities;
 using Vertica.Integration.Tests.Infrastructure.Testing;
@@ -156,6 +158,102 @@ namespace Vertica.Integration.Tests.Model
             }
         }
 
+        [Test]
+        public void Task_With_PreventConcurrentTaskExecutionAttribute_ReturnNullExceptionHandler_Verify_InteractsWithDistributedMutex()
+        {
+            var distributedMutex = new DistributedMutexStub();
+
+            using (var context = ApplicationContext.Create(application => application
+                .ConfigureForUnitTest()
+                .Services(services => services
+                    .Advanced(advanced => advanced
+                        .Register<IRuntimeSettings>(kernel => new InMemoryRuntimeSettings()
+                            .Set("ConcurrentTaskExecution.PreventConcurrentTaskExecutionOnAllTasks", "false"))
+                        .Register<IDistributedMutex>(kernel => distributedMutex)))
+                .Tasks(tasks => tasks
+                    .Task<ReturnNullOnSyncExceptionTask>()
+                    .ConcurrentTaskExecution(concurrentTaskExecution => concurrentTaskExecution
+                        .AddExceptionHandler<ReturnNullExceptionHandler>()))))
+            {
+                var runner = context.Resolve<ITaskRunner>();
+                var factory = context.Resolve<ITaskFactory>();
+
+                // Create an existing lock based on the actual task
+                distributedMutex.SimulateLockFromTask<ReturnNullOnSyncExceptionTask>();
+
+                ITask task = factory.Get<ReturnNullOnSyncExceptionTask>();
+
+                runner.Execute(task);
+            }
+        }
+
+        [Test]
+        public void Task_With_PreventConcurrentTaskExecutionAttribute_ThrowsDifferentExceptionExceptionHandler_Verify_InteractsWithDistributedMutex()
+        {
+            var distributedMutex = new DistributedMutexStub();
+
+            using (var context = ApplicationContext.Create(application => application
+                .ConfigureForUnitTest()
+                .Services(services => services
+                    .Advanced(advanced => advanced
+                        .Register<IRuntimeSettings>(kernel => new InMemoryRuntimeSettings()
+                            .Set("ConcurrentTaskExecution.PreventConcurrentTaskExecutionOnAllTasks", "false"))
+                        .Register<IDistributedMutex>(kernel => distributedMutex)))
+                .Tasks(tasks => tasks
+                    .Task<ThrowOnSyncExceptionTask>()
+                    .ConcurrentTaskExecution(concurrentTaskExecution => concurrentTaskExecution
+                        .AddExceptionHandler<ThrowingExceptionHandler>()))))
+            {
+                var runner = context.Resolve<ITaskRunner>();
+                var factory = context.Resolve<ITaskFactory>();
+
+                // Create an existing lock based on the actual task
+                distributedMutex.SimulateLockFromTask<ThrowOnSyncExceptionTask>();
+
+                ITask task = factory.Get<ThrowOnSyncExceptionTask>();
+
+                var exception = Assert.Throws<TaskExecutionFailedException>(() => runner.Execute(task));
+
+                Assert.IsNotNull(exception.InnerException);
+                Assert.IsInstanceOf<ThrowingExceptionHandler.DifferentException>(exception.InnerException);
+
+                Assert.IsNotNull(exception.InnerException.InnerException);
+                Assert.IsInstanceOf<DistributedMutexStub.IsLockedException>(exception.InnerException.InnerException);
+            }
+        }
+
+        [Test]
+        public void Task_With_PreventConcurrentTaskExecutionAttribute_UnableToAcquireLock_Verify_InteractsWithDistributedMutex()
+        {
+            var distributedMutex = new DistributedMutexStub();
+
+            using (var context = ApplicationContext.Create(application => application
+                .ConfigureForUnitTest()
+                .Services(services => services
+                    .Advanced(advanced => advanced
+                        .Register<IRuntimeSettings>(kernel => new InMemoryRuntimeSettings()
+                            .Set("ConcurrentTaskExecution.PreventConcurrentTaskExecutionOnAllTasks", "false"))
+                        .Register<IDistributedMutex>(kernel => distributedMutex)))
+                .Tasks(tasks => tasks
+                    .Task<ThrowIfStartsTask>())))
+            {
+                var runner = context.Resolve<ITaskRunner>();
+                var factory = context.Resolve<ITaskFactory>();
+
+                // Create an existing lock based on the actual task
+                distributedMutex.SimulateLockFromTask<ThrowIfStartsTask>();
+
+                ITask task = factory.Get<ThrowIfStartsTask>();
+
+                var exception = Assert.Throws<TaskExecutionFailedException>(() => runner.Execute(task));
+
+                Assert.IsNotNull(exception.InnerException);
+                Assert.IsInstanceOf<TaskExecutionLockNotAcquiredException>(exception.InnerException);
+
+                Assert.IsNotNull(exception.InnerException.InnerException);
+                Assert.IsInstanceOf<DistributedMutexStub.IsLockedException>(exception.InnerException.InnerException);
+            }
+        }
         public class DistributedMutexStub : IDistributedMutex
         {
             private readonly ConcurrentDictionary<string, DistributedMutexContext> _locks;
@@ -168,7 +266,7 @@ namespace Vertica.Integration.Tests.Model
             public IDisposable Enter(DistributedMutexContext context)
             {
                 if (_locks.ContainsKey(context.Name))
-                    throw new InvalidOperationException($"{context.Name} is locked.");
+                    throw new IsLockedException();
 
                 if (_locks.TryAdd(context.Name, context))
                 {
@@ -180,6 +278,20 @@ namespace Vertica.Integration.Tests.Model
                 }
 
                 throw new InvalidOperationException($"Unable to add lock for '{context.Name}.");
+            }
+
+            public void SimulateLockFromTask<TTask>() where TTask : ITask
+            {
+                SimulateLock(typeof(TTask).Name);
+            }
+
+            public void SimulateLock(string key)
+            {
+                _locks.AddOrUpdate(key, (DistributedMutexContext) null, (existingKey, existingValue) => existingValue);
+            }
+
+            public class IsLockedException : Exception
+            {
             }
         }
 
@@ -248,6 +360,31 @@ namespace Vertica.Integration.Tests.Model
             }
         }
 
+        public class ReturnNullExceptionHandler : IPreventConcurrentTaskExecutionExceptionHandler
+        {
+            public Exception OnException(ITask currentTask, TaskLog log, Arguments arguments, Exception exception)
+            {
+                return null;
+            }
+        }
+
+        public class ThrowingExceptionHandler : IPreventConcurrentTaskExecutionExceptionHandler
+        {
+            public Exception OnException(ITask currentTask, TaskLog log, Arguments arguments, Exception exception)
+            {
+                throw new DifferentException("Message", exception);
+            }
+
+            [Serializable]
+            public class DifferentException : Exception
+            {
+                public DifferentException(string message, Exception inner)
+                    : base(message, inner)
+                {
+                }
+            }
+        }
+
         [PreventConcurrentTaskExecution(RuntimeEvaluator = typeof(CustomRuntimeEvaluator))]
         public class SyncOnlyWithAttributeAndRuntimeEvaluatorTask : IntegrationTask
         {
@@ -263,6 +400,39 @@ namespace Vertica.Integration.Tests.Model
         {
             public override void StartTask(ITaskExecutionContext context)
             {
+            }
+
+            public override string Description => "TBD";
+        }
+
+        [PreventConcurrentTaskExecution(ExceptionHandler = typeof(ReturnNullExceptionHandler))]
+        public class ReturnNullOnSyncExceptionTask : IntegrationTask
+        {
+            public override void StartTask(ITaskExecutionContext context)
+            {
+                Assert.Fail("This task should never be started.");
+            }
+
+            public override string Description => "TBD";
+        }
+
+        [PreventConcurrentTaskExecution(ExceptionHandler = typeof(ThrowingExceptionHandler))]
+        public class ThrowOnSyncExceptionTask : IntegrationTask
+        {
+            public override void StartTask(ITaskExecutionContext context)
+            {
+                Assert.Fail("This task should never be started.");
+            }
+
+            public override string Description => "TBD";
+        }
+
+        [PreventConcurrentTaskExecution]
+        public class ThrowIfStartsTask : IntegrationTask
+        {
+            public override void StartTask(ITaskExecutionContext context)
+            {
+                Assert.Fail("This task should never be started.");
             }
 
             public override string Description => "TBD";

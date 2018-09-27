@@ -306,6 +306,7 @@
     <Compile Include="IRuntimeSettings.cs" />
     <Compile Include="Model\Arguments.cs" />
     <Compile Include="Model\ContextWorkItem.cs" />
+    <Compile Include="Model\Exceptions\TaskExecutionLockNotAcquiredException.cs" />
     <Compile Include="Model\Tasks\ConcurrentTaskExecutionConfiguration.cs" />
     <Compile Include="Model\Exceptions\IIgnoreLogging.cs" />
     <Compile Include="Model\Exceptions\MultipleHostsFoundException.cs" />
@@ -355,11 +356,13 @@
     <Compile Include="Model\TaskRunner.cs" />
     <Compile Include="Model\Tasks\AllowConcurrentTaskExecutionAttribute.cs" />
     <Compile Include="Model\Tasks\ConcurrentTaskExecution.cs" />
+    <Compile Include="Model\Tasks\ConcurrentTaskExecutionResult.cs" />
     <Compile Include="Model\Tasks\Evaluators\DisabledIfEnvironmentIsDevelopment.cs" />
     <Compile Include="Model\Tasks\Evaluators\DisabledIfIntegrationDbIsDisabled.cs" />
     <Compile Include="Model\Tasks\IConcurrentTaskExecution.cs" />
     <Compile Include="Model\Tasks\IPreventConcurrentTaskExecutionCustomLockDescription.cs" />
     <Compile Include="Model\Tasks\IPreventConcurrentTaskExecutionCustomLockName.cs" />
+    <Compile Include="Model\Tasks\IPreventConcurrentTaskExecutionExceptionHandler.cs" />
     <Compile Include="Model\Tasks\IPreventConcurrentTaskExecutionRuntimeEvaluator.cs" />
     <Compile Include="Model\Tasks\PreventConcurrentTaskExecutionAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,10 +1,9 @@
-﻿using System;
-using Vertica.Integration.Infrastructure.Logging;
+﻿using Vertica.Integration.Infrastructure.Logging;
 
 namespace Vertica.Integration.Model.Tasks
 {
     public interface IConcurrentTaskExecution
     {
-        IDisposable Handle(ITask task, Arguments arguments, TaskLog log);
+        ConcurrentTaskExecutionResult Handle(ITask task, Arguments arguments, TaskLog log);
     }
 }

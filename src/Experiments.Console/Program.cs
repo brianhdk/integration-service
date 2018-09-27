@@ -18,13 +18,15 @@
 
             //Tasks.ConcurrentExecution.Demo.Run();
 
+            Tasks.ConcurrentExecution.ExceptionHandler.Demo.Run();
+
             //Tasks.WithSteps.Demo.Run();
 
             //Tasks.Exceptions.Demo.Run();
 
             //Tasks.Obsolete.Demo.Run();
 
-            Tasks.Arguments.Demo.Run(args);
+            //Tasks.Arguments.Demo.Run(args);
 
             //WebApi.Controllers.Demo.Run();
 

@@ -12,21 +12,19 @@ namespace Vertica.Integration.Model.Tasks
     {
         private readonly IDistributedMutex _distributedMutex;
         private readonly IKernel _kernel;
-        private readonly ILogger _logger;
 
         private readonly DistributedMutexConfiguration _defaultConfiguration;
         private readonly bool _preventConcurrentTaskExecutionOnAllTasks;
 
-        public ConcurrentTaskExecution(IDistributedMutex distributedMutex, IKernel kernel, ILogger logger, IRuntimeSettings settings)
+        public ConcurrentTaskExecution(IDistributedMutex distributedMutex, IKernel kernel, IRuntimeSettings settings)
         {
             _distributedMutex = distributedMutex;
             _kernel = kernel;
-            _logger = logger;
 
             _defaultConfiguration = DefaultConfiguration(settings, out _preventConcurrentTaskExecutionOnAllTasks);
         }
 
-        public IDisposable Handle(ITask task, Arguments arguments, TaskLog log)
+        public ConcurrentTaskExecutionResult Handle(ITask task, Arguments arguments, TaskLog log)
         {
             if (task == null) throw new ArgumentNullException(nameof(task));
             if (arguments == null) throw new ArgumentNullException(nameof(arguments));
@@ -41,22 +39,54 @@ namespace Vertica.Integration.Model.Tasks
                 var allowConcurrentTaskExecutionAttribute = taskType.GetCustomAttribute<AllowConcurrentTaskExecutionAttribute>();
 
                 if (allowConcurrentTaskExecutionAttribute != null)
-                    return null;
+                    return ConcurrentTaskExecutionResult.Continue();
 
                 if (!_preventConcurrentTaskExecutionOnAllTasks)
-                    return null;
+                    return ConcurrentTaskExecutionResult.Continue();
             }
             else
             {
-                Type runtimeEvaluatorType = preventConcurrent.RuntimeEvaluator;
+                if (IsDisabled(task, arguments, preventConcurrent))
+                    return ConcurrentTaskExecutionResult.Continue();
+            }
 
-                if (runtimeEvaluatorType != null)
+            string lockName = GetLockName(task, arguments, preventConcurrent);
+            string lockDescription = GetLockDescription(task, log, arguments, preventConcurrent);
+            IPreventConcurrentTaskExecutionExceptionHandler exceptionHandler = GetExceptionHandler(task, preventConcurrent);
+
+            try
+            {
+                DistributedMutexConfiguration configuration = preventConcurrent?.Configuration ?? _defaultConfiguration;
+
+                var context = new DistributedMutexContext(lockName, configuration, log.LogMessage, lockDescription);
+
+                IDisposable lockAcquired = _distributedMutex.Enter(context);
+
+                return ConcurrentTaskExecutionResult.Continue(lockAcquired);
+            }
+            catch (Exception ex)
+            {
+                if (exceptionHandler != null)
                 {
-                    var runtimeEvaluator = _kernel.Resolve(runtimeEvaluatorType) as IPreventConcurrentTaskExecutionRuntimeEvaluator;
+                    ex = exceptionHandler.OnException(task, log, arguments, ex);
 
-                    if (runtimeEvaluator == null)
-                        throw new InvalidOperationException($@"Unable to resolve evaluator type '{runtimeEvaluatorType.FullName}'. 
+                    if (ex == null)
+                        return ConcurrentTaskExecutionResult.Stop();
+                }
 
+                throw new TaskExecutionLockNotAcquiredException($"Unable to acquire lock '{lockName}'.", ex);
+            }
+        }
+
+        private bool IsDisabled(ITask task, Arguments arguments, PreventConcurrentTaskExecutionAttribute preventConcurrent)
+        {
+            Type runtimeEvaluatorType = preventConcurrent.RuntimeEvaluator;
+
+            if (runtimeEvaluatorType != null)
+            {
+                if (!(_kernel.Resolve(runtimeEvaluatorType) is IPreventConcurrentTaskExecutionRuntimeEvaluator runtimeEvaluator)
+                )
+                    throw new InvalidOperationException($@"Unable to resolve evaluator type '{runtimeEvaluatorType.FullName}' which has been specified on task '{task.GetType().FullName}'. 
 
 Either the type does not implement '{nameof(IPreventConcurrentTaskExecutionRuntimeEvaluator)}'-interface or you forgot to register the type as a custom evaluator. 
 
@@ -68,30 +98,11 @@ using (IApplicationContext context = ApplicationContext.Create(application => ap
             .AddFromAssemblyOfThis<Program>()
             .AddEvaluator<MyCustomEvaluator>()))");
 
-                    if (runtimeEvaluator.Disabled(task, arguments))
-                        return null;
-                }
+                if (runtimeEvaluator.Disabled(task, arguments))
+                    return true;
             }
 
-            string lockName = GetLockName(task, arguments, preventConcurrent);
-
-            try
-            {
-                var context = new DistributedMutexContext(
-                    lockName,
-                    preventConcurrent?.Configuration ?? _defaultConfiguration,
-                    log.LogMessage,
-                    GetLockDescription(task, log, arguments, preventConcurrent));
-
-                return _distributedMutex.Enter(context);
-            }
-            catch (Exception ex)
-            {
-                ErrorLog errorLog = _logger.LogError(ex);
-                log.ErrorLog = errorLog;
-
-                throw new TaskExecutionFailedException($"Unable to acquire lock '{lockName}'.", ex);
-            }
+            return false;
         }
 
         private string GetLockName(ITask task, Arguments arguments, PreventConcurrentTaskExecutionAttribute preventConcurrent)
@@ -100,13 +111,9 @@ using (IApplicationContext context = ApplicationContext.Create(application => ap
 
             if (customLockNameType != null)
             {
-                var customLockName =
-                    _kernel.Resolve(customLockNameType) as IPreventConcurrentTaskExecutionCustomLockName;
-
-                if (customLockName == null)
+                if (!(_kernel.Resolve(customLockNameType) is IPreventConcurrentTaskExecutionCustomLockName customLockName))
                     throw new InvalidOperationException(
-                        $@"Unable to resolve custom lock name type '{customLockNameType.FullName}'. 
-
+                        $@"Unable to resolve custom lock name type '{customLockNameType.FullName}' which has been specified on task '{task.GetType().FullName}'. 
 
 Either the type does not implement '{nameof(IPreventConcurrentTaskExecutionCustomLockName)}'-interface or you forgot to register the type as a custom lock name. 
 
@@ -135,17 +142,13 @@ using (IApplicationContext context = ApplicationContext.Create(application => ap
 
             if (customLockDescriptionType != null)
             {
-                var customLockDescription =
-                    _kernel.Resolve(customLockDescriptionType) as IPreventConcurrentTaskExecutionCustomLockDescription;
-
-                if (customLockDescription == null)
+                if (!(_kernel.Resolve(customLockDescriptionType) is IPreventConcurrentTaskExecutionCustomLockDescription customLockDescription))
                     throw new InvalidOperationException(
-                        $@"Unable to resolve custom lock description type '{customLockDescriptionType.FullName}'. 
-
+                        $@"Unable to resolve custom lock description type '{customLockDescriptionType.FullName}' which has been specified on task '{task.GetType().FullName}'. 
 
 Either the type does not implement '{nameof(IPreventConcurrentTaskExecutionCustomLockDescription)}'-interface or you forgot to register the type as a custom lock description. 
 
-You can register custom evaluators when setting up Integration Service in the ApplicationContext.Create(...)-method:
+You can register custom lock descriptions when setting up Integration Service in the ApplicationContext.Create(...)-method:
 
 using (IApplicationContext context = ApplicationContext.Create(application => application
     .Tasks(tasks => tasks
@@ -159,10 +162,35 @@ using (IApplicationContext context = ApplicationContext.Create(application => ap
             return description;
         }
 
+        private IPreventConcurrentTaskExecutionExceptionHandler GetExceptionHandler(ITask task, PreventConcurrentTaskExecutionAttribute preventConcurrent)
+        {
+            Type exceptionHandlerType = preventConcurrent?.ExceptionHandler;
+
+            if (exceptionHandlerType != null)
+            {
+                if (!(_kernel.Resolve(exceptionHandlerType) is IPreventConcurrentTaskExecutionExceptionHandler exceptionHandler))
+                    throw new InvalidOperationException(
+                        $@"Unable to resolve exception handler type '{exceptionHandlerType.FullName}' which has been specified on task '{task.GetType().FullName}'. 
+
+Either the type does not implement '{nameof(IPreventConcurrentTaskExecutionExceptionHandler)}'-interface or you forgot to register the type as an exception handler. 
+
+You can register exception handlers when setting up Integration Service in the ApplicationContext.Create(...)-method:
+
+using (IApplicationContext context = ApplicationContext.Create(application => application
+    .Tasks(tasks => tasks
+        .ConcurrentTaskExecution(concurrentTaskExecution => concurrentTaskExecution
+            .AddFromAssemblyOfThis<Program>()
+            .AddExceptionHandler<MyExceptionHandler>()))");
+
+                return exceptionHandler;
+            }
+
+            return null;
+        }
+
         private static DistributedMutexConfiguration DefaultConfiguration(IRuntimeSettings settings, out bool preventConcurrentTaskExecutionOnAllTasks)
         {
-            TimeSpan defaultWaitTime;
-            if (!TimeSpan.TryParse(settings[$"{nameof(ConcurrentTaskExecution)}.DefaultWaitTime"], out defaultWaitTime))
+            if (!TimeSpan.TryParse(settings[$"{nameof(ConcurrentTaskExecution)}.DefaultWaitTime"], out TimeSpan defaultWaitTime))
                 defaultWaitTime = TimeSpan.FromSeconds(30);
 
             bool.TryParse(settings[$"{nameof(ConcurrentTaskExecution)}.PreventConcurrentTaskExecutionOnAllTasks"], out preventConcurrentTaskExecutionOnAllTasks);

@@ -25,8 +25,7 @@ namespace Vertica.Integration.Infrastructure.Threading.DistributedMutex.Db
             _featureToggler = featureToggler;
             _shutdown = shutdown;
 
-            TimeSpan queryLockInterval;
-            if (!TimeSpan.TryParse(settings[QueryLockIntervalKey], out queryLockInterval))
+            if (!TimeSpan.TryParse(settings[QueryLockIntervalKey], out TimeSpan queryLockInterval))
                 queryLockInterval = TimeSpan.FromSeconds(5);
 
             _queryLockInterval = queryLockInterval;

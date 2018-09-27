@@ -40,17 +40,20 @@ namespace Vertica.Integration.Model
 
 			var output = new List<string>();
 
-			Action<string> outputter = message =>
-			{
-				message = $"[{Time.Now:HH:mm:ss}] {message}";
+		    void Outputter(string message)
+		    {
+		        message = $"[{Time.Now:HH:mm:ss}] {message}";
 
-				_console.WriteLine(message);
-				output.Add(message);
-			};
+		        _console.WriteLine(message);
+		        output.Add(message);
+		    }
 
-            using (var taskLog = new TaskLog(task, _logger.LogEntry, new Output(outputter)))
-            using (_concurrentTaskExecution.Handle(task, arguments, taskLog))
+		    using (var taskLog = new TaskLog(task, _logger.LogEntry, new Output(Outputter)))
+            using (ConcurrentTaskExecutionResult taskExecution = HandleConcurrentTaskExecution(task, arguments, taskLog))
             {
+                if (taskExecution.StopTask)
+                    return new TaskExecutionResult(output.ToArray());
+
                 Action<string>[] logMessage = { x => { } };
 
                 var log = new Log(message => logMessage[0]?.Invoke(message), _logger);
@@ -129,5 +132,25 @@ namespace Vertica.Integration.Model
 
 			return new TaskExecutionResult(output.ToArray());
 		}
+
+	    private ConcurrentTaskExecutionResult HandleConcurrentTaskExecution(ITask task, Arguments arguments, TaskLog taskLog)
+	    {
+	        try
+	        {
+	            ConcurrentTaskExecutionResult result = _concurrentTaskExecution.Handle(task, arguments, taskLog);
+
+                if (result == null)
+                    throw new InvalidOperationException($"{_concurrentTaskExecution.GetType().FullName} returned <null> which was not expected.");
+
+	            return result;
+	        }
+	        catch (Exception ex)
+	        {
+                ErrorLog errorLog = _logger.LogError(ex);
+                taskLog.ErrorLog = errorLog;
+
+                throw new TaskExecutionFailedException($"Starting Task '{taskLog.Name}' failed with message: '{ex.DestructMessage()}'. ErrorID: {errorLog?.Id ?? "<null>"}.", ex);
+            }
+	    }
 	}
 }

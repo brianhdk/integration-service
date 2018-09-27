@@ -24,8 +24,8 @@ namespace Vertica.Integration.Model.Tasks
         /// </summary>
         public uint WaitTimeMs
         {
-            get { return _waitTimeMs.GetValueOrDefault(); }
-            set { _waitTimeMs = value; }
+            get => _waitTimeMs.GetValueOrDefault();
+            set => _waitTimeMs = value;
         }
 
         /// <summary>
@@ -42,5 +42,10 @@ namespace Vertica.Integration.Model.Tasks
         /// Specifies a type that implements <see cref="IPreventConcurrentTaskExecutionCustomLockDescription"/> to be able to specify a custom lock description at runtime.
         /// </summary>
         public Type CustomLockDescription { get; set; }
+
+        /// <summary>
+        /// Specifies a type that implements <see cref="IPreventConcurrentTaskExecutionExceptionHandler"/> to be able to influence on the exception handling at runtime if a lock was unable to be acquired.
+        /// </summary>
+        public Type ExceptionHandler { get; set; }
     }
 }

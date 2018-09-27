@@ -224,6 +224,7 @@
     <Compile Include="Logging\Serilog\Demo.cs" />
     <Compile Include="Tasks\Arguments\Demo.cs" />
     <Compile Include="Tasks\ConcurrentExecution\Demo.cs" />
+    <Compile Include="Tasks\ConcurrentExecution\ExceptionHandler\Demo.cs" />
     <Compile Include="Tasks\Exceptions\Demo.cs" />
     <Compile Include="Tasks\Obsolete\Demo.cs" />
     <Compile Include="Tasks\WithSteps\Demo.cs" />

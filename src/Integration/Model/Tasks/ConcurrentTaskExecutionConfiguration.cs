@@ -8,6 +8,7 @@ namespace Vertica.Integration.Model.Tasks
         private readonly ScanAddRemoveInstaller<IPreventConcurrentTaskExecutionRuntimeEvaluator> _evaluators;
         private readonly ScanAddRemoveInstaller<IPreventConcurrentTaskExecutionCustomLockName> _customLockNames;
         private readonly ScanAddRemoveInstaller<IPreventConcurrentTaskExecutionCustomLockDescription> _customLockDescriptions;
+        private readonly ScanAddRemoveInstaller<IPreventConcurrentTaskExecutionExceptionHandler> _exceptionHandlers;
 
         internal ConcurrentTaskExecutionConfiguration(TasksConfiguration tasks)
         {
@@ -16,6 +17,7 @@ namespace Vertica.Integration.Model.Tasks
             _evaluators = new ScanAddRemoveInstaller<IPreventConcurrentTaskExecutionRuntimeEvaluator>(serviceDescriptor: x => x.Self());
             _customLockNames = new ScanAddRemoveInstaller<IPreventConcurrentTaskExecutionCustomLockName>(serviceDescriptor: x => x.Self());
             _customLockDescriptions = new ScanAddRemoveInstaller<IPreventConcurrentTaskExecutionCustomLockDescription>(serviceDescriptor: x => x.Self());
+            _exceptionHandlers = new ScanAddRemoveInstaller<IPreventConcurrentTaskExecutionExceptionHandler>(serviceDescriptor: x => x.Self());
 
             // scan own assembly
             AddFromAssemblyOfThis<ConcurrentTaskExecutionConfiguration>();
@@ -25,7 +27,8 @@ namespace Vertica.Integration.Model.Tasks
                     .Advanced(advanced => advanced
                         .Install(_evaluators)
                         .Install(_customLockNames)
-                        .Install(_customLockDescriptions))));
+                        .Install(_customLockDescriptions)
+                        .Install(_exceptionHandlers))));
         }
 
         public TasksConfiguration Tasks { get; }
@@ -40,6 +43,7 @@ namespace Vertica.Integration.Model.Tasks
             _evaluators.AddFromAssemblyOfThis<T>();
             _customLockNames.AddFromAssemblyOfThis<T>();
             _customLockDescriptions.AddFromAssemblyOfThis<T>();
+            _exceptionHandlers.AddFromAssemblyOfThis<T>();
 
             return this;
         }
@@ -117,12 +121,38 @@ namespace Vertica.Integration.Model.Tasks
         }
 
         /// <summary>
+        /// Adds the specified <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">Specifies the <see cref="IPreventConcurrentTaskExecutionExceptionHandler"/> to be added.</typeparam>
+        public ConcurrentTaskExecutionConfiguration AddExceptionHandler<T>()
+            where T : IPreventConcurrentTaskExecutionExceptionHandler
+        {
+            _exceptionHandlers.Add<T>();
+
+            return this;
+        }
+
+        /// <summary>
+        /// Skips the specified <typeparamref name="T" />.
+        /// </summary>
+        /// <typeparam name="T">Specifies the <see cref="IPreventConcurrentTaskExecutionExceptionHandler"/> that will be skipped.</typeparam>
+        public ConcurrentTaskExecutionConfiguration RemoveExceptionHandler<T>()
+            where T : IPreventConcurrentTaskExecutionExceptionHandler
+        {
+            _exceptionHandlers.Remove<T>();
+
+            return this;
+        }
+
+        /// <summary>
         /// Clears all registrations.
         /// </summary>
         public ConcurrentTaskExecutionConfiguration Clear()
         {
             _evaluators.Clear();
             _customLockNames.Clear();
+            _customLockDescriptions.Clear();
+            _exceptionHandlers.Clear();
 
             return this;
         }
