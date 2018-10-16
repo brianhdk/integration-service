@@ -64,9 +64,8 @@
     <Compile Include="Environment\Demo.cs" />
     <Compile Include="FeatureToggler\Demo.cs" />
     <Compile Include="FileWatcher\Demo.cs" />
-    <Compile Include="FileWatcher\WatchFiles.cs" />
-    <Compile Include="FileWatcher\HandleFileTask.cs" />
     <Compile Include="Elasticsearch\Demo.cs" />
+    <Compile Include="FileWatcher\LargeFiles\Demo.cs" />
     <Compile Include="Hangfire\AllowAllAuthorizationFilter.cs" />
     <Compile Include="Hangfire\Demo.cs" />
     <Compile Include="Hangfire\IHangfireJob.cs" />

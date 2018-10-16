@@ -26,9 +26,7 @@ namespace Vertica.Integration.Elasticsearch.Infrastructure.Clusters
 
 		public ElasticClientFactory(IElasticClientFactory<DefaultConnection> decoree)
 		{
-			if (decoree == null) throw new ArgumentNullException(nameof(decoree));
-
-			_decoree = decoree;
+		    _decoree = decoree ?? throw new ArgumentNullException(nameof(decoree));
 		}
 
         public IElasticClient Get()

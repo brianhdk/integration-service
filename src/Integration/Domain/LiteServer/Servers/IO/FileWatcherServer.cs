@@ -26,10 +26,7 @@ namespace Vertica.Integration.Domain.LiteServer.Servers.IO
 				{
 					using (var watcher = new FileSystemWatcher(path.FullName, filterLocal))
 					{
-						watcher.Error += (sender, args) =>
-						{
-						    throw args.GetException();
-						};
+						watcher.Error += (sender, args) => throw args.GetException();
 
 						NotifyFilters notifyFiltersLocal = watcher.NotifyFilter;
 						ChangeNotifyFilters(change => notifyFiltersLocal = change);

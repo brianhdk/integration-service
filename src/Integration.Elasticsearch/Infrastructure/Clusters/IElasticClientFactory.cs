@@ -6,6 +6,7 @@ namespace Vertica.Integration.Elasticsearch.Infrastructure.Clusters
 	{
 	}
 
+    // ReSharper disable once UnusedTypeParameter
     public interface IElasticClientFactory<TConnection>
         where TConnection : Connection
     {

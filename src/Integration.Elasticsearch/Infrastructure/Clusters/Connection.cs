@@ -11,9 +11,7 @@ namespace Vertica.Integration.Elasticsearch.Infrastructure.Clusters
 	{
         protected Connection(ConnectionString connectionString)
 		{
-            if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
-
-			ConnectionString = connectionString;
+		    ConnectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
 		}
 
         protected internal ConnectionString ConnectionString { get; }

@@ -33,9 +33,7 @@ namespace Vertica.Integration.Elasticsearch.Infrastructure.Clusters.Castle.Winds
 
 		public ElasticClusterInstaller(TConnection connection)
         {
-            if (connection == null) throw new ArgumentNullException(nameof(connection));
-
-            _connection = connection;
+            _connection = connection ?? throw new ArgumentNullException(nameof(connection));
         }
 
         public virtual void Install(IWindsorContainer container, IConfigurationStore store)

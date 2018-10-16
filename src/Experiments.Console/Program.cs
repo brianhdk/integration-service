@@ -18,7 +18,7 @@
 
             //Tasks.ConcurrentExecution.Demo.Run();
 
-            Tasks.ConcurrentExecution.ExceptionHandler.Demo.Run();
+            //Tasks.ConcurrentExecution.ExceptionHandler.Demo.Run();
 
             //Tasks.WithSteps.Demo.Run();
 
@@ -59,6 +59,8 @@
             //Logging.Serilog.Demo.Run();
 
             //Archiving.Demo.Run();
+
+            FileWatcher.LargeFiles.Demo.Run();
         }
     }
 }

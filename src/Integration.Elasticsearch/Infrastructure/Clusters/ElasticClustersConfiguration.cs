@@ -13,11 +13,9 @@ namespace Vertica.Integration.Elasticsearch.Infrastructure.Clusters
 
 		internal ElasticClustersConfiguration(ElasticsearchConfiguration elasticsearch)
         {
-            if (elasticsearch == null) throw new ArgumentNullException(nameof(elasticsearch));
+            _connections = new List<IWindsorInstaller>();
 
-		    _connections = new List<IWindsorInstaller>();
-
-		    Elasticsearch = elasticsearch;
+		    Elasticsearch = elasticsearch ?? throw new ArgumentNullException(nameof(elasticsearch));
         }
 
         public ElasticsearchConfiguration Elasticsearch { get; }

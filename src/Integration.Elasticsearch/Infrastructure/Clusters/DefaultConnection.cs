@@ -17,9 +17,7 @@ namespace Vertica.Integration.Elasticsearch.Infrastructure.Clusters
 		internal DefaultConnection(Connection connection)
 			: base(connection.ConnectionString)
 		{
-			if (connection == null) throw new ArgumentNullException(nameof(connection));
-
-			_connection = connection;
+		    _connection = connection ?? throw new ArgumentNullException(nameof(connection));
 		}
 
 	    protected internal override IElasticClient Create(IKernel kernel)

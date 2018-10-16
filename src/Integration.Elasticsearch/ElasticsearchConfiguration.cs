@@ -9,9 +9,7 @@ namespace Vertica.Integration.Elasticsearch
 
         internal ElasticsearchConfiguration(ApplicationConfiguration application)
 		{
-			if (application == null) throw new ArgumentNullException(nameof(application));
-
-		    Application = application;
+		    Application = application ?? throw new ArgumentNullException(nameof(application));
 
             _clusters = new ElasticClustersConfiguration(this);
             Application.Extensibility(extensibility => extensibility.Register(() => _clusters));
