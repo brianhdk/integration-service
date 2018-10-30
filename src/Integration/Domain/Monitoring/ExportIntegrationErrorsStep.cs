@@ -43,10 +43,12 @@ namespace Vertica.Integration.Domain.Monitoring
                 ErrorEntry[] errors = session.Query<ErrorEntry>($@"
 SELECT
 	ErrorLog.Id AS ErrorId,
+    ErrorLog.MachineName,
+    ErrorLog.IdentityName,
 	ErrorLog.[Message] AS ErrorMessage,
-	ErrorLog.[TimeStamp] AS [DateTime],
 	ErrorLog.Severity,
 	ErrorLog.[Target],
+	ErrorLog.[TimeStamp] AS [DateTime],
 	TaskLog.TaskName,
 	TaskLog.StepName
 FROM
@@ -116,10 +118,12 @@ ORDER BY ErrorLog.[TimeStamp] DESC",
         public class ErrorEntry
         {
             public int ErrorId { get; set; }
+            public string MachineName { get; set; }
+            public string IdentityName { get; set; }
             public string ErrorMessage { get; set; }
-            public DateTimeOffset DateTime { get; set; }
             public Severity Severity { get; set; }
             public Target Target { get; set; }
+            public DateTimeOffset DateTime { get; set; }
             public string TaskName { get; set; }
             public string StepName { get; set; }
             public string TaskDescription { get; set; }
@@ -166,7 +170,10 @@ ORDER BY ErrorLog.[TimeStamp] DESC",
 
                 sb.AppendLine();
                 sb.AppendLine();
-                sb.AppendFormat("ErrorID: {0}", ErrorId);
+
+                sb.AppendLine($"MachineName: {MachineName}");
+                sb.AppendLine($"IdentityName: {IdentityName}");
+                sb.Append($"ErrorID: {ErrorId}");
 
                 return sb.ToString();
             }

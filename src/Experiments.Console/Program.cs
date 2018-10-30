@@ -40,7 +40,7 @@
 
             //Elasticsearch.Demo.Run();
 
-            //Logging.SqlServer.Demo.Run();
+            Logging.SqlServer.Demo.Run();
 
             //FeatureToggler.Demo.Run();
 
@@ -60,7 +60,7 @@
 
             //Archiving.Demo.Run();
 
-            FileWatcher.LargeFiles.Demo.Run();
+            //FileWatcher.LargeFiles.Demo.Run();
         }
     }
 }
