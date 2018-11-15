@@ -28,6 +28,7 @@ namespace Vertica.Integration.Infrastructure.Configuration
 SELECT 
     Id, 
     Name, 
+    Description,
     Created, 
     Updated, 
     UpdatedBy 

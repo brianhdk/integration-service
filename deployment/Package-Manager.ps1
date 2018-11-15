@@ -16,14 +16,14 @@ $script_directory = Split-Path -Parent $PSCommandPath
 
 $settings = @{
     "src" = @{
-        "integration" = Resolve-Path $script_directory\..\src\Integration
-		"integration_consolehost" = Resolve-Path $script_directory\..\src\Integration.ConsoleHost
-        "integration_webhost" = Resolve-Path $script_directory\..\src\Integration.WebHost
-		"integration_webapi" = Resolve-Path $script_directory\..\src\Integration.WebApi
-		"integration_webapi_signalr" = Resolve-Path $script_directory\..\src\Integration.WebApi.SignalR
-        "integration_portal" = Resolve-Path $script_directory\..\src\Integration.Portal
-		"integration_logging_elmah" = Resolve-Path $script_directory\..\src\Integration.Logging.Elmah
-		"integration_azure" = Resolve-Path $script_directory\..\src\Integration.Azure
+        #"integration" = Resolve-Path $script_directory\..\src\Integration
+		#"integration_consolehost" = Resolve-Path $script_directory\..\src\Integration.ConsoleHost
+        #"integration_webhost" = Resolve-Path $script_directory\..\src\Integration.WebHost
+		#"integration_webapi" = Resolve-Path $script_directory\..\src\Integration.WebApi
+		#"integration_webapi_signalr" = Resolve-Path $script_directory\..\src\Integration.WebApi.SignalR
+        #"integration_portal" = Resolve-Path $script_directory\..\src\Integration.Portal
+		#"integration_logging_elmah" = Resolve-Path $script_directory\..\src\Integration.Logging.Elmah
+		#"integration_azure" = Resolve-Path $script_directory\..\src\Integration.Azure
 		#"integration_paymentservice" = Resolve-Path $script_directory\..\src\Integration.PaymentService
 		"integration_ravendb" = Resolve-Path $script_directory\..\src\Integration.RavenDB
 		"integration_mongodb" = Resolve-Path $script_directory\..\src\Integration.MongoDB
@@ -47,7 +47,7 @@ $settings = @{
 }
 
 # remove .nupkg files in script directory
-Get-ChildItem $script_directory | Where-Object { $_.Extension -eq ".nupkg" } | Remove-Item
+#Get-ChildItem $script_directory | Where-Object { $_.Extension -eq ".nupkg" } | Remove-Item
 
 foreach ($project in $settings.src.Keys) {
 
@@ -89,7 +89,9 @@ foreach ($project in $settings.src.Keys) {
 	}
 
     # Move .nupkg to script directory
-    Get-ChildItem $projectDirectory | Where-Object { $_.Extension -eq ".nupkg" } | Move-Item -Destination $script_directory -Force
+
+    Write-Host $script_directory
+    Get-ChildItem $projectDirectory | Where-Object { $_.Extension -eq ".nupkg" } | Move-Item -Destination "C:\tmp\packages" -Force
 }
 
 Get-ChildItem $script_directory | Where-Object { $_.Extension -eq ".nupkg" } | ForEach {

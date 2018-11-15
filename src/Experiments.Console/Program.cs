@@ -40,7 +40,7 @@
 
             //Elasticsearch.Demo.Run();
 
-            Logging.SqlServer.Demo.Run();
+            //Logging.SqlServer.Demo.Run();
 
             //FeatureToggler.Demo.Run();
 
