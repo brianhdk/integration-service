@@ -16,25 +16,25 @@ $script_directory = Split-Path -Parent $PSCommandPath
 
 $settings = @{
     "src" = @{
-        #"integration" = Resolve-Path $script_directory\..\src\Integration
-		#"integration_consolehost" = Resolve-Path $script_directory\..\src\Integration.ConsoleHost
-        #"integration_webhost" = Resolve-Path $script_directory\..\src\Integration.WebHost
-		#"integration_webapi" = Resolve-Path $script_directory\..\src\Integration.WebApi
-		#"integration_webapi_signalr" = Resolve-Path $script_directory\..\src\Integration.WebApi.SignalR
-        #"integration_portal" = Resolve-Path $script_directory\..\src\Integration.Portal
-		#"integration_logging_elmah" = Resolve-Path $script_directory\..\src\Integration.Logging.Elmah
-		#"integration_azure" = Resolve-Path $script_directory\..\src\Integration.Azure
+		"integration" = Resolve-Path $script_directory\..\src\Integration
+		"integration_consolehost" = Resolve-Path $script_directory\..\src\Integration.ConsoleHost
+		"integration_webhost" = Resolve-Path $script_directory\..\src\Integration.WebHost
+		"integration_webapi" = Resolve-Path $script_directory\..\src\Integration.WebApi
+		"integration_webapi_signalr" = Resolve-Path $script_directory\..\src\Integration.WebApi.SignalR
+		"integration_portal" = Resolve-Path $script_directory\..\src\Integration.Portal
+		"integration_logging_elmah" = Resolve-Path $script_directory\..\src\Integration.Logging.Elmah
+		"integration_azure" = Resolve-Path $script_directory\..\src\Integration.Azure
 		#"integration_paymentservice" = Resolve-Path $script_directory\..\src\Integration.PaymentService
 		"integration_ravendb" = Resolve-Path $script_directory\..\src\Integration.RavenDB
 		"integration_mongodb" = Resolve-Path $script_directory\..\src\Integration.MongoDB
 		#"integration_rebus" = Resolve-Path $script_directory\..\src\Integration.Rebus #-- We'll not publish any Rebus-packages as this package is currently broken
 		"integration_sqlite" = Resolve-Path $script_directory\..\src\Integration.SQLite
 		"integration_perfion" = Resolve-Path $script_directory\..\src\Integration.Perfion
-        "integration_hangfire" = Resolve-Path $script_directory\..\src\Integration.Hangfire
+		"integration_hangfire" = Resolve-Path $script_directory\..\src\Integration.Hangfire
 		"integration_globase" = Resolve-Path $script_directory\..\src\Integration.Globase
-        "integration_slack" = Resolve-Path $script_directory\..\src\Integration.Slack
-        "integration_ucommerce" = Resolve-Path $script_directory\..\src\Integration.UCommerce
-        "integration_elasticsearch" = Resolve-Path $script_directory\..\src\Integration.Elasticsearch
+		"integration_slack" = Resolve-Path $script_directory\..\src\Integration.Slack
+		"integration_ucommerce" = Resolve-Path $script_directory\..\src\Integration.UCommerce
+		"integration_elasticsearch" = Resolve-Path $script_directory\..\src\Integration.Elasticsearch
 		"integration_redis" = Resolve-Path $script_directory\..\src\Integration.Redis
 		"integration_iis" = Resolve-Path $script_directory\..\src\Integration.IIS
 		"integration_emails_mandrill" = Resolve-Path $script_directory\..\src\Integration.Emails.Mandrill
@@ -46,8 +46,11 @@ $settings = @{
     }
 }
 
-# remove .nupkg files in script directory
-#Get-ChildItem $script_directory | Where-Object { $_.Extension -eq ".nupkg" } | Remove-Item
+If ($target -eq "Remote") {
+
+	# remove .nupkg files in tmp directory
+	Get-ChildItem "C:\tmp\packages" | Where-Object { $_.Extension -eq ".nupkg" } | Remove-Item
+}
 
 foreach ($project in $settings.src.Keys) {
 
@@ -94,7 +97,7 @@ foreach ($project in $settings.src.Keys) {
     Get-ChildItem $projectDirectory | Where-Object { $_.Extension -eq ".nupkg" } | Move-Item -Destination "C:\tmp\packages" -Force
 }
 
-Get-ChildItem $script_directory | Where-Object { $_.Extension -eq ".nupkg" } | ForEach {
+Get-ChildItem "C:\tmp\packages" | Where-Object { $_.Extension -eq ".nupkg" } | ForEach {
 
 	If ($target -eq "Remote") {
 
