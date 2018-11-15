@@ -89,7 +89,7 @@
       <Version>1.4.2</Version>
     </PackageReference>
     <PackageReference Include="Hangfire.Core">
-      <Version>1.6.20</Version>
+      <Version>1.6.21</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>10.0.3</Version>
