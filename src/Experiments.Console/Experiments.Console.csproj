@@ -91,6 +91,7 @@
     <Compile Include="Tasks\Exceptions\Demo.cs" />
     <Compile Include="Tasks\Obsolete\Demo.cs" />
     <Compile Include="Tasks\WithSteps\Demo.cs" />
+    <Compile Include="UCommerce\Demo.cs" />
     <Compile Include="WebApi\Controllers\Demo.cs" />
     <Compile Include="WebApi\Portal\Demo.cs" />
   </ItemGroup>
@@ -143,6 +144,10 @@
     <ProjectReference Include="..\Integration.Serilog\Integration.Serilog.csproj">
       <Project>{975CD228-9C95-4089-88F6-99D18F268ED7}</Project>
       <Name>Integration.Serilog</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration.UCommerce\Integration.UCommerce.csproj">
+      <Project>{BDED0B7F-0987-40B5-BEF8-88A25FF3AD3A}</Project>
+      <Name>Integration.UCommerce</Name>
     </ProjectReference>
     <ProjectReference Include="..\Integration.WebApi\Integration.WebApi.csproj">
       <Project>{A6CB3949-9637-4952-AB0F-0DE199E29B36}</Project>

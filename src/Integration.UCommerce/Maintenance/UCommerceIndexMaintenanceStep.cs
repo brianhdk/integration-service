@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Data;
+using System.Linq;
 using System.Text;
+using Dapper;
 using Vertica.Integration.Domain.Core;
 using Vertica.Integration.Infrastructure.Configuration;
 using Vertica.Integration.Infrastructure.Database;
@@ -40,9 +42,16 @@ namespace Vertica.Integration.UCommerce.Maintenance
             {
                 context.Log.Message(@"Executing sql: {0}", script);
 
-                using (IDbSession session = _uCommerceDb.OpenSession())
+                using (IDbConnection connection = _uCommerceDb.GetConnection())
                 {
-                    session.Execute(script);
+                    connection.Open();
+
+                    var command = new CommandDefinition(
+                        script,
+                        cancellationToken: context.CancellationToken,
+                        commandTimeout: configuration.IndexMaintenance.CommandTimeout.GetValueOrDefault(int.MaxValue));
+
+                    connection.ExecuteAsync(command).Wait(context.CancellationToken);
                 }
             }
         }

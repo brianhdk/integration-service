@@ -61,6 +61,8 @@
             //Archiving.Demo.Run();
 
             //FileWatcher.LargeFiles.Demo.Run();
+
+            UCommerce.Demo.Run();
         }
     }
 }
