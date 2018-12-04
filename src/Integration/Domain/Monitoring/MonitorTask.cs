@@ -24,7 +24,7 @@ namespace Vertica.Integration.Domain.Monitoring
 		    _runtimeSettings = runtimeSettings;
 		}
 
-		public override string Description => "Monitors the solution and sends out e-mails if there is any errors.";
+		public override string Description => "Monitors the solution and sends out e-mails if there are any errors.";
 
 	    public override MonitorWorkItem Start(ITaskExecutionContext context)
 		{
