@@ -35,29 +35,33 @@ namespace Vertica.Integration.Domain.Core
 
         public override void Execute(ITaskExecutionContext<MaintenanceWorkItem> context)
         {
+			MaintenanceConfiguration configuration = _configuration.Get<MaintenanceConfiguration>();
+
 			DateTimeOffset tasksLowerBound = Time.UtcNow.Subtract(context.WorkItem.Configuration.CleanUpTaskLogEntriesOlderThan),
 				errorsLowerBound = Time.UtcNow.Subtract(context.WorkItem.Configuration.CleanUpErrorLogEntriesOlderThan);
 
 			using (IDbSession session = _db.Value.OpenSession())
-			using (IDbTransaction transaction = session.BeginTransaction())
 			{
-			    Tuple<int, string> taskLog = DeleteEntries(session, IntegrationDbTable.TaskLog, tasksLowerBound);
-			    Tuple<int, string> errorLog = DeleteEntries(session, IntegrationDbTable.ErrorLog, errorsLowerBound);
-
-				transaction.Commit();
+			    Tuple<int, string> taskLog = DeleteEntries(configuration, session, IntegrationDbTable.TaskLog, tasksLowerBound);
+			    Tuple<int, string> errorLog = DeleteEntries(configuration, session, IntegrationDbTable.ErrorLog, errorsLowerBound);
 
 			    if (taskLog.Item1 > 0 || errorLog.Item1 > 0)
 			    {
-			        ArchiveCreated archive = _archiver.Archive("IntegrationDb-Maintenance", a =>
-			        {
-			            a.Options
-			                .GroupedBy("Backup")
-			                .ExpiresAfterMonths(12)
-			                .Compression(CompressionLevel.Optimal);
+			        ArchiveCreated archive = null;
 
-			            a.IncludeContent($"TaskLog_{tasksLowerBound:yyyyMMdd}.csv", taskLog.Item2);
-			            a.IncludeContent($"ErrorLog_{errorsLowerBound:yyyyMMdd}.csv", errorLog.Item2);
-			        });
+			        if (configuration.ArchiveDeletedLogEntries)
+			        {
+			            archive = _archiver.Archive("IntegrationDb-Maintenance", a =>
+			            {
+			                a.Options
+			                    .GroupedBy("Backup")
+			                    .ExpiresAfterMonths(12)
+			                    .Compression(CompressionLevel.Optimal);
+
+			                a.IncludeContent($"TaskLog_{tasksLowerBound:yyyyMMdd}.csv", taskLog.Item2);
+			                a.IncludeContent($"ErrorLog_{errorsLowerBound:yyyyMMdd}.csv", errorLog.Item2);
+			            });
+			        }
 
 			        context.Log.Message(@"Deleted {0} task entries older than '{1}'. 
 Deleted {2} error entries older than '{3}'
@@ -66,22 +70,53 @@ Archive: {4}",
 			            tasksLowerBound,
 			            errorLog.Item1,
 			            errorsLowerBound,
-			            archive);
+			            archive ?? "No archive");
 			    }
 			}
 		}
 
-	    private Tuple<int, string> DeleteEntries(IDbSession session, IntegrationDbTable table, DateTimeOffset lowerBound)
+	    private Tuple<int, string> DeleteEntries(MaintenanceConfiguration configuration, IDbSession session, IntegrationDbTable table, DateTimeOffset lowerBound)
 	    {
 	        return session.Wrap(s =>
 	        {
-	            string query = $" FROM [{_dbConfiguration.TableName(table)}] WHERE [TimeStamp] <= @lowerbound";
+	            string csv = null;
+	            string tableName = _dbConfiguration.TableName(table);
+	            int batchSize = configuration.DeleteLogEntriesBatchSize;
 
-	            string csv = s.QueryToCsv(string.Concat("SELECT *", query), new { lowerBound });
-                int count = s.Execute(string.Concat("DELETE", query), new { lowerBound }, commandTimeout: 10800);
+	            if (configuration.ArchiveDeletedLogEntries)
+	            {
+	                string query = $"SELECT * FROM [{tableName}] WHERE [TimeStamp] <= @lowerbound";
+	                csv = s.QueryToCsv(query, new { lowerBound });
+	            }
+
+	            int count = s.Execute(GetDeleteSql(tableName), new { lowerBound, batchSize }, commandTimeout: 10800);
 
 	            return Tuple.Create(count, csv);
 	        });
+	    }
+
+	    private string GetDeleteSql(string tableName)
+	    {
+	        return $@"
+DECLARE @DELETEDCOUNT INT
+SET @DELETEDCOUNT = 0
+
+DECLARE @BATCHCOUNT INT
+SET @BATCHCOUNT = @batchSize
+
+WHILE @BATCHCOUNT > 0
+BEGIN
+    DELETE TOP(@BATCHCOUNT) FROM [{tableName}] WHERE TimeStamp <= @lowerbound
+    SET @BATCHCOUNT = @@ROWCOUNT
+    SET @DELETEDCOUNT = @DELETEDCOUNT + @BATCHCOUNT
+
+    IF @BATCHCOUNT > 0
+    BEGIN
+        WAITFOR DELAY '00:00:02' -- wait 2 secs to allow other processes access to the table
+    END
+END
+
+SELECT @DELETEDCOUNT";
 	    }
 
         public override string Description

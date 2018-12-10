@@ -22,12 +22,16 @@ namespace Vertica.Integration.Domain.Core
         {
             CleanUpTaskLogEntriesOlderThan = TimeSpan.FromDays(60);
             CleanUpErrorLogEntriesOlderThan = TimeSpan.FromDays(60);
+            ArchiveDeletedLogEntries = true;
+            DeleteLogEntriesBatchSize = 200;
 
             ArchiveFolders = new ArchiveFoldersConfiguration();
         }
 
         public TimeSpan CleanUpTaskLogEntriesOlderThan { get; set; }
         public TimeSpan CleanUpErrorLogEntriesOlderThan { get; set; }
+        public bool ArchiveDeletedLogEntries { get; set; }
+        public int DeleteLogEntriesBatchSize { get; set; }
 
         public ArchiveFoldersConfiguration ArchiveFolders { get; }
 
