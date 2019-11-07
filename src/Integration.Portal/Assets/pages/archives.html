@@ -1,0 +1,14 @@
+﻿<div loading-container="tableParams.settings().$loading">
+    <table ng-table="tableParams" show-filter="true" class="table">
+        <tbody>
+            <tr ng-repeat="archive in $data">
+                <td data-title="'Created'" sortable="'Created'">{{ archive.Created | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+                <td data-title="'Name'" sortable="'Name'" filter="{ 'Name': 'text' }">{{ archive.Name }}</td>
+                <td data-title="'Group'" sortable="'GroupName'" filter="{ 'GroupName': 'text' }">{{ archive.GroupName }}</td>
+                <td data-title="'Size'" sortable="'ByteSize'">{{ formatSize(archive.ByteSize) }}</td>
+                <td data-title="'Expires'" sortable="'Expires'">{{ archive.Expires | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+                <td><a ng-href="/archives?id={{ archive.Id }}">Download</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

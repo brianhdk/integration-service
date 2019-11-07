@@ -1,0 +1,36 @@
+﻿Hi, and thanks for trying out the Integration Service platform.
+To get started, modify your Program.cs as shown below to begin working with this.
+
+Also make sure to visit the Project Home on https://github.com/vertica-as/integration-service#integrating-ravendb for further documentation.
+
+class Program
+{
+    static void Main(string[] args)
+    {
+		IntegrationStartup.Run(args, application => application
+			.UseRavenDb(ravenDb => ravenDb
+				.DefaultConnection(ConnectionString.FromText("Url = http://localhost:8998; Database = MyRavenDb"))
+				.AddConnection(new SecondRavenDb())));
+    }
+}
+
+public class SecondRavenDb : Connection
+{
+    public SecondRavenDb()
+        : base(ConnectionString.FromName("NameFromConnectionStringElement"))
+    {
+    }
+
+    protected override IDocumentStore Create()
+    {
+        // Control how the IDocumentStore is created here.
+        return base.Create();
+    }
+
+    protected override void Initialize(IDocumentStore documentStore)
+    {
+        base.Initialize(documentStore);
+
+        // Add custom initialization here.
+    }
+}

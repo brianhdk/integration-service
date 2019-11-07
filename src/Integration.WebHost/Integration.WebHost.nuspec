@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://github.com/vertica-as/integration-service/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/vertica-as/integration-service</projectUrl>
+    <iconUrl>http://icons.iconarchive.com/icons/icons8/ios7/32/Data-Workflow-icon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2018</copyright>
+    <tags>Vertica Integration Service IntegrationService WebHost</tags>
+    <!--<dependencies>
+  <dependency id="Castle.Core" version="[3.3.3,5.0)" />
+  <dependency id="Castle.Windsor" version="[3.4,5.0)" />
+  <dependency id="Vertica.Integration" version="[1.29.1,2.0)" />
+  <dependency id="Vertica.Integration.WebApi" version="[1.20.1,2.0)" />
+  <dependency id="Owin" version="[1,2.0)" />
+  <dependency id="Microsoft.Owin" version="[3.1.0,5.0)" />
+  <dependency id="Microsoft.Owin.Host.SystemWeb" version="[3.1.0,5.0)" />
+</dependencies>-->
+    <dependencies>
+      <dependency id="Castle.Core" version="[3.3.3,5.0)" />
+      <dependency id="Castle.Windsor" version="[3.4.0,5.0)" />
+      <dependency id="FluentMigrator.Runner" version="[1.6.2,2.0)" />
+      <dependency id="Microsoft.Owin" version="[4,5.0)" />
+      <dependency id="Microsoft.Owin.Host.SystemWeb" version="[4,5.0)" /> 
+      <dependency id="Vertica.Integration.WebApi" version="[1.20.1,2.0)" />
+      <dependency id="Vertica.Integration" version="[1.29.1,2.0)" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="App_Readme\Integration.WebHost-readme.txt" target="readme.txt" />
+    <file src="NuGet-web.config.install.xdt" target="content\Web.config.install.xdt" />
+    <file src="NuGet-web.config.uninstall.xdt" target="content\Web.config.uninstall.xdt" />
+    <file src="NuGet-Startup.cs.pp" target="content\App_Start\Startup.cs.pp" />
+  </files>
+</package>

@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://github.com/vertica-as/integration-service/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/vertica-as/integration-service</projectUrl>
+    <iconUrl>http://icons.iconarchive.com/icons/icons8/ios7/32/Data-Workflow-icon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2018</copyright>
+    <tags>Vertica Integration Service IntegrationService Azure</tags>
+    <!--<dependencies>
+  <dependency id="Vertica.Integration" version="[1.29.1,2.0)" />
+  <dependency id="Vertica.Utilities" version="[5,6.0)" />
+  <dependency id="Castle.Core" version="[3.3.3,5.0)" />
+  <dependency id="Castle.Windsor" version="[3.4,5.0)" />
+  <dependency id="Newtonsoft.Json" version="[10,13.0)" />
+  <dependency id="WindowsAzure.ServiceBus" version="[4.1,5.0)" />
+  <dependency id="WindowsAzure.Storage" version="[8.3,10.0)" />
+</dependencies>-->
+    <dependencies>
+      <dependency id="Castle.Core" version="[3.3.3,5.0)" />
+      <dependency id="Castle.Windsor" version="[3.4.0,5.0)" />
+      <dependency id="Microsoft.Azure.KeyVault.Core" version="[2.0.4,4.0)" />
+      <dependency id="Microsoft.Data.Services.Client" version="[5.8.2,6.0)" />
+      <dependency id="Microsoft.WindowsAzure.ConfigurationManager" version="[3.2.3,4.0)" />
+      <dependency id="Newtonsoft.Json" version="[10,13.0)" />
+      <dependency id="Vertica.Utilities" version="[5,6.0)" />
+      <dependency id="WindowsAzure.ServiceBus" version="[4.1,6.0)" />
+      <dependency id="WindowsAzure.Storage" version="[8.3,10.0)" />
+      <dependency id="Vertica.Integration" version="[1.29.1,2.0)" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="App_Readme\Integration.Azure-readme.txt" target="readme.txt" />
+    <file src="NuGet-app.config.install.xdt" target="content\App.config.install.xdt" />
+    <file src="NuGet-app.config.uninstall.xdt" target="content\App.config.uninstall.xdt" />
+  </files>
+</package>

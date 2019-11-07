@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html lang="en" ng-app="integrationsApp">
+<head>
+    <meta charset="utf-8">
+    <title>Integration Portal</title>
+
+    <link href="assets/layout/bootstrap/css/bootstrap.css" rel="stylesheet">
+	<link href="assets/layout/css/drunken-parrot.css" rel="stylesheet" />
+    <link href="assets/layout/css/drunken-parrot-theme.css" rel="stylesheet"/>
+    <link href="assets/layout/css/style.css" rel="stylesheet"/>
+    <link href="assets/js/angular/ng-table/ng-table.min.css" rel="stylesheet"/>
+
+	<script src="assets/js/angular/angular.min.js"></script>
+    <script src="assets/js/angular/angular-route.min.js"></script>
+    <script src="assets/js/angular/angular-resource.min.js"></script>
+    <script src="assets/js/angular/ng-table/ng-table.min.js"></script>
+    <script src="assets/js/angular/restangular/restangular.min.js"></script>
+
+	<script src="assets/js/app.js"></script>
+	<script src="assets/js/controller/mainController.js"></script>
+	<script src="assets/js/controller/runningTasksController.js"></script>
+	<script src="assets/js/controller/latestTasksController.js"></script>
+	<script src="assets/js/controller/errorsController.js"></script>
+	<script src="assets/js/controller/errorDetailController.js"></script>
+	<script src="assets/js/controller/taskDetailsController.js"></script>
+    <script src="assets/js/controller/taskExecutionDetailsController.js"></script>
+    <script src="assets/js/controller/archivesController.js"></script>
+    <script src="assets/js/controller/configurationController.js"></script>
+    <script src="assets/js/controller/configurationDetailController.js"></script>
+    <script src="assets/js/ace/ace.js"></script>
+    <script src="assets/js/ace/ui-ace.js"></script>
+    <script src="assets/js/filesize.min.js"></script>
+</head>
+<body ng-controller="mainController">
+	<div class="masthead palette-the-black-flag">
+	    <div class="container">
+            <div class="navbar-right uptime-text hidden-sm">
+                Started: <span ng-bind="uptime.StartedAt"></span><br />
+                Uptime: <span ng-bind="uptime.Text"></span>
+            </div>
+	        <div class="masthead-title">
+	            Integration Portal
+	        </div>
+	    </div>
+	</div>
+	<div class="container">
+		<ul class="row nav nav-pills demo-componant-title">
+            <li ng-class="{'active' : isActive('/') || isActive('/tasks')}"><a href="#/tasks">Task Types</a></li>
+			<li ng-class="{'active' : isActive('/running-tasks')}"><a href="#/running-tasks">Running tasks</a></li>
+		    <li ng-class="{'active' : isActive('/latest-tasks')}"><a href="#/latest-tasks">Latest tasks</a></li>
+            <li ng-class="{'active' : isActive('/archives')}"><a href="#/archives">Archives</a></li>
+		    <li ng-class="{'active' : isActive('/configuration')}"><a href="#/configuration">Configuration</a></li>
+            <li ng-class="{'active' : isActive('/errors')}"><a href="#/errors">Errors</a></li>
+		</ul>
+		<div class="row">
+			<div ng-view></div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+﻿Hi, and thanks for trying out the Integration Service platform.
+To get started, modify your Program.cs as shown below to begin working with this.
+
+Also make sure to visit the Project Home on https://github.com/vertica-as/integration-service#integrating-mongodb for further documentation.
+
+class Program
+{
+    static void Main(string[] args)
+    {
+		IntegrationStartup.Run(args, application => application
+            .UseMongoDb(ravenDb => ravenDb
+				.DefaultConnection(ConnectionString.FromText("mongodb://user:password@ds036178.mongolab.com:36178/project"))
+				.AddConnection(new SecondMongoDb())));
+    }
+}
+
+public class SecondMongoDb : Connection
+{
+    public SecondMongoDb()
+        : base(ConnectionString.FromName("NameFromConnectionStringElement"))
+    {
+    }
+}
+
+http://docs.mongodb.org/manual/reference/connection-string/#connections-connection-options
+ConnectionString.FromText("mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]")

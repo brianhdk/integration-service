@@ -1,0 +1,251 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{44A7587A-702A-4C3B-8E03-F43913C78632}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Experiments.Console</RootNamespace>
+    <AssemblyName>Experiments.Console</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.OracleClient" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Archiving\Demo.cs" />
+    <Compile Include="Azure\BlobStorage\Demo.cs" />
+    <Compile Include="Castle.Windsor\CustomInstaller\Demo.cs" />
+    <Compile Include="Configuration\Demo.cs" />
+    <Compile Include="Emails.SendGrid\Demo.cs" />
+    <Compile Include="Emails.Mandrill\Demo.cs" />
+    <Compile Include="Environment\Demo.cs" />
+    <Compile Include="FeatureToggler\Demo.cs" />
+    <Compile Include="FileWatcher\Demo.cs" />
+    <Compile Include="Elasticsearch\Demo.cs" />
+    <Compile Include="FileWatcher\LargeFiles\Demo.cs" />
+    <Compile Include="Hangfire\AllowAllAuthorizationFilter.cs" />
+    <Compile Include="Hangfire\Demo.cs" />
+    <Compile Include="Hangfire\IHangfireJob.cs" />
+    <Compile Include="Hangfire\Migrations\M1_SetupRecurringJobs.cs" />
+    <Compile Include="Hangfire\MyTask.cs" />
+    <Compile Include="Hangfire\MyTaskWithProgressBar.cs" />
+    <Compile Include="Castle.Windsor\Interceptors\Demo.cs" />
+    <Compile Include="LiteServer\Demo.cs" />
+    <Compile Include="LiteServer\Heartbeat\Demo.cs" />
+    <Compile Include="Logging\SqlServer\Demo.cs" />
+    <Compile Include="Logging\TextFile\Demo.cs" />
+    <Compile Include="Perfion\Demo.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rebus\ReceiveMessageHandler.cs" />
+    <Compile Include="Rebus\Demo.cs" />
+    <Compile Include="Rebus\RebusLoggerFactory.cs" />
+    <Compile Include="Rebus\SendMessageWorker.cs" />
+    <Compile Include="Logging\Serilog\Demo.cs" />
+    <Compile Include="Tasks\Arguments\Demo.cs" />
+    <Compile Include="Tasks\ConcurrentExecution\Demo.cs" />
+    <Compile Include="Tasks\ConcurrentExecution\ExceptionHandler\Demo.cs" />
+    <Compile Include="Tasks\Exceptions\Demo.cs" />
+    <Compile Include="Tasks\Obsolete\Demo.cs" />
+    <Compile Include="Tasks\WithSteps\Demo.cs" />
+    <Compile Include="UCommerce\Demo.cs" />
+    <Compile Include="WebApi\Controllers\Demo.cs" />
+    <Compile Include="WebApi\Portal\Demo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Integration.Azure\Integration.Azure.csproj">
+      <Project>{FC35A1E3-52DD-4B8D-AF2C-B01CE8AE2EE8}</Project>
+      <Name>Integration.Azure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration.Elasticsearch\Integration.Elasticsearch.csproj">
+      <Project>{D755AB1A-90E7-4E81-9F86-C574E1695A71}</Project>
+      <Name>Integration.Elasticsearch</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration.Emails.Mandrill\Integration.Emails.Mandrill.csproj">
+      <Project>{99AC12A8-C792-4DEF-BFC8-065BDCF84CD1}</Project>
+      <Name>Integration.Emails.Mandrill</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration.Emails.SendGrid\Integration.Emails.SendGrid.csproj">
+      <Project>{58C087A6-1000-40ED-9B21-3C3AD44A0762}</Project>
+      <Name>Integration.Emails.SendGrid</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration.Hangfire\Integration.Hangfire.csproj">
+      <Project>{7158B2C5-5725-4B55-B9ED-C58169712051}</Project>
+      <Name>Integration.Hangfire</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration.MongoDB\Integration.MongoDB.csproj">
+      <Project>{3BCCDB4F-104A-418A-8DEE-15A655960AEA}</Project>
+      <Name>Integration.MongoDB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration.Perfion\Integration.Perfion.csproj">
+      <Project>{218A773A-C382-42F7-9882-CB6D51B2EDF0}</Project>
+      <Name>Integration.Perfion</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration.Portal\Integration.Portal.csproj">
+      <Project>{BE14DA0E-31C6-4417-8EC6-ED1658B51FA9}</Project>
+      <Name>Integration.Portal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration.Rebus\Integration.Rebus.csproj">
+      <Project>{9078656D-7C5E-469C-BFC6-1B9AB2CE9AE1}</Project>
+      <Name>Integration.Rebus</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration.Redis\Integration.Redis.csproj">
+      <Project>{D59B4610-F4EB-495A-9012-C4767BBA9B38}</Project>
+      <Name>Integration.Redis</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration.Serilog\Integration.Serilog.csproj">
+      <Project>{975CD228-9C95-4089-88F6-99D18F268ED7}</Project>
+      <Name>Integration.Serilog</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration.UCommerce\Integration.UCommerce.csproj">
+      <Project>{BDED0B7F-0987-40B5-BEF8-88A25FF3AD3A}</Project>
+      <Name>Integration.UCommerce</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration.WebApi\Integration.WebApi.csproj">
+      <Project>{A6CB3949-9637-4952-AB0F-0DE199E29B36}</Project>
+      <Name>Integration.WebApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration\Integration.csproj">
+      <Project>{460F774F-2C89-47F4-84BD-B97653060E68}</Project>
+      <Name>Integration</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Castle.Core">
+      <Version>4.3.1</Version>
+    </PackageReference>
+    <PackageReference Include="Castle.Windsor">
+      <Version>4.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="FluentMigrator">
+      <Version>1.6.2</Version>
+    </PackageReference>
+    <PackageReference Include="Hangfire.Console">
+      <Version>1.4.2</Version>
+    </PackageReference>
+    <PackageReference Include="Hangfire.Core">
+      <Version>1.6.27</Version>
+    </PackageReference>
+    <PackageReference Include="Hangfire.MemoryStorage">
+      <Version>1.6.0</Version>
+    </PackageReference>
+    <PackageReference Include="Hangfire.SqlServer">
+      <Version>1.6.27</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core">
+      <Version>5.2.7</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Azure.KeyVault.Core">
+      <Version>3.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Owin.Host.HttpListener">
+      <Version>4.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Owin.Host.SystemWeb">
+      <Version>4.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Owin.StaticFiles">
+      <Version>4.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.WindowsAzure.ConfigurationManager">
+      <Version>3.2.3</Version>
+    </PackageReference>
+    <PackageReference Include="NEST">
+      <Version>6.5.1</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>12.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="Rebus">
+      <Version>4.2.1</Version>
+    </PackageReference>
+    <PackageReference Include="Rebus.AzureServiceBus">
+      <Version>4.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Rebus.SqlServer">
+      <Version>4.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Serilog">
+      <Version>2.8.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.Configuration.ConfigurationManager">
+      <Version>4.5.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt">
+      <Version>5.4.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.Net.Http">
+      <Version>4.3.4</Version>
+    </PackageReference>
+    <PackageReference Include="System.Runtime">
+      <Version>4.3.1</Version>
+    </PackageReference>
+    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation">
+      <Version>4.3.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.Security.Cryptography.Algorithms">
+      <Version>4.3.1</Version>
+    </PackageReference>
+    <PackageReference Include="System.Security.Cryptography.X509Certificates">
+      <Version>4.3.2</Version>
+    </PackageReference>
+    <PackageReference Include="Vertica.Utilities">
+      <Version>5.3.0</Version>
+    </PackageReference>
+    <PackageReference Include="WindowsAzure.ServiceBus">
+      <Version>5.1.0</Version>
+    </PackageReference>
+    <PackageReference Include="WindowsAzure.Storage">
+      <Version>9.3.3</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

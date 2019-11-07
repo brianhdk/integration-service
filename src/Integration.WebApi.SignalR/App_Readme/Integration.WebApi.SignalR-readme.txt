@@ -1,0 +1,21 @@
+﻿Hi, and thanks for trying out the SignalR extension.
+To get started, modify your Program.cs as shown below to begin working with this.
+
+Also make sure to visit the Project Home on https://github.com/vertica-as/integration-service for further documentation.
+
+using Vertica.Integration.WebApi;
+using Vertica.Integration.WebApi.SignalR;
+
+namespace YourNameSpace
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			IntegrationStartup.Run(args, application => application
+				.UseWebApi(webApi => webApi
+					.WithSignalR(signalR => signalR
+						.AddFromAssemblyOfThis<Program>())));
+		}
+	}
+}

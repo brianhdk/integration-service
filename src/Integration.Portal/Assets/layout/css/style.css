@@ -1,0 +1,14 @@
+.editor {
+	height: 200px;
+    margin-bottom: 6px;
+}
+
+.uptime-text {
+    color: #cccccc;
+    text-align: right;
+}
+
+.configuration-list-description {
+    font-size: 12px;
+    color: #a9a9a9;
+}

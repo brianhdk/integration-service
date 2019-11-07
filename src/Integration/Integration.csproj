@@ -1,0 +1,381 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{460F774F-2C89-47F4-84BD-B97653060E68}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Vertica.Integration</RootNamespace>
+    <AssemblyName>Vertica.Integration</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApplicationConfiguration.cs" />
+    <Compile Include="ApplicationContext.cs" />
+    <Compile Include="AppConfigRuntimeSettings.cs" />
+    <Compile Include="ApplicationEnvironment.cs" />
+    <Compile Include="ConfigurationBasedRuntimeSettings.cs" />
+    <Compile Include="Domain\Core\ArchiveFoldersStep.cs" />
+    <Compile Include="Domain\Core\CleanUpIntegrationDbStep.cs" />
+    <Compile Include="Domain\Core\MaintenanceConfiguration.cs" />
+    <Compile Include="Domain\Core\MaintenanceTask.cs" />
+    <Compile Include="Domain\Core\MaintenanceTaskExtensions.cs" />
+    <Compile Include="Domain\Core\MaintenanceWorkItem.cs" />
+    <Compile Include="Domain\Core\WriteDocumentationTask.cs" />
+    <Compile Include="Domain\LiteServer\BackgroundServerContext.cs" />
+    <Compile Include="Domain\LiteServer\BackgroundServerHost.cs" />
+    <Compile Include="Domain\LiteServer\BackgroundWorkerContext.cs" />
+    <Compile Include="Domain\LiteServer\BackgroundWorkerContinuation.cs" />
+    <Compile Include="Domain\LiteServer\BackgroundWorkerServer.cs" />
+    <Compile Include="Domain\LiteServer\Heartbeat\Logging\ConfigurationServiceBasedHeartbeatLoggingRepository.cs" />
+    <Compile Include="Domain\LiteServer\Heartbeat\Logging\HeartbeatLog.cs" />
+    <Compile Include="Domain\LiteServer\Heartbeat\Logging\HeartbeatLogEntry.cs" />
+    <Compile Include="Domain\LiteServer\Heartbeat\Logging\IHeartbeatLoggingRepository.cs" />
+    <Compile Include="Domain\LiteServer\Heartbeat\Logging\HeartbeatLoggingConfiguration.cs" />
+    <Compile Include="Domain\LiteServer\Heartbeat\HeartbeatConfiguration.cs" />
+    <Compile Include="Domain\LiteServer\Heartbeat\Logging\HeartbeatLoggingWorker.cs" />
+    <Compile Include="Domain\LiteServer\Heartbeat\Providers\CurrentProcessHeartbeatProvider.cs" />
+    <Compile Include="Domain\LiteServer\Heartbeat\Providers\GarbageCollectorHeartbeatProvider.cs" />
+    <Compile Include="Domain\LiteServer\HouseKeeping.cs" />
+    <Compile Include="Domain\LiteServer\HouseKeepingConfiguration.cs" />
+    <Compile Include="Domain\LiteServer\IBackgroundServer.cs" />
+    <Compile Include="Domain\LiteServer\IBackgroundWorker.cs" />
+    <Compile Include="Domain\LiteServer\Heartbeat\IHeartbeatProvider.cs" />
+    <Compile Include="Domain\LiteServer\ILiteServerFactory.cs" />
+    <Compile Include="Domain\LiteServer\InternalConfiguration.cs" />
+    <Compile Include="Domain\LiteServer\IRestartable.cs" />
+    <Compile Include="Domain\LiteServer\RestartableContext.cs" />
+    <Compile Include="Domain\LiteServer\Servers\IO\FileWatcherServer.cs" />
+    <Compile Include="Domain\LiteServer\Servers\IO\FileWatcherRunTaskServer.cs" />
+    <Compile Include="Domain\LiteServer\Servers\IO\ManualFileSystemEventArgs.cs" />
+    <Compile Include="Domain\LiteServer\LiteServerConfiguration.cs" />
+    <Compile Include="Domain\LiteServer\LiteServerExtensions.cs" />
+    <Compile Include="Domain\LiteServer\LiteServerHost.cs" />
+    <Compile Include="Domain\LiteServer\LiteServerImpl.cs" />
+    <Compile Include="Domain\LiteServer\ShutdownActions.cs" />
+    <Compile Include="Domain\LiteServer\StartupActions.cs" />
+    <Compile Include="Domain\Monitoring\ExportIntegrationErrorsStep.cs" />
+    <Compile Include="Domain\Monitoring\MessageContainsText.cs" />
+    <Compile Include="Domain\Monitoring\MonitorConfiguration.cs" />
+    <Compile Include="Domain\Monitoring\MonitorEmailTemplate.cs" />
+    <Compile Include="Domain\Monitoring\MonitorEntry.cs" />
+    <Compile Include="Domain\Monitoring\MonitorFoldersStep.cs" />
+    <Compile Include="Domain\Monitoring\MonitorTarget.cs" />
+    <Compile Include="Domain\Monitoring\MonitorTask.cs" />
+    <Compile Include="Domain\Monitoring\MonitorTaskExtensions.cs" />
+    <Compile Include="Domain\Monitoring\MonitorWorkItem.cs" />
+    <Compile Include="Domain\Monitoring\PingUrlsStep.cs" />
+    <Compile Include="Domain\Monitoring\RedirectForMonitorTargets.cs" />
+    <Compile Include="EnvironmentConfiguration.cs" />
+    <Compile Include="ExtensibilityConfiguration.cs" />
+    <Compile Include="IApplicationContext.cs" />
+    <Compile Include="IInitializable.cs" />
+    <Compile Include="Infrastructure\Database\IntegrationDatabaseConfiguration.cs" />
+    <Compile Include="Infrastructure\Database\IntegrationDbTable.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\M9_CreateLogTableIndicies.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\M8_DbDistributedMutexAddDescription.cs" />
+    <Compile Include="Infrastructure\Extensions\IOExtensions.cs" />
+    <Compile Include="Infrastructure\Extensions\QueueExtensions.cs" />
+    <Compile Include="Infrastructure\Extensions\RepeatExtensions.cs" />
+    <Compile Include="Infrastructure\Extensions\StringExtensions.cs" />
+    <Compile Include="Infrastructure\Extensions\TimeExtensions.cs" />
+    <Compile Include="Infrastructure\Extensions\WebClientExtensions.cs" />
+    <Compile Include="Infrastructure\IO\ConsoleWriter.cs" />
+    <Compile Include="Infrastructure\IO\IConsoleWriter.cs" />
+    <Compile Include="Infrastructure\IShutdown.cs" />
+    <Compile Include="Infrastructure\IUptime.cs" />
+    <Compile Include="Infrastructure\IUptimeTextGenerator.cs" />
+    <Compile Include="Infrastructure\ServicesConfiguration.cs" />
+    <Compile Include="Infrastructure\ServicesConventionsConfiguration.cs" />
+    <Compile Include="Infrastructure\ServicesInterceptorsConfiguration.cs" />
+    <Compile Include="Infrastructure\Threading\ActionRepeater.cs" />
+    <Compile Include="Infrastructure\Archiving\ArchiveOptions.cs" />
+    <Compile Include="Infrastructure\Archiving\BeginArchive.cs" />
+    <Compile Include="Infrastructure\Archiving\DbArchiveService.cs" />
+    <Compile Include="Infrastructure\Archiving\ArchiveExtensions.cs" />
+    <Compile Include="Infrastructure\Archiving\CleanUpArchivesStep.cs" />
+    <Compile Include="Infrastructure\Archiving\ArchiveCreated.cs" />
+    <Compile Include="Infrastructure\Archiving\DumpArchiveTask.cs" />
+    <Compile Include="Infrastructure\Archiving\FileBasedArchiveService.cs" />
+    <Compile Include="Infrastructure\Archiving\IArchiveService.cs" />
+    <Compile Include="Infrastructure\Archiving\Archive.cs" />
+    <Compile Include="Infrastructure\Configuration\Configuration.cs" />
+    <Compile Include="Infrastructure\Configuration\DbConfigurationRepository.cs" />
+    <Compile Include="Infrastructure\Configuration\ConfigurationService.cs" />
+    <Compile Include="Infrastructure\Configuration\FileBasedConfigurationRepository.cs" />
+    <Compile Include="Infrastructure\Configuration\IConfigurationRepository.cs" />
+    <Compile Include="Infrastructure\Configuration\IConfigurationService.cs" />
+    <Compile Include="Infrastructure\ConnectionString.cs" />
+    <Compile Include="Infrastructure\Database\Castle.Windsor\DbInstaller.cs" />
+    <Compile Include="Infrastructure\Database\Connection.cs" />
+    <Compile Include="Infrastructure\Database\DatabaseDisabledException.cs" />
+    <Compile Include="Infrastructure\Database\DbFactory.cs" />
+    <Compile Include="Infrastructure\Database\DbSession.cs" />
+    <Compile Include="Infrastructure\Database\DefaultConnection.cs" />
+    <Compile Include="Infrastructure\Database\Extensions\DbExtensions.cs" />
+    <Compile Include="Infrastructure\Database\Extensions\SqlDbExtensions.cs" />
+    <Compile Include="Infrastructure\Database\IIntegrationDatabaseConfiguration.cs" />
+    <Compile Include="Infrastructure\Database\IntegrationDbException.cs" />
+    <Compile Include="Infrastructure\Database\IDbFactory.cs" />
+    <Compile Include="Infrastructure\Database\IDbSession.cs" />
+    <Compile Include="Infrastructure\Database\DatabaseConfiguration.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\DatabaseServer.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\Features\DbDistributedMutexFeatureAttribute.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\Features\DbLoggerFeatureAttribute.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\Features\FeatureAttribute.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\IMigrationDbs.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\IntegrationMigration.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\IntegrationMigrationDb.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\M1_Baseline.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\M7_DbDistributedMutex.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\M6_ExtendArchiveWithExpirationAndGroup.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\M5_TaskLogNullableExecutionTimeSeconds.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\M4_ExtendTaskLogWithExecutionContext.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\M3_Configuration.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\M2_Archive.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\MigrateTask.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\MigrationConfiguration.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\MigrationDb.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\MigrationExtensions.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\ConfigurationUpdater.cs" />
+    <Compile Include="Infrastructure\Database\Migrations\VersionTable.cs" />
+    <Compile Include="Infrastructure\Email\EmailService.cs" />
+    <Compile Include="Infrastructure\Email\EmailTemplate.cs" />
+    <Compile Include="Infrastructure\Email\IEmailService.cs" />
+    <Compile Include="Infrastructure\Email\TextBasedEmailTemplate.cs" />
+    <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ScanAddRemoveInstaller.cs" />
+    <Compile Include="Infrastructure\Features\InMemoryFeatureToggler.cs" />
+    <Compile Include="Infrastructure\Features\IFeatureToggler.cs" />
+    <Compile Include="Infrastructure\KernelActions.cs" />
+    <Compile Include="Infrastructure\Extensions\ActionRepeaterExtensions.cs" />
+    <Compile Include="Infrastructure\Extensions\ExceptionExtensions.cs" />
+    <Compile Include="Infrastructure\Extensions\NameExtensions.cs" />
+    <Compile Include="Infrastructure\Extensions\ObjectExtensions.cs" />
+    <Compile Include="Infrastructure\Factories\Castle.Windsor\CastleWindsorExtensions.cs" />
+    <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\CollectionInstaller.cs" />
+    <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ContainerExtensions.cs" />
+    <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\HostsInstaller.cs" />
+    <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\Install.cs" />
+    <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\InstanceInstaller.cs" />
+    <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ConventionInstaller.cs" />
+    <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\HostFactoryInstaller.cs" />
+    <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\TypeInstaller.cs" />
+    <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\TaskInstaller.cs" />
+    <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\ServiceInstaller.cs" />
+    <Compile Include="Infrastructure\IO\AzureWebJobShutdownRequest.cs" />
+    <Compile Include="Infrastructure\ServicesAdvancedConfiguration.cs" />
+    <Compile Include="Infrastructure\IO\WaitForEscapeKey.cs" />
+    <Compile Include="Infrastructure\IWaitForShutdownRequest.cs" />
+    <Compile Include="Infrastructure\Logging\IReferenceErrorLog.cs" />
+    <Compile Include="Infrastructure\Logging\ITarget.cs" />
+    <Compile Include="Infrastructure\Logging\Loggers\EventLogger.cs" />
+    <Compile Include="Infrastructure\Logging\Loggers\EventLoggerConfiguration.cs" />
+    <Compile Include="Infrastructure\Logging\Loggers\TextWriterLoggerConfiguration.cs" />
+    <Compile Include="Infrastructure\Logging\Loggers\TextWriterLogger.cs" />
+    <Compile Include="Infrastructure\Logging\LoggingConfiguration.cs" />
+    <Compile Include="Infrastructure\Logging\Loggers\Logger.cs" />
+    <Compile Include="Infrastructure\Logging\Loggers\TextFileLogger.cs" />
+    <Compile Include="Infrastructure\Logging\Loggers\TextFileLoggerConfiguration.cs" />
+    <Compile Include="Infrastructure\Logging\Loggers\VoidLogger.cs" />
+    <Compile Include="Infrastructure\Threading\DistributedMutex\Db\CleanUpDbDistributedMutexStep.cs" />
+    <Compile Include="Infrastructure\Threading\DistributedMutex\Db\DbDistributedMutex.cs" />
+    <Compile Include="Infrastructure\Threading\DistributedMutex\Db\DbDistributedMutexLock.cs" />
+    <Compile Include="Infrastructure\Threading\DistributedMutex\Db\DeleteDbDistributedMutexLocksCommand.cs" />
+    <Compile Include="Infrastructure\Threading\DistributedMutex\Db\IDeleteDbDistributedMutexLocksCommand.cs" />
+    <Compile Include="Infrastructure\Threading\DistributedMutex\DistributedMutexConfiguration.cs" />
+    <Compile Include="Infrastructure\Threading\DistributedMutex\DistributedMutexContext.cs" />
+    <Compile Include="Infrastructure\Threading\DistributedMutex\IDistributedMutex.cs" />
+    <Compile Include="Infrastructure\Parsing\CsvConfiguration.cs" />
+    <Compile Include="Infrastructure\Parsing\CsvParser.cs" />
+    <Compile Include="Infrastructure\Parsing\CsvRow.cs" />
+    <Compile Include="Infrastructure\Parsing\ICsvParser.cs" />
+    <Compile Include="Infrastructure\Remote\Ftp\FtpClient.cs" />
+    <Compile Include="Infrastructure\Remote\Ftp\FtpClientConfiguration.cs" />
+    <Compile Include="Infrastructure\Remote\FtpClientFactory.cs" />
+    <Compile Include="Infrastructure\Remote\Ftp\FtpClientException.cs" />
+    <Compile Include="Infrastructure\Remote\Ftp\FtpClientExtensions.cs" />
+    <Compile Include="Infrastructure\Remote\Ftp\IFtpClient.cs" />
+    <Compile Include="Infrastructure\Remote\HttpClientFactory.cs" />
+    <Compile Include="Infrastructure\Remote\IFtpClientFactory.cs" />
+    <Compile Include="Infrastructure\Remote\IHttpClientFactory.cs" />
+    <Compile Include="Infrastructure\Repeat.cs" />
+    <Compile Include="Infrastructure\Extensions\ConsoleExtensions.cs" />
+    <Compile Include="Infrastructure\Threading\DistributedMutex\MachineWideMutex.cs" />
+    <Compile Include="Infrastructure\Threading\DistributedMutexTimeoutException.cs" />
+    <Compile Include="Infrastructure\Threading\DistributedMutex\ThrowingDistributedMutex.cs" />
+    <Compile Include="Infrastructure\Threading\DistributedMutex\VoidDistributedMutex.cs" />
+    <Compile Include="Infrastructure\UptimeTextGenerator.cs" />
+    <Compile Include="Infrastructure\Windows\WindowsServiceConfiguration.cs" />
+    <Compile Include="Infrastructure\Windows\IWindowsServices.cs" />
+    <Compile Include="Infrastructure\Windows\IWindowsFactory.cs" />
+    <Compile Include="Infrastructure\Windows\WindowsServices.cs" />
+    <Compile Include="Infrastructure\Windows\WindowsFactory.cs" />
+    <Compile Include="InMemoryRuntimeSettings.cs" />
+    <Compile Include="IRuntimeSettings.cs" />
+    <Compile Include="Model\Arguments.cs" />
+    <Compile Include="Model\ContextWorkItem.cs" />
+    <Compile Include="Model\Exceptions\TaskExecutionLockNotAcquiredException.cs" />
+    <Compile Include="Model\Tasks\ConcurrentTaskExecutionConfiguration.cs" />
+    <Compile Include="Model\Exceptions\IIgnoreLogging.cs" />
+    <Compile Include="Model\Exceptions\MultipleHostsFoundException.cs" />
+    <Compile Include="Model\Exceptions\NoHostFoundException.cs" />
+    <Compile Include="Model\Exceptions\TaskWithSameNameAlreadyRegistredException.cs" />
+    <Compile Include="Infrastructure\Windows\Credentials.cs" />
+    <Compile Include="Model\Hosting\Handlers\IWindowsServiceHandler.cs" />
+    <Compile Include="Model\Hosting\Handlers\HandleAsWindowsService.cs" />
+    <Compile Include="Model\Hosting\Handlers\WindowsServiceHandler.cs" />
+    <Compile Include="Model\Hosting\HostArguments.cs" />
+    <Compile Include="Model\Hosting\ArgumentsParser.cs" />
+    <Compile Include="Model\Hosting\IArgumentsParser.cs" />
+    <Compile Include="Model\Hosting\IHost.cs" />
+    <Compile Include="Model\Hosting\IHostFactory.cs" />
+    <Compile Include="Model\Hosting\TaskHost.cs" />
+    <Compile Include="Model\ILog.cs" />
+    <Compile Include="Model\ITaskExecutionContext.cs" />
+    <Compile Include="Model\TaskExecutionContext.cs" />
+    <Compile Include="Model\Hosting\HostsConfiguration.cs" />
+    <Compile Include="Model\TasksConfiguration.cs" />
+    <Compile Include="Model\TaskConfiguration.cs" />
+    <Compile Include="Infrastructure\Factories\Castle.Windsor\Installers\TaskFactoryInstaller.cs" />
+    <Compile Include="Infrastructure\Logging\ErrorLog.cs" />
+    <Compile Include="Infrastructure\Logging\ILogger.cs" />
+    <Compile Include="Infrastructure\Logging\LogEntry.cs" />
+    <Compile Include="Infrastructure\Logging\Loggers\DbLogger.cs" />
+    <Compile Include="Infrastructure\Logging\MessageLog.cs" />
+    <Compile Include="Infrastructure\Logging\Severity.cs" />
+    <Compile Include="Infrastructure\Logging\StepLog.cs" />
+    <Compile Include="Infrastructure\Logging\Target.cs" />
+    <Compile Include="Infrastructure\Logging\TaskLog.cs" />
+    <Compile Include="Infrastructure\Windows\WindowsUtils.cs" />
+    <Compile Include="Model\EmptyWorkItem.cs" />
+    <Compile Include="Model\Exceptions\TaskExecutionFailedException.cs" />
+    <Compile Include="Model\Exceptions\TaskNotFoundException.cs" />
+    <Compile Include="Model\Execution.cs" />
+    <Compile Include="Model\IStep.cs" />
+    <Compile Include="Model\ITask.cs" />
+    <Compile Include="Model\ITaskFactory.cs" />
+    <Compile Include="Model\ITaskRunner.cs" />
+    <Compile Include="Model\Log.cs" />
+    <Compile Include="Model\Output.cs" />
+    <Compile Include="Model\Step.cs" />
+    <Compile Include="Model\IntegrationTask.cs" />
+    <Compile Include="Model\TaskExecutionResult.cs" />
+    <Compile Include="Model\TaskRunner.cs" />
+    <Compile Include="Model\Tasks\AllowConcurrentTaskExecutionAttribute.cs" />
+    <Compile Include="Model\Tasks\ConcurrentTaskExecution.cs" />
+    <Compile Include="Model\Tasks\ConcurrentTaskExecutionResult.cs" />
+    <Compile Include="Model\Tasks\Evaluators\DisabledIfEnvironmentIsDevelopment.cs" />
+    <Compile Include="Model\Tasks\Evaluators\DisabledIfIntegrationDbIsDisabled.cs" />
+    <Compile Include="Model\Tasks\IConcurrentTaskExecution.cs" />
+    <Compile Include="Model\Tasks\IPreventConcurrentTaskExecutionCustomLockDescription.cs" />
+    <Compile Include="Model\Tasks\IPreventConcurrentTaskExecutionCustomLockName.cs" />
+    <Compile Include="Model\Tasks\IPreventConcurrentTaskExecutionExceptionHandler.cs" />
+    <Compile Include="Model\Tasks\IPreventConcurrentTaskExecutionRuntimeEvaluator.cs" />
+    <Compile Include="Model\Tasks\PreventConcurrentTaskExecutionAttribute.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Integration.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Castle.Core">
+      <Version>3.3.3</Version>
+    </PackageReference>
+    <PackageReference Include="Castle.Windsor">
+      <Version>3.4.0</Version>
+    </PackageReference>
+    <PackageReference Include="Dapper">
+      <Version>1.60.1</Version>
+    </PackageReference>
+    <PackageReference Include="FluentMigrator">
+      <Version>1.6.2</Version>
+    </PackageReference>
+    <PackageReference Include="FluentMigrator.Runner">
+      <Version>1.6.2</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client">
+      <Version>5.2.7</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>12.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="System.Net.Http">
+      <Version>4.3.4</Version>
+    </PackageReference>
+    <PackageReference Include="System.Security.Cryptography.Algorithms">
+      <Version>4.3.1</Version>
+    </PackageReference>
+    <PackageReference Include="System.Security.Cryptography.X509Certificates">
+      <Version>4.3.2</Version>
+    </PackageReference>
+    <PackageReference Include="Vertica.Utilities">
+      <Version>5.3.0</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

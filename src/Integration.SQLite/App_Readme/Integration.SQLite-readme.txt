@@ -1,0 +1,43 @@
+﻿Hi, and thanks for trying out the Integration Service platform.
+To get started, modify your Program.cs as shown below to begin working with this.
+
+Also make sure to visit the Project Home on https://github.com/vertica-as/integration-service for further documentation.
+
+class Program
+{
+    static void Main(string[] args)
+    {
+		IntegrationStartup.Run(args, application => application
+            .Database(database => database
+				.SQLite(sqlite => sqlite
+					.AddConnection(new MyConnection("myDb.sqlite")))));
+    }
+}
+
+public class MyConnection : SQLiteConnection
+{
+	public MyConnection(string fileName)
+		: base(FromCurrentDirectory(fileName))
+	{
+	}
+}
+
+public class MyTask : IntegrationTask
+{
+	private readonly IDbFactory<MyConnection> _myConnection;
+
+	public MyTask(IDbFactory<MyConnection> myConnection)
+	{
+		_myConnection = myConnection;
+	}
+
+	public override string Description
+	{
+		get { return "TBD"; }
+	}
+
+	public override void StartTask(ITaskExecutionContext context)
+	{
+		// ...
+	}
+}

@@ -1,0 +1,21 @@
+﻿Hi, and thanks for trying out the Payment Service integration for the Integration Service platform.
+To get started, modify your Program.cs as shown below to begin working with this.
+
+Also make sure to visit the Project Home on https://github.com/vertica-as/integration-service for further documentation.
+
+class Program
+{
+    static void Main(string[] args)
+    {
+		IntegrationStartup.Run(args, application => application
+            .UsePaymentService());
+    }
+}
+
+Open app.config and apply your own configuration to the <dibsClient> element:
+
+<dibsClient>
+	<merchants>
+		<merchant number="9999999" md5Enabled="false" md5Key1="" md5Key2="" hmacEnabled="false" hmacKey="" />
+	</merchants>
+</dibsClient>

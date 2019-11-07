@@ -1,0 +1,14 @@
+﻿
+<div loading-container="tableParams.settings().$loading">
+    <table ng-table="tableParams" show-filter="true" class="table">
+        <tbody>
+        <tr ng-repeat="error in $data">
+            <td data-title="'Time Stamp'" sortable="'TimeStamp'">{{error.TimeStamp | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+            <td data-title="'Severity'" sortable="'Severity'" filter="{ 'Severity': 'text' }">{{error.Severity}}</td>
+            <td data-title="'Target'" sortable="'Target'" filter="{ 'Target': 'text' }">{{error.Target}}</td>
+            <td data-title="'Message'" sortable="'Message'" filter="{ 'Message': 'text' }">{{error.Message | limitTo: 80 }}{{error.Message.length > 80 ? '...' : ''}}</td>
+            <td><a ng-href="#/errors/{{error.Id}}">Details</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
