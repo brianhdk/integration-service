@@ -19,15 +19,17 @@ namespace Vertica.Integration.Elasticsearch
 				elasticsearch?.Invoke(configuration);
 			});
 		}
-        
-	    public static TaskConfiguration<MonitorWorkItem> IncludeElasticsearch(this TaskConfiguration<MonitorWorkItem> task)
+
+		[Obsolete("The step to monitor Elasticsearch is no longer supported. You need to re-implement.")]
+		public static TaskConfiguration<MonitorWorkItem> IncludeElasticsearch(this TaskConfiguration<MonitorWorkItem> task)
 	    {
 	        if (task == null) throw new ArgumentNullException(nameof(task));
 
 	        return task.Step<PingElasticsearchStep>();
 	    }
 
-	    public static TaskConfiguration<MonitorWorkItem> IncludeElasticsearch<TConnection>(this TaskConfiguration<MonitorWorkItem> task)
+        [Obsolete("The step to monitor Elasticsearch is no longer supported. You need to re-implement.")]
+		public static TaskConfiguration<MonitorWorkItem> IncludeElasticsearch<TConnection>(this TaskConfiguration<MonitorWorkItem> task)
 	        where TConnection : Connection
 	    {
 	        return task.Step<PingElasticsearchStep<TConnection>>();

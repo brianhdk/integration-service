@@ -1,13 +1,11 @@
 using System;
-using Nest;
 using Vertica.Integration.Domain.Monitoring;
 using Vertica.Integration.Elasticsearch.Infrastructure.Clusters;
-using Vertica.Integration.Infrastructure.Extensions;
 using Vertica.Integration.Model;
-using Time = Vertica.Utilities.Time;
 
 namespace Vertica.Integration.Elasticsearch.Monitor
 {
+    [Obsolete("This step which can monitor Elasticsearch is no longer supported. You need to re-implement. This class will be removed.")]
     public class PingElasticsearchStep<TConnection> : Step<MonitorWorkItem>
         where TConnection : Connection
     {
@@ -18,40 +16,20 @@ namespace Vertica.Integration.Elasticsearch.Monitor
             _clientFactory = connection;
         }
 
+        public override Execution ContinueWith(ITaskExecutionContext<MonitorWorkItem> context)
+        {
+            throw new NotSupportedException("This step which can monitor Elasticsearch is no longer supported. You need to re-implement. This class will be removed.");
+        }
+
         public override void Execute(ITaskExecutionContext<MonitorWorkItem> context)
         {
-            try
-            {
-                IElasticClient client = _clientFactory.Get();
-
-                var request = new PingRequest
-                {
-                    ErrorTrace = true
-                };
-
-                IPingResponse response = client.PingAsync(request, context.CancellationToken).Result;
-
-                if (response.IsValid)
-                    return;
-
-                AddToWorkItem(context, response.DebugInformation);
-            }
-            catch (Exception ex)
-            {
-                AddToWorkItem(context, ex.AggregateMessages());
-            }
+            throw new NotSupportedException("This step which can monitor Elasticsearch is no longer supported. You need to re-implement. This class will be removed.");
         }
 
-        private static void AddToWorkItem(ITaskExecutionContext<MonitorWorkItem> context, string message)
-        {
-            context.Log.Message(message);
-
-            context.WorkItem.Add(Time.UtcNow, "Elasticsearch", message);
-        }
-
-        public override string Description => $"Performs a Ping request to the Elasticsearch cluster for {_clientFactory}.";
+        public override string Description => $"Performs a Ping request to the Elasticsearch cluster for {_clientFactory}. [NOT SUPPORTED ANY MORE]";
     }
 
+    [Obsolete("The step to monitor Elasticsearch is no longer supported. You need to re-implement.")]
     public class PingElasticsearchStep : PingElasticsearchStep<DefaultConnection>
     {
         public PingElasticsearchStep(IElasticClientFactory<DefaultConnection> connection)
