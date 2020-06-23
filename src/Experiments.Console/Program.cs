@@ -30,11 +30,11 @@
 
             //WebApi.Controllers.Demo.Run();
 
-            //WebApi.Portal.Demo.Run();
+            WebApi.Portal.Demo.Run();
 
             //WebApi.NSwag.Demo.Run();
 
-            Hangfire.Demo.Run();
+            //Hangfire.Demo.Run();
 
             //Logging.TextFile.Demo.Run();
 
